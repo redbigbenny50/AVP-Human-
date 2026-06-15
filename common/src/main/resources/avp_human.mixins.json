@@ -25,6 +25,7 @@
     "MixinOwnableEntity_NPCOwnerPatch",
     "MixinPlayer_CrawlPosing",
     "MixinShearsItem_BreakRazorWire",
+    "MixinStructureTemplatePool_Accessor",
     "MixinWolf_Accessor"
   ],
   "client": [
