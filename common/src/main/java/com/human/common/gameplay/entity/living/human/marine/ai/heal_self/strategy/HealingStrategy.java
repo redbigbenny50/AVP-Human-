@@ -1,7 +1,7 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.heal_self.strategy;
 
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategy;
-import com.just.goap.action.Action;
+import com.just.ai.goap.action.Action;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface HealingStrategy extends ItemStrategy {

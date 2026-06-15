@@ -8,8 +8,12 @@ dependencies {
     compileOnly "com.just:just-goap:${project.just_goap_version}"
 
     // Compatibility
-    compileOnly "com.avp.alien:avp_alien-common-1.21.1:${project.avp_alien_version}"
-    compileOnly "com.avp.predator:avp_predator-common-1.21.1:${project.avp_predator_version}"
+    compileOnly("com.avp.alien:avp_alien-common-1.21.1:${project.avp_alien_version}") {
+        exclude group: 'com.blib'
+    }
+    compileOnly("com.avp.predator:avp_predator-common-1.21.1:${project.avp_predator_version}") {
+        exclude group: 'com.blib'
+    }
 
     compileOnly "maven.modrinth:gigeresque:${project.gigeresque_version}"
 }

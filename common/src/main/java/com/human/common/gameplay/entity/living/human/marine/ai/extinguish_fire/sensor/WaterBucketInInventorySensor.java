@@ -2,9 +2,9 @@ package com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.
 
 import com.blib.api.common.inventory.v1.BLibInventory;
 import com.blib.api.common.inventory.v1.BLibInventoryHolder;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.state.ReadableWorldState;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;

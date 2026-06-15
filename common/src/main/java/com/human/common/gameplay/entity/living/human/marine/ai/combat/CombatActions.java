@@ -10,8 +10,8 @@ import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
 import com.human.common.gameplay.entity.living.human.marine.ai.combat.action.EquipWeaponAction;
 import com.human.common.gameplay.entity.living.human.marine.ai.combat.action.MoveUntilAttackTargetInRangeForEquippedBestWeaponAction;
 import com.human.common.gameplay.entity.living.human.marine.ai.combat.action.UseWeaponAction;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 

@@ -1,8 +1,8 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.heal_self.action;
 
 import com.human.common.gameplay.entity.living.human.marine.ai.heal_self.HealingSensors;
+import com.just.ai.goap.action.Action;
 import com.just.core.functional.option.Option;
-import com.just.goap.action.Action;
 import net.minecraft.world.entity.LivingEntity;
 
 public class UseHealingItemAction {

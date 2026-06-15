@@ -6,7 +6,7 @@ import com.human.common.gameplay.entity.living.human.ai.model.ArmorSetTarget;
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.EquipArmorSensors;
-import com.just.goap.action.Action;
+import com.just.ai.goap.action.Action;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class EquipBestArmorSetFromInventoryAction {

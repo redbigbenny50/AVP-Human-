@@ -12,8 +12,12 @@ dependencies {
     blibMod "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
 
     // Compatibility
-    blibMod "com.avp.alien:avp_alien-neoforge-1.21.1:${project.avp_alien_version}"
-    blibMod "com.avp.predator:avp_predator-neoforge-1.21.1:${project.avp_predator_version}"
+    blibCompileOnly("com.avp.alien:avp_alien-neoforge-1.21.1:${project.avp_alien_version}") {
+        exclude group: 'com.blib'
+    }
+    blibCompileOnly("com.avp.predator:avp_predator-neoforge-1.21.1:${project.avp_predator_version}") {
+        exclude group: 'com.blib'
+    }
 
     blibMod "maven.modrinth:gigeresque:${project.gigeresque_version}"
     blibRuntimeOnly "mod.azure.azurelib:azurelib-neo-${project.minecraft_version}:${project.azurelib_version}"

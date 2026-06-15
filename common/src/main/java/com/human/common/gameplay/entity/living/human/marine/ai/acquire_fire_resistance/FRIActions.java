@@ -9,8 +9,8 @@ import com.human.common.gameplay.entity.living.human.ai.generic.action.PickUpNea
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.action.EquipFRIAction;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.action.UseFRIAction;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 

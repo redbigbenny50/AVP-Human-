@@ -6,9 +6,9 @@ import com.human.common.gameplay.entity.living.human.ai.HumanGOAPExpressions;
 import com.human.common.gameplay.entity.living.human.ai.model.ArmorSetTarget;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.action.EquipBestArmorSetFromInventoryAction;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
-import com.just.goap.state.Blackboard;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
+import com.just.ai.goap.state.Blackboard;
 
 public class EquipArmorActions {
 

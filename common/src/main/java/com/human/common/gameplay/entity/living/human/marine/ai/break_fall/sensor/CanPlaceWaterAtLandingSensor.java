@@ -2,8 +2,8 @@ package com.human.common.gameplay.entity.living.human.marine.ai.break_fall.senso
 
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.BreakFallSensors;
+import com.just.ai.goap.state.ReadableWorldState;
 import com.just.core.functional.option.Option;
-import com.just.goap.state.ReadableWorldState;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 

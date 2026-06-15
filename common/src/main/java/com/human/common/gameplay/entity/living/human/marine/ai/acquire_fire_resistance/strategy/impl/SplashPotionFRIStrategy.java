@@ -3,8 +3,8 @@ package com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_res
 import com.blib.api.common.goap.v1.GOAPSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.strategy.FRIStrategy;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.strategy.FRIStrategyUtil;
-import com.just.goap.action.Action;
-import com.just.goap.state.ReadableWorldState;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.state.ReadableWorldState;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrownPotion;

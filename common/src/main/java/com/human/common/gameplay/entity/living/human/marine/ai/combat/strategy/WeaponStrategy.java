@@ -1,8 +1,8 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.combat.strategy;
 
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategy;
-import com.just.goap.action.Action;
-import com.just.goap.state.ReadableWorldState;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 

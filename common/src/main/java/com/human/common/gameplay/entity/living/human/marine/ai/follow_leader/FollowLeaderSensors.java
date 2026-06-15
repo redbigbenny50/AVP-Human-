@@ -3,9 +3,9 @@ package com.human.common.gameplay.entity.living.human.marine.ai.follow_leader;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.MarineMode;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 import net.minecraft.world.entity.player.Player;
 
 public class FollowLeaderSensors {

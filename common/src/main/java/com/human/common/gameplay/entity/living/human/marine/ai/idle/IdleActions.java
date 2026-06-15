@@ -6,8 +6,8 @@ import com.blib.api.common.goap.v1.action.BLibAction;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.follow_leader.FollowLeaderSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.idle.action.WanderAction;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
 
 public class IdleActions {
 

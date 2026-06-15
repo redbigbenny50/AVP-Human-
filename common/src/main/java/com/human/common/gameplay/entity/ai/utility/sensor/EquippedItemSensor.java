@@ -3,9 +3,9 @@ package com.human.common.gameplay.entity.ai.utility.sensor;
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategy;
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategyResult;
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
+import com.just.ai.goap.state.ReadableWorldState;
 import com.just.core.functional.function.Function3;
 import com.just.core.functional.option.Option;
-import com.just.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 

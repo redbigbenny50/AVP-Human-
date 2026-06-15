@@ -1,7 +1,7 @@
 package com.human.common.gameplay.entity.ai.utility.item;
 
 import com.blib.api.common.inventory.v1.BLibInventory;
-import com.just.goap.state.ReadableWorldState;
+import com.just.ai.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 

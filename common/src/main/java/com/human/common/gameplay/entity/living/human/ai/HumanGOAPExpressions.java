@@ -1,8 +1,8 @@
 package com.human.common.gameplay.entity.living.human.ai;
 
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
-import com.just.goap.condition.expression.Expression;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.condition.expression.Expression;
+import com.just.ai.goap.condition.expression.Expressions;
 
 public class HumanGOAPExpressions {
 

@@ -1,6 +1,7 @@
 package com.human.common.gameplay.item.gun.animation.dispatcher.impl;
 
 import com.blib.api.client.animation.v1.command.AzCommand;
+import com.blib.api.client.animation.v1.command.AzTarget;
 import com.blib.api.client.animation.v1.command.play_behavior.AzPlayBehaviors;
 import com.human.common.gameplay.item.gun.animation.dispatcher.GunAnimationDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -18,23 +19,17 @@ public class OldPainlessAnimationDispatcher implements GunAnimationDispatcher {
 
     public static final String ANIMATION_SPIN_UP = "animation.barrelspinup";
 
-    private final AzCommand SPIN_LOOP = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_SPIN_LOOP,
-        AzPlayBehaviors.LOOP
-    );
+    private final AzCommand<ItemStack> SPIN_LOOP = AzCommand.<ItemStack>idempotent()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_LOOP, AzPlayBehaviors.LOOP)
+        .build();
 
-    private final AzCommand SPIN_DOWN = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_SPIN_DOWN,
-        AzPlayBehaviors.HOLD_ON_LAST_FRAME
-    );
+    private final AzCommand<ItemStack> SPIN_DOWN = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_DOWN, AzPlayBehaviors.HOLD_ON_LAST_FRAME)
+        .build();
 
-    private final AzCommand SPIN_UP = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_SPIN_UP,
-        AzPlayBehaviors.PLAY_ONCE
-    );
+    private final AzCommand<ItemStack> SPIN_UP = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_UP, AzPlayBehaviors.PLAY_ONCE)
+        .build();
 
     @Override
     public void idle(Entity entity, ItemStack itemStack) {
@@ -47,15 +42,15 @@ public class OldPainlessAnimationDispatcher implements GunAnimationDispatcher {
     }
 
     public void spinLoop(Entity entity, ItemStack itemStack) {
-        SPIN_LOOP.sendForItem(entity, itemStack);
+        SPIN_LOOP.dispatchForItem(entity, itemStack);
     }
 
     public void spinDown(Entity entity, ItemStack itemStack) {
-        SPIN_DOWN.sendForItem(entity, itemStack);
+        SPIN_DOWN.dispatchForItem(entity, itemStack);
     }
 
     public void spinUp(Entity entity, ItemStack itemStack) {
-        SPIN_UP.sendForItem(entity, itemStack);
+        SPIN_UP.dispatchForItem(entity, itemStack);
     }
 
     private OldPainlessAnimationDispatcher() {}

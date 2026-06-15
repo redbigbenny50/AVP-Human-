@@ -1,10 +1,10 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.action;
 
 import com.human.common.gameplay.entity.living.human.marine.Marine;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.state.Blackboard;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.action.Action;
-import com.just.goap.state.Blackboard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;

@@ -3,7 +3,7 @@ package com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.stra
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.human.common.gameplay.entity.living.human.ai.MathUtil;
 import com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.strategy.ArmorStrategy;
-import com.just.goap.state.ReadableWorldState;
+import com.just.ai.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;

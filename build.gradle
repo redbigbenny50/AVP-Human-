@@ -2,6 +2,21 @@ plugins {
     id 'blib-multiloader-root'
 }
 
+allprojects {
+    repositories {
+        mavenLocal()
+    }
+
+    configurations.configureEach {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.blib' && details.requested.name.startsWith('blib-')) {
+                details.useVersion rootProject.blib_version
+                details.because 'Some published AVP/BLib POMs point at missing BLib versions.'
+            }
+        }
+    }
+}
+
 blib {
     version = project.blib_version
     recipeViewer = 'rei'
@@ -40,6 +55,7 @@ blib {
     maven {
         repository 'https://maven.bvanseghi.dev/avp_alien'
         repository 'https://maven.bvanseghi.dev/avp_predator'
+        repository 'https://maven.bvanseghi.dev/blib_engine'
 
         publish {
             url = 'https://maven.bvanseghi.dev/avp_human/'

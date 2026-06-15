@@ -1,6 +1,6 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.heal_self.strategy;
 
-import com.just.goap.action.Action;
+import com.just.ai.goap.action.Action;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffect;

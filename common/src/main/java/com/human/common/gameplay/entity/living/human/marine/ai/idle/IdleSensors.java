@@ -1,9 +1,9 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.idle;
 
 import com.human.common.gameplay.entity.living.human.marine.Marine;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 
 public class IdleSensors {
 

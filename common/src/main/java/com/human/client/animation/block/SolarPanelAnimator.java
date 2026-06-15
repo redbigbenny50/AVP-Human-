@@ -2,8 +2,8 @@ package com.human.client.animation.block;
 
 import com.blib.api.client.animation.v1.animator.AzAnimatorConfig;
 import com.blib.api.client.animation.v1.animator.AzBlockAnimator;
-import com.blib.api.client.animation.v1.controller.AzAnimationController;
-import com.blib.api.client.animation.v1.controller.AzAnimationControllerContainer;
+import com.blib.api.client.animation.v1.track.AzAnimationTrack;
+import com.blib.api.client.animation.v1.track.AzAnimationTrackContainer;
 import com.human.HumanResources;
 import com.human.common.gameplay.block.entity.power.impl.SolarPanelBlockEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -18,9 +18,9 @@ public class SolarPanelAnimator extends AzBlockAnimator<SolarPanelBlockEntity> {
     }
 
     @Override
-    public void registerControllers(AzAnimationControllerContainer<SolarPanelBlockEntity> animationControllerContainer) {
+    public void registerTracks(AzAnimationTrackContainer<SolarPanelBlockEntity> animationControllerContainer) {
         animationControllerContainer.add(
-            AzAnimationController.builder(this, "base_controller")
+            AzAnimationTrack.builder(this, "base_controller")
                 .build()
         );
     }

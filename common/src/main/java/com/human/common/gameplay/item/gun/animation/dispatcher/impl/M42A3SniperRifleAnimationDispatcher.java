@@ -1,6 +1,7 @@
 package com.human.common.gameplay.item.gun.animation.dispatcher.impl;
 
 import com.blib.api.client.animation.v1.command.AzCommand;
+import com.blib.api.client.animation.v1.command.AzTarget;
 import com.blib.api.client.animation.v1.command.play_behavior.AzPlayBehaviors;
 import com.human.common.gameplay.item.gun.animation.dispatcher.GunAnimationDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -18,30 +19,24 @@ public class M42A3SniperRifleAnimationDispatcher implements GunAnimationDispatch
 
     private static final String ANIMATION_SHOOT = "animation.shoot";
 
-    private static final AzCommand IDLE = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_IDLE,
-        AzPlayBehaviors.LOOP
-    );
+    private static final AzCommand<ItemStack> IDLE = AzCommand.<ItemStack>idempotent()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_IDLE, AzPlayBehaviors.LOOP)
+        .build();
 
-    private static final AzCommand RECHAMBER = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_RECHAMBER,
-        AzPlayBehaviors.PLAY_ONCE
-    );
+    private static final AzCommand<ItemStack> RECHAMBER = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_RECHAMBER, AzPlayBehaviors.PLAY_ONCE)
+        .build();
 
-    private static final AzCommand SHOOT = AzCommand.compose(
-        AzCommand.create(
-            CONTROLLER_MAIN,
-            ANIMATION_SHOOT,
-            AzPlayBehaviors.PLAY_ONCE
-        ),
+    private static final AzCommand<ItemStack> SHOOT = AzCommand.compose(
+        AzCommand.<ItemStack>replay()
+            .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SHOOT, AzPlayBehaviors.PLAY_ONCE)
+            .build(),
         RECHAMBER
     );
 
     @Override
     public void idle(Entity entity, ItemStack itemStack) {
-        IDLE.sendForItem(entity, itemStack);
+        IDLE.dispatchForItem(entity, itemStack);
     }
 
     @Override
@@ -51,7 +46,7 @@ public class M42A3SniperRifleAnimationDispatcher implements GunAnimationDispatch
 
     @Override
     public void shoot(Entity entity, ItemStack itemStack) {
-        SHOOT.sendForItem(entity, itemStack);
+        SHOOT.dispatchForItem(entity, itemStack);
     }
 
     private M42A3SniperRifleAnimationDispatcher() {}

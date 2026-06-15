@@ -2,11 +2,11 @@ package com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf;
 
 import com.blib.api.common.inventory.v1.BLibInventory;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Compose;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Compose;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.item.ItemEntity;

@@ -16,10 +16,10 @@ import com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.strat
 import com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.strategy.ArmorStrategySet;
 import com.human.common.registry.init.item.HumanArmorItems;
 import com.human.compatibility.avp_alien.AVPAlien;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;

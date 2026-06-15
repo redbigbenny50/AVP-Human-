@@ -1,7 +1,7 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.place_torch;
 
-import com.just.goap.condition.expression.Expressions;
-import com.just.goap.goal.Goal;
+import com.just.ai.goap.condition.expression.Expressions;
+import com.just.ai.goap.goal.Goal;
 
 public class TorchGoals {
 

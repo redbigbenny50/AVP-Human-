@@ -10,8 +10,8 @@ import com.human.common.gameplay.entity.living.human.ai.generic.action.PickUpNea
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.MarineGOAPSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.action.PlaceWaterAtFeetAction;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;

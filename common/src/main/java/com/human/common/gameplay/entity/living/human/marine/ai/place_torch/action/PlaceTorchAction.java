@@ -2,8 +2,8 @@ package com.human.common.gameplay.entity.living.human.marine.ai.place_torch.acti
 
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.place_torch.TorchSensors;
+import com.just.ai.goap.action.Action;
 import com.just.core.functional.option.Option;
-import com.just.goap.action.Action;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;

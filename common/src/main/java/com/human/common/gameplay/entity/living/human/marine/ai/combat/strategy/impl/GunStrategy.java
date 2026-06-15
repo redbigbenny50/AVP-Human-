@@ -6,11 +6,11 @@ import com.human.common.gameplay.entity.living.human.marine.ai.combat.strategy.W
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.tag.HumanItemTags;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.state.Blackboard;
+import com.just.ai.goap.state.ReadableWorldState;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.action.Action;
-import com.just.goap.state.Blackboard;
-import com.just.goap.state.ReadableWorldState;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

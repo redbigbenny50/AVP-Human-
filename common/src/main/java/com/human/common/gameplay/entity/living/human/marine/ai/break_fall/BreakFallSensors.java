@@ -5,10 +5,10 @@ import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.sensor
 import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.sensor.IsCloseToLandingSensor;
 import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.sensor.LandingBlockPosSensor;
 import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.sensor.WillLandInFluidSensor;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
 import net.minecraft.core.BlockPos;
 
 public class BreakFallSensors {

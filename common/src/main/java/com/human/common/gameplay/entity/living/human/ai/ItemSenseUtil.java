@@ -5,7 +5,7 @@ import com.human.common.gameplay.entity.living.human.ai.model.ArmorSet;
 import com.human.common.gameplay.entity.living.human.ai.model.ArmorSetTarget;
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
-import com.just.goap.state.ReadableWorldState;
+import com.just.ai.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;

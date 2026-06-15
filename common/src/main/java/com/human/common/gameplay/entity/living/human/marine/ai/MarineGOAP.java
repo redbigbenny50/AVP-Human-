@@ -38,9 +38,9 @@ import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWol
 import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWolfGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWolfSensors;
 import com.human.common.registry.tag.HumanEntityTypeTags;
-import com.just.goap.Agent;
-import com.just.goap.graph.Graph;
-import com.just.goap.plan.ReplanPolicies;
+import com.just.ai.goap.Agent;
+import com.just.ai.goap.graph.Graph;
+import com.just.ai.goap.plan.ReplanPolicies;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 

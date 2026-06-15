@@ -2,8 +2,8 @@ package com.human.client.animation.entity;
 
 import com.blib.api.client.animation.v1.BLibEntityAnimationUtils;
 import com.blib.api.client.animation.v1.animator.AzEntityAnimator;
-import com.blib.api.client.animation.v1.controller.AzAnimationController;
-import com.blib.api.client.animation.v1.controller.AzAnimationControllerContainer;
+import com.blib.api.client.animation.v1.track.AzAnimationTrack;
+import com.blib.api.client.animation.v1.track.AzAnimationTrackContainer;
 import com.human.HumanResources;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.MarineAnimationRefs;
@@ -18,9 +18,9 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
     private static final ResourceLocation ANIMATION = HumanResources.entityAnimationLocation(NAME);
 
     @Override
-    public void registerControllers(AzAnimationControllerContainer<Marine> animationControllerContainer) {
+    public void registerTracks(AzAnimationTrackContainer<Marine> animationControllerContainer) {
         animationControllerContainer.add(
-            AzAnimationController.builder(this, MarineAnimationRefs.FULL_BODY_CONTROLLER_NAME)
+            AzAnimationTrack.builder(this, MarineAnimationRefs.FULL_BODY_CONTROLLER_NAME)
                 .setTransitionLength(5)
                 .build()
         );

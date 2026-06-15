@@ -1,6 +1,7 @@
 package com.human.common.gameplay.item.gun.animation.dispatcher.impl;
 
 import com.blib.api.client.animation.v1.command.AzCommand;
+import com.blib.api.client.animation.v1.command.AzTarget;
 import com.blib.api.client.animation.v1.command.play_behavior.AzPlayBehaviors;
 import com.human.common.gameplay.item.gun.animation.dispatcher.GunAnimationDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -18,37 +19,31 @@ public class DefaultGunAnimationDispatcher implements GunAnimationDispatcher {
 
     private static final String ANIMATION_SHOOT = "animation.shoot";
 
-    private static final AzCommand IDLE = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_IDLE,
-        AzPlayBehaviors.PLAY_ONCE
-    );
+    private static final AzCommand<ItemStack> IDLE = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_IDLE, AzPlayBehaviors.PLAY_ONCE)
+        .build();
 
-    private static final AzCommand RELOAD = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_RELOAD,
-        AzPlayBehaviors.PLAY_ONCE
-    );
+    private static final AzCommand<ItemStack> RELOAD = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_RELOAD, AzPlayBehaviors.PLAY_ONCE)
+        .build();
 
-    private static final AzCommand SHOOT = AzCommand.create(
-        CONTROLLER_MAIN,
-        ANIMATION_SHOOT,
-        AzPlayBehaviors.PLAY_ONCE
-    );
+    private static final AzCommand<ItemStack> SHOOT = AzCommand.<ItemStack>replay()
+        .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SHOOT, AzPlayBehaviors.PLAY_ONCE)
+        .build();
 
     @Override
     public void idle(Entity entity, ItemStack itemStack) {
-        IDLE.sendForItem(entity, itemStack);
+        IDLE.dispatchForItem(entity, itemStack);
     }
 
     @Override
     public void reload(Entity entity, ItemStack itemStack) {
-        RELOAD.sendForItem(entity, itemStack);
+        RELOAD.dispatchForItem(entity, itemStack);
     }
 
     @Override
     public void shoot(Entity entity, ItemStack itemStack) {
-        SHOOT.sendForItem(entity, itemStack);
+        SHOOT.dispatchForItem(entity, itemStack);
     }
 
     private DefaultGunAnimationDispatcher() {}

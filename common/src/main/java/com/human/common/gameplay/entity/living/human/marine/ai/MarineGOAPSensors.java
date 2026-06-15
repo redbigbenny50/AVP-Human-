@@ -1,8 +1,8 @@
 package com.human.common.gameplay.entity.living.human.marine.ai;
 
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.sensor.Sensors;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.sensor.Sensors;
 import net.minecraft.world.entity.Entity;
 
 public class MarineGOAPSensors {

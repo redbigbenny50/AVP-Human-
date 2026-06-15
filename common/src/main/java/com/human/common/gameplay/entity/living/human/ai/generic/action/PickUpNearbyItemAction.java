@@ -2,9 +2,9 @@ package com.human.common.gameplay.entity.living.human.ai.generic.action;
 
 import com.blib.api.common.goap.v1.action.impl.PickUpItemAction;
 import com.blib.api.common.inventory.v1.BLibInventoryHolder;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.action.Action;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.action.Action;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 

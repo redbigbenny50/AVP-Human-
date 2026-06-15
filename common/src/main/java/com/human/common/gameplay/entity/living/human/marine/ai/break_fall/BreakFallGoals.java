@@ -1,8 +1,8 @@
 package com.human.common.gameplay.entity.living.human.marine.ai.break_fall;
 
 import com.blib.api.common.goap.v1.GOAPSensors;
-import com.just.goap.condition.expression.Expressions;
-import com.just.goap.goal.Goal;
+import com.just.ai.goap.condition.expression.Expressions;
+import com.just.ai.goap.goal.Goal;
 
 public class BreakFallGoals {
 

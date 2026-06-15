@@ -3,10 +3,10 @@ package com.human.common.gameplay.entity.ai.utility.sensor;
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategy;
 import com.human.common.gameplay.entity.ai.utility.item.ItemStrategyResult;
 import com.human.common.gameplay.entity.living.human.ai.model.ItemTarget;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.sensor.Sensor;
+import com.just.ai.goap.state.ReadableWorldState;
 import com.just.core.functional.option.Option;
-import com.just.goap.StateKey;
-import com.just.goap.sensor.Sensor;
-import com.just.goap.state.ReadableWorldState;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;

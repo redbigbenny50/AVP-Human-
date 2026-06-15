@@ -2,9 +2,9 @@ package com.human.common.gameplay.entity.living.human.marine.ai.follow_leader.ac
 
 import com.blib.api.common.goap.v1.action.impl.MoveToPosAction;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
-import com.just.goap.StateKey;
-import com.just.goap.action.Action;
-import com.just.goap.state.Blackboard;
+import com.just.ai.goap.StateKey;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.state.Blackboard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
@@ -34,7 +34,7 @@ public class MoveCloserToLeaderAction {
             return Action.Signal.CONTINUE;
         }
 
-        return switch (MoveToPosAction.perform(marine, blackboard, leaderOrNull.position(), 1)) {
+        return switch (MoveToPosAction.perform(context, leaderOrNull.position(), 1)) {
             case FINISHED, MOVING -> Action.Signal.CONTINUE;
             case NO_PATH -> Action.Signal.ABORT;
         };
@@ -43,7 +43,7 @@ public class MoveCloserToLeaderAction {
     public static void onFinish(Action.Context<? extends Marine> context) {
         var marine = context.getActor();
         var blackboard = context.getBlackboard(Blackboard.Scope.ACTION);
-        marine.getNavigation().stop();
+        MoveToPosAction.onFinish(context);
         marine.setPathfindingMalus(PathType.WATER, blackboard.getOrThrow(OLD_WATER_MALUS_COST));
     }
 

@@ -7,8 +7,8 @@ import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.ai.MarineGOAPSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.break_fall.action.PlaceWaterToBreakFallAction;
 import com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.ExtinguishFireSensors;
-import com.just.goap.action.Action;
-import com.just.goap.condition.expression.Expressions;
+import com.just.ai.goap.action.Action;
+import com.just.ai.goap.condition.expression.Expressions;
 
 public class BreakFallActions {
 

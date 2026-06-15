@@ -21,10 +21,10 @@ import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.ItemCooldownUser;
 import com.human.common.gameplay.level.patrol.decorator.gear.MarineGearDecorator;
 import com.human.common.registry.init.HumanDataComponents;
+import com.just.ai.goap.Agent;
+import com.just.ai.goap.graph.Graph;
 import com.just.codec.impl.Codecs;
 import com.just.core.functional.option.Option;
-import com.just.goap.Agent;
-import com.just.goap.graph.Graph;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -84,8 +84,14 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
     public Marine(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
         this.animationDispatcher = new MarineAnimationDispatcher(this);
-        this.biomeSenseCache = new BiomeSenseCache(this, 4, 40);
-        this.entitySenseCache = new EntitySenseCache(this, 40);
+        this.biomeSenseCache = BiomeSenseCache.builder(this)
+            .withScanRadius(4)
+            .withRefreshPolicy(cache -> cache.getEntity().tickCount - cache.getLastSenseTick() > 40)
+            .build();
+        this.entitySenseCache = EntitySenseCache.builder(this)
+            .withScanRadius(40)
+            .withRefreshPolicy(cache -> cache.getEntity().tickCount - cache.getLastSenseTick() > 40)
+            .build();
         this.inventory = new BLibInventory(27);
         this.itemCooldowns = new ItemCooldowns();
         this.leaderUUIDOption = Option.none();
