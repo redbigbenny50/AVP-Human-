@@ -3,7 +3,6 @@ package com.human.client.input.keybind;
 import com.blib.api.client.input.v1.model.KeyInteractType;
 import com.human.Human;
 import com.human.client.HumanClient;
-import com.human.common.gameplay.item.GunItem;
 import com.human.common.model.Crawler;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
@@ -41,14 +40,6 @@ public class HumanKeybindingRegistry {
             var player = Minecraft.getInstance().player;
 
             if (player != null) {
-                var itemStack = player.getMainHandItem();
-
-                if (itemStack.getItem() instanceof GunItem gunItem) {
-                    gunItem.getGunConfig()
-                        .animationDispatcher()
-                        .reload(player, itemStack);
-                }
-
                 Human.MOD.networking().sendToServer(C2SGunReloadPayload.INSTANCE);
             }
         }

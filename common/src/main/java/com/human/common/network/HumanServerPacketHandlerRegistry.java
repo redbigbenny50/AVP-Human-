@@ -8,6 +8,7 @@ import com.human.common.network.packet.C2SGunHitResultsPayload;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
 import com.human.common.network.packet.S2CBulletHitBlockPayload;
+import com.human.common.network.packet.S2CGunAnimationPayload;
 import com.human.common.network.packet.S2CGunRecoilPayload;
 
 public class HumanServerPacketHandlerRegistry {
@@ -56,6 +57,13 @@ public class HumanServerPacketHandlerRegistry {
                 S2CGunRecoilPayload.TYPE,
                 S2CGunRecoilPayload.CODEC,
                 HumanClientListener::handleGunRecoil
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                S2CGunAnimationPayload.TYPE,
+                S2CGunAnimationPayload.CODEC,
+                (payload, player) -> HumanClientListener.handleGunAnimation(payload)
             )
         );
     }

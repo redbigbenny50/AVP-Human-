@@ -95,7 +95,7 @@ public class GunItem extends Item {
                     // No side effects to run for these results at the time of writing.
                     case COOLDOWN, DELAYED, FAILURE, RELOADING -> { /* NO-OP */ }
                     case SHOT -> {
-                        if (level.isClientSide) {
+                        if (!level.isClientSide) {
                             playUseAnimations(livingEntity, itemStack);
                         }
 

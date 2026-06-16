@@ -3,7 +3,9 @@ package com.human.common.gameplay.item.gun.animation.dispatcher.impl;
 import com.blib.api.client.animation.v1.command.AzCommand;
 import com.blib.api.client.animation.v1.command.AzTarget;
 import com.blib.api.client.animation.v1.command.play_behavior.AzPlayBehaviors;
+import com.human.common.gameplay.item.gun.animation.GunAnimationNetworking;
 import com.human.common.gameplay.item.gun.animation.dispatcher.GunAnimationDispatcher;
+import com.human.common.network.packet.S2CGunAnimationPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -50,11 +52,7 @@ public class M42A3SniperRifleAnimationDispatcher implements GunAnimationDispatch
 
     @Override
     public void shoot(Entity entity, ItemStack itemStack) {
-        if (!entity.level().isClientSide()) {
-            return;
-        }
-
-        SHOOT.dispatchForItem(entity, itemStack);
+        GunAnimationNetworking.dispatch(SHOOT, entity, itemStack, S2CGunAnimationPayload.Animation.SHOOT);
     }
 
     private M42A3SniperRifleAnimationDispatcher() {}
