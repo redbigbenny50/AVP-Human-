@@ -131,11 +131,6 @@ public class GunItem extends Item {
             itemStack.set(HumanDataComponents.IS_FIRING.get(), false);
         }
 
-        if (level.isClientSide()) {
-            gunConfig.animationDispatcher()
-                .idle(entity, itemStack);
-        }
-
         super.inventoryTick(itemStack, level, entity, i, bl);
     }
 
