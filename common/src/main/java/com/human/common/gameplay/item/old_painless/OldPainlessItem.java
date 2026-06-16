@@ -2,7 +2,7 @@ package com.human.common.gameplay.item.old_painless;
 
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.gun.GunData;
-import com.human.common.gameplay.item.gun.animation.dispatcher.impl.OldPainlessAnimationDispatcher;
+import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +20,8 @@ public class OldPainlessItem extends GunItem {
         var tickProgress = Math.abs(START_TICK_PROGRESS - tickCountdown);
         var isFirstTick = tickProgress == 0;
 
-        if (isFirstTick) {
-            OldPainlessAnimationDispatcher.INSTANCE.spinUp(livingEntity, itemStack);
+        if (isFirstTick && !level.isClientSide()) {
+            GunAnimationEvents.trigger(itemStack, GunAnimationEvents.OLD_PAINLESS_SPIN_UP);
         }
 
         super.onUseTick(level, livingEntity, itemStack, tickCountdown);
@@ -32,8 +32,8 @@ public class OldPainlessItem extends GunItem {
         var fireModeConfig = getGunConfig().getDefaultFireMode();
         var shootFinishSoundEvent = fireModeConfig.shootFinishSoundEvent();
 
-        if (shootFinishSoundEvent != null) {
-            OldPainlessAnimationDispatcher.INSTANCE.spinDown(livingEntity, itemStack);
+        if (shootFinishSoundEvent != null && !level.isClientSide()) {
+            GunAnimationEvents.trigger(itemStack, GunAnimationEvents.OLD_PAINLESS_SPIN_DOWN);
         }
 
         super.releaseUsing(itemStack, level, livingEntity, i);
@@ -41,6 +41,6 @@ public class OldPainlessItem extends GunItem {
 
     @Override
     protected void playUseAnimations(Entity shooter, ItemStack itemStack) {
-        OldPainlessAnimationDispatcher.INSTANCE.spinLoop(shooter, itemStack);
+        GunAnimationEvents.trigger(itemStack, GunAnimationEvents.OLD_PAINLESS_SPIN_LOOP);
     }
 }

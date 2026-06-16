@@ -1,7 +1,5 @@
 package com.human.client.animation.item;
 
-import com.blib.api.client.animation.v1.animator.AzAnimatorConfig;
-import com.blib.api.client.animation.v1.animator.AzItemAnimator;
 import com.blib.api.client.animation.v1.track.AzAnimationTrack;
 import com.blib.api.client.animation.v1.track.AzAnimationTrackContainer;
 import com.human.HumanResources;
@@ -10,15 +8,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class M6BRLAnimator extends AzItemAnimator {
+public class M6BRLAnimator extends GunItemAnimator {
 
     private static final String NAME = "m6b_rocket_launcher";
 
     private static final ResourceLocation ANIMATION = HumanResources.itemAnimationLocation(NAME);
-
-    public M6BRLAnimator() {
-        super(AzAnimatorConfig.defaultConfig());
-    }
 
     @Override
     public void registerTracks(AzAnimationTrackContainer<ItemStack> animationControllerContainer) {
@@ -32,5 +26,11 @@ public class M6BRLAnimator extends AzItemAnimator {
     @Override
     public @NotNull ResourceLocation getAnimationLocation(ItemStack animatable) {
         return ANIMATION;
+    }
+
+    @Override
+    public void setCustomAnimations(ItemStack animatable, float partialTicks) {
+        super.setCustomAnimations(animatable, partialTicks);
+        runGunAnimationEvents(animatable, DefaultGunAnimationDispatcher.INSTANCE);
     }
 }

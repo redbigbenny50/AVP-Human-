@@ -1,7 +1,5 @@
 package com.human.client.animation.item;
 
-import com.blib.api.client.animation.v1.animator.AzAnimatorConfig;
-import com.blib.api.client.animation.v1.animator.AzItemAnimator;
 import com.blib.api.client.animation.v1.track.AzAnimationTrack;
 import com.blib.api.client.animation.v1.track.AzAnimationTrackContainer;
 import com.human.HumanResources;
@@ -10,15 +8,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class M88Mod4CombatPistolAnimator extends AzItemAnimator {
+public class M88Mod4CombatPistolAnimator extends GunItemAnimator {
 
     private static final String NAME = "m88mod4_combat_pistol";
 
     private static final ResourceLocation ANIMATION = HumanResources.itemAnimationLocation(NAME);
-
-    public M88Mod4CombatPistolAnimator() {
-        super(AzAnimatorConfig.defaultConfig());
-    }
 
     @Override
     public void registerTracks(AzAnimationTrackContainer<ItemStack> animationControllerContainer) {
@@ -32,5 +26,11 @@ public class M88Mod4CombatPistolAnimator extends AzItemAnimator {
     @Override
     public @NotNull ResourceLocation getAnimationLocation(ItemStack animatable) {
         return ANIMATION;
+    }
+
+    @Override
+    public void setCustomAnimations(ItemStack animatable, float partialTicks) {
+        super.setCustomAnimations(animatable, partialTicks);
+        runGunAnimationEvents(animatable, DefaultGunAnimationDispatcher.INSTANCE);
     }
 }

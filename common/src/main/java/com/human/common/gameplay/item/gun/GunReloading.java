@@ -4,6 +4,7 @@ import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.blib.api.common.server.v1.ServerScheduler;
 import com.human.common.gameplay.item.GunItem;
+import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanBlockItems;
 import net.minecraft.sounds.SoundSource;
@@ -82,8 +83,7 @@ public class GunReloading {
             return;
         }
 
-        gunConfig.animationDispatcher()
-            .reload(player, itemStack);
+        GunAnimationEvents.trigger(itemStack, GunAnimationEvents.RELOAD);
 
         var fireModeConfig = gunConfig.getDefaultFireMode();
         var reloadStartSoundEvent = fireModeConfig.reloadStartSoundEvent();

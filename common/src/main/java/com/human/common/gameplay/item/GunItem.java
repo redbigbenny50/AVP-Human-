@@ -2,6 +2,7 @@ package com.human.common.gameplay.item;
 
 import com.blib.api.common.tooltip.v1.TooltipUtil;
 import com.human.common.gameplay.item.gun.GunConfig;
+import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.gameplay.item.gun.pipeline.GunShootContext;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanGunItems;
@@ -37,6 +38,8 @@ public class GunItem extends Item {
             new Item.Properties().stacksTo(1)
                 .component(HumanDataComponents.IS_FIRING.get(), false)
                 .component(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 0)
+                .component(HumanDataComponents.GUN_ANIMATION_ID.get(), 0)
+                .component(HumanDataComponents.GUN_ANIMATION_TYPE.get(), GunAnimationEvents.NONE)
                 .durability(gunConfig.durability())
                 .attributes(createAttributes())
         );
@@ -54,8 +57,7 @@ public class GunItem extends Item {
     }
 
     protected void playUseAnimations(Entity shooter, ItemStack itemStack) {
-        gunConfig.animationDispatcher()
-            .shoot(shooter, itemStack);
+        GunAnimationEvents.trigger(itemStack, GunAnimationEvents.SHOOT);
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.human.common.gameplay.item.gun.animation.dispatcher.impl;
 import com.blib.api.client.animation.v1.command.AzCommand;
 import com.blib.api.client.animation.v1.command.AzTarget;
 import com.blib.api.client.animation.v1.command.play_behavior.AzPlayBehaviors;
-import com.human.common.gameplay.item.gun.animation.GunAnimationNetworking;
 import com.human.common.gameplay.item.gun.animation.dispatcher.GunAnimationDispatcher;
-import com.human.common.network.packet.S2CGunAnimationPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -44,15 +42,27 @@ public class OldPainlessAnimationDispatcher implements GunAnimationDispatcher {
     }
 
     public void spinLoop(Entity entity, ItemStack itemStack) {
-        GunAnimationNetworking.dispatch(SPIN_LOOP, entity, itemStack, S2CGunAnimationPayload.Animation.OLD_PAINLESS_SPIN_LOOP);
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
+        SPIN_LOOP.dispatchForItem(entity, itemStack);
     }
 
     public void spinDown(Entity entity, ItemStack itemStack) {
-        GunAnimationNetworking.dispatch(SPIN_DOWN, entity, itemStack, S2CGunAnimationPayload.Animation.OLD_PAINLESS_SPIN_DOWN);
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
+        SPIN_DOWN.dispatchForItem(entity, itemStack);
     }
 
     public void spinUp(Entity entity, ItemStack itemStack) {
-        GunAnimationNetworking.dispatch(SPIN_UP, entity, itemStack, S2CGunAnimationPayload.Animation.OLD_PAINLESS_SPIN_UP);
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
+        SPIN_UP.dispatchForItem(entity, itemStack);
     }
 
     private OldPainlessAnimationDispatcher() {}

@@ -42,6 +42,20 @@ public class HumanDataComponents {
             .cacheEncoding()
     );
 
+    public static final BLibHolder<DataComponentType<Integer>> GUN_ANIMATION_ID = create(
+        "gun_animation_id",
+        builder -> builder.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
+    public static final BLibHolder<DataComponentType<Integer>> GUN_ANIMATION_TYPE = create(
+        "gun_animation_type",
+        builder -> builder.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
     public static final BLibHolder<DataComponentType<GeneReaderContents>> GENE_READER_CONTENTS = create(
         "gene_reader_contents",
         builder -> builder.persistent(GeneReaderContents.CODEC)
