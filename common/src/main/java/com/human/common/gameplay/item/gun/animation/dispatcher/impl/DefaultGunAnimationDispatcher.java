@@ -33,16 +33,28 @@ public class DefaultGunAnimationDispatcher implements GunAnimationDispatcher {
 
     @Override
     public void idle(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         IDLE.dispatchForItem(entity, itemStack);
     }
 
     @Override
     public void reload(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         RELOAD.dispatchForItem(entity, itemStack);
     }
 
     @Override
     public void shoot(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         SHOOT.dispatchForItem(entity, itemStack);
     }
 

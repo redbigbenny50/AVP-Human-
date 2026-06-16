@@ -21,14 +21,26 @@ public class ResonatorAnimationDispatcher {
     public ResonatorAnimationDispatcher() {}
 
     public void unpowered(ResonatorBlockEntity entity) {
+        if (entity.getLevel() == null || !entity.getLevel().isClientSide()) {
+            return;
+        }
+
         UNPOWERED_COMMAND.dispatchForBlockEntity(entity);
     }
 
     public void powered(ResonatorBlockEntity entity) {
+        if (entity.getLevel() == null || !entity.getLevel().isClientSide()) {
+            return;
+        }
+
         SPINNING_COMMAND.dispatchForBlockEntity(entity);
     }
 
     public void powerUp(ResonatorBlockEntity entity) {
+        if (entity.getLevel() == null || !entity.getLevel().isClientSide()) {
+            return;
+        }
+
         POWER_UP_COMMAND.dispatchForBlockEntity(entity);
     }
 }

@@ -34,18 +34,34 @@ public class MarineAnimationDispatcher {
     }
 
     public void idle() {
+        if (!abstractHuman.level().isClientSide()) {
+            return;
+        }
+
         IDLE.dispatchForEntity(abstractHuman);
     }
 
     public void swim() {
+        if (!abstractHuman.level().isClientSide()) {
+            return;
+        }
+
         SWIM.dispatchForEntity(abstractHuman);
     }
 
     public void walk() {
+        if (!abstractHuman.level().isClientSide()) {
+            return;
+        }
+
         WALK.dispatchForEntity(abstractHuman);
     }
 
     public void rightShoot() {
+        if (!abstractHuman.level().isClientSide()) {
+            return;
+        }
+
         RIGHT_SHOOT.dispatchForEntity(abstractHuman);
     }
 }

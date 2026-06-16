@@ -36,6 +36,10 @@ public class M42A3SniperRifleAnimationDispatcher implements GunAnimationDispatch
 
     @Override
     public void idle(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         IDLE.dispatchForItem(entity, itemStack);
     }
 
@@ -46,6 +50,10 @@ public class M42A3SniperRifleAnimationDispatcher implements GunAnimationDispatch
 
     @Override
     public void shoot(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         SHOOT.dispatchForItem(entity, itemStack);
     }
 

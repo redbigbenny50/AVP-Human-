@@ -17,6 +17,10 @@ public class MushroomCloudAnimDispatcher {
     }
 
     public void explode() {
+        if (!mushroomCloudEntity.level().isClientSide()) {
+            return;
+        }
+
         EXPLODE_COMMAND.dispatchForEntity(mushroomCloudEntity);
     }
 }

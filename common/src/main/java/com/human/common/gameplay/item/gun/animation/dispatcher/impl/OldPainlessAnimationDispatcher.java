@@ -42,14 +42,26 @@ public class OldPainlessAnimationDispatcher implements GunAnimationDispatcher {
     }
 
     public void spinLoop(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         SPIN_LOOP.dispatchForItem(entity, itemStack);
     }
 
     public void spinDown(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         SPIN_DOWN.dispatchForItem(entity, itemStack);
     }
 
     public void spinUp(Entity entity, ItemStack itemStack) {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         SPIN_UP.dispatchForItem(entity, itemStack);
     }
 

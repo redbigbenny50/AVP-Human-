@@ -26,14 +26,26 @@ public class SentryTurretAnimDispatcher {
     }
 
     public void idle() {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         IDLE_COMMAND.dispatchForEntity(entity);
     }
 
     public void unpowered() {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         UNPOWERED_COMMAND.dispatchForEntity(entity);
     }
 
     public void firing() {
+        if (!entity.level().isClientSide()) {
+            return;
+        }
+
         FIRING_COMMAND.dispatchForEntity(entity);
     }
 
