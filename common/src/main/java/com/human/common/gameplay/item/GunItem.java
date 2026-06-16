@@ -57,12 +57,6 @@ public class GunItem extends Item {
     }
 
     protected void playUseAnimations(Entity shooter, ItemStack itemStack) {
-        if (shooter.level().isClientSide()) {
-            gunConfig.animationDispatcher()
-                .shoot(shooter, itemStack);
-            return;
-        }
-
         GunAnimationEvents.trigger(itemStack, GunAnimationEvents.SHOOT);
     }
 

@@ -4,6 +4,7 @@ import com.blib.api.client.input.v1.model.KeyInteractType;
 import com.human.Human;
 import com.human.client.HumanClient;
 import com.human.common.gameplay.item.GunItem;
+import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.model.Crawler;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
@@ -43,10 +44,8 @@ public class HumanKeybindingRegistry {
             if (player != null) {
                 var itemStack = player.getMainHandItem();
 
-                if (itemStack.getItem() instanceof GunItem gunItem) {
-                    gunItem.getGunConfig()
-                        .animationDispatcher()
-                        .reload(player, itemStack);
+                if (itemStack.getItem() instanceof GunItem) {
+                    GunAnimationEvents.trigger(itemStack, GunAnimationEvents.RELOAD);
                 }
 
                 Human.MOD.networking().sendToServer(C2SGunReloadPayload.INSTANCE);
