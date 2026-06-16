@@ -22,8 +22,7 @@ public class FlamethrowProjectileGunAttackAction implements GunAttackAction {
         var level = shooter.level();
 
         if (level.isClientSide) {
-            // Flamethrow projectile shots do nothing on the client-side.
-            return GunShootResult.FAILURE;
+            return GunShootResult.SHOT;
         }
 
         var flamethrow = new Flamethrow(level, shooter);

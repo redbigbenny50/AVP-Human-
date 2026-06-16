@@ -57,6 +57,12 @@ public class GunItem extends Item {
     }
 
     protected void playUseAnimations(Entity shooter, ItemStack itemStack) {
+        if (shooter.level().isClientSide()) {
+            gunConfig.animationDispatcher()
+                .shoot(shooter, itemStack);
+            return;
+        }
+
         GunAnimationEvents.trigger(itemStack, GunAnimationEvents.SHOOT);
     }
 
@@ -97,9 +103,7 @@ public class GunItem extends Item {
                     // No side effects to run for these results at the time of writing.
                     case COOLDOWN, DELAYED, FAILURE, RELOADING -> { /* NO-OP */ }
                     case SHOT -> {
-                        if (!level.isClientSide) {
-                            playUseAnimations(livingEntity, itemStack);
-                        }
+                        playUseAnimations(livingEntity, itemStack);
 
                         itemStack.set(HumanDataComponents.IS_FIRING.get(), true);
                         itemStack.set(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 5);

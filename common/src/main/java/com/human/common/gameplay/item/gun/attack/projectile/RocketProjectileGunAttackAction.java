@@ -20,8 +20,7 @@ public class RocketProjectileGunAttackAction implements GunAttackAction {
         var level = shooter.level();
 
         if (level.isClientSide) {
-            // Rocket projectile shots do nothing on the client-side.
-            return GunShootResult.FAILURE;
+            return GunShootResult.SHOT;
         }
 
         var rocket = new Rocket(level, shooter);
