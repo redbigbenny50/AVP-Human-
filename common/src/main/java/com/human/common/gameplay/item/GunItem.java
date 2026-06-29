@@ -7,6 +7,8 @@ import com.human.common.gameplay.item.gun.pipeline.GunShootContext;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanGunItems;
 import com.human.compatibility.HumanCommonItemTags;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +24,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,10 +77,11 @@ public class GunItem extends Item {
 
     @Override
     public void releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity, int i) {
+        var wasFiring = itemStack.getOrDefault(HumanDataComponents.IS_FIRING.get(), false);
         var fireModeConfig = gunConfig.getDefaultFireMode();
         var shootFinishSoundEvent = fireModeConfig.shootFinishSoundEvent();
 
-        if (shootFinishSoundEvent != null) {
+        if (wasFiring && shootFinishSoundEvent != null) {
             level.playSound(null, livingEntity.blockPosition(), shootFinishSoundEvent.get(), SoundSource.PLAYERS);
         }
 
@@ -86,10 +92,18 @@ public class GunItem extends Item {
 
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack itemStack, int tickCountdown) {
+        if (livingEntity instanceof Player) {
+            return;
+        }
+
         // Lack of server/client side check here is deliberate.
 
         var tickProgress = Math.abs(START_TICK_PROGRESS - tickCountdown);
 
+        fire(level, livingEntity, itemStack, tickProgress);
+    }
+
+    public void fire(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack itemStack, int tickProgress) {
         GunShootContext.create(livingEntity, itemStack, tickProgress)
             .map(GunShootContext::shoot)
             .ifSome(result -> {
@@ -122,6 +136,8 @@ public class GunItem extends Item {
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int i, boolean bl) {
+        removeBlockedEnchantments(itemStack);
+
         var muzzleFlashDurationInTicks = itemStack.getOrDefault(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 0);
         var newMuzzleFlashDurationInTicks = Math.max(muzzleFlashDurationInTicks - 1, 0);
 
@@ -134,8 +150,28 @@ public class GunItem extends Item {
         super.inventoryTick(itemStack, level, entity, i, bl);
     }
 
+    private static void removeBlockedEnchantments(ItemStack itemStack) {
+        var enchantments = itemStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+
+        if (enchantments.isEmpty()) {
+            return;
+        }
+
+        var mutableEnchantments = new ItemEnchantments.Mutable(enchantments);
+        mutableEnchantments.removeIf(enchantment -> enchantment.is(Enchantments.INFINITY) || enchantment.is(Enchantments.MENDING));
+        var sanitizedEnchantments = mutableEnchantments.toImmutable();
+
+        if (!sanitizedEnchantments.equals(enchantments)) {
+            itemStack.set(DataComponents.ENCHANTMENTS, sanitizedEnchantments);
+        }
+    }
+
     public GunConfig getGunConfig() {
         return gunConfig;
+    }
+
+    public static boolean isBlockedGunEnchantment(Holder<Enchantment> enchantment) {
+        return enchantment.is(Enchantments.INFINITY) || enchantment.is(Enchantments.MENDING);
     }
 
     @Override

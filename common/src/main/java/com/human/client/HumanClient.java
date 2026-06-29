@@ -17,6 +17,7 @@ import com.human.client.render.block.DeskTerminalRenderer;
 import com.human.client.render.block.ResonatorRenderer;
 import com.human.client.render.block.SolarPanelRenderer;
 import com.human.client.render.entity.FlamethrowRenderer;
+import com.human.client.render.entity.MarineDogRenderer;
 import com.human.client.render.entity.MarineRenderer;
 import com.human.client.render.entity.MushroomCloudRenderer;
 import com.human.client.render.entity.NukeRenderer;
@@ -262,6 +263,7 @@ public class HumanClient {
         MOD.registries().registerEntityRenderer(HumanEntityTypes.FLAMETHROW, FlamethrowRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.GRENADE_THROWN, ThrownItemRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE, MarineRenderer::new);
+        MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE_DOG, MarineDogRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MUSHROOM_CLOUD, MushroomCloudRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.NUKE, NukeRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.ROCKET, RocketRenderer::new);

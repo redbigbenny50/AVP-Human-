@@ -1,6 +1,7 @@
 package com.human.common.gameplay.entity.projectile;
 
 import com.alien.common.data.AlienVariantTypes;
+import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
 import com.human.common.registry.init.HumanEntityTypes;
 import com.human.common.registry.key.HumanDamageTypeKeys;
 import com.human.compatibility.avp_alien.AVPAlien;
@@ -12,6 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
@@ -99,6 +101,10 @@ public class Flamethrow extends ThrowableProjectile {
         var entitiesToHurt = level().getEntities(this, AABB.encapsulatingFullBlocks(bottomCorner, topCorner));
 
         entitiesToHurt.forEach(entity -> {
+            if (MarineAllyUtil.isMarineAlly(getOwner(), entity)) {
+                return;
+            }
+
             entity.hurt(damageSource, 1F);
             entity.igniteForTicks(10 * 20);
             entity.invulnerableTime = 0;
@@ -125,6 +131,11 @@ public class Flamethrow extends ThrowableProjectile {
         }
 
         return state.canBeReplaced() && state.getFluidState().isEmpty();
+    }
+
+    @Override
+    protected boolean canHitEntity(Entity target) {
+        return super.canHitEntity(target) && !MarineAllyUtil.isMarineAlly(getOwner(), target);
     }
 
     @Override

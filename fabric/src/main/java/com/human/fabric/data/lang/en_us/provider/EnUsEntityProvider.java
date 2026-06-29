@@ -15,6 +15,7 @@ public class EnUsEntityProvider {
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         addEntity(builder, HumanEntityTypes.FLAMETHROW, "Flamethrow");
         addEntity(builder, HumanEntityTypes.GRENADE_THROWN, "Grenade");
+        addEntity(builder, HumanEntityTypes.MARINE_DOG, "Marine Dog");
         addEntity(builder, HumanEntityTypes.MARINE, "Marine");
         addEntity(builder, HumanEntityTypes.MUSHROOM_CLOUD, "Mushroom Cloud");
         addEntity(builder, HumanEntityTypes.NUKE, "Nuke");

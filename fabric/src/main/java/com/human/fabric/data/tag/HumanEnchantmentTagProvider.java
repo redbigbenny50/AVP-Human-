@@ -19,8 +19,6 @@ public class HumanEnchantmentTagProvider extends FabricTagProvider.EnchantmentTa
         getOrCreateTagBuilder(HumanEnchantmentTags.GUN_ENCHANTMENTS)
             .add(
                 Enchantments.FLAME,
-                Enchantments.INFINITY,
-                Enchantments.MENDING,
                 Enchantments.MULTISHOT,
                 Enchantments.PIERCING,
                 Enchantments.POWER,

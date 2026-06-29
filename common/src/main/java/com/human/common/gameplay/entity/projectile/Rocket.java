@@ -1,5 +1,6 @@
 package com.human.common.gameplay.entity.projectile;
 
+import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
 import com.human.common.property.HumanProperties;
 import com.human.common.property.HumanPropertyAccess;
 import com.human.common.registry.init.HumanEntityTypes;
@@ -11,6 +12,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -75,9 +78,24 @@ public class Rocket extends ThrowableProjectile {
             : Level.ExplosionInteraction.NONE;
 
         if (!level.isClientSide) {
-            level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 5.0F, false, explosionInteraction);
+            level.explode(
+                this,
+                null,
+                new MarineAllyExplosionDamageCalculator(getOwner()),
+                getX(),
+                getY(0.0625D),
+                getZ(),
+                5.0F,
+                false,
+                explosionInteraction
+            );
             discard();
         }
+    }
+
+    @Override
+    protected boolean canHitEntity(Entity target) {
+        return super.canHitEntity(target) && !MarineAllyUtil.isMarineAlly(getOwner(), target);
     }
 
     @Override
@@ -106,5 +124,24 @@ public class Rocket extends ThrowableProjectile {
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         tag.putShort(TICK_COUNT_KEY, (short) tickCount);
+    }
+
+    private static class MarineAllyExplosionDamageCalculator extends ExplosionDamageCalculator {
+
+        private final Entity source;
+
+        private MarineAllyExplosionDamageCalculator(Entity source) {
+            this.source = source;
+        }
+
+        @Override
+        public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
+            return !MarineAllyUtil.isMarineAlly(source, entity) && super.shouldDamageEntity(explosion, entity);
+        }
+
+        @Override
+        public float getKnockbackMultiplier(Entity entity) {
+            return MarineAllyUtil.isMarineAlly(source, entity) ? 0.0F : super.getKnockbackMultiplier(entity);
+        }
     }
 }

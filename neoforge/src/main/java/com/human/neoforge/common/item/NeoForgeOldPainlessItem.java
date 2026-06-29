@@ -1,5 +1,6 @@
 package com.human.neoforge.common.item;
 
+import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.old_painless.OldPainlessItem;
 import com.human.common.registry.tag.HumanEnchantmentTags;
 import net.minecraft.core.Holder;
@@ -12,6 +13,6 @@ public class NeoForgeOldPainlessItem extends OldPainlessItem implements IItemExt
 
     @Override
     public boolean supportsEnchantment(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS);
+        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS) && !GunItem.isBlockedGunEnchantment(enchantment);
     }
 }

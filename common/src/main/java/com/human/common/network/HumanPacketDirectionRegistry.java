@@ -3,6 +3,7 @@ package com.human.common.network;
 import com.blib.api.common.network.v1.PacketDirection;
 import com.blib.api.common.registry.v1.impl.BLibNetworkRegistry;
 import com.human.Human;
+import com.human.common.network.packet.C2SGunFirePayload;
 import com.human.common.network.packet.C2SGunHitResultsPayload;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
@@ -14,6 +15,7 @@ public class HumanPacketDirectionRegistry {
     private static final BLibNetworkRegistry REGISTRY = Human.MOD.registries().createNetworkRegistry();
 
     public static void initialize() {
+        REGISTRY.registerPacketDirection(new PacketDirection.C2S<>(C2SGunFirePayload.TYPE, C2SGunFirePayload.CODEC));
         REGISTRY.registerPacketDirection(new PacketDirection.C2S<>(C2SGunHitResultsPayload.TYPE, C2SGunHitResultsPayload.CODEC));
         REGISTRY.registerPacketDirection(new PacketDirection.C2S<>(C2SGunReloadPayload.TYPE, C2SGunReloadPayload.CODEC));
         REGISTRY.registerPacketDirection(

@@ -6,12 +6,10 @@ import com.human.common.gameplay.level.patrol.PatrolSpawnerTicker;
 import com.human.common.gameplay.level.patrol.decorator.gear.MarineGearDecorator;
 import com.human.common.gameplay.level.patrol.decorator.squad.MarineSquadLeadershipDecorator;
 import com.human.common.registry.tag.HumanBiomeTags;
-import com.human.mixin.MixinWolf_Accessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -69,14 +67,7 @@ public class MarinePatrolSpawnHandle {
 
                 var randomMarine = spawnedMarines.get(level.random.nextInt(spawnedMarines.size()));
 
-                // TODO: Share this with TameWolfAction.
-                wolf.setTame(true, true);
-                wolf.setOwnerUUID(randomMarine.getUUID());
-                wolf.getNavigation().stop();
-                wolf.setOrderedToSit(false);
-                wolf.setInSittingPose(false);
-
-                wolf.getEntityData().set(MixinWolf_Accessor.getDataCollarColor(), DyeColor.GREEN.getId());
+                wolf.assignMarineOwner(randomMarine);
             }
         }
     }

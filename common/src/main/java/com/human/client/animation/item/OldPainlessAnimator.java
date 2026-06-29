@@ -31,6 +31,5 @@ public class OldPainlessAnimator extends GunItemAnimator {
     @Override
     public void setCustomAnimations(ItemStack animatable, float partialTicks) {
         super.setCustomAnimations(animatable, partialTicks);
-        runGunAnimationEvents(animatable, OldPainlessAnimationDispatcher.INSTANCE);
     }
 }

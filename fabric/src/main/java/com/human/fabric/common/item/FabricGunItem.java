@@ -16,6 +16,6 @@ public class FabricGunItem extends GunItem {
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
-        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS);
+        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS) && !GunItem.isBlockedGunEnchantment(enchantment);
     }
 }

@@ -8,6 +8,7 @@ import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanBlockItems;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -25,8 +26,7 @@ public class GunReloading {
         }
 
         var level = player.level();
-        var usedItemHand = player.getUsedItemHand();
-        var itemStack = player.getItemInHand(usedItemHand);
+        var itemStack = getHeldGunStack(player);
         var item = itemStack.getItem();
 
         if (!(item instanceof GunItem gunItem)) {
@@ -58,10 +58,9 @@ public class GunReloading {
         var reloadAmount = gunConfig.reloadAmount();
         var neededAmmunition = (int) Math.ceil((maximumAmmunition - currentAmmunition) / ((float) reloadAmount));
 
-        var hasInfinity = EnchantmentUtil.getLevel(player.level(), itemStack, Enchantments.INFINITY) > 0;
         var isPlayerImmortal = BLibEntityPredicates.isInvulnerable(player);
         // Result is how much we DIDN'T consume.
-        var result = hasInfinity || isPlayerImmortal
+        var result = isPlayerImmortal
             // If the player is immortal, then assume they can get a full reload.
             ? ItemConsumptionResult.Full.INSTANCE
             // Otherwise, the player needs to use actual ammunition.
@@ -107,8 +106,7 @@ public class GunReloading {
                 var reloadFinishSoundEvent = fireModeConfig.reloadFinishSoundEvent();
 
                 if (reloadFinishSoundEvent != null) {
-                    var interactionHand = player.getUsedItemHand();
-                    var itemInHand = player.getItemInHand(interactionHand);
+                    var itemInHand = getHeldGunStack(player);
 
                     if (Objects.equals(itemStack, itemInHand)) {
                         level.playSound(null, player.blockPosition(), reloadFinishSoundEvent.get(), SoundSource.PLAYERS);
@@ -116,6 +114,17 @@ public class GunReloading {
                 }
             }, Duration.ofMillis(reloadTimeInTicks * 50L));
         }
+    }
+
+    private static ItemStack getHeldGunStack(Player player) {
+        var usedItemHand = player.getUsedItemHand();
+        var itemStack = player.getItemInHand(usedItemHand);
+
+        if (itemStack.getItem() instanceof GunItem) {
+            return itemStack;
+        }
+
+        return player.getItemInHand(InteractionHand.MAIN_HAND);
     }
 
     public static ItemConsumptionResult consumeItemAmountFromInventory(

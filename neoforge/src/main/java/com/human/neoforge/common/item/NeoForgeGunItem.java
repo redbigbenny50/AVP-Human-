@@ -17,6 +17,6 @@ public class NeoForgeGunItem extends GunItem implements IItemExtension {
 
     @Override
     public boolean supportsEnchantment(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS);
+        return enchantment.is(HumanEnchantmentTags.GUN_ENCHANTMENTS) && !GunItem.isBlockedGunEnchantment(enchantment);
     }
 }

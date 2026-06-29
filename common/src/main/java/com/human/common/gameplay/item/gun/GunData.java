@@ -73,7 +73,7 @@ public class GunData {
             FireModeConfig.builder()
                 .withConsumedAmmunitionPerShot(4)
                 .withCooldownInTicks(10)
-                .withDamage(2F * 2 * 4) // 4 bullets per shot in burst mode
+                .withDamage(6F)
                 .withRange(64)
                 .withRecoil(2.25F)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M41A_PULSE_RIFLE_SHOOT)

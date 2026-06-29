@@ -1,6 +1,7 @@
 package com.human.common.gameplay.item.gun.attack.hitscan;
 
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
+import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.registry.key.HumanDamageTypeKeys;
 import net.minecraft.core.registries.Registries;
@@ -17,6 +18,10 @@ public class EntityGunHitResultHandler {
     public static void handle(GunAttackConfig gunAttackConfig, Entity hitEntity, int pierceIndex) {
         var shooter = gunAttackConfig.shooter();
         var level = (ServerLevel) shooter.level();
+
+        if (MarineAllyUtil.isMarineAlly(shooter, hitEntity)) {
+            return;
+        }
 
         if (shooter instanceof Player && hitEntity instanceof Player && !level.getServer().isPvpAllowed()) {
             // Do not hurt entities if shooter was a player, target was a player and if PVP is not allowed.

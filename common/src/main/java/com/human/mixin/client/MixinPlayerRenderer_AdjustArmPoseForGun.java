@@ -17,16 +17,18 @@ public class MixinPlayerRenderer_AdjustArmPoseForGun {
     @Inject(method = "getArmPose", at = @At(value = "TAIL"), cancellable = true)
     private static void tryItemPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> ci) {
         var itemstack = player.getItemInHand(hand);
+
+        if (!(itemstack.getItem() instanceof GunItem gunItem) || !player.isUsingItem() || player.getUsedItemHand() != hand) {
+            return;
+        }
+
         if (
-            itemstack.getItem() instanceof GunItem gunItem &&
-                (gunItem.getGunConfig() == GunData.OLD_PAINLESS ||
-                    gunItem.getGunConfig() == GunData.FLAMETHROWER_SEVASTOPOL ||
-                    gunItem.getGunConfig() == GunData.M56_SMARTGUN)
+            gunItem.getGunConfig() == GunData.OLD_PAINLESS
+                || gunItem.getGunConfig() == GunData.FLAMETHROWER_SEVASTOPOL
+                || gunItem.getGunConfig() == GunData.M56_SMARTGUN
         ) {
             ci.setReturnValue(HumanoidModel.ArmPose.BOW_AND_ARROW);
-        } else if (
-            itemstack.getItem() instanceof GunItem gunItem && gunItem.getGunConfig() != GunData.OLD_PAINLESS && player.isUsingItem()
-        ) {
+        } else {
             ci.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
         }
     }

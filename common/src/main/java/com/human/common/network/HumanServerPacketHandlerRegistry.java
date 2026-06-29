@@ -4,6 +4,7 @@ import com.blib.api.common.network.v1.NetworkHandler;
 import com.blib.api.common.registry.v1.impl.BLibNetworkRegistry;
 import com.human.Human;
 import com.human.client.network.HumanClientListener;
+import com.human.common.network.packet.C2SGunFirePayload;
 import com.human.common.network.packet.C2SGunHitResultsPayload;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
@@ -20,6 +21,13 @@ public class HumanServerPacketHandlerRegistry {
     }
 
     private static void registerServerBoundPacketHandlers() {
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                C2SGunFirePayload.TYPE,
+                C2SGunFirePayload.CODEC,
+                HumanServerListener::handleGunFirePayload
+            )
+        );
         REGISTRY.registerPacketHandler(
             new NetworkHandler.FromClient<>(
                 C2SGunHitResultsPayload.TYPE,

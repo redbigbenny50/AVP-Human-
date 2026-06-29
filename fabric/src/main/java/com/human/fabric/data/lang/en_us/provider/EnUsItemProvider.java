@@ -164,6 +164,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.TITANIUM_SWORD, "Titanium Sword");
 
         // Spawn Egg Items
+        addItem(builder, HumanSpawnEggItems.MARINE_DOG_SPAWN_EGG, "Marine Dog Spawn Egg");
         addItem(builder, HumanSpawnEggItems.MARINE_SPAWN_EGG, "Marine Spawn Egg");
     };
 

@@ -54,6 +54,16 @@ public class PatrolSpawner {
         return true;
     }
 
+    public void forceSpawnFor(Player player) {
+        var spawnPosition = PositionSelector.NEAR_PLAYER.select(player);
+
+        if (spawnPosition == null) {
+            spawnPosition = player.blockPosition();
+        }
+
+        spawner.spawn(player.level(), player, spawnPosition.mutable());
+    }
+
     public static class Builder {
 
         private final List<Condition> conditions;

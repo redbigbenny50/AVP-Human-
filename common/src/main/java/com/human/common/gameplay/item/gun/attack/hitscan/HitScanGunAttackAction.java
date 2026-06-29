@@ -3,9 +3,11 @@ package com.human.common.gameplay.item.gun.attack.hitscan;
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.Human;
+import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
 import com.human.common.gameplay.item.gun.attack.GunAttackAction;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.attack.GunHitResult;
+import com.human.common.gameplay.item.gun.debug.BulletTrajectoryDebug;
 import com.human.common.gameplay.item.gun.pipeline.GunShootResult;
 import com.human.common.network.packet.C2SGunHitResultsPayload;
 import net.minecraft.core.BlockPos;
@@ -59,6 +61,7 @@ public class HitScanGunAttackAction implements GunAttackAction {
                 next,
                 shooter.getBoundingBox().expandTowards(direction.scale(maxDistance)).inflate(1.0),
                 entity -> !hitEntityUUIDs.contains(entity.getUUID()) &&
+                    !MarineAllyUtil.isMarineAlly(shooter, entity) &&
                     (entity.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(entity))
             );
 
@@ -84,6 +87,18 @@ public class HitScanGunAttackAction implements GunAttackAction {
             }
 
             current = next;
+        }
+
+        if (!level.isClientSide) {
+            BulletTrajectoryDebug.renderShot(
+                gunAttackConfig,
+                origin,
+                direction,
+                distanceTraveled,
+                totalPierces,
+                piercingBudget,
+                hitResults
+            );
         }
 
         var gunHitResultsPayload = new C2SGunHitResultsPayload(hitResults);

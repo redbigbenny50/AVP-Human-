@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 public class SpawnEggsCreativeModeTabInitializer {
 
     public static final Consumer<CreativeModeTab.Output> OUTPUT_CONSUMER = output -> {
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.MARINE_DOG_SPAWN_EGG);
         CreativeModeTabUtil.accept(output, HumanSpawnEggItems.MARINE_SPAWN_EGG);
     };
 }

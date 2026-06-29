@@ -5,6 +5,7 @@ import com.blib.api.common.registry.v1.BLibHolder;
 import com.blib.api.common.registry.v1.BLibRegistry;
 import com.blib.api.common.registry.v1.impl.BLibEntityAttributeRegistry;
 import com.human.Human;
+import com.human.common.gameplay.entity.living.dog.MarineDog;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.machine.SentryTurret;
 import com.human.common.gameplay.entity.nuke.MushroomCloudEntity;
@@ -19,6 +20,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.phys.Vec3;
 
 public class HumanEntityTypes {
 
@@ -38,6 +41,15 @@ public class HumanEntityTypes {
         "grenade_thrown",
         EntityType.Builder.<ThrownGrenade>of(ThrownGrenade::new, MobCategory.MISC)
             .sized(0.25F, 0.25F)
+    );
+
+    public static final BLibHolder<EntityType<MarineDog>> MARINE_DOG = create(
+        "marine_dog",
+        EntityType.Builder.<MarineDog>of(MarineDog::new, MobCategory.CREATURE)
+            .sized(0.6F, 0.85F)
+            .eyeHeight(0.68F)
+            .passengerAttachments(new Vec3(0.0, 0.81875, -0.0625))
+            .clientTrackingRange(10)
     );
 
     public static final BLibHolder<EntityType<Marine>> MARINE = create(
@@ -95,6 +107,7 @@ public class HumanEntityTypes {
 
     public static void initialize() {
         TYPE_REGISTRY.registerAll();
+        ATTRIBUTE_REGISTRY.register(MARINE_DOG, Wolf::createAttributes);
         ATTRIBUTE_REGISTRY.register(MARINE, Marine::createMarineAttributes);
         ATTRIBUTE_REGISTRY.register(SENTRY_TURRET, SentryTurret::createSentryTurretAttributes);
     }

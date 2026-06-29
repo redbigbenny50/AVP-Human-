@@ -4,6 +4,7 @@ import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.blib.api.common.goap.v1.GOAPSensors;
 import com.human.common.gameplay.entity.ai.goap.HumanGOAPSensors;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
+import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.FRIActions;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.FRIGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.acquire_fire_resistance.FRISensors;
@@ -400,6 +401,7 @@ public class MarineGOAP {
         if (
             BLibEntityPredicates.isInvulnerable(livingEntity)
                 || Objects.equals(marine.getUUID(), livingEntity.getUUID())
+                || MarineAllyUtil.isMarineAlly(marine, livingEntity)
         ) {
             return false;
         }
@@ -448,9 +450,7 @@ public class MarineGOAP {
             // OR is the mob targeting my leader?
             || leaderUUIDOption.isSomeAnd(mobTarget.getUUID()::equals)
             // OR is the mob targeting an ally?
-            // (an ally is defined as another marine with the same leader status (no leader or same leader).
-            || (mobTarget instanceof Marine otherMarine
-                && Objects.equals(otherMarine.getLeaderUUID(), leaderUUIDOption));
+            || MarineAllyUtil.isMarineAlly(marine, mobTarget);
     }
 
     private static boolean shouldRetaliateAgainstLastAttacker(Marine marine, LivingEntity livingEntity) {
@@ -460,10 +460,7 @@ public class MarineGOAP {
             // AND the last attacker is not our leader...
             && !Objects.equals(lastAttacker.getUUID(), marine.getLeaderUUID().unwrapOr(null))
             // AND the current entity we are checking is our last attacker...
-            && Objects.equals(lastAttacker.getUUID(), livingEntity.getUUID())
-            // AND the current entity is not a fellow marine...
-            // TODO: We'll want to do faction checking here in the future.
-            && !(livingEntity instanceof Marine);
+            && Objects.equals(lastAttacker.getUUID(), livingEntity.getUUID());
     }
 
     public static void initialize() {}
