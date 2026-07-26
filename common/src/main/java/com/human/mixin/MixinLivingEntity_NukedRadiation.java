@@ -26,6 +26,10 @@ public abstract class MixinLivingEntity_NukedRadiation extends Entity {
     public void tick(CallbackInfo callbackInfo) {
         var self = LivingEntity.class.cast(this);
 
+        if (self.level().isClientSide || self.tickCount % 20 != 0) {
+            return;
+        }
+
         if (!HumanPredicates.canBeIrradiated(self)) {
             return;
         }

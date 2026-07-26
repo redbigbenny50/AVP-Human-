@@ -3,6 +3,10 @@ plugins {
     id 'blib-multiloader-fabric'
 }
 
+configurations.configureEach {
+    exclude group: 'dev.emi'
+}
+
 dependencies {
     implementation "com.just:just-codec:${project.just_codec_version}"
     include "com.just:just-codec:${project.just_codec_version}"
@@ -18,6 +22,7 @@ dependencies {
     // Compatibility
     blibModCompileOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
         exclude group: 'com.blib'
+        exclude group: 'dev.emi'
     }
     blibModCompileOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
         exclude group: 'com.blib'

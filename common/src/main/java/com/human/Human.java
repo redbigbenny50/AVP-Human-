@@ -6,6 +6,7 @@ import com.blib.api.common.mod.v1.BLibMod;
 import com.human.common.data.HumanReloadListeners;
 import com.human.common.data.fixer.migration.HumanDataMigrations;
 import com.human.common.gameplay.entity.living.human.marine.ai.MarineGOAP;
+import com.human.common.gameplay.explosion.nuke.NuclearExplosionEngine;
 import com.human.common.gameplay.gene.Genes;
 import com.human.common.gameplay.level.patrol.impl.ApePatrolSpawnHandle;
 import com.human.common.gameplay.level.patrol.impl.MarinePatrolSpawnHandle;
@@ -157,6 +158,7 @@ public class Human {
         HumanDataMigrations.initialize();
 
         MOD.events().postLevelTick().register(Human::tickMarinePatrolSpawner);
+        MOD.events().postLevelTick().register(NuclearExplosionEngine::tick);
         MOD.events().postLevelTick().register(Human::tickNukeAshPlacement);
         MOD.events().postLevelTick().register(Human::tickPowerSystem);
         MOD.events().onEntityTick().register(Human::applyFullArmorSetBonuses);

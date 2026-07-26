@@ -1,5 +1,6 @@
 package com.human.mixin.client;
 
+import com.human.client.input.AdsSightCalibration;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.old_painless.OldPainlessItem;
 import com.human.common.registry.init.item.HumanGunItems;
@@ -100,5 +101,18 @@ public abstract class MixinItemInHandRenderer_AdjustHandRenderingForGun {
         var side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
 
         poseStack.translate(-ADS_HORIZONTAL_OFFSET * side, ADS_VERTICAL_OFFSET, ADS_DEPTH_OFFSET);
+        applyGunSpecificAdsOffset(poseStack, stack, side);
+    }
+
+    private static void applyGunSpecificAdsOffset(PoseStack poseStack, ItemStack stack, float side) {
+        var item = stack.getItem();
+
+        if (item == HumanGunItems.F903WE_RIFLE.get()) {
+            poseStack.translate(AdsSightCalibration.horizontalOffset(item) * side, -0.008F, 0.0F);
+        } else if (item == HumanGunItems.ZX_76_SHOTGUN.get()) {
+            poseStack.translate(0.020F * side, -0.012F, 0.0F);
+        } else if (item == HumanGunItems.M37_12_SHOTGUN.get()) {
+            poseStack.translate(AdsSightCalibration.horizontalOffset(item) * side, -0.010F, 0.0F);
+        }
     }
 }

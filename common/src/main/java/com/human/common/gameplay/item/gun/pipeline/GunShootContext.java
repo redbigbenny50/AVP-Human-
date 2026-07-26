@@ -11,8 +11,12 @@ import com.human.common.gameplay.item.gun.pipeline.step.GunShootStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckCooldownStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckReloadingStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckShootDelayStep;
+import com.human.common.gameplay.item.old_painless.OldPainlessHeat;
 import com.human.common.registry.init.HumanDataComponents;
+import com.human.common.registry.init.item.HumanGunItems;
 import com.just.core.functional.option.Option;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -63,6 +67,10 @@ public record GunShootContext(
     }
 
     public GunShootResult shoot() {
+        if (gunItem == HumanGunItems.OLD_PAINLESS.get() && OldPainlessHeat.isOverheated(itemStack)) {
+            return GunShootResult.COOLDOWN;
+        }
+
         for (var step : STEPS) {
             var result = step.apply(this);
 
@@ -91,6 +99,10 @@ public record GunShootContext(
 
         consumeAmmunition();
 
+        applyOldPainlessMovementPenalty();
+
+        applyOldPainlessHeat();
+
         updateItemStackDamage();
 
         playSecondaryShootSoundEffect();
@@ -116,6 +128,21 @@ public record GunShootContext(
     private void updateItemStackDamage() {
         if (!isShooterImmortal) {
             itemStack.hurtAndBreak(1, shooter, EquipmentSlot.MAINHAND);
+        }
+    }
+
+    private void applyOldPainlessMovementPenalty() {
+        if (gunItem != HumanGunItems.OLD_PAINLESS.get()) {
+            return;
+        }
+
+        // Refreshed by each live round, then clears almost immediately after the trigger is released.
+        shooter.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 4, 1, true, false, false));
+    }
+
+    private void applyOldPainlessHeat() {
+        if (gunItem == HumanGunItems.OLD_PAINLESS.get()) {
+            OldPainlessHeat.addShotHeat(shooter, itemStack);
         }
     }
 

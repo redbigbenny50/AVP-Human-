@@ -1,5 +1,6 @@
 package com.human.mixin.client;
 
+import com.human.client.effect.NukeClientEffects;
 import com.human.client.render.hud.SniperScopeOverlay;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
@@ -15,5 +16,6 @@ public class MixinGui_SniperScopeOverlay {
     @Inject(method = "render", at = @At("RETURN"))
     private void avp_human$renderSniperScopeOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
         SniperScopeOverlay.render(guiGraphics, deltaTracker);
+        NukeClientEffects.renderFlash(guiGraphics, deltaTracker);
     }
 }

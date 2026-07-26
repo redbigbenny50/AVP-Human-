@@ -49,6 +49,24 @@ public class HumanBlockItems {
 
     public static final BLibHolder<BlockItem> CABLE = create("cable", HumanBlocks.CABLE);
 
+    public static final BLibHolder<BlockItem> CRYOTUBE = create("cryotube", HumanBlocks.CRYOTUBE);
+
+    public static final BLibHolder<BlockItem> CRYO_TOP_CORE = create("cryo_top_core", HumanBlocks.CRYO_TOP_CORE);
+
+    public static final BLibHolder<BlockItem> CRYO_BOTTOM_CORE = create("cryo_bottom_core", HumanBlocks.CRYO_BOTTOM_CORE);
+
+    public static final BLibHolder<BlockItem> CRYO_TOP_CENTER = create("cryo_top_center", HumanBlocks.CRYO_TOP_CENTER);
+
+    public static final BLibHolder<BlockItem> CRYO_MIDDLE_CENTER = create("cryo_middle_center", HumanBlocks.CRYO_MIDDLE_CENTER);
+
+    public static final BLibHolder<BlockItem> CRYO_BOTTOM_CENTER = create("cryo_bottom_center", HumanBlocks.CRYO_BOTTOM_CENTER);
+
+    public static final BLibHolder<BlockItem> CRYO_TOP_CORNER = create("cryo_top_corner", HumanBlocks.CRYO_TOP_CORNER);
+
+    public static final BLibHolder<BlockItem> CRYO_MIDDLE_CORNER = create("cryo_middle_corner", HumanBlocks.CRYO_MIDDLE_CORNER);
+
+    public static final BLibHolder<BlockItem> CRYO_BOTTOM_CORNER = create("cryo_bottom_corner", HumanBlocks.CRYO_BOTTOM_CORNER);
+
     public static final BLibHolder<BlockItem> BRASS_BLOCK = create("brass_block", CoreBlocks.BRASS_BLOCK);
 
     public static final BLibHolder<BlockItem> DEEPSLATE_TITANIUM_ORE = create(
