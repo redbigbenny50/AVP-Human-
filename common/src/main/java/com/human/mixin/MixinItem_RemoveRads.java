@@ -1,5 +1,6 @@
 package com.human.mixin;
 
+import com.human.common.model.RadiationExposure;
 import com.human.common.registry.init.HumanMobEffects;
 import com.human.common.registry.tag.HumanItemTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +22,15 @@ public class MixinItem_RemoveRads {
         LivingEntity livingEntity,
         CallbackInfoReturnable<ItemStack> cir
     ) {
-        if (stack.is(HumanItemTags.RADIATION_CURE_ITEMS) && livingEntity.hasEffect(HumanMobEffects.getRadiationHolder())) {
+        if (!stack.is(HumanItemTags.RADIATION_CURE_ITEMS)) {
+            return;
+        }
+
+        // Clear the accumulated EXPOSURE, not just the visible effect: the effect is a readout of the counter, so
+        // removing it alone would simply be re-applied on the next tick. A cure decontaminates completely.
+        ((RadiationExposure) livingEntity).avp_human$setRadiationExposure(0);
+
+        if (livingEntity.hasEffect(HumanMobEffects.getRadiationHolder())) {
             livingEntity.removeEffect(HumanMobEffects.getRadiationHolder());
         }
     }

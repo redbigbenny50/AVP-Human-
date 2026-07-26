@@ -1,10 +1,8 @@
 package com.human.mixin;
 
-import com.human.common.gameplay.effect.RadiationStatusEffect;
-import com.human.common.registry.init.HumanMobEffects;
+import com.human.common.model.RadiationExposure;
 import com.human.common.registry.tag.HumanItemTags;
 import com.human.util.HumanPredicates;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -33,12 +31,9 @@ public class MixinItem_GiveRads {
             return;
         }
 
-        // Apply the radiation effect.
-        var mobEffectInstance = new MobEffectInstance(
-            HumanMobEffects.getRadiationHolder(),
-            RadiationStatusEffect.SHORT_EFFECT_DURATION_IN_TICKS,
-            0
-        );
-        livingEntity.addEffect(mobEffectInstance);
+        // A hot item in the pocket is a BASELINE source: it marks the carrier as exposed for as long as it is
+        // carried, and the exposure manager turns sustained contact into a rising sickness level. Drop the item
+        // and the marking stops, so the level starts decaying back down.
+        ((RadiationExposure) livingEntity).avp_human$markRadiationSource(1);
     }
 }

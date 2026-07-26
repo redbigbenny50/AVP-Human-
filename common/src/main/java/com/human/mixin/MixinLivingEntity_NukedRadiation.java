@@ -1,10 +1,8 @@
 package com.human.mixin;
 
-import com.human.common.gameplay.effect.RadiationStatusEffect;
-import com.human.common.registry.init.HumanMobEffects;
+import com.human.common.model.RadiationExposure;
 import com.human.common.registry.key.HumanBiomeKeys;
 import com.human.util.HumanPredicates;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,8 +33,9 @@ public abstract class MixinLivingEntity_NukedRadiation extends Entity {
             return;
         }
 
-        // Apply radiation effect.
-        self.addEffect(new MobEffectInstance(HumanMobEffects.getRadiationHolder(), RadiationStatusEffect.LONG_EFFECT_DURATION_IN_TICKS, 0));
+        // Standing in the fallout is a STRONGER source than carrying something hot: it drives the sickness level
+        // up twice as fast, so an irradiated biome is somewhere you visit deliberately and briefly.
+        ((RadiationExposure) self).avp_human$markRadiationSource(2);
     }
 
     @Unique

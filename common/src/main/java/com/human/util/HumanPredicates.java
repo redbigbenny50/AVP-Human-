@@ -1,7 +1,6 @@
 package com.human.util;
 
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
-import com.human.common.registry.init.HumanMobEffects;
 import com.human.common.registry.tag.HumanEntityTypeTags;
 import com.human.common.registry.tag.HumanItemTags;
 import net.minecraft.world.entity.Entity;
@@ -17,8 +16,9 @@ public class HumanPredicates {
                 || livingEntity.getType().is(HumanEntityTypeTags.RADIATION_RESISTANT)
                 // Or if the living entity is immortal...
                 || BLibEntityPredicates.isInvulnerable(livingEntity)
-                // Or if the living entity already has the radiation effect...
-                || livingEntity.hasEffect(HumanMobEffects.getRadiationHolder())
+                // NOTE: deliberately NOT gated on "already has the radiation effect". Radiation is now an
+                // accumulating exposure level rather than a one-shot dose, so a source must keep contributing
+                // while it is present - the old gate is what produced the endless re-application sawtooth.
                 // Or if the entity is no longer alive...
                 || !livingEntity.isAlive()
         ) {

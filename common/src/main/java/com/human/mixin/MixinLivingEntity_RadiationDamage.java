@@ -1,10 +1,14 @@
 package com.human.mixin;
 
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
+import com.human.common.gameplay.effect.RadiationLevel;
 import com.human.common.gameplay.effect.RadiationStatusEffect;
+import com.human.common.model.RadiationExposure;
 import com.human.common.registry.init.HumanMobEffects;
 import com.human.common.registry.tag.HumanEntityTypeTags;
+import com.human.util.HumanPredicates;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,39 +20,73 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Handles radiation damage and side effects based on effect duration progress.
- * <p>
- * Phases based on progress through the effect:
- * <ul>
- * <li><b>Incubation (0-20%):</b> No damage, no side effects</li>
- * <li><b>Ramp-up (20-80%):</b> Damage frequency increases</li>
- * <li><b>Taper-off (80-100%):</b> Damage frequency decreases</li>
- * </ul>
+ * The radiation exposure manager: turns TIME SPENT IN RADIATION into a rising sickness level.
+ *
+ * <p>Radiation is not a fixed-duration debuff. Sources ({@code MixinItem_GiveRads} for hot items in the inventory,
+ * {@code MixinLivingEntity_NukedRadiation} for irradiated ground, blasts and radioactive attacks) mark the entity as
+ * exposed each tick they are present. This manager accumulates that exposure, derives a {@link RadiationLevel} from
+ * it, mirrors the level onto the visible radiation effect, and applies the level's damage and afflictions.</p>
+ *
+ * <p>Exposure climbs one level per 60 seconds of contact and falls one level per 90 seconds of being clean, so
+ * escaping a source starts the clock running backwards - through every level, in order - rather than curing you
+ * outright. Contamination is faster than recovery on purpose.</p>
+ *
+ * <p>This replaces an earlier design in which each source re-applied a fixed-duration effect. Because a source
+ * could not refresh an effect that was already running, that design produced an endless sawtooth: a single hot item
+ * in a pocket re-applied a full lethal dose the instant the previous one expired, forever.</p>
  */
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity_RadiationDamage extends Entity {
+public abstract class MixinLivingEntity_RadiationDamage extends Entity implements RadiationExposure {
 
     @Unique
-    private static final String NBT_INITIAL_RADIATION_DURATION = "initialRadiationDuration";
+    private static final String NBT_RADIATION_EXPOSURE = "radiationExposure";
 
+    /** Accumulated exposure, persisted. See {@link RadiationLevel} for the units. */
     @Unique
-    private int avp_human$initialRadiationDuration = 0;
+    private int avp_human$radiationExposure = 0;
+
+    /**
+     * The strongest source rate marked this tick, consumed and cleared every tick. Deliberately NOT persisted -
+     * sources re-mark themselves while they are present, so a reload simply re-detects them.
+     */
+    @Unique
+    private int avp_human$radiationSourceRate = 0;
 
     protected MixinLivingEntity_RadiationDamage(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 
+    @Override
+    public int avp_human$getRadiationExposure() {
+        return avp_human$radiationExposure;
+    }
+
+    @Override
+    public void avp_human$setRadiationExposure(int exposure) {
+        avp_human$radiationExposure = Math.max(0, Math.min(RadiationLevel.MAX_EXPOSURE, exposure));
+    }
+
+    @Override
+    public void avp_human$addRadiationExposure(int amount) {
+        avp_human$setRadiationExposure(avp_human$radiationExposure + amount);
+    }
+
+    @Override
+    public void avp_human$markRadiationSource(int rate) {
+        avp_human$radiationSourceRate = Math.max(avp_human$radiationSourceRate, rate);
+    }
+
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
     private void avp_human$saveRadiationData(CompoundTag tag, CallbackInfo ci) {
-        if (avp_human$initialRadiationDuration > 0) {
-            tag.putInt(NBT_INITIAL_RADIATION_DURATION, avp_human$initialRadiationDuration);
+        if (avp_human$radiationExposure > 0) {
+            tag.putInt(NBT_RADIATION_EXPOSURE, avp_human$radiationExposure);
         }
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
     private void avp_human$loadRadiationData(CompoundTag tag, CallbackInfo ci) {
-        if (tag.contains(NBT_INITIAL_RADIATION_DURATION)) {
-            avp_human$initialRadiationDuration = tag.getInt(NBT_INITIAL_RADIATION_DURATION);
+        if (tag.contains(NBT_RADIATION_EXPOSURE)) {
+            avp_human$radiationExposure = tag.getInt(NBT_RADIATION_EXPOSURE);
         }
     }
 
@@ -60,43 +98,73 @@ public abstract class MixinLivingEntity_RadiationDamage extends Entity {
             return;
         }
 
-        var effectInstance = self.getEffect(HumanMobEffects.getRadiationHolder());
+        // Consume this tick's source marks whatever happens next, so a stale flag can never carry over.
+        var sourceRate = avp_human$radiationSourceRate;
+        avp_human$radiationSourceRate = 0;
 
-        if (effectInstance == null) {
-            avp_human$initialRadiationDuration = 0;
+        // Entities that simply do not get irradiated (xenomorphs, undead, the invulnerable) shed any contamination
+        // outright rather than decaying it - they were never really carrying it.
+        if (self.getType().is(HumanEntityTypeTags.RADIATION_RESISTANT) || BLibEntityPredicates.isInvulnerable(self)) {
+            if (avp_human$radiationExposure > 0) {
+                avp_human$radiationExposure = 0;
+                self.removeEffect(HumanMobEffects.getRadiationHolder());
+            }
             return;
         }
 
-        if (
-            BLibEntityPredicates.isInvulnerable(self)
-                || self.getType().is(HumanEntityTypeTags.RADIATION_RESISTANT)
-        ) {
-            self.removeEffect(HumanMobEffects.getRadiationHolder());
-            avp_human$initialRadiationDuration = 0;
+        // A full radiation-resistant suit stops exposure CLIMBING; it is protection, not decontamination, so
+        // anything already accumulated still has to decay off the wearer.
+        if (sourceRate > 0 && HumanPredicates.canBeIrradiated(self)) {
+            avp_human$radiationExposure = Math.min(
+                RadiationLevel.MAX_EXPOSURE,
+                avp_human$radiationExposure + RadiationLevel.GAIN_PER_TICK * sourceRate
+            );
+        } else if (avp_human$radiationExposure > 0) {
+            avp_human$radiationExposure = Math.max(0, avp_human$radiationExposure - RadiationLevel.DECAY_PER_TICK);
+        }
+
+        // ABSORB foreign doses. Anything that hands out the radiation effect directly - a grenade's gas cloud, a
+        // command, another mod - is treated as contamination to at least that level, so every path feeds the one
+        // counter instead of fighting it. Self-applied readouts absorb to no more than they already are.
+        var existing = self.getEffect(HumanMobEffects.getRadiationHolder());
+
+        if (existing != null) {
+            avp_human$radiationExposure = Math.max(
+                avp_human$radiationExposure,
+                Math.min(RadiationLevel.MAX_EXPOSURE, existing.getAmplifier() * RadiationLevel.UNITS_PER_LEVEL + 1)
+            );
+        }
+
+        var radiationLevel = RadiationLevel.byExposure(avp_human$radiationExposure);
+
+        if (radiationLevel == RadiationLevel.NONE) {
+            if (self.hasEffect(HumanMobEffects.getRadiationHolder())) {
+                self.removeEffect(HumanMobEffects.getRadiationHolder());
+            }
             return;
         }
 
-        var remainingDuration = effectInstance.getDuration();
+        avp_human$syncRadiationEffect(self, radiationLevel);
+        radiationLevel.applySideEffects(self);
 
-        if (avp_human$initialRadiationDuration == 0 || remainingDuration > avp_human$initialRadiationDuration) {
-            avp_human$initialRadiationDuration = remainingDuration;
+        if (radiationLevel.isHarmful() && self.tickCount % radiationLevel.damageIntervalTicks() == 0) {
+            self.hurt(RadiationStatusEffect.createRadiationDamageSource(self), radiationLevel.damage());
         }
+    }
 
-        var progress = 1.0f - ((float) remainingDuration / avp_human$initialRadiationDuration);
-        progress = Math.clamp(progress, 0.0f, 1.0f);
+    /**
+     * Keeps the visible effect in step with the exposure level. The effect is a READOUT of the counter, not the
+     * thing driving it, so it is re-applied whenever the level changes or the display would otherwise lapse.
+     */
+    @Unique
+    private void avp_human$syncRadiationEffect(LivingEntity self, RadiationLevel radiationLevel) {
+        var holder = HumanMobEffects.getRadiationHolder();
+        var current = self.getEffect(holder);
 
-        if (progress < RadiationStatusEffect.INCUBATION_RATIO) {
+        if (current != null && current.getAmplifier() == radiationLevel.amplifier() && current.getDuration() > 40) {
             return;
         }
 
-        var amplifier = effectInstance.getAmplifier();
-        RadiationStatusEffect.applyRadiationSideEffects(self, amplifier);
-
-        var damageInterval = RadiationStatusEffect.calculateDamageInterval(progress);
-
-        if (self.tickCount % damageInterval == 0) {
-            var damage = RadiationStatusEffect.BASE_DAMAGE + (amplifier * RadiationStatusEffect.DAMAGE_PER_AMPLIFIER);
-            self.hurt(RadiationStatusEffect.createRadiationDamageSource(self), damage);
-        }
+        self.addEffect(new MobEffectInstance(holder, 100, radiationLevel.amplifier(), true, false, true));
     }
 }
