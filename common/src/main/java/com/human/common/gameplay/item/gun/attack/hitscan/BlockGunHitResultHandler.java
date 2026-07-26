@@ -6,6 +6,7 @@ import com.blib.api.common.tag.v1.BLibBlockTags;
 import com.human.Human;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.attack.GunHitResult;
+import com.human.common.network.packet.S2CBulletHitBlockPayload;
 import com.human.common.property.HumanProperties;
 import com.human.common.property.HumanPropertyAccess;
 import com.human.common.registry.init.HumanSoundEvents;
@@ -32,6 +33,9 @@ public class BlockGunHitResultHandler {
         level.playSound(null, blockPos, ricochetSoundEvent, SoundSource.BLOCKS);
 
         damageBlock(gunAttackConfig, level, blockPos, blockState, pierceIndex);
+
+        var payload = new S2CBulletHitBlockPayload(blockPos, direction);
+        Human.MOD.networking().sendToAllClients(level.getServer(), payload);
     }
 
     private static SoundEvent getRicochetSoundForSoundType(SoundType soundType) {
@@ -68,9 +72,7 @@ public class BlockGunHitResultHandler {
         }
 
         var powerLevel = EnchantmentUtil.getLevel(level, gunAttackConfig.gunItemStack(), Enchantments.POWER);
-        var baseDamage = gunAttackConfig.fireModeConfig().damage()
-            * gunAttackConfig.damageMultiplier()
-            * (1 + (0.25F * powerLevel));
+        var baseDamage = gunAttackConfig.fireModeConfig().damage() * (1 + (0.25F * powerLevel));
         var multiplier = 1.0F - (0.2F * pierceIndex);
         var damage = baseDamage * multiplier;
 

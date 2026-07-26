@@ -24,13 +24,7 @@ public record FireModeConfig(
     int shootDelayInTicks,
     @Nullable Supplier<SoundEvent> shootFinishSoundEvent,
     @Nullable Supplier<SoundEvent> shootStartSoundEvent,
-    GunAttackAction gunAttackAction,
-    RecoilProfile recoilProfile,
-    int pelletCount,
-    float pelletSpreadDegrees,
-    float damageFalloffStartFraction,
-    float minimumDamageMultiplier,
-    int tracerFrequency
+    GunAttackAction gunAttackAction
 ) {
 
     public static Builder builder() {
@@ -71,18 +65,6 @@ public record FireModeConfig(
 
         private GunAttackAction gunAttackAction;
 
-        private RecoilProfile recoilProfile;
-
-        private int pelletCount;
-
-        private float pelletSpreadDegrees;
-
-        private float damageFalloffStartFraction;
-
-        private float minimumDamageMultiplier;
-
-        private int tracerFrequency;
-
         private Builder() {
             this.consumedAmmunitionPerShot = 1;
             this.cooldownInTicks = 0;
@@ -97,10 +79,6 @@ public record FireModeConfig(
             this.secondaryShootSoundFrequencyInTicks = 0;
             this.shootDelayInTicks = 0;
             this.gunAttackAction = HitScanGunAttackAction.INSTANCE;
-            this.pelletCount = 1;
-            this.damageFalloffStartFraction = 0.55F;
-            this.minimumDamageMultiplier = 0.55F;
-            this.tracerFrequency = 4;
         }
 
         public Builder withConsumedAmmunitionPerShot(int consumedAmmunitionPerShot) {
@@ -183,32 +161,6 @@ public record FireModeConfig(
             return this;
         }
 
-        public Builder withRecoilProfile(RecoilProfile recoilProfile) {
-            this.recoilProfile = recoilProfile;
-            return this;
-        }
-
-        public Builder withPelletCount(int pelletCount) {
-            this.pelletCount = pelletCount;
-            return this;
-        }
-
-        public Builder withPelletSpreadDegrees(float pelletSpreadDegrees) {
-            this.pelletSpreadDegrees = pelletSpreadDegrees;
-            return this;
-        }
-
-        public Builder withDamageFalloff(float startFraction, float minimumMultiplier) {
-            this.damageFalloffStartFraction = startFraction;
-            this.minimumDamageMultiplier = minimumMultiplier;
-            return this;
-        }
-
-        public Builder withTracerFrequency(int tracerFrequency) {
-            this.tracerFrequency = tracerFrequency;
-            return this;
-        }
-
         public FireModeConfig build() {
             return new FireModeConfig(
                 consumedAmmunitionPerShot,
@@ -226,13 +178,7 @@ public record FireModeConfig(
                 shootDelayInTicks,
                 shootFinishSoundEvent,
                 shootStartSoundEvent,
-                gunAttackAction,
-                recoilProfile == null ? RecoilProfile.fromLegacy(recoil) : recoilProfile,
-                Math.max(1, pelletCount),
-                Math.max(0.0F, pelletSpreadDegrees),
-                Math.clamp(damageFalloffStartFraction, 0.0F, 1.0F),
-                Math.clamp(minimumDamageMultiplier, 0.0F, 1.0F),
-                Math.max(1, tracerFrequency)
+                gunAttackAction
             );
         }
     }

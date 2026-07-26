@@ -3,7 +3,6 @@ package com.human.client.render.item.gun.muzzled.impl;
 import com.blib.api.client.render.v1.AzRendererPipelineContext;
 import com.human.client.animation.item.OldPainlessAnimator;
 import com.human.client.render.item.gun.muzzled.MuzzledGunItemRenderer;
-import com.human.client.render.layer.OldPainlessHeatLayer;
 import com.human.common.registry.init.HumanDataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -33,12 +32,12 @@ public class OldPainlessItemRenderer extends MuzzledGunItemRenderer {
             MUZZLE_FLASH_BONE_NAME_LIST,
             createOldPainlessPrerender(),
             config -> config
-                .addRenderLayer(new OldPainlessHeatLayer())
                 .setAnimatorProvider(OldPainlessAnimator::new)
         );
     }
 
-    private static Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>> createOldPainlessPrerender() {
+    private static Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>>
+        createOldPainlessPrerender() {
         return context -> {
             var itemStack = context.animatable();
             var gameTime = getGameTime();

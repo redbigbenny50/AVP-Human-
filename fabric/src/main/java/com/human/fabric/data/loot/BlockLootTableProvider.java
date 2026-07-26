@@ -54,15 +54,6 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(CoreBlocks.ASH_BLOCK);
         dropSelf(CoreBlocks.AUTUNITE_BLOCK);
         dropSelf(HumanBlocks.CABLE);
-        dropSelf(HumanBlocks.CRYOTUBE);
-        dropSelf(HumanBlocks.CRYO_TOP_CORE);
-        dropSelf(HumanBlocks.CRYO_BOTTOM_CORE);
-        dropSelf(HumanBlocks.CRYO_TOP_CENTER);
-        dropSelf(HumanBlocks.CRYO_MIDDLE_CENTER);
-        dropSelf(HumanBlocks.CRYO_BOTTOM_CENTER);
-        dropSelf(HumanBlocks.CRYO_TOP_CORNER);
-        dropSelf(HumanBlocks.CRYO_MIDDLE_CORNER);
-        dropSelf(HumanBlocks.CRYO_BOTTOM_CORNER);
         dropSelf(HumanBlocks.BLUEPRINT_BLOCK);
         dropSelf(CoreBlocks.BRASS_BLOCK);
         dropSelf(HumanFerroaluminumBlocks.CHISELED_FERROALUMINUM);

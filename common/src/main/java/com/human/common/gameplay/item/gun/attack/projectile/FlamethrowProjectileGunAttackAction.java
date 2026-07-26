@@ -30,7 +30,7 @@ public class FlamethrowProjectileGunAttackAction implements GunAttackAction {
         flamethrow.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, 1.5F, 1.0F);
 
         if (shooter instanceof ServerPlayer serverPlayer) {
-            Human.MOD.networking().sendToClient(serverPlayer, new S2CGunRecoilPayload(gunAttackConfig.fireModeConfig().recoil(), 0.0F));
+            Human.MOD.networking().sendToClient(serverPlayer, new S2CGunRecoilPayload(gunAttackConfig.fireModeConfig().recoil()));
         }
 
         level.addFreshEntity(flamethrow);

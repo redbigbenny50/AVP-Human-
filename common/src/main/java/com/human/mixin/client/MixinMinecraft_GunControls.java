@@ -1,7 +1,5 @@
 package com.human.mixin.client;
 
-import com.human.client.effect.NukeClientEffects;
-import com.human.client.effect.VoxelGunEffects;
 import com.human.client.input.GunInputHandler;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,12 +14,6 @@ public class MixinMinecraft_GunControls {
     @Inject(method = "handleKeybinds", at = @At("HEAD"))
     private void avp_human$fireHeldGun(CallbackInfo callbackInfo) {
         GunInputHandler.tick((Minecraft) (Object) this);
-    }
-
-    @Inject(method = "tick", at = @At("RETURN"))
-    private void avp_human$tickNukeClientEffects(CallbackInfo callbackInfo) {
-        NukeClientEffects.clientTick((Minecraft) (Object) this);
-        VoxelGunEffects.clientTick((Minecraft) (Object) this);
     }
 
     @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)

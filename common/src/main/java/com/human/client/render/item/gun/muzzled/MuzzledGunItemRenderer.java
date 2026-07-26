@@ -5,8 +5,8 @@ import com.blib.api.client.render.v1.item.AzItemRenderer;
 import com.blib.api.client.render.v1.item.AzItemRendererConfig;
 import com.blib.api.client.render.v1.item.pipeline.AzItemRendererPipelineContext;
 import com.human.HumanResources;
-import com.human.client.effect.VoxelGunEffects;
 import com.human.client.input.GunZoomHandler;
+import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanGunItems;
 import net.minecraft.client.Minecraft;
@@ -14,7 +14,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -60,10 +62,13 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
         List<String> muzzleFlashBoneNames,
         Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>> extraPrerender
     ) {
+        var muzzleFlashStates = new WeakHashMap<ItemStack, MuzzleFlashState>();
+
         return context -> {
             var itemStack = context.animatable();
             var hideScopedGun = shouldHideScopedGun(context);
-            var shouldShowMuzzleFlash = shouldShowMuzzleFlash(itemStack);
+            var gameTime = getGameTime();
+            var shouldShowMuzzleFlash = shouldShowMuzzleFlash(itemStack, gameTime, muzzleFlashStates);
 
             if (hideScopedGun) {
                 context.bakedModel().getTopLevelBones().forEach(bone -> bone.setHidden(true));
@@ -102,8 +107,52 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
             || transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
     }
 
-    private static boolean shouldShowMuzzleFlash(ItemStack itemStack) {
+    private static boolean shouldShowMuzzleFlash(
+        ItemStack itemStack,
+        long gameTime,
+        Map<ItemStack, MuzzleFlashState> muzzleFlashStates
+    ) {
+        if (gameTime == Long.MIN_VALUE) {
+            return false;
+        }
+
+        var animationId = itemStack.getOrDefault(HumanDataComponents.GUN_ANIMATION_ID.get(), 0);
+        var animationType = itemStack.getOrDefault(HumanDataComponents.GUN_ANIMATION_TYPE.get(), GunAnimationEvents.NONE);
         var muzzleFlashDuration = itemStack.getOrDefault(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 0);
-        return muzzleFlashDuration > 0 || VoxelGunEffects.hasLocalMuzzleFlash(itemStack);
+        var state = muzzleFlashStates.computeIfAbsent(
+            itemStack,
+            ignored -> new MuzzleFlashState(
+                animationId,
+                animationType == GunAnimationEvents.SHOOT && muzzleFlashDuration > 0 ? gameTime : Long.MIN_VALUE
+            )
+        );
+
+        if (animationId != state.lastAnimationId) {
+            state.lastAnimationId = animationId;
+
+            if (animationType == GunAnimationEvents.SHOOT && muzzleFlashDuration > 0) {
+                state.visibleGameTick = gameTime;
+            }
+        }
+
+        return muzzleFlashDuration > 0 && gameTime <= state.visibleGameTick;
+    }
+
+    private static long getGameTime() {
+        var level = Minecraft.getInstance().level;
+
+        return level == null ? Long.MIN_VALUE : level.getGameTime();
+    }
+
+    private static final class MuzzleFlashState {
+
+        private int lastAnimationId;
+
+        private long visibleGameTick;
+
+        private MuzzleFlashState(int lastAnimationId, long visibleGameTick) {
+            this.lastAnimationId = lastAnimationId;
+            this.visibleGameTick = visibleGameTick;
+        }
     }
 }

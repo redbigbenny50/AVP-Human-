@@ -5,8 +5,6 @@ import com.blib.api.common.registry.v1.BLibHolder;
 import com.blib.api.common.registry.v1.BLibRegistry;
 import com.human.Human;
 import com.human.common.gameplay.block.AmmoChestBlock;
-import com.human.common.gameplay.block.CryoPieceBlock;
-import com.human.common.gameplay.block.CryotubeBlock;
 import com.human.common.gameplay.block.IndustrialFurnaceBlock;
 import com.human.common.gameplay.block.LeadChestBlock;
 import com.human.common.gameplay.block.NukeBlock;
@@ -59,51 +57,6 @@ public class HumanBlocks {
         "cable",
         // TODO: Use custom properties here.
         () -> new CableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE).noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYOTUBE = create(
-        "cryotube",
-        () -> new CryotubeBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_TOP_CORE = create(
-        "cryo_top_core",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_BOTTOM_CORE = create(
-        "cryo_bottom_core",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_TOP_CENTER = create(
-        "cryo_top_center",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_MIDDLE_CENTER = create(
-        "cryo_middle_center",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_BOTTOM_CENTER = create(
-        "cryo_bottom_center",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_TOP_CORNER = create(
-        "cryo_top_corner",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_MIDDLE_CORNER = create(
-        "cryo_middle_corner",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
-    );
-
-    public static final BLibHolder<Block> CRYO_BOTTOM_CORNER = create(
-        "cryo_bottom_corner",
-        () -> new CryoPieceBlock(HumanBlockProperties.STEEL.build().noOcclusion())
     );
 
     public static final BLibHolder<Block> DESK_TERMINAL_BLOCK = create(

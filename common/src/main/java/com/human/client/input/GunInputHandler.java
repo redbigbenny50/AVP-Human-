@@ -25,8 +25,8 @@ public class GunInputHandler {
         firingTicks++;
 
         if (itemStack.getItem() instanceof GunItem gunItem) {
-            // The server owns shots, hit detection, ammunition and confirmed recoil.
-            Human.MOD.networking().sendToServer(new C2SGunFirePayload(tickProgress, player.getYRot(), player.getXRot()));
+            gunItem.fire(player.level(), player, itemStack, tickProgress);
+            Human.MOD.networking().sendToServer(new C2SGunFirePayload(tickProgress));
         }
     }
 

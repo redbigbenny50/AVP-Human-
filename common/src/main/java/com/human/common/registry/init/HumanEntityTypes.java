@@ -76,10 +76,7 @@ public class HumanEntityTypes {
 
     public static final BLibHolder<EntityType<MushroomCloudEntity>> MUSHROOM_CLOUD = create(
         "mushroom_cloud",
-        EntityType.Builder.<MushroomCloudEntity>of(MushroomCloudEntity::new, MobCategory.MISC)
-            .sized(1.0F, 1.0F)
-            .clientTrackingRange(32)
-            .updateInterval(1)
+        EntityType.Builder.of(MushroomCloudEntity::new, MobCategory.MISC)
     );
 
     public static final BLibHolder<EntityType<PrimedNuke>> NUKE = create(

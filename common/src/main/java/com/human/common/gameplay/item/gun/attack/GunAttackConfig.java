@@ -9,11 +9,5 @@ public record GunAttackConfig(
     GunConfig gunConfig,
     FireModeConfig fireModeConfig,
     LivingEntity shooter,
-    ItemStack gunItemStack,
-    float damageMultiplier
-) {
-
-    public GunAttackConfig(GunConfig gunConfig, FireModeConfig fireModeConfig, LivingEntity shooter, ItemStack gunItemStack) {
-        this(gunConfig, fireModeConfig, shooter, gunItemStack, 1.0F);
-    }
-}
+    ItemStack gunItemStack
+) {}

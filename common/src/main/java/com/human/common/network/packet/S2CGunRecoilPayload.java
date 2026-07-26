@@ -9,8 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record S2CGunRecoilPayload(
-    float verticalKick,
-    float horizontalKick
+    float recoil
 ) implements CustomPacketPayload {
 
     public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gun_recoil");
@@ -19,9 +18,7 @@ public record S2CGunRecoilPayload(
 
     public static final StreamCodec<S2CGunRecoilPayload> CODEC = RecordStreamCodec.of(
         StreamCodecs.FLOAT,
-        S2CGunRecoilPayload::verticalKick,
-        StreamCodecs.FLOAT,
-        S2CGunRecoilPayload::horizontalKick,
+        S2CGunRecoilPayload::recoil,
         S2CGunRecoilPayload::new
     );
 

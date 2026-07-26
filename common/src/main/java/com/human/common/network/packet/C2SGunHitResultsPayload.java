@@ -1,0 +1,31 @@
+package com.human.common.network.packet;
+
+import com.human.HumanResources;
+import com.human.common.gameplay.item.gun.attack.GunHitResult;
+import com.just.codec.stream.RecordStreamCodec;
+import com.just.codec.stream.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public record C2SGunHitResultsPayload(
+    List<GunHitResult> gunHitResults
+) implements CustomPacketPayload {
+
+    public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gun_hit_results");
+
+    public static final Type<C2SGunHitResultsPayload> TYPE = new Type<>(PAYLOAD_ID);
+
+    public static final StreamCodec<C2SGunHitResultsPayload> CODEC = RecordStreamCodec.of(
+        GunHitResult.LIST_STREAM_CODEC,
+        C2SGunHitResultsPayload::gunHitResults,
+        C2SGunHitResultsPayload::new
+    );
+
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+}

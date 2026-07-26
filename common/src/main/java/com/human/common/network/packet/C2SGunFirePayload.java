@@ -9,9 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record C2SGunFirePayload(
-    int tickProgress,
-    float yaw,
-    float pitch
+    int tickProgress
 ) implements CustomPacketPayload {
 
     public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gun_fire");
@@ -21,10 +19,6 @@ public record C2SGunFirePayload(
     public static final StreamCodec<C2SGunFirePayload> CODEC = RecordStreamCodec.of(
         StreamCodecs.INT,
         C2SGunFirePayload::tickProgress,
-        StreamCodecs.FLOAT,
-        C2SGunFirePayload::yaw,
-        StreamCodecs.FLOAT,
-        C2SGunFirePayload::pitch,
         C2SGunFirePayload::new
     );
 

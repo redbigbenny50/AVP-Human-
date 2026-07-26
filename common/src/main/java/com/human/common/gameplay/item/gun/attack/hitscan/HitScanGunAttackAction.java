@@ -1,354 +1,134 @@
 package com.human.common.gameplay.item.gun.attack.hitscan;
 
-import com.alien.common.gameplay.entity.living.alien.Alien;
-import com.blib.api.common.dismemberment.v1.LimbHitResolver;
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.Human;
 import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
-import com.human.common.gameplay.item.gun.GunAccuracyState;
 import com.human.common.gameplay.item.gun.attack.GunAttackAction;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.attack.GunHitResult;
 import com.human.common.gameplay.item.gun.debug.BulletTrajectoryDebug;
 import com.human.common.gameplay.item.gun.pipeline.GunShootResult;
-import com.human.common.network.packet.S2CGunKillEffectPayload;
-import com.human.common.network.packet.S2CGunRecoilPayload;
-import com.human.common.network.packet.S2CGunVoxelEffectPayload;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import com.human.common.network.packet.C2SGunHitResultsPayload;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
-/** A single server-owned ray pipeline for every conventional firearm. */
-public final class HitScanGunAttackAction implements GunAttackAction {
+public class HitScanGunAttackAction implements GunAttackAction {
 
     public static final HitScanGunAttackAction INSTANCE = new HitScanGunAttackAction();
-
-    private static final double TRACE_EPSILON = 0.01D;
 
     private HitScanGunAttackAction() {}
 
     @Override
     public GunShootResult shoot(GunAttackConfig gunAttackConfig) {
         var shooter = gunAttackConfig.shooter();
-        if (shooter.level().isClientSide) {
+        var level = shooter.level();
+
+        final var stepSize = 0.25;
+        final var maxDistance = (double) gunAttackConfig.fireModeConfig().range();
+        final var origin = shooter.getEyePosition();
+        final var direction = shooter.getLookAngle().normalize();
+
+        var hitEntityUUIDs = new HashSet<UUID>();
+        var hitBlockPositions = new HashSet<BlockPos>();
+        var hitResults = new ArrayList<GunHitResult>();
+
+        var totalPierces = 0;
+        var piercingBudget = EnchantmentUtil.getLevel(level, gunAttackConfig.gunItemStack(), Enchantments.PIERCING) + 1;
+
+        var current = origin;
+        var distanceTraveled = 0.0;
+
+        while (distanceTraveled < maxDistance && totalPierces < piercingBudget) {
+            var next = current.add(direction.scale(stepSize));
+            distanceTraveled += stepSize;
+
+            // Check for entity in this segment.
+            var entityHit = ProjectileUtil.getEntityHitResult(
+                level,
+                shooter,
+                current,
+                next,
+                shooter.getBoundingBox().expandTowards(direction.scale(maxDistance)).inflate(1.0),
+                entity -> !hitEntityUUIDs.contains(entity.getUUID()) &&
+                    !MarineAllyUtil.isMarineAlly(shooter, entity) &&
+                    (entity.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(entity))
+            );
+
+            if (entityHit != null) {
+                var entity = entityHit.getEntity();
+                hitEntityUUIDs.add(entity.getUUID());
+                hitResults.add(new GunHitResult.Entity(entity.getUUID()));
+                totalPierces++;
+
+                // Don't skip block check – entities and blocks can be hit in same step.
+            }
+
+            // Check for block hits.
+            var blockHit = level.clip(new ClipContext(current, next, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, shooter));
+
+            if (blockHit.getType() == HitResult.Type.BLOCK) {
+                var blockPos = blockHit.getBlockPos();
+                if (!hitBlockPositions.contains(blockPos)) {
+                    hitBlockPositions.add(blockPos);
+                    hitResults.add(new GunHitResult.Block(blockPos, blockHit.getDirection()));
+                    totalPierces++;
+                }
+            }
+
+            current = next;
+        }
+
+        if (!level.isClientSide) {
+            BulletTrajectoryDebug.renderShot(
+                gunAttackConfig,
+                origin,
+                direction,
+                distanceTraveled,
+                totalPierces,
+                piercingBudget,
+                hitResults
+            );
+        }
+
+        var gunHitResultsPayload = new C2SGunHitResultsPayload(hitResults);
+
+        if (!level.isClientSide) {
+
+            if (!(shooter instanceof Player)) {
+                // If the gun was fired server-side and the shooter is not a player (such as a marine), then we process
+                // the shot immediately. This is fine to do because the marine has no outdated information on its target
+                // like a client might have in terms of target's movement, position, etc.
+                GunHitScanAttackHandler.handle(gunHitResultsPayload, shooter);
+            }
+
+            return GunShootResult.SHOT;
+        } else if (shooter instanceof Player player) {
+            // Otherwise if the shot occurred client-side AND the shooter was a player, then add a bit of recoil.
+            applyRecoilToPlayer(gunAttackConfig, player, level);
+            // And then network their hit results to the server. While yes this opens the door for players to cheat
+            // on servers, hit results are done this way so that the player's shots are visually accurate.
+            // TODO: There is some cheating that can occur here on servers. Add server-side validation at some point.
+            Human.MOD.networking().sendToServer(gunHitResultsPayload);
             return GunShootResult.SHOT;
         }
 
-        var level = (ServerLevel) shooter.level();
-        var fireMode = gunAttackConfig.fireModeConfig();
-        var accuracyShot = GunAccuracyState.nextShot(shooter, fireMode);
-        var origin = shooter.getEyePosition();
-        var allHits = new ArrayList<GunHitResult>();
-        var visualImpacts = new ArrayList<Impact>();
-        var primaryImpact = Impact.miss(origin.add(accuracyShot.direction().scale(fireMode.range())));
-        Impact visualImpact = primaryImpact;
-        var pelletDamage = 1.0F / fireMode.pelletCount();
-
-        for (int pellet = 0; pellet < fireMode.pelletCount(); pellet++) {
-            var direction = pellet == 0
-                ? accuracyShot.direction()
-                : GunAccuracyState.scatter(
-                    accuracyShot.direction(),
-                    Math.max(fireMode.pelletSpreadDegrees(), accuracyShot.spread()),
-                    shooter.getRandom()
-                );
-            var impact = tracePellet(gunAttackConfig, direction, pelletDamage, allHits);
-            if (pellet == 0) {
-                primaryImpact = impact;
-                visualImpact = impact;
-            }
-            if (impact.hasVisualImpact()) {
-                visualImpacts.add(impact);
-            }
-            // The center pellet remains the debug/primary visual point of aim.
-            if (visualImpact.isMiss() && impact.entityImpact()) {
-                visualImpact = impact;
-            }
-        }
-
-        for (var impact : visualImpacts) {
-            var effectPayload = new S2CGunVoxelEffectPayload(
-                origin,
-                impact.position(),
-                impact.impactNormal(),
-                shooter.getRandom().nextInt(),
-                impact.entityImpact()
-            );
-            level.players()
-                .stream()
-                .filter(player -> canSeeImpact(level, player, impact))
-                .forEach(player -> Human.MOD.networking().sendToClient(player, effectPayload));
-        }
-
-        BulletTrajectoryDebug.renderShot(
-            gunAttackConfig,
-            origin,
-            accuracyShot.direction(),
-            origin.distanceTo(primaryImpact.position()),
-            allHits.size(),
-            EnchantmentUtil.getLevel(level, gunAttackConfig.gunItemStack(), Enchantments.PIERCING) + 1,
-            allHits
-        );
-
-        if (shooter instanceof ServerPlayer player) {
-            Human.MOD.networking()
-                .sendToClient(
-                    player,
-                    new S2CGunRecoilPayload(accuracyShot.verticalKick(), accuracyShot.horizontalKick())
-                );
-        }
-
-        return GunShootResult.SHOT;
+        return GunShootResult.FAILURE;
     }
 
-    private static Impact tracePellet(
-        GunAttackConfig baseConfig,
-        Vec3 direction,
-        float damageMultiplier,
-        List<GunHitResult> allHits
-    ) {
-        var shooter = baseConfig.shooter();
-        var level = shooter.level();
-        var config = new GunAttackConfig(
-            baseConfig.gunConfig(),
-            baseConfig.fireModeConfig(),
-            shooter,
-            baseConfig.gunItemStack(),
-            damageMultiplier
-        );
-        var current = shooter.getEyePosition();
-        var remainingDistance = (double) config.fireModeConfig().range();
-        var hitEntities = new HashSet<UUID>();
-        var remainingPierces = EnchantmentUtil.getLevel(level, config.gunItemStack(), Enchantments.PIERCING) + 1;
-        Impact lastImpact = null;
-
-        while (remainingDistance > TRACE_EPSILON && remainingPierces > 0) {
-            var requestedEnd = current.add(direction.scale(remainingDistance));
-            var blockHit = level.clip(new ClipContext(current, requestedEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, shooter));
-            var blockEnd = blockHit.getType() == HitResult.Type.BLOCK ? blockHit.getLocation() : requestedEnd;
-            var entityHit = findNearestEntityHit(level, shooter, current, blockEnd, hitEntities);
-
-            if (entityHit != null) {
-                var entity = entityHit.entity();
-                var hitLocation = entityHit.location();
-                hitEntities.add(entity.getUUID());
-                var hitDistance = shooter.getEyePosition().distanceTo(hitLocation);
-                var impactConfig = withDamageFalloff(config, hitDistance);
-                var damageResult = EntityGunHitResultHandler.handle(impactConfig, entity, hitEntities.size() - 1);
-                allHits.add(new GunHitResult.Entity(entity.getUUID()));
-                if (entityHit.limbHit() != null && entity instanceof LivingEntity livingEntity) {
-                    var limbResult = GunLimbDamage.apply(
-                        impactConfig,
-                        livingEntity,
-                        entityHit.limbHit().definition(),
-                        damageResult.actualDamage(),
-                        hitDistance,
-                        direction
-                    );
-                    BulletTrajectoryDebug.reportLimbHit(
-                        shooter,
-                        entity,
-                        entityHit.limbHit(),
-                        damageResult.actualDamage(),
-                        limbResult.damageBefore(),
-                        limbResult.damageAfter(),
-                        limbResult.threshold(),
-                        limbResult.detached(),
-                        limbResult.rejectionReason()
-                    );
-                    if (limbResult.detached()) {
-                        sendBloodBurst(level, shooter, entity, hitLocation, direction, 10);
-                    }
-                }
-                if (damageResult.lethal()) {
-                    var burstCount = config.fireModeConfig().pelletCount() > 1 ? 24 : 18;
-                    sendBloodBurst(level, shooter, entity, hitLocation, direction, burstCount);
-                }
-                lastImpact = new Impact(
-                    hitLocation,
-                    true,
-                    Vec3.ZERO
-                );
-                remainingPierces--;
-                var traveled = current.distanceTo(hitLocation) + TRACE_EPSILON;
-                current = hitLocation.add(direction.scale(TRACE_EPSILON));
-                remainingDistance -= traveled;
-                continue;
-            }
-
-            if (blockHit.getType() == HitResult.Type.BLOCK) {
-                var impactConfig = withDamageFalloff(config, shooter.getEyePosition().distanceTo(blockHit.getLocation()));
-                BlockGunHitResultHandler.handle(impactConfig, new GunHitResult.Block(blockHit.getBlockPos(), blockHit.getDirection()), 0);
-                allHits.add(new GunHitResult.Block(blockHit.getBlockPos(), blockHit.getDirection()));
-                return lastImpact == null
-                    ? new Impact(blockHit.getLocation(), false, Vec3.atLowerCornerOf(blockHit.getDirection().getNormal()))
-                    : lastImpact;
-            }
-
-            return lastImpact == null ? Impact.miss(requestedEnd) : lastImpact;
-        }
-
-        return lastImpact == null ? Impact.miss(current) : lastImpact;
+    private void applyRecoilToPlayer(GunAttackConfig gunAttackConfig, Player player, Level level) {
+        var baseRecoilX = level.getRandom().nextBoolean() ? 1f : -1f;
+        var recoil = gunAttackConfig.fireModeConfig().recoil();
+        player.turn(baseRecoilX * 2, -recoil * 2);
     }
-
-    private static EntityTraceHit findNearestEntityHit(
-        net.minecraft.world.level.Level level,
-        LivingEntity shooter,
-        Vec3 rayStart,
-        Vec3 rayEnd,
-        HashSet<UUID> ignored
-    ) {
-        EntityTraceHit nearest = null;
-        var nearestDistance = Double.MAX_VALUE;
-        var searchBounds = new AABB(rayStart, rayEnd).inflate(12.0D);
-        for (
-            var entity : level.getEntities(
-                shooter,
-                searchBounds,
-                candidate -> !ignored.contains(candidate.getUUID())
-                    && !MarineAllyUtil.isMarineAlly(shooter, candidate)
-                    && (candidate.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(candidate))
-            )
-        ) {
-            LimbHitResolver.Hit limbHit = null;
-            Vec3 location = null;
-            if (entity instanceof LivingEntity livingEntity) {
-                limbHit = LimbHitResolver.findNearest(livingEntity, rayStart, rayEnd).orElse(null);
-                if (limbHit != null) {
-                    location = limbHit.location();
-                }
-            }
-            var bodyLocation = entity.getBoundingBox().inflate(0.3D).clip(rayStart, rayEnd).orElse(null);
-            if (bodyLocation != null && location == null) {
-                location = bodyLocation;
-                limbHit = null;
-            }
-            if (location == null) {
-                continue;
-            }
-            var distance = rayStart.distanceToSqr(location);
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearest = new EntityTraceHit(entity, location, limbHit);
-            }
-        }
-        return nearest;
-    }
-
-    private static void sendBloodBurst(
-        net.minecraft.world.level.Level level,
-        LivingEntity shooter,
-        Entity entity,
-        Vec3 hitLocation,
-        Vec3 direction,
-        int burstCount
-    ) {
-        Human.MOD.networking()
-            .sendToAllClients(
-                level.getServer(),
-                new S2CGunKillEffectPayload(
-                    hitLocation,
-                    direction,
-                    killFluidType(entity),
-                    burstCount,
-                    shooter.getRandom().nextInt()
-                )
-            );
-    }
-
-    private static int killFluidType(net.minecraft.world.entity.Entity entity) {
-        if (entity instanceof Alien alien) {
-            if (alien.isIrradiated()) {
-                return 4;
-            }
-            if (alien.isNetherAfflicted()) {
-                return 3;
-            }
-            return 1;
-        }
-        var key = entity.getType().builtInRegistryHolder().key().location();
-        var namespace = key.getNamespace();
-        var path = key.getPath();
-        if (path.contains("irradiated")) {
-            return 4;
-        }
-        if (path.contains("nether")) {
-            return 3;
-        }
-        if (namespace.contains("alien") || path.contains("xenomorph") || path.contains("facehugger")) {
-            return 1;
-        }
-        if (path.contains("android") || path.contains("synthetic") || path.contains("robot")) {
-            return 2;
-        }
-        return 0;
-    }
-
-    private record Impact(
-        Vec3 position,
-        boolean entityImpact,
-        Vec3 impactNormal
-    ) {
-
-        private boolean isMiss() {
-            return !entityImpact && impactNormal.equals(Vec3.ZERO);
-        }
-
-        private boolean hasVisualImpact() {
-            return !isMiss();
-        }
-
-        private static Impact miss(Vec3 position) {
-            return new Impact(position, false, Vec3.ZERO);
-        }
-    }
-
-    private record EntityTraceHit(
-        Entity entity,
-        Vec3 location,
-        LimbHitResolver.Hit limbHit
-    ) {}
-
-    private static boolean canSeeImpact(ServerLevel level, ServerPlayer viewer, Impact impact) {
-        if (!impact.entityImpact() && impact.impactNormal().equals(Vec3.ZERO)) {
-            return false;
-        }
-
-        var visiblePoint = impact.position().add(impact.impactNormal().scale(0.015D));
-        var obstruction = level.clip(
-            new ClipContext(viewer.getEyePosition(), visiblePoint, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, viewer)
-        );
-        return obstruction.getType() != HitResult.Type.BLOCK
-            || obstruction.getLocation().distanceToSqr(viewer.getEyePosition()) >= visiblePoint.distanceToSqr(viewer.getEyePosition())
-                - 0.001D;
-    }
-
-    private static GunAttackConfig withDamageFalloff(GunAttackConfig config, double distance) {
-        var fireMode = config.fireModeConfig();
-        var startDistance = fireMode.range() * fireMode.damageFalloffStartFraction();
-        var falloffSpan = Math.max(0.001D, fireMode.range() - startDistance);
-        var progress = Math.clamp((distance - startDistance) / falloffSpan, 0.0D, 1.0D);
-        var multiplier = (float) (1.0D - ((1.0D - fireMode.minimumDamageMultiplier()) * progress));
-        return new GunAttackConfig(
-            config.gunConfig(),
-            fireMode,
-            config.shooter(),
-            config.gunItemStack(),
-            config.damageMultiplier() * multiplier
-        );
-    }
-
 }

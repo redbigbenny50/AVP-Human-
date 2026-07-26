@@ -15,17 +15,17 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class EntityGunHitResultHandler {
 
-    public static Result handle(GunAttackConfig gunAttackConfig, Entity hitEntity, int pierceIndex) {
+    public static void handle(GunAttackConfig gunAttackConfig, Entity hitEntity, int pierceIndex) {
         var shooter = gunAttackConfig.shooter();
         var level = (ServerLevel) shooter.level();
 
         if (MarineAllyUtil.isMarineAlly(shooter, hitEntity)) {
-            return Result.REJECTED;
+            return;
         }
 
         if (shooter instanceof Player && hitEntity instanceof Player && !level.getServer().isPvpAllowed()) {
             // Do not hurt entities if shooter was a player, target was a player and if PVP is not allowed.
-            return Result.REJECTED;
+            return;
         }
 
         // Apply pre-effects.
@@ -34,19 +34,13 @@ public class EntityGunHitResultHandler {
         }
 
         var powerLevel = EnchantmentUtil.getLevel(level, gunAttackConfig.gunItemStack(), Enchantments.POWER);
-        var baseDamage = gunAttackConfig.fireModeConfig().damage()
-            * gunAttackConfig.damageMultiplier()
-            * (1 + (0.25F * powerLevel));
+        var baseDamage = gunAttackConfig.fireModeConfig().damage() * (1 + (0.25F * powerLevel));
         var multiplier = 1.0F - (0.2F * pierceIndex);
         var damage = baseDamage * multiplier;
         var registry = shooter.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
         var damageSource = new DamageSource(registry.getHolderOrThrow(HumanDamageTypeKeys.BULLET), shooter);
 
-        var healthBefore = hitEntity instanceof LivingEntity livingEntity ? livingEntity.getHealth() : 0.0F;
         var wasHurt = hitEntity.hurt(damageSource, damage);
-        var actualDamage = hitEntity instanceof LivingEntity livingEntity
-            ? Math.max(0.0F, healthBefore - livingEntity.getHealth())
-            : wasHurt ? damage : 0.0F;
 
         // Apply post-effects.
         if (wasHurt && hitEntity instanceof LivingEntity livingEntity) {
@@ -56,8 +50,6 @@ public class EntityGunHitResultHandler {
 
             applyKnockbackEffects(gunAttackConfig, livingEntity, shooter);
         }
-
-        return new Result(wasHurt, wasHurt && !hitEntity.isAlive(), actualDamage);
     }
 
     private static void applyFlameEffects(GunAttackConfig gunAttackConfig, LivingEntity livingEntity) {
@@ -85,14 +77,5 @@ public class EntityGunHitResultHandler {
             Mth.sin(shooter.getYRot() * Mth.DEG_TO_RAD),
             -Mth.cos(shooter.getYRot() * Mth.DEG_TO_RAD)
         );
-    }
-
-    public record Result(
-        boolean hurt,
-        boolean lethal,
-        float actualDamage
-    ) {
-
-        private static final Result REJECTED = new Result(false, false, 0.0F);
     }
 }

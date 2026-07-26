@@ -29,12 +29,10 @@
     "MixinWolf_Accessor"
   ],
   "client": [
-    "client.MixinFogRenderer_NukedBiome",
     "client.MixinGameRenderer_GunZoom",
     "client.MixinGui_CrosshairPickEntityWithinGunRange",
     "client.MixinGui_SniperScopeOverlay",
     "client.MixinItemInHandRenderer_AdjustHandRenderingForGun",
-    "client.MixinLevelRenderer_GunVoxels",
     "client.MixinMinecraft_GunControls",
     "client.MixinMouseHandler_GunZoom",
     "client.MixinPlayerEntity_LowAmmunitionIndicator",
