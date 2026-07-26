@@ -138,6 +138,7 @@
   "block.avp_human.chiseled_ferroaluminum": "Chiseled Ferroaluminum",
   "block.avp_human.chiseled_steel": "Chiseled Steel",
   "block.avp_human.chiseled_titanium": "Chiseled Titanium",
+  "block.avp_human.cryotube": "Cryotube",
   "block.avp_human.cut_ferroaluminum": "Cut Ferroaluminum",
   "block.avp_human.cut_ferroaluminum_slab": "Cut Ferroaluminum Slab",
   "block.avp_human.cut_ferroaluminum_stairs": "Cut Ferroaluminum Stairs",
@@ -1013,5 +1014,13 @@
   "tooltip.avp_human.nearby_turrets_use_ammo_from_chest": "Nearby Turrets use Ammo from Chest",
   "tooltip.avp_human.radiation_resistance": "Radiation Resistance",
   "tooltip.avp_human.requires_nearby_ammo_chest_with_ammo": "Nearby Ammo Chest with Medium Bullets",
-  "tooltip.avp_human.requires_redstone_power": "Redstone Power"
+  "tooltip.avp_human.requires_redstone_power": "Redstone Power",
+  "block.avp_human.cryo_top_core": "Cryo Top Core",
+  "block.avp_human.cryo_bottom_core": "Cryo Bottom Core",
+  "block.avp_human.cryo_top_center": "Cryo Top Center",
+  "block.avp_human.cryo_middle_center": "Cryo Middle Center",
+  "block.avp_human.cryo_bottom_center": "Cryo Bottom Center",
+  "block.avp_human.cryo_top_corner": "Cryo Top Corner",
+  "block.avp_human.cryo_middle_corner": "Cryo Middle Corner",
+  "block.avp_human.cryo_bottom_corner": "Cryo Bottom Corner"
 }

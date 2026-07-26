@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/cryo/bottom_center"
+    },
+    "facing=east": {
+      "model": "avp_human:block/cryo/bottom_center",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "avp_human:block/cryo/bottom_center",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/cryo/bottom_center",
+      "y": 270
+    }
+  }
+}

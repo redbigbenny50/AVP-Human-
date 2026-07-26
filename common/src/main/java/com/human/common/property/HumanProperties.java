@@ -17,6 +17,46 @@ public class HumanProperties {
                 NUKE.leaf("enabled", BLibPropertySerializers.BOOLEAN),
                 false
             );
+
+            public static final HumanProperty<Integer> HORIZONTAL_RADIUS = new HumanProperty<>(
+                NUKE.leaf("horizontal_radius", BLibPropertySerializers.INT),
+                128
+            );
+
+            public static final HumanProperty<Integer> UPWARD_RADIUS = new HumanProperty<>(
+                NUKE.leaf("upward_radius", BLibPropertySerializers.INT),
+                64
+            );
+
+            public static final HumanProperty<Integer> DOWNWARD_RADIUS = new HumanProperty<>(
+                NUKE.leaf("downward_radius", BLibPropertySerializers.INT),
+                32
+            );
+
+            public static final HumanProperty<Integer> TERRAIN_BLOCKS_PER_TICK = new HumanProperty<>(
+                NUKE.leaf("terrain_blocks_per_tick", BLibPropertySerializers.INT),
+                6000
+            );
+
+            public static final HumanProperty<Integer> MAX_ACTIVE_NUKE_JOBS = new HumanProperty<>(
+                NUKE.leaf("max_active_jobs", BLibPropertySerializers.INT),
+                1
+            );
+
+            public static final HumanProperty<Integer> CLOUD_PARTICLE_BUDGET = new HumanProperty<>(
+                NUKE.leaf("cloud_particle_budget", BLibPropertySerializers.INT),
+                8000
+            );
+
+            public static final HumanProperty<Float> SCREEN_FLASH_INTENSITY = new HumanProperty<>(
+                NUKE.leaf("screen_flash_intensity", BLibPropertySerializers.FLOAT),
+                0.85F
+            );
+
+            public static final HumanProperty<Float> SCREEN_SHAKE_INTENSITY = new HumanProperty<>(
+                NUKE.leaf("screen_shake_intensity", BLibPropertySerializers.FLOAT),
+                0.75F
+            );
         }
 
         public static class Resonator {

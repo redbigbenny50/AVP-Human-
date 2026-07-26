@@ -27,7 +27,7 @@ public class RocketProjectileGunAttackAction implements GunAttackAction {
         rocket.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, 1.5F, 1.0F);
 
         if (shooter instanceof ServerPlayer serverPlayer) {
-            Human.MOD.networking().sendToClient(serverPlayer, new S2CGunRecoilPayload(gunAttackConfig.fireModeConfig().recoil()));
+            Human.MOD.networking().sendToClient(serverPlayer, new S2CGunRecoilPayload(gunAttackConfig.fireModeConfig().recoil(), 0.0F));
         }
 
         level.addFreshEntity(rocket);

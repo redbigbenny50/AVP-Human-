@@ -84,6 +84,20 @@ public class HumanDataComponents {
             .cacheEncoding()
     );
 
+    public static final BLibHolder<DataComponentType<Integer>> OLD_PAINLESS_HEAT = create(
+        "old_painless_heat",
+        builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
+    public static final BLibHolder<DataComponentType<Boolean>> OLD_PAINLESS_OVERHEATED = create(
+        "old_painless_overheated",
+        builder -> builder.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL)
+            .cacheEncoding()
+    );
+
     public static final BLibHolder<DataComponentType<Integer>> MUZZLE_FLASH_DURATION_IN_TICKS = create(
         "muzzle_flash_duration_in_ticks",
         builder -> builder.persistent(Codec.INT)
