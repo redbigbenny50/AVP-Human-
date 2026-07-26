@@ -24,6 +24,15 @@ public class EnUsBlockProvider {
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         addBlock(builder, HumanBlocks.BLUEPRINT_BLOCK, "Blueprint Block");
         addBlock(builder, HumanBlocks.CABLE, "Cable");
+        addBlock(builder, HumanBlocks.CRYOTUBE, "Cryotube");
+        addBlock(builder, HumanBlocks.CRYO_TOP_CORE, "Cryo Top Core");
+        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CORE, "Cryo Bottom Core");
+        addBlock(builder, HumanBlocks.CRYO_TOP_CENTER, "Cryo Top Center");
+        addBlock(builder, HumanBlocks.CRYO_MIDDLE_CENTER, "Cryo Middle Center");
+        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CENTER, "Cryo Bottom Center");
+        addBlock(builder, HumanBlocks.CRYO_TOP_CORNER, "Cryo Top Corner");
+        addBlock(builder, HumanBlocks.CRYO_MIDDLE_CORNER, "Cryo Middle Corner");
+        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CORNER, "Cryo Bottom Corner");
         addBlock(builder, HumanBlocks.REDSTONE_GENERATOR, "Redstone Generator");
         addBlock(builder, HumanBlocks.DESK_TERMINAL_BLOCK, "Desk Terminal");
         addBlock(builder, HumanBlocks.RESONATOR_BLOCK, "Resonator");

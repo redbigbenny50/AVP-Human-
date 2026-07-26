@@ -1,8 +1,10 @@
 package com.human.common.gameplay.block;
 
 import com.human.common.gameplay.entity.nuke.PrimedNuke;
+import com.human.common.gameplay.explosion.nuke.NuclearExplosionEngine;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Explosion;
@@ -87,17 +89,24 @@ public class NukeBlock extends Block {
             var blockPos = blockHitResult.getBlockPos();
             if (projectile.isOnFire() && projectile.mayInteract(level, blockPos)) {
                 this.summonNuke(level, blockPos);
-            } else if (projectile.mayInteract(level, blockPos)) {
-                blockState.setValue(UNSTABLE, true);
+            } else if (!level.isClientSide() && projectile.mayInteract(level, blockPos)) {
+                level.setBlock(blockPos, blockState.setValue(UNSTABLE, true), Block.UPDATE_ALL);
             }
         }
     }
 
     private void summonNuke(Level level, BlockPos blockPos) {
+        var blockState = level.getBlockState(blockPos);
+        if (level.isClientSide() || !blockState.is(this)) {
+            return;
+        }
+
         var nuke = new PrimedNuke(level);
         nuke.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        nuke.setFuse(300);
-        level.addFreshEntity(nuke);
+        nuke.setFuse(320);
+        if (level.addFreshEntity(nuke) && level instanceof ServerLevel serverLevel) {
+            NuclearExplosionEngine.keepPrimedNukeLoaded(serverLevel, blockPos, nuke.getUUID());
+        }
         level.removeBlock(blockPos, false);
     }
 }
