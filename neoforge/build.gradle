@@ -22,3 +22,15 @@ dependencies {
     blibMod "maven.modrinth:gigeresque:${project.gigeresque_version}"
     blibRuntimeOnly "mod.azure.azurelib:azurelib-neo-${project.minecraft_version}:${project.azurelib_version}"
 }
+
+// The generated-resources tree is contributed to processResources from more than one source root, so the same
+// asset can arrive twice and Gradle 9 refuses to pick a winner. The copies are byte-identical (they differ only
+// in line endings), so taking the first and dropping later duplicates is safe.
+//
+// This is a SAFETY NET, not the cure: the real fix is a single generated tree. Datagen currently writes to
+// <module>/src/main/generated while common/src/main/generated is also a resource root - avp_alien has only the
+// common one and builds clean. Without this net a crashed datagen run leaves a partial tree behind that then
+// blocks the NEXT build before datagen can retry, which is a loop you cannot escape from inside the project.
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

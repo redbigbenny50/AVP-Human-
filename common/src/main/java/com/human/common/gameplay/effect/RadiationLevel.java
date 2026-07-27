@@ -1,30 +1,31 @@
 package com.human.common.gameplay.effect;
 
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.Holder;
 
 /**
  * The five stages of radiation sickness, in order of severity.
- *
- * <p>Radiation is NOT a fixed-duration debuff - it is a level driven by how long you have been standing in it. An
- * entity accumulates exposure while a source is present (a radioactive item in the inventory, an irradiated
- * location, a hit from a radioactive attack) and sheds it once clear. Each level is reached after
- * {@code ESCALATION_TICKS} of continuous exposure and lost after the slower {@code DECAY_TICKS} of being clean, so
- * getting contaminated is faster than getting clean.</p>
- *
- * <p>The ladder is tuned against natural regeneration, which restores roughly 1 HP every 4 seconds for a well-fed
- * player:</p>
+ * <p>
+ * Radiation is NOT a fixed-duration debuff - it is a level driven by how long you have been standing in it. An entity
+ * accumulates exposure while a source is present (a radioactive item in the inventory, an irradiated location, a hit
+ * from a radioactive attack) and sheds it once clear. Each level is reached after {@code ESCALATION_TICKS} of
+ * continuous exposure and lost after the slower {@code DECAY_TICKS} of being clean, so getting contaminated is faster
+ * than getting clean.
+ * </p>
+ * <p>
+ * The ladder is tuned against natural regeneration, which restores roughly 1 HP every 4 seconds for a well-fed player:
+ * </p>
  * <ul>
- *   <li>{@link #MILD} - well under the regeneration line. A warning; you can outlast it if you eat.</li>
- *   <li>{@link #CONTAMINATION} - still beatable, but hunger makes you burn supplies to stay even.</li>
- *   <li>{@link #SICKNESS} - damage exactly cancels natural regeneration. Healing stops. Leave.</li>
- *   <li>{@link #ACUTE} - net loss. Roughly eighty seconds from full health.</li>
- *   <li>{@link #FATAL} - roughly twenty seconds. Cure it or die.</li>
+ * <li>{@link #MILD} - well under the regeneration line. A warning; you can outlast it if you eat.</li>
+ * <li>{@link #CONTAMINATION} - still beatable, but hunger makes you burn supplies to stay even.</li>
+ * <li>{@link #SICKNESS} - damage exactly cancels natural regeneration. Healing stops. Leave.</li>
+ * <li>{@link #ACUTE} - net loss. Roughly eighty seconds from full health.</li>
+ * <li>{@link #FATAL} - roughly twenty seconds. Cure it or die.</li>
  * </ul>
  */
 public enum RadiationLevel {
@@ -68,8 +69,8 @@ public enum RadiationLevel {
     }
 
     /**
-     * The level for an exposure counter. ANY exposure at all is {@link #MILD} - contact is immediate - and each
-     * further {@link #UNITS_PER_LEVEL} of accumulated exposure adds a level, to a ceiling of {@link #FATAL}.
+     * The level for an exposure counter. ANY exposure at all is {@link #MILD} - contact is immediate - and each further
+     * {@link #UNITS_PER_LEVEL} of accumulated exposure adds a level, to a ceiling of {@link #FATAL}.
      */
     public static RadiationLevel byExposure(int exposure) {
         if (exposure <= 0) {
@@ -101,8 +102,8 @@ public enum RadiationLevel {
 
     /**
      * Applies this level's accompanying afflictions. Deliberately escalates in KIND, not just in numbers: hunger
-     * arrives first (you burn supplies), then weakness (you cannot fight your way out), then mining fatigue (you
-     * cannot work), and finally the loss of natural healing at {@link #FATAL}.
+     * arrives first (you burn supplies), then weakness (you cannot fight your way out), then mining fatigue (you cannot
+     * work), and finally the loss of natural healing at {@link #FATAL}.
      */
     public void applySideEffects(LivingEntity entity) {
         switch (this) {
@@ -134,8 +135,8 @@ public enum RadiationLevel {
     }
 
     /**
-     * Applies an affliction, or upgrades one that is already present at a weaker amplifier. Never DOWNGRADES an
-     * effect the entity got from somewhere else, and never fights a stronger dose from another source.
+     * Applies an affliction, or upgrades one that is already present at a weaker amplifier. Never DOWNGRADES an effect
+     * the entity got from somewhere else, and never fights a stronger dose from another source.
      */
     private static void refresh(LivingEntity entity, Holder<MobEffect> effect, int amplifier) {
         var current = entity.getEffect(effect);

@@ -1,6 +1,5 @@
 package com.human.fabric.data.tag;
 
-import com.alien.common.registry.tag.AlienBlockTags;
 import com.blib.api.common.tag.v1.CommonBlockTags;
 import com.human.Human;
 import com.human.common.registry.init.HumanBlocks;
@@ -14,13 +13,16 @@ import com.human.common.registry.init.block.HumanSteelBlocks;
 import com.human.common.registry.init.block.HumanTitaniumBlocks;
 import com.human.common.registry.tag.HumanBlockTags;
 import com.human.compatibility.HumanCommonBlockTags;
-import mods.cybercat.gigeresque.common.tags.GigTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -63,6 +65,7 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         addNeedsIronToolBlocks();
         addMarineSpawnBlocks();
         addRazorWireBlocks();
+        addRadioactiveBlocks();
 
         addAutomatedBlockTags();
         addCommonBlockTags();
@@ -71,6 +74,23 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     private void addRazorWireBlocks() {
         getOrCreateTagBuilder(HumanBlockTags.RAZOR_WIRE).add(HumanBlocks.RAZOR_WIRE.get());
+    }
+
+    /**
+     * Placed radiation sources: blocks that irradiate anything standing NEAR them, not merely walked on. Other mods
+     * contribute to these tags as well - avp_alien injects the irradiated hive materials, which is what makes an
+     * irradiated hive somewhere you cannot linger without a suit.
+     */
+    private void addRadioactiveBlocks() {
+        getOrCreateTagBuilder(HumanBlockTags.RADIOACTIVE_BLOCKS)
+            .add(CoreBlocks.AUTUNITE_ORE.get());
+
+        getOrCreateTagBuilder(HumanBlockTags.HIGHLY_RADIOACTIVE_BLOCKS)
+            .add(
+                CoreBlocks.AUTUNITE_BLOCK.get(),
+                CoreBlocks.URANIUM_BLOCK.get(),
+                CoreBlocks.TRINITITE_BLOCK.get()
+            );
     }
 
     private void addMarineSpawnBlocks() {
@@ -588,17 +608,30 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     private void addCompatibilityBlockTags() {
-        getOrCreateTagBuilder(AlienBlockTags.ACID_IMMUNE)
+        getOrCreateTagBuilder(foreignBlockTag("avp_alien", "acid_immune"))
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
 
-        getOrCreateTagBuilder(AlienBlockTags.XENOMORPH_IMMUNE)
+        getOrCreateTagBuilder(foreignBlockTag("avp_alien", "xenomorph_immune"))
             .addTag(HumanBlockTags.INDUSTRIAL_CONCRETE)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
 
-        getOrCreateTagBuilder(GigTags.ACID_RESISTANT)
+        getOrCreateTagBuilder(foreignBlockTag("gigeresque", "acid_resistant"))
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
+    }
+
+    /**
+     * Builds a TagKey owned by ANOTHER mod from its raw id, instead of importing that mod's tag class.
+     * <p>
+     * Datagen only ever needs the tag's IDENTITY to write a JSON file, never the foreign class - and importing it made
+     * this provider fail with NoClassDefFoundError whenever the sibling mod was absent from the DATAGEN runtime
+     * classpath (it is compile-only here). Raw ids keep these compatibility tags working no matter which siblings are
+     * present, and an unused tag file for an absent mod is simply inert data.
+     * </p>
+     */
+    private static TagKey<Block> foreignBlockTag(String namespace, String path) {
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(namespace, path));
     }
 }

@@ -1,10 +1,8 @@
 package com.human.common.gameplay.block;
 
 import com.human.common.model.RadiationExposure;
-import com.human.common.registry.init.HumanMobEffects;
 import com.human.util.HumanPredicates;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;

@@ -5,13 +5,16 @@ import com.human.common.gameplay.effect.RadiationLevel;
 import com.human.common.gameplay.effect.RadiationStatusEffect;
 import com.human.common.model.RadiationExposure;
 import com.human.common.registry.init.HumanMobEffects;
+import com.human.common.registry.tag.HumanBlockTags;
 import com.human.common.registry.tag.HumanEntityTypeTags;
 import com.human.util.HumanPredicates;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,19 +24,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * The radiation exposure manager: turns TIME SPENT IN RADIATION into a rising sickness level.
- *
- * <p>Radiation is not a fixed-duration debuff. Sources ({@code MixinItem_GiveRads} for hot items in the inventory,
+ * <p>
+ * Radiation is not a fixed-duration debuff. Sources ({@code MixinItem_GiveRads} for hot items in the inventory,
  * {@code MixinLivingEntity_NukedRadiation} for irradiated ground, blasts and radioactive attacks) mark the entity as
- * exposed each tick they are present. This manager accumulates that exposure, derives a {@link RadiationLevel} from
- * it, mirrors the level onto the visible radiation effect, and applies the level's damage and afflictions.</p>
- *
- * <p>Exposure climbs one level per 60 seconds of contact and falls one level per 90 seconds of being clean, so
- * escaping a source starts the clock running backwards - through every level, in order - rather than curing you
- * outright. Contamination is faster than recovery on purpose.</p>
- *
- * <p>This replaces an earlier design in which each source re-applied a fixed-duration effect. Because a source
- * could not refresh an effect that was already running, that design produced an endless sawtooth: a single hot item
- * in a pocket re-applied a full lethal dose the instant the previous one expired, forever.</p>
+ * exposed each tick they are present. This manager accumulates that exposure, derives a {@link RadiationLevel} from it,
+ * mirrors the level onto the visible radiation effect, and applies the level's damage and afflictions.
+ * </p>
+ * <p>
+ * Exposure climbs one level per 60 seconds of contact and falls one level per 90 seconds of being clean, so escaping a
+ * source starts the clock running backwards - through every level, in order - rather than curing you outright.
+ * Contamination is faster than recovery on purpose.
+ * </p>
+ * <p>
+ * This replaces an earlier design in which each source re-applied a fixed-duration effect. Because a source could not
+ * refresh an effect that was already running, that design produced an endless sawtooth: a single hot item in a pocket
+ * re-applied a full lethal dose the instant the previous one expired, forever.
+ * </p>
  */
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity_RadiationDamage extends Entity implements RadiationExposure {
@@ -41,13 +47,28 @@ public abstract class MixinLivingEntity_RadiationDamage extends Entity implement
     @Unique
     private static final String NBT_RADIATION_EXPOSURE = "radiationExposure";
 
+    /**
+     * How far a placed radiation source reaches. Kept deliberately short: this is the single biggest lever on the cost
+     * of the proximity scan, which grows with the CUBE of this number.
+     */
+    @Unique
+    private static final int BLOCK_SCAN_RADIUS = 3;
+
+    /** Ticks between proximity scans. The result is cached and re-applied every tick in between. */
+    @Unique
+    private static final int BLOCK_SCAN_INTERVAL_TICKS = 20;
+
+    /** Cached strength of nearby placed sources, refreshed by the scan and re-marked every tick until then. */
+    @Unique
+    private int avp_human$nearbyBlockRate = 0;
+
     /** Accumulated exposure, persisted. See {@link RadiationLevel} for the units. */
     @Unique
     private int avp_human$radiationExposure = 0;
 
     /**
-     * The strongest source rate marked this tick, consumed and cleared every tick. Deliberately NOT persisted -
-     * sources re-mark themselves while they are present, so a reload simply re-detects them.
+     * The strongest source rate marked this tick, consumed and cleared every tick. Deliberately NOT persisted - sources
+     * re-mark themselves while they are present, so a reload simply re-detects them.
      */
     @Unique
     private int avp_human$radiationSourceRate = 0;
@@ -96,6 +117,18 @@ public abstract class MixinLivingEntity_RadiationDamage extends Entity implement
 
         if (self.level().isClientSide()) {
             return;
+        }
+
+        // Placed sources: rescan occasionally and re-apply the cached answer in between, so standing beside hot
+        // blocks irradiates you without a per-tick block search.
+        if (self instanceof Player) {
+            if (self.tickCount % BLOCK_SCAN_INTERVAL_TICKS == 0) {
+                avp_human$nearbyBlockRate = avp_human$scanNearbyRadioactiveBlocks(self);
+            }
+
+            if (avp_human$nearbyBlockRate > 0) {
+                avp_human$markRadiationSource(avp_human$nearbyBlockRate);
+            }
         }
 
         // Consume this tick's source marks whatever happens next, so a stale flag can never carry over.
@@ -153,8 +186,50 @@ public abstract class MixinLivingEntity_RadiationDamage extends Entity implement
     }
 
     /**
-     * Keeps the visible effect in step with the exposure level. The effect is a READOUT of the counter, not the
-     * thing driving it, so it is re-applied whenever the level changes or the display would otherwise lapse.
+     * The strength of placed radiation sources around the entity, or zero. Cost is contained deliberately, because an
+     * earlier attempt at proximity radiation cost TPS:
+     * <ul>
+     * <li><b>Players only.</b> Mobs never scan - radiation sickness in a wandering cow changes nothing a player can
+     * observe, and mob counts are what make per-entity scans expensive.</li>
+     * <li><b>Once a second, not every tick</b> ({@link #BLOCK_SCAN_INTERVAL_TICKS}), with the answer cached.</li>
+     * <li><b>A short radius</b> ({@link #BLOCK_SCAN_RADIUS}) - the volume grows with its cube.</li>
+     * <li><b>Early exit</b> the moment the strongest possible source is found, which is the common case inside an
+     * irradiated hive or a uranium store.</li>
+     * </ul>
+     * <p>
+     * That is a few hundred cached block-state reads per player per second - far below what vanilla's own random
+     * ticking does - and the two constants above are the dials if it ever needs trimming further.
+     * </p>
+     */
+    @Unique
+    private int avp_human$scanNearbyRadioactiveBlocks(LivingEntity self) {
+        var level = self.level();
+        var origin = self.blockPosition();
+        var strongest = 0;
+
+        for (
+            var pos : BlockPos.betweenClosed(
+                origin.offset(-BLOCK_SCAN_RADIUS, -BLOCK_SCAN_RADIUS, -BLOCK_SCAN_RADIUS),
+                origin.offset(BLOCK_SCAN_RADIUS, BLOCK_SCAN_RADIUS, BLOCK_SCAN_RADIUS)
+            )
+        ) {
+            var state = level.getBlockState(pos);
+
+            if (state.is(HumanBlockTags.HIGHLY_RADIOACTIVE_BLOCKS)) {
+                return 4;
+            }
+
+            if (strongest == 0 && state.is(HumanBlockTags.RADIOACTIVE_BLOCKS)) {
+                strongest = 2;
+            }
+        }
+
+        return strongest;
+    }
+
+    /**
+     * Keeps the visible effect in step with the exposure level. The effect is a READOUT of the counter, not the thing
+     * driving it, so it is re-applied whenever the level changes or the display would otherwise lapse.
      */
     @Unique
     private void avp_human$syncRadiationEffect(LivingEntity self, RadiationLevel radiationLevel) {

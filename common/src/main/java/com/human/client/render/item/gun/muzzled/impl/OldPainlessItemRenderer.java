@@ -36,8 +36,7 @@ public class OldPainlessItemRenderer extends MuzzledGunItemRenderer {
         );
     }
 
-    private static Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>>
-        createOldPainlessPrerender() {
+    private static Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>> createOldPainlessPrerender() {
         return context -> {
             var itemStack = context.animatable();
             var gameTime = getGameTime();

@@ -23,6 +23,30 @@ dependencies {
         exclude group: 'com.blib'
     }
 
+    // DATAGEN CLASSPATH. avp_alien and avp_predator are compileOnly above so they stay OPTIONAL in the shipped
+    // jar - but datagen RUNS the providers, and several of them need the real classes, not just ids:
+    // ChestRawMaterialLootTable builds loot entries from AlienItems, and a LootItem needs an actual Item object.
+    // runtimeOnly puts them on the dev/datagen classpath WITHOUT bundling them or making them a hard dependency.
+    // Build avp_alien first; it compiles standalone, so there is no circular build order.
+    blibModRuntimeOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
+        exclude group: 'com.blib'
+    }
+    blibModRuntimeOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
+        exclude group: 'com.blib'
+    }
+
     blibMod "maven.modrinth:gigeresque:${project.gigeresque_modrinth_version}"
     blibModRuntimeOnly "mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azurelib_version}"
+}
+
+// The generated-resources tree is contributed to processResources from more than one source root, so the same
+// asset can arrive twice and Gradle 9 refuses to pick a winner. The copies are byte-identical (they differ only
+// in line endings), so taking the first and dropping later duplicates is safe.
+//
+// This is a SAFETY NET, not the cure: the real fix is a single generated tree. Datagen currently writes to
+// <module>/src/main/generated while common/src/main/generated is also a resource root - avp_alien has only the
+// common one and builds clean. Without this net a crashed datagen run leaves a partial tree behind that then
+// blocks the NEXT build before datagen can retry, which is a loop you cannot escape from inside the project.
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
