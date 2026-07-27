@@ -1,10 +1,5 @@
 package com.human.util;
 
-import com.human.common.gameplay.effect.RadiationLevel;
-import com.human.common.model.RadiationExposure;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import com.alien.common.gameplay.entity.living.alien.Alien;
 import com.alien.common.model.alien.variant.AlienVariant;
 import com.alien.common.util.AlienTransitionUtil;
@@ -12,11 +7,16 @@ import com.blib.api.common.explosion.v1.Explosion;
 import com.blib.api.common.explosion.v1.ExplosionProgressTracker;
 import com.blib.api.common.explosion.v1.ExplosionUtil;
 import com.human.Human;
+import com.human.common.gameplay.effect.RadiationLevel;
 import com.human.common.gameplay.entity.nuke.MushroomCloudEntity;
 import com.human.common.gameplay.explosion.nuke.NuclearExplosionEffects;
+import com.human.common.model.RadiationExposure;
 import com.human.compatibility.avp_alien.AVPAlien;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class NuclearExplosionUtil {
@@ -79,21 +79,24 @@ public class NuclearExplosionUtil {
 
     /**
      * The blast's radiation dose, written for the exposure-counter system rather than as a fixed effect.
-     *
-     * <p>A nuke is the one source that contaminates INSTANTLY instead of accumulating: it adds exposure outright,
-     * scaled by how close the victim was, so ground zero lands at {@link RadiationLevel#FATAL} and the fringe at a
-     * survivable warning. Falloff uses the SQUARED distance the blast loop already has, which is both free and
-     * physically apt - intensity drops with the square of range, giving a broad lethal core and a sharp taper
-     * rather than a linear gradient.</p>
-     *
-     * <p>Roughly: ground zero {@literal ->} level V, half the radius {@literal ->} level IV, seven tenths
-     * {@literal ->} level III, nine tenths {@literal ->} level I. Anyone caught inside the radius at all is
-     * contaminated to at least level I; walking away from a nuclear detonation completely clean is not a thing.</p>
-     *
-     * <p>Exposure is ADDED, so a second blast compounds on an already-contaminated victim (clamped at the ceiling),
-     * and the ordinary 90-seconds-per-level decay is what carries survivors back down. {@code canBeIrradiated}
-     * still gates it, which means a sealed hazard suit turns the fallout aside entirely - that is the whole point
-     * of owning one - and radiation-immune entities such as xenomorphs shrug it off.</p>
+     * <p>
+     * A nuke is the one source that contaminates INSTANTLY instead of accumulating: it adds exposure outright, scaled
+     * by how close the victim was, so ground zero lands at {@link RadiationLevel#FATAL} and the fringe at a survivable
+     * warning. Falloff uses the SQUARED distance the blast loop already has, which is both free and physically apt -
+     * intensity drops with the square of range, giving a broad lethal core and a sharp taper rather than a linear
+     * gradient.
+     * </p>
+     * <p>
+     * Roughly: ground zero {@literal ->} level V, half the radius {@literal ->} level IV, seven tenths {@literal ->}
+     * level III, nine tenths {@literal ->} level I. Anyone caught inside the radius at all is contaminated to at least
+     * level I; walking away from a nuclear detonation completely clean is not a thing.
+     * </p>
+     * <p>
+     * Exposure is ADDED, so a second blast compounds on an already-contaminated victim (clamped at the ceiling), and
+     * the ordinary 90-seconds-per-level decay is what carries survivors back down. {@code canBeIrradiated} still gates
+     * it, which means a sealed hazard suit turns the fallout aside entirely - that is the whole point of owning one -
+     * and radiation-immune entities such as xenomorphs shrug it off.
+     * </p>
      */
     private static void applyFalloutDose(Entity entity, double distanceSquared, int radius) {
         if (!(entity instanceof LivingEntity livingEntity) || !HumanPredicates.canBeIrradiated(livingEntity)) {
