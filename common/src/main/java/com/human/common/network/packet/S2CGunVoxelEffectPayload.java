@@ -14,7 +14,8 @@ public record S2CGunVoxelEffectPayload(
     Vec3 endpoint,
     Vec3 impactNormal,
     int seed,
-    boolean entityImpact
+    boolean entityImpact,
+    int fluidType
 ) implements CustomPacketPayload {
 
     public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gun_voxel_effect");
@@ -44,6 +45,8 @@ public record S2CGunVoxelEffectPayload(
         S2CGunVoxelEffectPayload::seed,
         StreamCodecs.BOOLEAN,
         S2CGunVoxelEffectPayload::entityImpact,
+        StreamCodecs.INT,
+        S2CGunVoxelEffectPayload::fluidType,
         (
             originX,
             originY,
@@ -55,13 +58,15 @@ public record S2CGunVoxelEffectPayload(
             normalY,
             normalZ,
             seed,
-            entityImpact
+            entityImpact,
+            fluidType
         ) -> new S2CGunVoxelEffectPayload(
             new Vec3(originX, originY, originZ),
             new Vec3(endpointX, endpointY, endpointZ),
             new Vec3(normalX, normalY, normalZ),
             seed,
-            entityImpact
+            entityImpact,
+            fluidType
         )
     );
 

@@ -1,14 +1,11 @@
 package com.human.common.gameplay.item.gun.debug;
 
-import com.blib.api.common.dismemberment.v1.LimbHitResolver;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.gun.GunAccuracyState;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.attack.GunHitResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
@@ -133,35 +130,6 @@ public class BulletTrajectoryDebug {
                 "Recoil: vertical=" + format(profile.verticalKick())
                     + " horizontal=" + format(profile.horizontalKick())
                     + " pattern=[" + pattern + "]"
-            )
-        );
-    }
-
-    public static void reportLimbHit(
-        LivingEntity shooter,
-        Entity target,
-        LimbHitResolver.Hit hit,
-        float actualHealthDamage,
-        float limbDamageBefore,
-        float limbDamageAfter,
-        float threshold,
-        boolean detached,
-        String rejectionReason
-    ) {
-        if (!(shooter instanceof ServerPlayer player) || !ENABLED_PLAYERS.contains(player.getUUID())) {
-            return;
-        }
-        var status = rejectionReason.isEmpty()
-            ? "limbDamage=" + format(limbDamageBefore) + "->" + format(limbDamageAfter)
-                + "/" + format(threshold) + " detached=" + detached
-            : rejectionReason;
-        player.sendSystemMessage(
-            Component.literal(
-                "Limb hit: entity=" + target.getType().builtInRegistryHolder().key().location()
-                    + " limb=" + hit.definition().id()
-                    + " intersection=" + format(hit.location())
-                    + " healthDamage=" + format(actualHealthDamage)
-                    + " " + status
             )
         );
     }

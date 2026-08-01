@@ -59,7 +59,7 @@ public final class VoxelGunEffects {
         }
 
         var random = RandomSource.create(payload.seed());
-        spawnImpactShards(endpoint, payload.entityImpact(), random);
+        spawnImpactShards(endpoint, payload.entityImpact(), payload.fluidType(), random);
     }
 
     public static boolean hasLocalMuzzleFlash(ItemStack itemStack) {
@@ -154,10 +154,11 @@ public final class VoxelGunEffects {
         );
     }
 
-    private static void spawnImpactShards(Vec3 endpoint, boolean entityImpact, RandomSource random) {
-        var red = entityImpact ? 0.95F : 1.0F;
-        var green = entityImpact ? 0.12F : 0.58F;
-        var blue = entityImpact ? 0.10F : 0.12F;
+    private static void spawnImpactShards(Vec3 endpoint, boolean entityImpact, int fluidType, RandomSource random) {
+        var color = entityImpact ? GunKillBloodEffect.colorFor(fluidType) : new float[] { 1.0F, 0.58F, 0.12F };
+        var red = color[0];
+        var green = color[1];
+        var blue = color[2];
         for (int index = 0; index < 14; index++) {
             var direction = randomVector(random, 1.0D).normalize();
             var length = 0.08D + random.nextDouble() * 0.20D;

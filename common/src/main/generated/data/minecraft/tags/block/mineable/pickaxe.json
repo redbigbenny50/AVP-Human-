@@ -17,6 +17,7 @@
     "avp_human:deepslate_titanium_ore",
     "avp_human:deepslate_zinc_ore",
     "avp_human:desk_terminal",
+    "avp_human:cryotube",
     "avp_human:galena_ore",
     "avp_human:industrial_furnace_block",
     "avp_human:infinite_power_generator",
@@ -41,6 +42,14 @@
     "avp_human:trinitite_block",
     "avp_human:uranium_block",
     "avp_human:zinc_block",
-    "avp_human:zinc_ore"
+    "avp_human:zinc_ore",
+    "avp_human:cryo_top_core",
+    "avp_human:cryo_bottom_core",
+    "avp_human:cryo_top_center",
+    "avp_human:cryo_middle_center",
+    "avp_human:cryo_bottom_center",
+    "avp_human:cryo_top_corner",
+    "avp_human:cryo_middle_corner",
+    "avp_human:cryo_bottom_corner"
   ]
 }

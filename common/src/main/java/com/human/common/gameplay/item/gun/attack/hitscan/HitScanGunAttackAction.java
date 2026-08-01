@@ -1,7 +1,6 @@
 package com.human.common.gameplay.item.gun.attack.hitscan;
 
 import com.alien.common.gameplay.entity.living.alien.Alien;
-import com.blib.api.common.dismemberment.v1.LimbHitResolver;
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.Human;
@@ -85,7 +84,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                 impact.position(),
                 impact.impactNormal(),
                 shooter.getRandom().nextInt(),
-                impact.entityImpact()
+                impact.entityImpact(),
+                impact.fluidType()
             );
             level.players()
                 .stream()
@@ -149,30 +149,6 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                 var impactConfig = withDamageFalloff(config, hitDistance);
                 var damageResult = EntityGunHitResultHandler.handle(impactConfig, entity, hitEntities.size() - 1);
                 allHits.add(new GunHitResult.Entity(entity.getUUID()));
-                if (entityHit.limbHit() != null && entity instanceof LivingEntity livingEntity) {
-                    var limbResult = GunLimbDamage.apply(
-                        impactConfig,
-                        livingEntity,
-                        entityHit.limbHit().definition(),
-                        damageResult.actualDamage(),
-                        hitDistance,
-                        direction
-                    );
-                    BulletTrajectoryDebug.reportLimbHit(
-                        shooter,
-                        entity,
-                        entityHit.limbHit(),
-                        damageResult.actualDamage(),
-                        limbResult.damageBefore(),
-                        limbResult.damageAfter(),
-                        limbResult.threshold(),
-                        limbResult.detached(),
-                        limbResult.rejectionReason()
-                    );
-                    if (limbResult.detached()) {
-                        sendBloodBurst(level, shooter, entity, hitLocation, direction, 10);
-                    }
-                }
                 if (damageResult.lethal()) {
                     var burstCount = config.fireModeConfig().pelletCount() > 1 ? 24 : 18;
                     sendBloodBurst(level, shooter, entity, hitLocation, direction, burstCount);
@@ -180,7 +156,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                 lastImpact = new Impact(
                     hitLocation,
                     true,
-                    Vec3.ZERO
+                    Vec3.ZERO,
+                    killFluidType(entity)
                 );
                 remainingPierces--;
                 var traveled = current.distanceTo(hitLocation) + TRACE_EPSILON;
@@ -194,7 +171,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                 BlockGunHitResultHandler.handle(impactConfig, new GunHitResult.Block(blockHit.getBlockPos(), blockHit.getDirection()), 0);
                 allHits.add(new GunHitResult.Block(blockHit.getBlockPos(), blockHit.getDirection()));
                 return lastImpact == null
-                    ? new Impact(blockHit.getLocation(), false, Vec3.atLowerCornerOf(blockHit.getDirection().getNormal()))
+                    ? new Impact(blockHit.getLocation(), false, Vec3.atLowerCornerOf(blockHit.getDirection().getNormal()), 0)
                     : lastImpact;
             }
 
@@ -223,18 +200,10 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                     && (candidate.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(candidate))
             )
         ) {
-            LimbHitResolver.Hit limbHit = null;
             Vec3 location = null;
-            if (entity instanceof LivingEntity livingEntity) {
-                limbHit = LimbHitResolver.findNearest(livingEntity, rayStart, rayEnd).orElse(null);
-                if (limbHit != null) {
-                    location = limbHit.location();
-                }
-            }
             var bodyLocation = entity.getBoundingBox().inflate(0.3D).clip(rayStart, rayEnd).orElse(null);
-            if (bodyLocation != null && location == null) {
+            if (bodyLocation != null) {
                 location = bodyLocation;
-                limbHit = null;
             }
             if (location == null) {
                 continue;
@@ -242,7 +211,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             var distance = rayStart.distanceToSqr(location);
             if (distance < nearestDistance) {
                 nearestDistance = distance;
-                nearest = new EntityTraceHit(entity, location, limbHit);
+                nearest = new EntityTraceHit(entity, location);
             }
         }
         return nearest;
@@ -300,7 +269,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
     private record Impact(
         Vec3 position,
         boolean entityImpact,
-        Vec3 impactNormal
+        Vec3 impactNormal,
+        int fluidType
     ) {
 
         private boolean isMiss() {
@@ -312,14 +282,13 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         }
 
         private static Impact miss(Vec3 position) {
-            return new Impact(position, false, Vec3.ZERO);
+            return new Impact(position, false, Vec3.ZERO, 0);
         }
     }
 
     private record EntityTraceHit(
         Entity entity,
-        Vec3 location,
-        LimbHitResolver.Hit limbHit
+        Vec3 location
     ) {}
 
     private static boolean canSeeImpact(ServerLevel level, ServerPlayer viewer, Impact impact) {

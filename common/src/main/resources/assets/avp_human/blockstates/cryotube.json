@@ -1,0 +1,176 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "north": false,
+        "south": false,
+        "east": false,
+        "west": false,
+        "up": false,
+        "down": false
+      },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": {
+        "north": false,
+        "south": false,
+        "east": false,
+        "west": false,
+        "up": true,
+        "down": false
+      },
+      "apply": { "model": "avp_human:block/cryo/bs112_bottom" }
+    },
+    {
+      "when": {
+        "north": false,
+        "south": false,
+        "east": false,
+        "west": false,
+        "up": false,
+        "down": true
+      },
+      "apply": { "model": "avp_human:block/cryo/bs112_top" }
+    },
+    {
+      "when": {
+        "north": false,
+        "south": false,
+        "east": false,
+        "west": false,
+        "up": true,
+        "down": true
+      },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": true, "south": false, "east": false, "west": false },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": false, "south": true, "east": false, "west": false },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": false, "south": false, "east": true, "west": false },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": false, "south": false, "east": false, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": true, "south": true, "east": false, "west": false },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "north": false, "south": false, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bs" }
+    },
+    {
+      "when": { "up": false, "down": true, "north": false, "west": false, "south": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/top_corner" }
+    },
+    {
+      "when": { "up": false, "down": true, "north": false, "east": false, "south": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/top_corner", "y": 90 }
+    },
+    {
+      "when": { "up": false, "down": true, "south": false, "east": false, "north": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/top_corner", "y": 180 }
+    },
+    {
+      "when": { "up": false, "down": true, "south": false, "west": false, "north": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/top_corner", "y": 270 }
+    },
+    {
+      "when": { "up": true, "down": true, "north": false, "west": false, "south": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/middle_corner" }
+    },
+    {
+      "when": { "up": true, "down": true, "north": false, "east": false, "south": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/middle_corner", "y": 90 }
+    },
+    {
+      "when": { "up": true, "down": true, "south": false, "east": false, "north": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/middle_corner", "y": 180 }
+    },
+    {
+      "when": { "up": true, "down": true, "south": false, "west": false, "north": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/middle_corner", "y": 270 }
+    },
+    {
+      "when": { "up": true, "down": false, "north": false, "west": false, "south": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_corner" }
+    },
+    {
+      "when": { "up": true, "down": false, "north": false, "east": false, "south": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_corner", "y": 90 }
+    },
+    {
+      "when": { "up": true, "down": false, "south": false, "east": false, "north": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_corner", "y": 180 }
+    },
+    {
+      "when": { "up": true, "down": false, "south": false, "west": false, "north": true, "east": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_corner", "y": 270 }
+    },
+    {
+      "when": { "up": false, "down": true, "north": false, "south": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/top_center" }
+    },
+    {
+      "when": { "up": false, "down": true, "east": false, "west": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/top_center", "y": 90 }
+    },
+    {
+      "when": { "up": false, "down": true, "south": false, "north": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/top_center", "y": 180 }
+    },
+    {
+      "when": { "up": false, "down": true, "west": false, "east": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/top_center", "y": 270 }
+    },
+    {
+      "when": { "up": true, "down": true, "north": false, "south": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/middle_center", "y": 90 }
+    },
+    {
+      "when": { "up": true, "down": true, "east": false, "west": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/middle_center", "y": 180 }
+    },
+    {
+      "when": { "up": true, "down": true, "south": false, "north": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/middle_center", "y": 270 }
+    },
+    {
+      "when": { "up": true, "down": true, "west": false, "east": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/middle_center" }
+    },
+    {
+      "when": { "up": true, "down": false, "north": false, "south": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_center" }
+    },
+    {
+      "when": { "up": true, "down": false, "east": false, "west": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_center", "y": 90 }
+    },
+    {
+      "when": { "up": true, "down": false, "south": false, "north": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_center", "y": 180 }
+    },
+    {
+      "when": { "up": true, "down": false, "west": false, "east": true, "north": true, "south": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_center", "y": 270 }
+    },
+    {
+      "when": { "up": false, "down": true, "north": true, "south": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/top_core" }
+    },
+    {
+      "when": { "up": true, "down": false, "north": true, "south": true, "east": true, "west": true },
+      "apply": { "model": "avp_human:block/cryo/bottom_core" }
+    }
+  ]
+}
