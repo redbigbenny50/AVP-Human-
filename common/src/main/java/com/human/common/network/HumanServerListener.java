@@ -1,11 +1,13 @@
 package com.human.common.network;
 
+import com.blib.api.common.dismemberment.v1.hitbox.LimbHitPrediction;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.gun.GunReloading;
 import com.human.common.model.Crawler;
 import com.human.common.network.packet.C2SGunFirePayload;
 import com.human.common.network.packet.C2SGunReloadPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 
@@ -20,9 +22,15 @@ public class HumanServerListener {
         }
 
         var itemStack = serverPlayer.getItemInHand(InteractionHand.MAIN_HAND);
-
+        LimbHitPrediction prediction = null;
+        if (gunFirePayload.predictedEntityId() >= 0 && gunFirePayload.predictedLimbId().length() <= 128) {
+            var limbId = ResourceLocation.tryParse(gunFirePayload.predictedLimbId());
+            if (limbId != null) {
+                prediction = new LimbHitPrediction(gunFirePayload.predictedEntityId(), limbId);
+            }
+        }
         if (itemStack.getItem() instanceof GunItem gunItem) {
-            gunItem.fire(serverPlayer.level(), serverPlayer, itemStack, gunFirePayload.tickProgress());
+            gunItem.fire(serverPlayer.level(), serverPlayer, itemStack, gunFirePayload.tickProgress(), prediction);
         }
     }
 

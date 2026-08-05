@@ -1,9 +1,11 @@
 package com.human.client.input;
 
+import com.blib.api.common.dismemberment.v1.hitbox.LimbHitPredictionRegistry;
 import com.human.Human;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.network.packet.C2SGunFirePayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class GunInputHandler {
 
@@ -26,7 +28,24 @@ public class GunInputHandler {
 
         if (itemStack.getItem() instanceof GunItem gunItem) {
             // The server owns shots, hit detection, ammunition and confirmed recoil.
-            Human.MOD.networking().sendToServer(new C2SGunFirePayload(tickProgress, player.getYRot(), player.getXRot()));
+            var prediction = LimbHitPredictionRegistry.findNearest(
+                player.level(),
+                player.getEyePosition(),
+                player.getEyePosition().add(player.getViewVector(1.0F).scale(128.0D))
+            ).orElse(null);
+            if (prediction != null && minecraft.getEntityRenderDispatcher().shouldRenderHitBoxes()) {
+                player.displayClientMessage(Component.literal("Visual limb: " + prediction.limbId().getPath()), true);
+            }
+            Human.MOD.networking()
+                .sendToServer(
+                    new C2SGunFirePayload(
+                        tickProgress,
+                        player.getYRot(),
+                        player.getXRot(),
+                        prediction == null ? -1 : prediction.entityId(),
+                        prediction == null ? "" : prediction.limbId().toString()
+                    )
+                );
         }
     }
 

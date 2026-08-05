@@ -1,5 +1,6 @@
 package com.human.common.gameplay.item;
 
+import com.blib.api.common.dismemberment.v1.hitbox.LimbHitPrediction;
 import com.blib.api.common.tooltip.v1.TooltipUtil;
 import com.human.common.gameplay.item.gun.GunConfig;
 import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
@@ -104,7 +105,17 @@ public class GunItem extends Item {
     }
 
     public void fire(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack itemStack, int tickProgress) {
-        GunShootContext.create(livingEntity, itemStack, tickProgress)
+        fire(level, livingEntity, itemStack, tickProgress, null);
+    }
+
+    public void fire(
+        @NotNull Level level,
+        @NotNull LivingEntity livingEntity,
+        @NotNull ItemStack itemStack,
+        int tickProgress,
+        LimbHitPrediction prediction
+    ) {
+        GunShootContext.create(livingEntity, itemStack, tickProgress, prediction)
             .map(GunShootContext::shoot)
             .ifSome(result -> {
                 switch (result) {

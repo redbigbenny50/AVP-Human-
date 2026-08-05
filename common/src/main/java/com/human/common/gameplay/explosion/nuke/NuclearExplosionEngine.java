@@ -87,15 +87,17 @@ public class NuclearExplosionEngine {
 
     private static final int FLUID_SEAL_UPDATE_FLAGS = Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS;
 
-    private static final long STARTUP_WORK_BUDGET_NANOS = 2_000_000L;
+    private static final long STARTUP_WORK_BUDGET_NANOS = 3_000_000L;
 
-    private static final long TICK_WORK_BUDGET_NANOS = 6_000_000L;
+    private static final long TICK_WORK_BUDGET_NANOS = 9_000_000L;
 
     private static final int TIME_CHECK_INTERVAL = 63;
 
     private static final int SHOCKWAVE_SCAN_INTERVAL_TICKS = 2;
 
-    private static final int BIOME_CONVERSIONS_PER_TICK = 1;
+    private static final int BIOME_CONVERSION_RATE_NUMERATOR = 3;
+
+    private static final int BIOME_CONVERSION_RATE_DENOMINATOR = 2;
 
     private static final int WATER_EVAPORATION_PASSES = 8;
 
@@ -429,7 +431,7 @@ public class NuclearExplosionEngine {
                 clampInt(HumanProperties.Blocks.Nuke.HORIZONTAL_RADIUS, 16, 512),
                 clampInt(HumanProperties.Blocks.Nuke.UPWARD_RADIUS, 8, 256),
                 clampInt(HumanProperties.Blocks.Nuke.DOWNWARD_RADIUS, 8, 256),
-                clampInt(HumanProperties.Blocks.Nuke.TERRAIN_BLOCKS_PER_TICK, 1024, 50000),
+                scaleWorkBudget(clampInt(HumanProperties.Blocks.Nuke.TERRAIN_BLOCKS_PER_TICK, 1024, 50000)),
                 clampInt(HumanProperties.Blocks.Nuke.MAX_ACTIVE_NUKE_JOBS, 1, 8),
                 clampInt(HumanProperties.Blocks.Nuke.CLOUD_PARTICLE_BUDGET, 512, 20000),
                 clampFloat(HumanProperties.Blocks.Nuke.SCREEN_FLASH_INTENSITY, 0.0F, 1.0F),
@@ -447,6 +449,10 @@ public class NuclearExplosionEngine {
 
         private static float clampFloat(com.human.common.property.HumanProperty<Float> property, float min, float max) {
             return Mth.clamp(HumanPropertyAccess.INSTANCE.get(property), min, max);
+        }
+
+        private static int scaleWorkBudget(int budget) {
+            return Mth.ceil(budget * 1.5F);
         }
 
         public int initialTerrainBlocks() {
@@ -532,6 +538,8 @@ public class NuclearExplosionEngine {
 
         private int shockwaveTick;
 
+        private int biomeConversionRemainder;
+
         private double lastShockwaveRadius;
 
         private int changedBlocks;
@@ -593,6 +601,11 @@ public class NuclearExplosionEngine {
 
         private void process(int terrainBudget, int waterBudget, long deadlineNanos) {
             tickShockwave();
+            processBiomeConversions(deadlineNanos);
+            if (!pendingBiomeConversions.isEmpty() || isPastDeadline(deadlineNanos)) {
+                return;
+            }
+
             evaporateWater(waterBudget, sliceDeadline(deadlineNanos, 3));
 
             while (terrainBudget > 0 && chunkIndex < terrainChunks.size() && !isPastDeadline(deadlineNanos)) {
@@ -623,7 +636,6 @@ public class NuclearExplosionEngine {
             }
 
             releaseWorkTicketIfTerrainComplete();
-            processBiomeConversions(deadlineNanos);
         }
 
         private boolean isPrimaryDone() {
@@ -715,9 +727,12 @@ public class NuclearExplosionEngine {
         }
 
         private void processBiomeConversions(long deadlineNanos) {
+            biomeConversionRemainder += BIOME_CONVERSION_RATE_NUMERATOR;
+            var conversionBudget = biomeConversionRemainder / BIOME_CONVERSION_RATE_DENOMINATOR;
+            biomeConversionRemainder %= BIOME_CONVERSION_RATE_DENOMINATOR;
             var converted = 0;
             while (
-                converted < BIOME_CONVERSIONS_PER_TICK
+                converted < conversionBudget
                     && !pendingBiomeConversions.isEmpty()
                     && !isPastDeadline(deadlineNanos)
             ) {

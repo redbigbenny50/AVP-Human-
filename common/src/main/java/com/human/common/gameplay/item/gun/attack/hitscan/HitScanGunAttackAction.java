@@ -1,6 +1,8 @@
 package com.human.common.gameplay.item.gun.attack.hitscan;
 
 import com.alien.common.gameplay.entity.living.alien.Alien;
+import com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxDamage;
+import com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxRegistry;
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.Human;
@@ -127,7 +129,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             baseConfig.fireModeConfig(),
             shooter,
             baseConfig.gunItemStack(),
-            damageMultiplier
+            damageMultiplier,
+            baseConfig.prediction()
         );
         var current = shooter.getEyePosition();
         var remainingDistance = (double) config.fireModeConfig().range();
@@ -139,16 +142,33 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             var requestedEnd = current.add(direction.scale(remainingDistance));
             var blockHit = level.clip(new ClipContext(current, requestedEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, shooter));
             var blockEnd = blockHit.getType() == HitResult.Type.BLOCK ? blockHit.getLocation() : requestedEnd;
-            var entityHit = findNearestEntityHit(level, shooter, current, blockEnd, hitEntities);
+            var entityHit = findNearestEntityHit(level, shooter, current, blockEnd, hitEntities, config.prediction());
 
             if (entityHit != null) {
                 var entity = entityHit.entity();
                 var hitLocation = entityHit.location();
                 hitEntities.add(entity.getUUID());
+                if (entityHit.limbHit() != null && ArmoredHeadResistance.blocks(config.gunConfig(), entityHit.limbHit())) {
+                    // An armoured head is a solid terminal impact for small and medium rounds: no health damage,
+                    // no headshot bonus, no limb damage, and no acid-blood impact effect.
+                    allHits.add(new GunHitResult.Entity(entity.getUUID()));
+                    return Impact.armoredHead(hitLocation, direction);
+                }
                 var hitDistance = shooter.getEyePosition().distanceTo(hitLocation);
                 var impactConfig = withDamageFalloff(config, hitDistance);
-                var damageResult = EntityGunHitResultHandler.handle(impactConfig, entity, hitEntities.size() - 1);
+                var hitboxDamageMultiplier = entityHit.limbHit() == null
+                    ? 1.0F
+                    : entityHit.limbHit().volume().healthDamageMultiplier();
+                var damageResult = EntityGunHitResultHandler.handle(
+                    impactConfig,
+                    entity,
+                    hitEntities.size() - 1,
+                    hitboxDamageMultiplier
+                );
                 allHits.add(new GunHitResult.Entity(entity.getUUID()));
+                if (entityHit.limbHit() != null && entity instanceof LivingEntity livingEntity) {
+                    LimbHitboxDamage.apply(livingEntity, entityHit.limbHit(), damageResult.attemptedDamage());
+                }
                 if (damageResult.lethal()) {
                     var burstCount = config.fireModeConfig().pelletCount() > 1 ? 24 : 18;
                     sendBloodBurst(level, shooter, entity, hitLocation, direction, burstCount);
@@ -186,7 +206,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         LivingEntity shooter,
         Vec3 rayStart,
         Vec3 rayEnd,
-        HashSet<UUID> ignored
+        HashSet<UUID> ignored,
+        com.blib.api.common.dismemberment.v1.hitbox.LimbHitPrediction prediction
     ) {
         EntityTraceHit nearest = null;
         var nearestDistance = Double.MAX_VALUE;
@@ -200,10 +221,21 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                     && (candidate.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(candidate))
             )
         ) {
+            LimbHitboxRegistry.Hit limbHit = null;
             Vec3 location = null;
+            if (entity instanceof LivingEntity livingEntity) {
+                limbHit = LimbHitboxRegistry.findNearest(livingEntity, rayStart, rayEnd).orElse(null);
+                if (limbHit == null && prediction != null && prediction.entityId() == entity.getId()) {
+                    limbHit = findValidatedVisualLimbHit(livingEntity, rayStart, rayEnd, prediction.limbId());
+                }
+                if (limbHit != null) {
+                    location = limbHit.location();
+                }
+            }
             var bodyLocation = entity.getBoundingBox().inflate(0.3D).clip(rayStart, rayEnd).orElse(null);
-            if (bodyLocation != null) {
+            if (bodyLocation != null && location == null) {
                 location = bodyLocation;
+                limbHit = null;
             }
             if (location == null) {
                 continue;
@@ -211,10 +243,43 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             var distance = rayStart.distanceToSqr(location);
             if (distance < nearestDistance) {
                 nearestDistance = distance;
-                nearest = new EntityTraceHit(entity, location);
+                nearest = new EntityTraceHit(entity, location, limbHit);
             }
         }
         return nearest;
+    }
+
+    /**
+     * The client only names a rendered limb. The server reconstructs that limb from the existing profile and requires
+     * the server-owned shot ray to cross a deliberately limited envelope around it before damage is allowed.
+     */
+    private static LimbHitboxRegistry.Hit findValidatedVisualLimbHit(
+        LivingEntity entity,
+        Vec3 rayStart,
+        Vec3 rayEnd,
+        net.minecraft.resources.ResourceLocation limbId
+    ) {
+        var tolerance = new Vec3(0.25D, 0.25D, 0.25D);
+        return LimbHitboxRegistry.getHitboxes(entity)
+            .stream()
+            .filter(volume -> volume.limbId().equals(limbId))
+            .map(volume -> {
+                var envelope = new com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxVolume(
+                    volume.limbId(),
+                    volume.center(),
+                    volume.xAxis(),
+                    volume.yAxis(),
+                    volume.zAxis(),
+                    volume.halfExtents().add(tolerance),
+                    volume.healthDamageMultiplier(),
+                    volume.limbDamageMultiplier(),
+                    volume.limbDamageThreshold()
+                );
+                return envelope.clip(rayStart, rayEnd).map(location -> new LimbHitboxRegistry.Hit(volume, location)).orElse(null);
+            })
+            .filter(java.util.Objects::nonNull)
+            .min(java.util.Comparator.comparingDouble(hit -> rayStart.distanceToSqr(hit.location())))
+            .orElse(null);
     }
 
     private static void sendBloodBurst(
@@ -284,11 +349,17 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         private static Impact miss(Vec3 position) {
             return new Impact(position, false, Vec3.ZERO, 0);
         }
+
+        private static Impact armoredHead(Vec3 position, Vec3 shotDirection) {
+            // A non-entity impact routes through the existing orange shard impact effect rather than blood/acid.
+            return new Impact(position, false, shotDirection.scale(-1.0D), 0);
+        }
     }
 
     private record EntityTraceHit(
         Entity entity,
-        Vec3 location
+        Vec3 location,
+        LimbHitboxRegistry.Hit limbHit
     ) {}
 
     private static boolean canSeeImpact(ServerLevel level, ServerPlayer viewer, Impact impact) {
@@ -316,7 +387,8 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             fireMode,
             config.shooter(),
             config.gunItemStack(),
-            config.damageMultiplier() * multiplier
+            config.damageMultiplier() * multiplier,
+            config.prediction()
         );
     }
 
