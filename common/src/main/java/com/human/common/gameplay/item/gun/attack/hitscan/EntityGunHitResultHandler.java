@@ -16,6 +16,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 public class EntityGunHitResultHandler {
 
     public static Result handle(GunAttackConfig gunAttackConfig, Entity hitEntity, int pierceIndex) {
+        return handle(gunAttackConfig, hitEntity, pierceIndex, 1.0F);
+    }
+
+    /** Applies damage after the server-owned limb raycast has selected a damage multiplier. */
+    public static Result handle(GunAttackConfig gunAttackConfig, Entity hitEntity, int pierceIndex, float hitboxDamageMultiplier) {
         var shooter = gunAttackConfig.shooter();
         var level = (ServerLevel) shooter.level();
 
@@ -38,7 +43,7 @@ public class EntityGunHitResultHandler {
             * gunAttackConfig.damageMultiplier()
             * (1 + (0.25F * powerLevel));
         var multiplier = 1.0F - (0.2F * pierceIndex);
-        var damage = baseDamage * multiplier;
+        var damage = baseDamage * multiplier * hitboxDamageMultiplier;
         var registry = shooter.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
         var damageSource = new DamageSource(registry.getHolderOrThrow(HumanDamageTypeKeys.BULLET), shooter);
 
@@ -57,7 +62,7 @@ public class EntityGunHitResultHandler {
             applyKnockbackEffects(gunAttackConfig, livingEntity, shooter);
         }
 
-        return new Result(wasHurt, wasHurt && !hitEntity.isAlive(), actualDamage);
+        return new Result(wasHurt, wasHurt && !hitEntity.isAlive(), actualDamage, damage);
     }
 
     private static void applyFlameEffects(GunAttackConfig gunAttackConfig, LivingEntity livingEntity) {
@@ -90,9 +95,10 @@ public class EntityGunHitResultHandler {
     public record Result(
         boolean hurt,
         boolean lethal,
-        float actualDamage
+        float actualDamage,
+        float attemptedDamage
     ) {
 
-        private static final Result REJECTED = new Result(false, false, 0.0F);
+        private static final Result REJECTED = new Result(false, false, 0.0F, 0.0F);
     }
 }
