@@ -4,9 +4,11 @@ import com.alien.common.gameplay.entity.living.alien.Alien;
 import com.alien.common.model.alien.variant.AlienVariant;
 import com.alien.common.util.AlienTransitionUtil;
 import com.human.Human;
+import com.human.common.gameplay.effect.RadiationLevel;
 import com.human.common.gameplay.effect.RadiationStatusEffect;
 import com.human.common.gameplay.entity.nuke.MushroomCloudEntity;
 import com.human.common.network.packet.S2CNukeEffectPayload;
+import com.human.common.model.RadiationExposure;
 import com.human.common.property.HumanProperties;
 import com.human.common.property.HumanPropertyAccess;
 import com.human.common.registry.init.HumanMobEffects;
@@ -400,6 +402,10 @@ public class NuclearExplosionEngine {
             );
             var amplifier = falloff > 0.66 ? 2 : falloff > 0.33 ? 1 : 0;
             livingEntity.addEffect(new MobEffectInstance(HumanMobEffects.getRadiationHolder(), duration, amplifier));
+
+            // The blast adds an immediate, distance-scaled radiation dose as well as its temporary effect.
+            var exposure = (int) Math.round(RadiationLevel.MAX_EXPOSURE * Mth.clamp(falloff, 0.0, 1.0));
+            ((RadiationExposure) livingEntity).avp_human$addRadiationExposure(Math.max(1200, exposure));
         }
     }
 

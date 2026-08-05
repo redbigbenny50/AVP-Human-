@@ -1,10 +1,8 @@
 package com.human.common.gameplay.block;
 
-import com.human.common.gameplay.effect.RadiationStatusEffect;
-import com.human.common.registry.init.HumanMobEffects;
+import com.human.common.model.RadiationExposure;
 import com.human.util.HumanPredicates;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -21,10 +19,9 @@ public class RadiatedBlock extends Block {
     @Override
     public void stepOn(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Entity entity) {
         if (HumanPredicates.canBeIrradiated(entity) && entity instanceof LivingEntity livingEntity) {
-            // Apply radiation effect.
-            livingEntity.addEffect(
-                new MobEffectInstance(HumanMobEffects.getRadiationHolder(), RadiationStatusEffect.MEDIUM_EFFECT_DURATION_IN_TICKS, 0)
-            );
+            // Standing on the hot stuff marks exposure while contact lasts, at the same strength as irradiated
+            // ground - step off and the level starts falling again.
+            ((RadiationExposure) livingEntity).avp_human$markRadiationSource(2);
         }
 
         super.stepOn(level, blockPos, blockState, entity);

@@ -2,31 +2,25 @@ package com.human.common.gameplay.effect;
 
 import com.blib.api.common.color.v1.Color;
 import com.human.common.registry.key.HumanDamageTypeKeys;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * Radiation status effect (display only).
+ * Radiation status effect - a DISPLAY of accumulated exposure, not the thing that drives it.
  * <p>
- * This effect serves as a visual indicator of radiation exposure. The actual damage and side effects are handled by
- * {@code MixinLivingEntity_RadiationDamage}.
+ * The amplifier mirrors the entity's {@link RadiationLevel} (amplifier 0 = Radiation I). All of the behaviour -
+ * accumulating exposure while a source is present, decaying it once clear, and applying each level's damage and
+ * afflictions - lives in {@code MixinLivingEntity_RadiationDamage} and {@link RadiationLevel}.
+ * </p>
  * <p>
- * The effect progresses through phases based on remaining duration:
- * <ul>
- * <li><b>Incubation (0-20% progress):</b> No damage, no side effects</li>
- * <li><b>Ramp-up (20-80% progress):</b> Damage frequency increases, side effects applied</li>
- * <li><b>Taper-off (80-100% progress):</b> Damage frequency decreases as effect subsides</li>
- * </ul>
- * <p>
- * The amplifier affects damage amount per hit, not frequency.
+ * The duration constants below are what INSTANT sources hand out; sustained sources instead mark exposure every tick
+ * they are present.
+ * </p>
  */
 public class RadiationStatusEffect extends MobEffect {
 
@@ -50,44 +44,6 @@ public class RadiationStatusEffect extends MobEffect {
 
     public RadiationStatusEffect() {
         super(MobEffectCategory.HARMFUL, Color.GREEN.getColor());
-    }
-
-    public static int calculateDamageInterval(float progress) {
-        float damageIntensity;
-
-        if (progress < RadiationStatusEffect.PEAK_DAMAGE_RATIO) {
-            var rampProgress = (progress - RadiationStatusEffect.INCUBATION_RATIO) / (RadiationStatusEffect.PEAK_DAMAGE_RATIO
-                - RadiationStatusEffect.INCUBATION_RATIO);
-            damageIntensity = rampProgress;
-        } else {
-            var taperProgress = (progress - RadiationStatusEffect.PEAK_DAMAGE_RATIO) / (1.0f - RadiationStatusEffect.PEAK_DAMAGE_RATIO);
-            damageIntensity = 1.0f - taperProgress;
-        }
-
-        var interval = (int) (RadiationStatusEffect.MAX_DAMAGE_INTERVAL_TICKS - (damageIntensity
-            * (RadiationStatusEffect.MAX_DAMAGE_INTERVAL_TICKS - RadiationStatusEffect.MIN_DAMAGE_INTERVAL_TICKS)));
-        return Math.max(RadiationStatusEffect.MIN_DAMAGE_INTERVAL_TICKS, interval);
-    }
-
-    public static void applyRadiationSideEffects(LivingEntity entity, int amplifier) {
-        handleStatusEffects(entity, amplifier, MobEffects.WEAKNESS, MobEffects.HUNGER);
-
-        if (amplifier >= 1) {
-            handleStatusEffects(entity, amplifier, MobEffects.MOVEMENT_SLOWDOWN);
-        }
-
-        if (amplifier >= 2) {
-            handleStatusEffects(entity, amplifier, MobEffects.BLINDNESS);
-        }
-    }
-
-    @SafeVarargs
-    public static void handleStatusEffects(LivingEntity entity, int amplifier, Holder<MobEffect>... statusEffects) {
-        for (var effect : statusEffects) {
-            if (!entity.hasEffect(effect)) {
-                entity.addEffect(new MobEffectInstance(effect, 5 * 20, amplifier, true, true));
-            }
-        }
     }
 
     public static DamageSource createRadiationDamageSource(LivingEntity entity) {

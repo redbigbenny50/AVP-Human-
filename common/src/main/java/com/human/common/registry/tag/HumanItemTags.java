@@ -9,6 +9,15 @@ public class HumanItemTags {
 
     public static final TagKey<Item> AMMO_ITEMS = create("ammo_items");
 
+    /**
+     * Potency tiers for carried radiation sources. Everything hot belongs to {@code radioactive_items} (that is what
+     * the lead chest intercepts); these two sub-tags mark the things that are WORSE to carry. A member of neither is
+     * baseline strength, so refined and raw materials can be told apart from solid blocks of the stuff.
+     */
+    public static final TagKey<Item> HIGHLY_RADIOACTIVE_ITEMS = create("highly_radioactive_items");
+
+    public static final TagKey<Item> EXTREMELY_RADIOACTIVE_ITEMS = create("extremely_radioactive_items");
+
     public static final TagKey<Item> GUNS = create("guns");
 
     public static final TagKey<Item> INDUSTRIAL_GLASS = create("industrial_glass");

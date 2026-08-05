@@ -1,6 +1,5 @@
 package com.human.fabric.data.tag;
 
-import com.alien.common.registry.tag.AlienItemTags;
 import com.blib.api.common.tag.v1.BLibItemTags;
 import com.blib.api.common.tag.v1.CommonItemTags;
 import com.human.Human;
@@ -21,11 +20,15 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
@@ -237,6 +240,22 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 HumanBlockItems.TRINITITE_BLOCK.get()
             )
             .addTag(HumanCommonItemTags.INGOTS_URANIUM);
+
+        // Potency tiers layered on top of the master list above. Dust and nuggets stay at baseline strength; refined
+        // and raw material is worse to carry; a solid block of the stuff is worse again.
+        getOrCreateTagBuilder(HumanItemTags.HIGHLY_RADIOACTIVE_ITEMS)
+            .add(
+                HumanItems.URANIUM_INGOT.get(),
+                HumanBlockItems.AUTUNITE_ORE.get()
+            )
+            .addTag(HumanCommonItemTags.INGOTS_URANIUM);
+
+        getOrCreateTagBuilder(HumanItemTags.EXTREMELY_RADIOACTIVE_ITEMS)
+            .add(
+                HumanBlockItems.AUTUNITE_BLOCK.get(),
+                HumanBlockItems.URANIUM_BLOCK.get(),
+                HumanBlockItems.TRINITITE_BLOCK.get()
+            );
 
         getOrCreateTagBuilder(HumanItemTags.URANIUM_NUGGET_LIKE)
             .addOptionalTag(HumanCommonItemTags.NUGGETS_URANIUM);
@@ -489,7 +508,7 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void addCompatibilityItems() {
-        getOrCreateTagBuilder(AlienItemTags.FACEHUGGER_RESISTANT_HELMETS)
+        getOrCreateTagBuilder(foreignItemTag("avp_alien", "facehugger_resistant_helmets"))
             .add(HumanArmorItems.WY_APE_HELMET.get());
     }
 
@@ -590,5 +609,18 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
                     swordTagProvider.add(item);
                 }
             });
+    }
+
+    /**
+     * Builds a TagKey owned by ANOTHER mod from its raw id, instead of importing that mod's tag class.
+     * <p>
+     * Datagen only ever needs the tag's IDENTITY to write a JSON file, never the foreign class - and importing it made
+     * this provider fail with NoClassDefFoundError whenever the sibling mod was absent from the DATAGEN runtime
+     * classpath (it is compile-only here). Raw ids keep these compatibility tags working no matter which siblings are
+     * present, and an unused tag file for an absent mod is simply inert data.
+     * </p>
+     */
+    private static TagKey<Item> foreignItemTag(String namespace, String path) {
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(namespace, path));
     }
 }

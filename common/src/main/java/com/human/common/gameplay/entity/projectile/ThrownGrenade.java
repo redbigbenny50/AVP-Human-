@@ -103,8 +103,11 @@ public class ThrownGrenade extends BouncingItemProjectile {
             -areaEffectCloudEntity.getRadius() / areaEffectCloudEntity.getDuration()
         );
         areaEffectCloudEntity.setParticle(ParticleTypes.ASH);
+        // The cloud hands out the radiation effect directly; the exposure manager absorbs whatever level it
+        // implies. Amplifier 1 = CONTAMINATION, so catching a gas cloud plants you two rungs up the ladder and you
+        // decay back down from there rather than taking a fixed lethal dose.
         areaEffectCloudEntity.addEffect(
-            new MobEffectInstance(HumanMobEffects.getRadiationHolder(), RadiationStatusEffect.MEDIUM_EFFECT_DURATION_IN_TICKS, 0)
+            new MobEffectInstance(HumanMobEffects.getRadiationHolder(), RadiationStatusEffect.MEDIUM_EFFECT_DURATION_IN_TICKS, 1)
         );
 
         level.addFreshEntity(areaEffectCloudEntity);
