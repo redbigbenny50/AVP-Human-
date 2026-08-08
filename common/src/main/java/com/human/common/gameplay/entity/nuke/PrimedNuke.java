@@ -113,8 +113,8 @@ public class PrimedNuke extends Entity {
                     var explosion = NuclearExplosionUtil.createNuclearExplosion(
                         serverLevel,
                         blockPosition().getCenter(),
-                        16 * 8,
-                        5
+                        NuclearExplosionUtil.RADIUS,
+                        NuclearExplosionUtil.MAX_KNOCKBACK
                     );
 
                     explosion.explode();

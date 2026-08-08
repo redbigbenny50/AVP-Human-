@@ -17,6 +17,18 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
 
     private static final ResourceLocation ANIMATION = HumanResources.entityAnimationLocation(NAME);
 
+    /**
+     * Vanilla's crossbow hold, from {@code AnimationUtils.animateCrossbowHold}: the firing arm swings slightly
+     * outboard, the support arm crosses further in to meet the weapon, and both pitch with the head.
+     */
+    private static final float FIRING_ARM_YAW_OFFSET = -0.3F;
+
+    private static final float SUPPORT_ARM_YAW_OFFSET = 0.6F;
+
+    private static final float FIRING_ARM_PITCH_OFFSET = 0.1F;
+
+    private static final float SUPPORT_ARM_PITCH = -1.5F;
+
     @Override
     public void registerTracks(AzAnimationTrackContainer<Marine> animationControllerContainer) {
         animationControllerContainer.add(
@@ -38,10 +50,32 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
         BLibEntityAnimationUtils.applyHeadRotations(animatable, context(), partialTicks, "gHead", 0F);
 
         var boneCache = this.context().boneCache();
+        var head = boneCache.getBakedModel().getBoneOrNull("gHead");
         var leftArm = boneCache.getBakedModel().getBoneOrNull("gLeftArm");
         var rightArm = boneCache.getBakedModel().getBoneOrNull("gRightArm");
         var leftLeg = boneCache.getBakedModel().getBoneOrNull("gLeftLeg");
         var rightLeg = boneCache.getBakedModel().getBoneOrNull("gRightLeg");
+
+        // The weapon hangs off rightHand_Item, which is a child of gRightArm, so the gun points wherever that bone
+        // points and nowhere else. Nothing was aiming it: the walk swing below is skipped while aggressive, and the
+        // only animation that touches the arm is a fixed -85 degree pose barely one tick long, so the arm sat in its
+        // bind pose -- straight down -- for the whole engagement.
+        //
+        // These marines are posed the way a vanilla player is, so the aim pose is vanilla's two-handed ranged hold
+        // rather than anything bespoke. It is driven off the head bone instead of the entity's own pitch and yaw,
+        // because applyHeadRotations has already resolved the aim above; reading it back keeps the muzzle exactly on
+        // the line the marine is looking along, elevation included, and inherits its sign conventions for free.
+        if (head != null && animatable.isAggressive()) {
+            if (rightArm != null) {
+                rightArm.setRotY(FIRING_ARM_YAW_OFFSET + head.getRotY());
+                rightArm.setRotX(-Mth.HALF_PI + head.getRotX() + FIRING_ARM_PITCH_OFFSET);
+            }
+
+            if (leftArm != null) {
+                leftArm.setRotY(SUPPORT_ARM_YAW_OFFSET + head.getRotY());
+                leftArm.setRotX(SUPPORT_ARM_PITCH + head.getRotX());
+            }
+        }
 
         if (leftArm != null && !animatable.isAggressive()) {
             leftArm.setRotX(

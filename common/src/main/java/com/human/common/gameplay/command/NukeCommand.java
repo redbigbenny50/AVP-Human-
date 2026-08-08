@@ -6,10 +6,13 @@ import com.blib.api.common.explosion.v1.ExplosionUtil;
 import com.blib.api.common.server.v1.ServerScheduler;
 import com.human.Human;
 import com.human.common.gameplay.explosion.nuke.NuclearExplosionEffects;
+import com.human.common.gameplay.explosion.nuke.NuclearFalloutSpreader;
+import com.human.util.NuclearExplosionUtil;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
 import java.time.Duration;
@@ -35,14 +38,15 @@ public class NukeCommand {
         var center = context.getSource().getPosition();
         var progressTracker = new ExplosionProgressTracker();
         var nuclearExplosionEffects = new NuclearExplosionEffects();
-        var radius = 16 * 8;
-        var maxKnockback = 5;
+        var radius = NuclearExplosionUtil.RADIUS;
+        var maxKnockback = NuclearExplosionUtil.MAX_KNOCKBACK;
 
         return Explosion.builder(level, center)
             .withRadius(Direction.Plane.HORIZONTAL, radius)
             .withRadius(Direction.UP, radius / 2)
-            .withRadius(Direction.DOWN, 16 * 2)
+            .withRadius(Direction.DOWN, NuclearExplosionUtil.RADIUS_DOWN)
             .onExplosionStart(() -> {
+                NuclearFalloutSpreader.spread(level, BlockPos.containing(center), NuclearExplosionUtil.FALLOUT_RADIUS_IN_CHUNKS);
                 progressTracker.startTimer();
 
                 var entities = ExplosionUtil.getEntitiesInRadius(level, center, radius);
@@ -60,6 +64,8 @@ public class NukeCommand {
                 nuclearExplosionEffects.apply($, pos);
                 progressTracker.incrementBlockDestroyCounter();
             })
+            .onCycleStart(() -> nuclearExplosionEffects.beginCycle(level))
+            .onCycleFinish(sampledPositions -> nuclearExplosionEffects.flushParticles(level))
             .onExplosionFinish(() -> {
                 progressTracker.stopTimer();
 

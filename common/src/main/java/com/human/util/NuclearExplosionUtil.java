@@ -10,8 +10,10 @@ import com.human.Human;
 import com.human.common.gameplay.effect.RadiationLevel;
 import com.human.common.gameplay.entity.nuke.MushroomCloudEntity;
 import com.human.common.gameplay.explosion.nuke.NuclearExplosionEffects;
+import com.human.common.gameplay.explosion.nuke.NuclearFalloutSpreader;
 import com.human.common.model.RadiationExposure;
 import com.human.compatibility.avp_alien.AVPAlien;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -20,6 +22,24 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class NuclearExplosionUtil {
+
+    /** Horizontal crater radius, in chunks. The blast is spec'd as a five-chunk crater. */
+    public static final int RADIUS_IN_CHUNKS = 5;
+
+    /** Horizontal crater radius, in blocks. */
+    public static final int RADIUS = 16 * RADIUS_IN_CHUNKS;
+
+    /** Vertical crater radius above the centre, in blocks. */
+    public static final int RADIUS_UP = RADIUS / 2;
+
+    /** Vertical crater radius below the centre, in blocks. */
+    public static final int RADIUS_DOWN = 16 * 2;
+
+    /** Radius of the fallout biome, in chunks. The contaminated zone is far wider than the crater. */
+    public static final int FALLOUT_RADIUS_IN_CHUNKS = 16;
+
+    /** Peak knockback applied at ground zero. */
+    public static final int MAX_KNOCKBACK = 5;
 
     /** Nobody walks away from a detonation clean: the faintest dose still plants level I. */
     private static final int MINIMUM_FALLOUT_EXPOSURE = 1200;
@@ -31,8 +51,9 @@ public class NuclearExplosionUtil {
         return Explosion.builder(level, center)
             .withRadius(Direction.Plane.HORIZONTAL, radius)
             .withRadius(Direction.UP, radius / 2)
-            .withRadius(Direction.DOWN, 16 * 2)
+            .withRadius(Direction.DOWN, RADIUS_DOWN)
             .onExplosionStart(() -> {
+                NuclearFalloutSpreader.spread(level, BlockPos.containing(center), FALLOUT_RADIUS_IN_CHUNKS);
                 progressTracker.startTimer();
 
                 var entities = ExplosionUtil.getEntitiesInRadius(level, center, radius);
@@ -60,6 +81,8 @@ public class NuclearExplosionUtil {
                 nuclearExplosionEffects.apply($, pos);
                 progressTracker.incrementBlockDestroyCounter();
             })
+            .onCycleStart(() -> nuclearExplosionEffects.beginCycle(level))
+            .onCycleFinish(sampledPositions -> nuclearExplosionEffects.flushParticles(level))
             .onExplosionFinish(() -> {
                 progressTracker.stopTimer();
 
