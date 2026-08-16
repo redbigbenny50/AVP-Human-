@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_orientable_trapdoor_top",
+  "textures": {
+    "texture": "avp_human:block/light_gray_industrial_glass_trapdoor"
+  }
+}

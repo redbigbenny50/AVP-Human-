@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_brown_plastic": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:brown_plastic"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:brown_plastic_wall_from_brown_plastic_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_brown_plastic"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:brown_plastic_wall_from_brown_plastic_stonecutting"
+    ]
+  }
+}

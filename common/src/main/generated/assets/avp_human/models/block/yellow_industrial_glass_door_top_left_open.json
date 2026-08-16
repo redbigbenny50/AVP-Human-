@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left_open",
+  "textures": {
+    "bottom": "avp_human:block/yellow_industrial_glass_door_bottom",
+    "top": "avp_human:block/yellow_industrial_glass_door_top"
+  }
+}

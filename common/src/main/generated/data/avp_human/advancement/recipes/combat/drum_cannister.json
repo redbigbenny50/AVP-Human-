@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gunpowder": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:gunpowder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_storage_blocks/brass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:storage_blocks/brass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:drum_cannister"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_storage_blocks/brass",
+      "has_gunpowder"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:drum_cannister"
+    ]
+  }
+}

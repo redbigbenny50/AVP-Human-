@@ -1,0 +1,7 @@
+{
+  "parent": "blib:block/template_wall_side_tall",
+  "textures": {
+    "top": "avp_human:block/black_industrial_glass",
+    "wall": "avp_human:block/black_industrial_glass"
+  }
+}

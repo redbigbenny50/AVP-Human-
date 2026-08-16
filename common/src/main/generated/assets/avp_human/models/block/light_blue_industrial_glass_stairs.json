@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "avp_human:block/light_blue_industrial_glass",
+    "side": "avp_human:block/light_blue_industrial_glass",
+    "top": "avp_human:block/light_blue_industrial_glass"
+  }
+}

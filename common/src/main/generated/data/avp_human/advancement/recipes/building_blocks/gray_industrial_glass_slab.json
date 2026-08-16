@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gray_industrial_glass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:gray_industrial_glass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:gray_industrial_glass_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gray_industrial_glass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:gray_industrial_glass_slab"
+    ]
+  }
+}
