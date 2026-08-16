@@ -40,6 +40,7 @@ import com.human.client.render.item.gun.muzzled.impl.OldPainlessItemRenderer;
 import com.human.client.render.item.gun.muzzled.impl.ZX76ShotgunItemRenderer;
 import com.human.client.screen.ArmorCaseScreen;
 import com.human.client.screen.IndustrialFurnaceScreen;
+import com.human.client.screen.MarineInventoryScreen;
 import com.human.common.registry.init.HumanBlockEntityTypes;
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.HumanEntityTypes;
@@ -242,7 +243,20 @@ public class HumanClient {
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL, RenderType.cutout());
         HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS.values()
+            .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
+        // Coloured glass is translucent where the uncoloured is cutout, so every coloured derivative has to be
+        // registered too - missing one renders it fully opaque with nothing logged.
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.values()
+            .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.values()
+            .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.values()
+            .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.values()
+            .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.values()
             .forEach(blockSupplier -> MOD.registries().registerBlockRenderLayer(blockSupplier, RenderType.translucent()));
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_PANE, RenderType.cutout());
         HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE.values()
@@ -315,6 +329,7 @@ public class HumanClient {
     private static void registerMenuScreens() {
         MOD.registries().registerMenuScreen(HumanMenuTypes.ARMOR_CASE, ArmorCaseScreen::new);
         MOD.registries().registerMenuScreen(HumanMenuTypes.INDUSTRIAL_FURNACE_MENU, IndustrialFurnaceScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.MARINE_INVENTORY, MarineInventoryScreen::new);
     }
 
     private static void registerParasiteHeadAttachmentOffsetData() {

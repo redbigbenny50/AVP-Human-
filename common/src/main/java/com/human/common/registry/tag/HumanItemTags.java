@@ -18,6 +18,8 @@ public class HumanItemTags {
 
     public static final TagKey<Item> EXTREMELY_RADIOACTIVE_ITEMS = create("extremely_radioactive_items");
 
+    public static final TagKey<Item> DAGGERS = create("daggers");
+
     public static final TagKey<Item> GUNS = create("guns");
 
     public static final TagKey<Item> INDUSTRIAL_GLASS = create("industrial_glass");

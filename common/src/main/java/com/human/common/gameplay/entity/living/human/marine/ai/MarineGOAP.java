@@ -23,6 +23,9 @@ import com.human.common.gameplay.entity.living.human.marine.ai.equip_totem.Totem
 import com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.ExtinguishFireActions;
 import com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.ExtinguishFireGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.extinguish_fire.ExtinguishFireSensors;
+import com.human.common.gameplay.entity.living.human.marine.ai.fall_back.FallBackActions;
+import com.human.common.gameplay.entity.living.human.marine.ai.fall_back.FallBackGoals;
+import com.human.common.gameplay.entity.living.human.marine.ai.fall_back.FallBackSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.follow_leader.FollowLeaderActions;
 import com.human.common.gameplay.entity.living.human.marine.ai.follow_leader.FollowLeaderGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.follow_leader.FollowLeaderSensors;
@@ -35,6 +38,12 @@ import com.human.common.gameplay.entity.living.human.marine.ai.idle.IdleSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.place_torch.TorchActions;
 import com.human.common.gameplay.entity.living.human.marine.ai.place_torch.TorchGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.place_torch.TorchSensors;
+import com.human.common.gameplay.entity.living.human.marine.ai.sentry.SentryActions;
+import com.human.common.gameplay.entity.living.human.marine.ai.sentry.SentryGoals;
+import com.human.common.gameplay.entity.living.human.marine.ai.sentry.SentrySensors;
+import com.human.common.gameplay.entity.living.human.marine.ai.standoff.StandoffActions;
+import com.human.common.gameplay.entity.living.human.marine.ai.standoff.StandoffGoals;
+import com.human.common.gameplay.entity.living.human.marine.ai.standoff.StandoffSensors;
 import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWolfActions;
 import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWolfGoals;
 import com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf.TameWolfSensors;
@@ -53,6 +62,9 @@ public class MarineGOAP {
         .apply(MarineGOAP::addSensorsPackage)
         .apply(MarineGOAP::addAcquireFireResistancePackage)
         .apply(MarineGOAP::addCombatPackage)
+        .apply(MarineGOAP::addFallBackPackage)
+        .apply(MarineGOAP::addStandoffPackage)
+        .apply(MarineGOAP::addSentryPackage)
         .apply(MarineGOAP::addEquipBestArmorPackage)
         .apply(MarineGOAP::addExtinguishSelfPackage)
         .apply(MarineGOAP::addSatisfyBoredomPackage)
@@ -169,6 +181,57 @@ public class MarineGOAP {
         graphBuilder.addSensor(CombatSensors.HAS_WEAPON);
         // Used for checking if the attack target is in range of the agent's currently equipped best weapon.
         graphBuilder.addSensor(CombatSensors.IS_ATTACK_TARGET_IN_RANGE_OF_EQUIPPED_BEST_WEAPON);
+
+        return graphBuilder;
+    }
+
+    private static Graph.Builder<Marine> addFallBackPackage(Graph.Builder<Marine> graphBuilder) {
+        // The goal we want to complete.
+        graphBuilder.addGoal(FallBackGoals.FALL_BACK_GOAL);
+
+        // Actions that can complete the goal.
+        graphBuilder.addAction(FallBackActions.FALL_BACK_FROM_ATTACK_TARGET);
+
+        // Read out of the world state by the composite below. Sensing is demand-driven and memoised, so the order
+        // here is documentation rather than a dependency.
+        graphBuilder.addSensor(FallBackSensors.IS_LOW_ON_AMMUNITION);
+        graphBuilder.addSensor(FallBackSensors.IS_ATTACK_TARGET_CHARGING);
+        graphBuilder.addSensor(FallBackSensors.IS_AT_SAFE_DISTANCE);
+        graphBuilder.addSensor(FallBackSensors.IS_FALLING_BACK);
+        // Used for deciding whether giving ground is worth planning for at all.
+        graphBuilder.addSensor(FallBackSensors.SHOULD_FALL_BACK);
+
+        return graphBuilder;
+    }
+
+    private static Graph.Builder<Marine> addStandoffPackage(Graph.Builder<Marine> graphBuilder) {
+        // The goal we want to complete.
+        graphBuilder.addGoal(StandoffGoals.MAINTAIN_STANDOFF_GOAL);
+
+        // Actions that can complete the goal.
+        graphBuilder.addAction(StandoffActions.MAINTAIN_STANDOFF);
+
+        // Read out of the world state by the composite below. Sensing is demand-driven and memoised, so the order
+        // here is documentation rather than a dependency.
+        graphBuilder.addSensor(StandoffSensors.IS_TARGET_INSIDE_STANDOFF);
+        graphBuilder.addSensor(StandoffSensors.IS_AT_STANDOFF_DISTANCE);
+        // Used for deciding whether holding distance is worth planning for at all.
+        graphBuilder.addSensor(StandoffSensors.SHOULD_MAINTAIN_STANDOFF);
+
+        return graphBuilder;
+    }
+
+    private static Graph.Builder<Marine> addSentryPackage(Graph.Builder<Marine> graphBuilder) {
+        // The goal we want to complete.
+        graphBuilder.addGoal(SentryGoals.RETURN_TO_POST_GOAL);
+
+        // Actions that can complete the goal.
+        graphBuilder.addAction(SentryActions.RETURN_TO_POST);
+
+        // Used for checking whether the marine is guarding a point, and whether it has strayed off it.
+        graphBuilder.addSensor(SentrySensors.IS_SENTRY);
+        graphBuilder.addSensor(SentrySensors.IS_AWAY_FROM_POST);
+        graphBuilder.addSensor(SentrySensors.IS_AT_POST);
 
         return graphBuilder;
     }
@@ -402,8 +465,24 @@ public class MarineGOAP {
             BLibEntityPredicates.isInvulnerable(livingEntity)
                 || Objects.equals(marine.getUUID(), livingEntity.getUUID())
                 || MarineAllyUtil.isMarineAlly(marine, livingEntity)
+                // The leader is never a target, whatever the filter says. That has to sit above the filter rather than
+                // inside it, or a blacklist with nothing ticked would turn a squad on its own employer.
+                || marine.getLeaderUUID().isSomeAnd(livingEntity.getUUID()::equals)
         ) {
             return false;
+        }
+
+        if (marine.isSentry()) {
+            // ⚠ The filter chooses what a sentry HUNTS. It does not choose whether it defends itself.
+            //
+            // Self defence and protecting the leader are kept, because the alternative is a marine that stands still
+            // while something eats it - which no player reads as "configured correctly", they read it as broken. What
+            // IS dropped for a sentry is the HATED_BY_MARINES tag, now the filter's business, and following the
+            // leader's fire: punching a cow next to a sentry told to leave animals alone must not get the cow shot,
+            // and that case is the whole reason the filter exists.
+            return marine.getSentryFilter().shouldEngage(livingEntity)
+                || shouldRetaliateAgainstLastAttacker(marine, livingEntity)
+                || shouldProtectSelfOrAllies(marine, livingEntity);
         }
 
         return livingEntity.getType().is(HumanEntityTypeTags.HATED_BY_MARINES)

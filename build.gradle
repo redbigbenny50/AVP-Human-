@@ -34,7 +34,7 @@ blib {
         id = 'avp_human'
         license = 'All Rights Reserved'
         name = 'AVP (Human)'
-        version = '0.1.7'
+        version = '0.1.7-fork'
 
         publish {
             dryRun = true

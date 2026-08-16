@@ -12,16 +12,22 @@ import com.human.common.registry.init.block.HumanTitaniumBlocks;
 import com.human.common.registry.init.item.HumanItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.Collection;
@@ -44,14 +50,58 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         generateSelfDrops();
+        generateAshDrops();
         generateSlabDrops();
         generateCustomDrops();
         generateOtherDrops();
     }
 
+    /**
+     * Ash layers drop ASH BALLS, one per layer - the snow model exactly.
+     * <p>
+     * Previously this was {@code dropSelf}, which handed out a whole {@code ash_block} item for a SINGLE layer. Placing
+     * that back gives eight layers, so a shovel was an ash duplicator. Scaling the drop to the layer count closes that
+     * and gives ash a real unit.
+     * </p>
+     * <p>
+     * Silk touch still returns the layers themselves, again matching snow, so a careful player can relocate a drift
+     * intact instead of reconstituting it.
+     * </p>
+     */
+    private void generateAshDrops() {
+        add(
+            CoreBlocks.ASH_BLOCK.get(),
+            block -> LootTable.lootTable()
+                .withPool(
+                    LootPool.lootPool()
+                        .add(
+                            AlternativesEntry.alternatives(
+                                AlternativesEntry.alternatives(
+                                    SnowLayerBlock.LAYERS.getPossibleValues(),
+                                    layers -> LootItem.lootTableItem(HumanItems.ASH_BALL.get())
+                                        .when(layersAre(block, layers))
+                                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(layers.floatValue())))
+                                )
+                                    .when(doesNotHaveSilkTouch()),
+                                AlternativesEntry.alternatives(
+                                    SnowLayerBlock.LAYERS.getPossibleValues(),
+                                    layers -> LootItem.lootTableItem(CoreBlocks.ASH_BLOCK.get())
+                                        .when(layersAre(block, layers))
+                                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(layers.floatValue())))
+                                )
+                            )
+                        )
+                )
+        );
+    }
+
+    private static LootItemBlockStatePropertyCondition.Builder layersAre(Block block, Integer layers) {
+        return LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SnowLayerBlock.LAYERS, layers.intValue()));
+    }
+
     private void generateSelfDrops() {
         dropSelf(CoreBlocks.ALUMINUM_BLOCK);
-        dropSelf(CoreBlocks.ASH_BLOCK);
         dropSelf(CoreBlocks.AUTUNITE_BLOCK);
         dropSelf(HumanBlocks.CABLE);
         dropSelf(HumanBlocks.BLUEPRINT_BLOCK);
@@ -90,6 +140,7 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS);
         dropSelf(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_PANE);
         dropSelf(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS);
+        dropSelf(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL);
         dropSelf(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR);
         dropSelf(CoreBlocks.LEAD_BLOCK);
         dropSelf(CoreBlocks.LITHIUM_BLOCK);
@@ -187,6 +238,10 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
             HumanIndustrialConcreteBlocks.DYE_COLOR_TO_INDUSTRIAL_CONCRETE_WALL,
             HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS,
             HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL,
+            HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL,
             HumanPaddingBlocks.DYE_COLOR_TO_PADDING,
             HumanPaddingBlocks.DYE_COLOR_TO_PADDING_STAIRS,
             HumanPaddingBlocks.DYE_COLOR_TO_PANEL_PADDING,
@@ -220,6 +275,9 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSlab(HumanFerroaluminumBlocks.FERROALUMINUM_STANDING_SLAB);
         dropSlab(HumanFerroaluminumBlocks.FERROALUMINUM_TREAD_SLAB);
         dropSlab(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB);
+        // ⚠ Slabs and doors need their own tables, not dropSelf: a double slab must yield two, and a door is two
+        // blocks that must yield ONE item rather than one per half.
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.values().forEach(this::dropSlab);
         dropSlab(HumanSteelBlocks.STEEL_FASTENED_SIDING_SLAB);
         dropSlab(HumanSteelBlocks.STEEL_FASTENED_STANDING_SLAB);
         dropSlab(HumanSteelBlocks.STEEL_GRATE_SLAB);
@@ -275,6 +333,8 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         add(CoreBlocks.MONAZITE_ORE, block -> createOreDrop(block, HumanItems.RAW_MONAZITE.get()));
         add(CoreBlocks.ZINC_ORE, block -> createOreMultiDrop(block, HumanItems.RAW_ZINC.get(), 2, 5));
         add(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR, this::createDoorTable);
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.values()
+            .forEach(blockSupplier -> add(blockSupplier, this::createDoorTable));
         add(HumanFerroaluminumBlocks.FERROALUMINUM_DOOR, this::createDoorTable);
         add(HumanSteelBlocks.STEEL_DOOR, this::createDoorTable);
         add(HumanTitaniumBlocks.TITANIUM_DOOR, this::createDoorTable);

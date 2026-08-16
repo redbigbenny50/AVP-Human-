@@ -19,6 +19,18 @@ public class HumanTooltipTranslationKeys {
 
     public static final String REQUIRES_NEARBY_AMMO_CHEST_WITH_AMMO = create("requires_nearby_ammo_chest_with_ammo");
 
+    public static final String STATUS_NEEDS_AMMO_CHEST = create("status.needs_ammo_chest");
+
+    public static final String STATUS_NEEDS_MEDIUM_BULLETS = create("status.needs_medium_bullets");
+
+    public static final String STATUS_NEEDS_REDSTONE = create("status.needs_redstone");
+
+    public static final String STATUS_READY = create("status.ready");
+
+    public static final String USE_CHECK_TURRET_STATUS = create("use.check_turret_status");
+
+    public static final String USE_PICK_UP_TURRET = create("use.pick_up_turret");
+
     public static final String REQUIRES_REDSTONE_POWER = create("requires_redstone_power");
 
     private static @NotNull String create(String name) {

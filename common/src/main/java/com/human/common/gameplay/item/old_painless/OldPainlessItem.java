@@ -28,4 +28,13 @@ public class OldPainlessItem extends GunItem {
 
     @Override
     protected void playUseAnimations(Entity shooter, ItemStack itemStack) {}
+
+    @Override
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean selected) {
+        super.inventoryTick(itemStack, level, entity, slotId, selected);
+        if (!level.isClientSide) {
+            OldPainlessHeat.cool(itemStack);
+        }
+    }
+
 }

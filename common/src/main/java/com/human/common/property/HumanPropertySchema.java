@@ -24,6 +24,21 @@ public class HumanPropertySchema {
             HumanProperties.Blocks.Nuke.ENABLED.key(),
             HumanProperties.Blocks.Nuke.ENABLED.defaultValue()
         )
+        .addComment("Maximum cloudlets rendered for one mushroom cloud effect.")
+        .addProperty(
+            HumanProperties.Blocks.Nuke.CLOUD_PARTICLE_BUDGET.key(),
+            HumanProperties.Blocks.Nuke.CLOUD_PARTICLE_BUDGET.defaultValue()
+        )
+        .addComment("Client screen flash intensity for nearby nuclear explosions. Set to 0 to disable.")
+        .addProperty(
+            HumanProperties.Blocks.Nuke.SCREEN_FLASH_INTENSITY.key(),
+            HumanProperties.Blocks.Nuke.SCREEN_FLASH_INTENSITY.defaultValue()
+        )
+        .addComment("Client screen shake intensity for nearby nuclear explosions. Set to 0 to disable.")
+        .addProperty(
+            HumanProperties.Blocks.Nuke.SCREEN_SHAKE_INTENSITY.key(),
+            HumanProperties.Blocks.Nuke.SCREEN_SHAKE_INTENSITY.defaultValue()
+        )
         .addBlankLine()
         .addComment("Block radius that a turret looks for an ammo chest.")
         .addProperty(

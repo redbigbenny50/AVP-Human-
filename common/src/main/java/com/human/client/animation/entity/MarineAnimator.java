@@ -18,16 +18,26 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
     private static final ResourceLocation ANIMATION = HumanResources.entityAnimationLocation(NAME);
 
     /**
-     * Vanilla's crossbow hold, from {@code AnimationUtils.animateCrossbowHold}: the firing arm swings slightly
-     * outboard, the support arm crosses further in to meet the weapon, and both pitch with the head.
+     * Vanilla's crossbow hold, from {@code AnimationUtils.animateCrossbowHold}, WITH EVERY CONSTANT NEGATED.
+     * <p>
+     * ⚠⚠ THE SIGNS ARE FLIPPED ON PURPOSE AND THAT IS THE WHOLE FIX. These numbers were lifted from vanilla
+     * {@code HumanoidModel}, which drives {@code ModelPart}. Azure bones turn the OPPOSITE WAY on both axes - BLib's
+     * own {@code applyHeadRotations} is the proof, since it negates the head's pitch AND its yaw before writing them to
+     * a bone. Copying vanilla's constants across without flipping them pointed the arms the wrong way, and for the
+     * pitch that meant {@code -PI/2} swung the rifle up over the shoulder and BACKWARDS rather than forwards - a
+     * constant error of almost exactly 180 degrees, no matter where the target was or whether the marine was moving.
+     * <p>
+     * Converting properly: vanilla asks for {@code armV = -PI/2 + headV}; an Azure bone needs {@code armA = -armV}, and
+     * {@code headA = -headV} already, so it works out to {@code armA = +PI/2 + headA}. The constant flips, the head
+     * term stays added. Same derivation for every offset below.
      */
-    private static final float FIRING_ARM_YAW_OFFSET = -0.3F;
+    private static final float FIRING_ARM_YAW_OFFSET = 0.3F;
 
-    private static final float SUPPORT_ARM_YAW_OFFSET = 0.6F;
+    private static final float SUPPORT_ARM_YAW_OFFSET = -0.6F;
 
-    private static final float FIRING_ARM_PITCH_OFFSET = 0.1F;
+    private static final float FIRING_ARM_PITCH_OFFSET = -0.1F;
 
-    private static final float SUPPORT_ARM_PITCH = -1.5F;
+    private static final float SUPPORT_ARM_PITCH = 1.5F;
 
     @Override
     public void registerTracks(AzAnimationTrackContainer<Marine> animationControllerContainer) {
@@ -68,7 +78,7 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
         if (head != null && animatable.isAggressive()) {
             if (rightArm != null) {
                 rightArm.setRotY(FIRING_ARM_YAW_OFFSET + head.getRotY());
-                rightArm.setRotX(-Mth.HALF_PI + head.getRotX() + FIRING_ARM_PITCH_OFFSET);
+                rightArm.setRotX(Mth.HALF_PI + head.getRotX() + FIRING_ARM_PITCH_OFFSET);
             }
 
             if (leftArm != null) {

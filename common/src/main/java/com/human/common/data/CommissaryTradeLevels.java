@@ -14,6 +14,16 @@ import java.util.List;
 public class CommissaryTradeLevels {
 
     public static List<VillagerTrades.ItemListing> LEVEL_1 = List.of(
+        // Rations, cheap and plentiful - the commissary's most ordinary stock, and the reliable way to get the
+        // cornbread a marine dog is tamed with. Priced at one emerald because it is bread, and stocked deep (12 uses)
+        // so taming a dog never comes down to waiting for a restock.
+        (entity, randomSource) -> new MerchantOffer(
+            new ItemCost(Items.EMERALD, 1),
+            new ItemStack(HumanItems.CORNBREAD.get(), 6),
+            12,
+            2,
+            0.02f
+        ),
         (entity, randomSource) -> new MerchantOffer(
             new ItemCost(Items.EMERALD, 1),
             new ItemStack(HumanItems.SMALL_BULLET.get(), 8),

@@ -104,6 +104,22 @@ public class HumanDataComponents {
             .cacheEncoding()
     );
 
+    // OLD PAINLESS OVERHEAT. Heat is a persisted, network-synced component so the HUD/heat render layer and the
+    // server-side firing lockout agree without a bespoke packet.
+    public static final BLibHolder<DataComponentType<Integer>> OLD_PAINLESS_HEAT = create(
+        "old_painless_heat",
+        builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
+    public static final BLibHolder<DataComponentType<Boolean>> OLD_PAINLESS_OVERHEATED = create(
+        "old_painless_overheated",
+        builder -> builder.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL)
+            .cacheEncoding()
+    );
+
     private static <T> BLibHolder<DataComponentType<T>> create(
         String id,
         UnaryOperator<DataComponentType.Builder<T>> unaryOperator

@@ -74,8 +74,29 @@ public class BlockModelProvider extends FabricModelProvider {
             .door(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR.get())
             .stairs(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS.get())
             .trapdoor(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR.get());
-        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS.forEach(
-            (dyeColor, blockSupplier) -> generators.createTrivialCube(blockSupplier.get())
+        // ⚠ NO createTrivialCube HERE. generators.family(block) calls fullBlock() internally, which emits the block's
+        // own CUBE_ALL model and blockstate - so generating the cube separately as well is a DUPLICATE MODEL and
+        // datagen dies on it. The uncoloured glass has always relied on family() for the same reason.
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS.forEach((dyeColor, blockSupplier) -> {
+            createIndustrialGlassSlab(
+                generators,
+                blockSupplier.get(),
+                HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.get(dyeColor).get()
+            );
+            generators.family(blockSupplier.get())
+                .door(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.get(dyeColor).get())
+                .stairs(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.get(dyeColor).get())
+                .trapdoor(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.get(dyeColor).get());
+            createWall(
+                generators,
+                blockSupplier.get(),
+                HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.get(dyeColor).get()
+            );
+        });
+        createWall(
+            generators,
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS.get(),
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL.get()
         );
         createGlassBlocks(
             generators,
@@ -171,6 +192,7 @@ public class BlockModelProvider extends FabricModelProvider {
                 generators.family(block)
                     .slab(slabBlock)
                     .stairs(stairBlock);
+                createWall(generators, block, HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.get(dyeColor).get());
             }
         );
 
@@ -571,8 +593,19 @@ public class BlockModelProvider extends FabricModelProvider {
     }
 
     private void createIndustrialGlassSlab(BlockModelGenerators generators) {
-        var block = HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS.get();
-        var slabBlock = HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB.get();
+        createIndustrialGlassSlab(
+            generators,
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS.get(),
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB.get()
+        );
+    }
+
+    /**
+     * ⚠ The slab takes its SIDE from a dedicated {@code _slab_side} texture rather than the block face - the seam sits
+     * in the middle of the sheet instead of at the top - so every coloured slab needs its own
+     * {@code <colour>_industrial_glass_slab_side.png}. The top and bottom come from the parent block.
+     */
+    private void createIndustrialGlassSlab(BlockModelGenerators generators, Block block, Block slabBlock) {
         var textureMapping = TextureMapping.cube(block);
         var textureMapping2 = TextureMapping.column(
             TextureMapping.getBlockTexture(slabBlock, "_side"),

@@ -2,6 +2,22 @@
   "values": [
     "avp_human:ferroaluminum_trapdoor",
     "avp_human:industrial_glass_trapdoor",
+    "avp_human:white_industrial_glass_trapdoor",
+    "avp_human:orange_industrial_glass_trapdoor",
+    "avp_human:magenta_industrial_glass_trapdoor",
+    "avp_human:light_blue_industrial_glass_trapdoor",
+    "avp_human:yellow_industrial_glass_trapdoor",
+    "avp_human:lime_industrial_glass_trapdoor",
+    "avp_human:pink_industrial_glass_trapdoor",
+    "avp_human:gray_industrial_glass_trapdoor",
+    "avp_human:light_gray_industrial_glass_trapdoor",
+    "avp_human:cyan_industrial_glass_trapdoor",
+    "avp_human:purple_industrial_glass_trapdoor",
+    "avp_human:blue_industrial_glass_trapdoor",
+    "avp_human:brown_industrial_glass_trapdoor",
+    "avp_human:green_industrial_glass_trapdoor",
+    "avp_human:red_industrial_glass_trapdoor",
+    "avp_human:black_industrial_glass_trapdoor",
     "avp_human:steel_trapdoor",
     "avp_human:titanium_trapdoor"
   ]

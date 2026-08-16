@@ -29,6 +29,11 @@ public class HumanIndustrialGlassBlockItems {
         HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR
     );
 
+    public static final BLibHolder<BlockItem> INDUSTRIAL_GLASS_WALL = create(
+        "industrial_glass_wall",
+        HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL
+    );
+
     public static final BLibHolder<BlockItem> INDUSTRIAL_GLASS_PANE = create(
         "industrial_glass_pane",
         HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_PANE
@@ -72,6 +77,81 @@ public class HumanIndustrialGlassBlockItems {
                     Map.Entry::getKey,
                     entry -> create(
                         entry.getKey().getName() + "_industrial_glass_pane",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS =
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_industrial_glass_stairs",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB =
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_industrial_glass_slab",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR =
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_industrial_glass_door",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR =
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_industrial_glass_trapdoor",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL =
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_industrial_glass_wall",
                         entry.getValue()
                     ),
                     (a, b) -> b,

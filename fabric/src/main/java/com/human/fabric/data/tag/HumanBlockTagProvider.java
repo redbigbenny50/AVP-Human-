@@ -119,6 +119,15 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         var trapdoorTagProvider = getOrCreateTagBuilder(BlockTags.TRAPDOORS);
         var wallTagBuilder = getOrCreateTagBuilder(BlockTags.WALLS);
 
+        // Soundproof glass. Wool sits in both of these and they do DIFFERENT jobs: OCCLUDES_VIBRATION_SIGNALS stops a
+        // vibration escaping a space enclosed by the block, DAMPENS_VIBRATIONS stops the block itself emitting one when
+        // walked on or broken. Wool has both, so glass needs both to behave the way people expect wool to.
+        //
+        // Added as the whole family tag rather than block by block, so anything added to industrial glass later is
+        // soundproof for free.
+        getOrCreateTagBuilder(BlockTags.OCCLUDES_VIBRATION_SIGNALS).addTag(HumanBlockTags.INDUSTRIAL_GLASS);
+        getOrCreateTagBuilder(BlockTags.DAMPENS_VIBRATIONS).addTag(HumanBlockTags.INDUSTRIAL_GLASS);
+
         Human.MOD.registries().getAllHolders(BuiltInRegistries.BLOCK).forEach(deferredHolder -> {
             var block = deferredHolder.get();
 
@@ -389,15 +398,27 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     private void addIndustrialGlassBlocks() {
-        getOrCreateTagBuilder(HumanBlockTags.INDUSTRIAL_GLASS)
+        var industrialGlassTagBuilder = getOrCreateTagBuilder(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS_BLOCK)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS_PANE)
             .add(
                 HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR.get(),
                 HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB.get(),
                 HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS.get(),
-                HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR.get()
+                HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR.get(),
+                HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL.get()
             );
+
+        Stream.of(
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR,
+            HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL
+        )
+            .flatMap(map -> map.values().stream())
+            .map(Supplier::get)
+            .forEach(industrialGlassTagBuilder::add);
     }
 
     private void addIndustrialGlassPaneBlocks() {

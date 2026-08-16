@@ -79,6 +79,33 @@ public class MiscellaneousRecipeProvider {
             .pattern("A")
             .into(2, HumanItems.CARBON_DUST);
 
+        // CORNBREAD. Marines spawn carrying it and it is the only thing that tames a marine dog, but until now it had
+        // no survival source at all - creative menu or looting a corpse. Wheat, egg and milk are the bread of it; the
+        // yellow dye is the point, because nothing in this world grows maize and the colour is out of a packet.
+        //
+        // ⚠ Shapeless deliberately. It is field rations, not a construction, and a fixed grid pattern for four loose
+        // ingredients is busywork. The milk bucket returns as an empty bucket on its own - vanilla handles that through
+        // the item's crafting remainder, so no special handling is needed here.
+        builder.shapeless()
+            .withCategory(RecipeCategory.FOOD)
+            .requires(1, Items.WHEAT)
+            .requires(1, Items.EGG)
+            .requires(1, Items.MILK_BUCKET)
+            .requires(1, Items.YELLOW_DYE)
+            .into(2, HumanItems.CORNBREAD);
+
+        // ASH. Four balls pack back into a layer (the snowball -> snow relationship), and a packed ash block renders
+        // down into grey dye - the one thing fallout ash is actually good for.
+        builder.shapeless()
+            .withCategory(RecipeCategory.MISC)
+            .requires(4, HumanItems.ASH_BALL)
+            .into(1, CoreBlocks.ASH_BLOCK);
+
+        builder.shapeless()
+            .withCategory(RecipeCategory.MISC)
+            .requires(1, CoreBlocks.ASH_BLOCK)
+            .into(4, Items.GRAY_DYE);
+
         builder.shaped()
             .withCategory(RecipeCategory.MISC)
             .define('A', HumanCommonItemTags.INGOTS_ALUMINUM)

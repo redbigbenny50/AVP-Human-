@@ -62,11 +62,13 @@ import com.human.common.registry.init.item.block.HumanTitaniumBlockItems;
 import com.human.common.registry.key.HumanVillagerGiftKeys;
 import com.human.common.registry.tag.HumanItemTags;
 import com.human.mixin.GiveGiftToHeroAccessor;
+import com.human.util.NuclearExplosionUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
@@ -159,6 +161,7 @@ public class Human {
         MOD.events().postLevelTick().register(Human::tickMarinePatrolSpawner);
         MOD.events().postLevelTick().register(Human::tickNukeAshPlacement);
         MOD.events().postLevelTick().register(Human::tickPowerSystem);
+        MOD.events().postLevelTick().register(NuclearExplosionUtil::resumeUnfinishedExplosions);
         MOD.events().onEntityTick().register(Human::applyFullArmorSetBonuses);
         MOD.events().onTagsUpdated().register(($1, $2) -> GeneBonusDataRegistry.rebuildLookupMappings());
         MOD.events().serverStarting().register(HumanCommissaryVillagerHouseInjector::inject);
@@ -170,8 +173,18 @@ public class Human {
             return;
         }
 
+        // ⚠ This runs for EVERY living entity, EVERY tick, and every set below starts with a tag lookup on the helmet.
+        // The overwhelming majority of entities in a world - every zombie, cow, alien and item frame - wear no helmet
+        // at all, so one emptiness check retires them for the cost of an array read instead of three tag lookups.
+        if (livingEntity.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            return;
+        }
+
         if (BLibEntityPredicates.hasFullArmorSetMatching(livingEntity, itemStack -> itemStack.is(HumanItemTags.WY_APE_ARMOR))) {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 5, 0, true, false, true));
+            // The weight of the plate, the same trade the MK50 makes. Five ticks and refreshed every tick, so it
+            // lapses on its own the moment a piece comes off rather than needing to be cleared.
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 0, true, false, true));
         }
 
         var supplyAir = false;

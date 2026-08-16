@@ -39,6 +39,8 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.MEDIUM_BULLET);
         generateStandardItem(generators, HumanItems.SHOTGUN_SHELL);
         generateStandardItem(generators, HumanItems.FUEL_TANK);
+        generateStandardItem(generators, HumanItems.DRUM_CARTRIDGE);
+        generateStandardItem(generators, HumanItems.DRUM_CANNISTER);
         generateStandardItem(generators, HumanArmorItems.WY_APE_BOOTS);
         generateStandardItem(generators, HumanArmorItems.WY_APE_CHESTPLATE);
         generateStandardItem(generators, HumanArmorItems.WY_APE_HELMET);
@@ -103,6 +105,7 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.REDSTONE_CRYSTAL);
         generateStandardItem(generators, HumanItems.SERVO);
         generateStandardItem(generators, HumanItems.SPEAKER);
+        generateStandardItem(generators, HumanItems.ASH_BALL);
         generateStandardItem(generators, HumanItems.CARBON_DUST);
         generateStandardItem(generators, HumanItems.CORNBREAD);
         generateStandardItem(generators, HumanItems.CPU);

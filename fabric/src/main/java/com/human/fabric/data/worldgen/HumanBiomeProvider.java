@@ -40,7 +40,7 @@ public class HumanBiomeProvider extends FabricDynamicRegistryProvider {
                     .waterFogColor(10944384)
                     .waterColor(6666343)
                     .grassColorOverride(7237230)
-                    .foliageColorOverride(9453889)
+                    .foliageColorOverride(HumanBiomeKeys.NUKED_FOLIAGE_COLOR)
                     .ambientParticle(new AmbientParticleSettings(ParticleTypes.ASH, 0.5F))
                     .grassColorModifier(BiomeSpecialEffects.GrassColorModifier.NONE)
                     .build()

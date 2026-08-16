@@ -30,6 +30,8 @@ public class CombatCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.SHOTGUN_SHELL);
         CreativeModeTabUtil.accept(output, HumanItems.ROCKET);
         CreativeModeTabUtil.accept(output, HumanItems.FUEL_TANK);
+        CreativeModeTabUtil.accept(output, HumanItems.DRUM_CARTRIDGE);
+        CreativeModeTabUtil.accept(output, HumanItems.DRUM_CANNISTER);
 
         CreativeModeTabUtil.accept(output, HumanGunItems.F903WE_RIFLE);
         CreativeModeTabUtil.accept(output, HumanGunItems.FLAMETHROWER_SEVASTOPOL);

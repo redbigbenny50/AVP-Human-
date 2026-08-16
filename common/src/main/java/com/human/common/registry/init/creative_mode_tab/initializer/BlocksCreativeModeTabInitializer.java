@@ -45,6 +45,7 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR);
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB);
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL);
 
         // Ferroaluminum
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.FERROALUMINUM_BLOCK);

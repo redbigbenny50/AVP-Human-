@@ -72,6 +72,7 @@ public class EnUsBlockProvider {
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR, "Industrial Glass Trap Door");
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB, "Industrial Glass Slab");
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS, "Industrial Glass Stairs");
+        addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL, "Industrial Glass Wall");
         addBlock(builder, CoreBlocks.LEAD_BLOCK, "Block of Lead");
         addBlock(builder, HumanBlocks.LEAD_CHEST, "Lead Chest");
         addBlock(builder, HumanFerroaluminumBlocks.FERROALUMINUM_FASTENED_STANDING_SLAB, "Ferroaluminum Fastened Standing Slab");
@@ -125,6 +126,24 @@ public class EnUsBlockProvider {
         );
         HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE.forEach(
             (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Pane")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Stairs")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Slab")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Door")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Trap Door")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Wall")
+        );
+        HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Plastic Wall")
         );
 
         addBlock(builder, CoreBlocks.LITHIUM_BLOCK, "Block of Lithium");

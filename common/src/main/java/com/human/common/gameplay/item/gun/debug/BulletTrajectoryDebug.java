@@ -1,11 +1,10 @@
 package com.human.common.gameplay.item.gun.debug;
 
 import com.human.common.gameplay.item.GunItem;
+import com.human.common.gameplay.item.gun.GunAccuracyState;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.attack.GunHitResult;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
@@ -16,10 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BulletTrajectoryDebug {
-
-    private static final double PARTICLE_STEP = 2.0;
-
-    private static final int MAX_TRAIL_PARTICLES = 48;
 
     private static final Set<UUID> ENABLED_PLAYERS = new HashSet<>();
 
@@ -55,37 +50,6 @@ public class BulletTrajectoryDebug {
 
         var maxDistance = gunAttackConfig.fireModeConfig().range();
         var lineDistance = Math.min(distanceTraveled, maxDistance);
-        var particleStep = Math.max(PARTICLE_STEP, lineDistance / MAX_TRAIL_PARTICLES);
-
-        for (double distance = 0.0; distance <= lineDistance; distance += particleStep) {
-            var point = origin.add(direction.scale(distance));
-            sendParticle(player, ParticleTypes.END_ROD, point, 1, 0.0F, 0.0F, 0.0F, 0.0F);
-        }
-
-        for (var hitResult : hitResults) {
-            switch (hitResult) {
-                case GunHitResult.Block block -> {
-                    var center = block.blockPos().getCenter();
-                    sendParticle(player, ParticleTypes.FLAME, center, 8, 0.15F, 0.15F, 0.15F, 0.0F);
-                }
-                case GunHitResult.Entity entityHit -> {
-                    var entity = player.serverLevel().getEntity(entityHit.entityUUID());
-
-                    if (entity != null) {
-                        sendParticle(
-                            player,
-                            ParticleTypes.CRIT,
-                            new Vec3(entity.getX(), entity.getEyeY(), entity.getZ()),
-                            8,
-                            0.2F,
-                            0.2F,
-                            0.2F,
-                            0.0F
-                        );
-                    }
-                }
-            }
-        }
 
         player.sendSystemMessage(
             Component.literal(
@@ -93,36 +57,15 @@ public class BulletTrajectoryDebug {
                     + " dir=" + format(direction)
                     + " range=" + maxDistance
                     + " traced=" + format(lineDistance)
-                    + " recoil=" + format(gunAttackConfig.fireModeConfig().recoil())
-                    + " accuracy=100%/no spread"
+                    + " pellets=" + gunAttackConfig.fireModeConfig().pelletCount()
+                    + " pelletSpread=" + format(gunAttackConfig.fireModeConfig().pelletSpreadDegrees())
+                    + " falloffStart=" + format(
+                        gunAttackConfig.fireModeConfig().damageFalloffStartFraction() * gunAttackConfig.fireModeConfig().range()
+                    )
+                    + " recoil=" + format(gunAttackConfig.fireModeConfig().recoilProfile().verticalKick())
+                    + " maxSpread=" + format(gunAttackConfig.fireModeConfig().recoilProfile().maximumSpread())
                     + " pierces=" + totalPierces + "/" + piercingBudget
                     + " hits=" + hitResults.size()
-            )
-        );
-    }
-
-    private static void sendParticle(
-        ServerPlayer player,
-        net.minecraft.core.particles.ParticleOptions particle,
-        Vec3 point,
-        int count,
-        float xDist,
-        float yDist,
-        float zDist,
-        float maxSpeed
-    ) {
-        player.connection.send(
-            new ClientboundLevelParticlesPacket(
-                particle,
-                false,
-                point.x,
-                point.y,
-                point.z,
-                xDist,
-                yDist,
-                zDist,
-                maxSpeed,
-                count
             )
         );
     }
@@ -134,9 +77,59 @@ public class BulletTrajectoryDebug {
             Component.literal(
                 "Held gun debug: range=" + fireMode.range()
                     + " recoil=" + format(fireMode.recoil())
+                    + " pellets=" + fireMode.pelletCount()
+                    + " pelletSpread=" + format(fireMode.pelletSpreadDegrees())
+                    + " falloff=" + format(fireMode.damageFalloffStartFraction() * fireMode.range()) + "-" + format(fireMode.range())
+                    + " minDamage=" + format(fireMode.minimumDamageMultiplier() * 100.0F) + "%"
+                    + " maxSpread=" + format(fireMode.recoilProfile().maximumSpread())
                     + " damage=" + format(fireMode.damage())
                     + " cooldownTicks=" + fireMode.cooldownInTicks()
-                    + " accuracy=100%/no spread"
+                    + " spreadPerShot=" + format(fireMode.recoilProfile().spreadPerShot())
+                    + " recovery=" + format(fireMode.recoilProfile().recoveryPerTick()) + "/tick"
+            )
+        );
+    }
+
+    public static void sendAccuracyState(ServerPlayer player, GunItem gunItem) {
+        var fireMode = gunItem.getGunConfig().getDefaultFireMode();
+        var state = GunAccuracyState.snapshot(player, fireMode);
+        player.sendSystemMessage(
+            Component.literal(
+                "Gun state: shot=" + state.shotIndex()
+                    + " bloom=" + format(state.bloom())
+                    + " movement=" + format(state.movementPenalty())
+                    + " nextSpread=" + format(state.nextShotSpread())
+                    + " aiming=" + state.aiming()
+            )
+        );
+    }
+
+    public static void sendSpreadInfo(ServerPlayer player, GunItem gunItem) {
+        var profile = gunItem.getGunConfig().getDefaultFireMode().recoilProfile();
+        player.sendSystemMessage(
+            Component.literal(
+                "Spread: perShot=" + format(profile.spreadPerShot())
+                    + " max=" + format(profile.maximumSpread())
+                    + " recovery=" + format(profile.recoveryPerTick()) + "/tick"
+                    + " aimedMultiplier=" + format(profile.aimedMultiplier())
+            )
+        );
+    }
+
+    public static void sendRecoilInfo(ServerPlayer player, GunItem gunItem) {
+        var profile = gunItem.getGunConfig().getDefaultFireMode().recoilProfile();
+        var pattern = new StringBuilder();
+        for (var index = 0; index < profile.horizontalPattern().length; index++) {
+            if (index > 0) {
+                pattern.append(", ");
+            }
+            pattern.append(format(profile.horizontalPattern()[index] * profile.horizontalKick()));
+        }
+        player.sendSystemMessage(
+            Component.literal(
+                "Recoil: vertical=" + format(profile.verticalKick())
+                    + " horizontal=" + format(profile.horizontalKick())
+                    + " pattern=[" + pattern + "]"
             )
         );
     }

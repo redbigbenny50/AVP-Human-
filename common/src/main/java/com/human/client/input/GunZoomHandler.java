@@ -64,7 +64,17 @@ public class GunZoomHandler {
             && minecraft.getOverlay() == null
             && minecraft.player != null
             && minecraft.player.isUsingItem()
-            && minecraft.options.keyUse.isDown()
+            // ⚠⚠ DO NOT REINSTATE `&& minecraft.options.keyUse.isDown()` HERE. It broke the sniper scope AND the FOV
+            // zoom on Steam Deck and on every controller setup: KeyMapping.isDown() reflects only Minecraft's OWN
+            // keybinding state, and Steam Input / Controllable / MidnightControls drive the USE action without ever
+            // leaving that mapping flagged down. So isUsingItem() was TRUE while keyUse.isDown() was FALSE, and every
+            // caller of this method (SniperScopeOverlay.render via isAimingSniper, and MixinGameRenderer_GunZoom)
+            // silently did nothing.
+            // <p>
+            // It was redundant anyway: isUsingItem() already means the use action is being held, and the instanceof
+            // below already identifies WHAT is being held. The keybind added no information on keyboard-and-mouse and
+            // excluded every other input device.
+            // </p>
             && minecraft.player.getUseItem().getItem() instanceof GunItem;
     }
 

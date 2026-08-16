@@ -7,6 +7,7 @@ import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanBlockItems;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +19,11 @@ import java.time.Duration;
 import java.util.Objects;
 
 public class GunReloading {
+
+    private static final String RELOAD_TOO_EARLY_KEY = "message.avp.reload_too_early";
+
+    /** A magazine may be swapped once it is below this fraction of its capacity. */
+    private static final float RELOAD_THRESHOLD = 0.10F;
 
     public static void reload(Player player) {
         if (player == null) {
@@ -36,15 +42,16 @@ public class GunReloading {
         var gunConfig = gunItem.getGunConfig();
         var maximumAmmunition = gunConfig.maximumAmmunition();
 
-        // TODO: Kinda hacky, find a better way to do this.
-        if (gunConfig == GunData.OLD_PAINLESS) {
-            return;
-        }
-
         int currentAmmunition = itemStack.getOrDefault(HumanDataComponents.AMMUNITION.get(), 0);
 
         if (currentAmmunition >= maximumAmmunition) {
             // Gun is already max ammo, no need to continue trying to reload.
+            return;
+        }
+
+        if (!canReloadYet(gunConfig, currentAmmunition, maximumAmmunition)) {
+            player.displayClientMessage(Component.translatable(RELOAD_TOO_EARLY_KEY), true);
+
             return;
         }
 
@@ -91,9 +98,13 @@ public class GunReloading {
             level.playSound(null, player.blockPosition(), reloadStartSoundEvent.get(), SoundSource.PLAYERS);
         }
 
+        // NOT capped at maximumAmmunition. A whole-unit reload consumes the drum outright, so capping would silently
+        // bin whatever was still in the magazine and punish reloading a moment early. Carrying it over is the reward
+        // for good discipline, and it is not free ammunition - it is only the rounds the player already had.
+        // Round-fed guns cannot overshoot anyway: their neededAmmunition is computed to land exactly on the maximum.
         itemStack.set(
             HumanDataComponents.AMMUNITION.get(),
-            Math.min(currentAmmunition + (ammunitionToRestore * reloadAmount), maximumAmmunition)
+            currentAmmunition + (ammunitionToRestore * reloadAmount)
         );
 
         if (!isPlayerImmortal) {
@@ -256,5 +267,24 @@ public class GunReloading {
         }
 
         record Partial(int remainingAmount) implements ItemConsumptionResult {}
+    }
+
+    /**
+     * Whether the magazine is empty enough to be worth swapping.
+     * <p>
+     * This only applies to guns reloaded a WHOLE UNIT at a time — a drum, a fuel tank — where one reload consumes one
+     * item no matter how much was left. Without a gate, tapping reload after a short burst throws away almost an entire
+     * drum for a handful of rounds. Round-fed weapons are untouched: they consume exactly what they load, so topping up
+     * early costs nothing and refusing it would be pure friction.
+     * <p>
+     * The threshold is deliberately not zero. Players reload in the lull rather than at the click of an empty gun, and
+     * the leftover rounds are carried over rather than binned, so reloading early is rewarded instead of punished.
+     */
+    private static boolean canReloadYet(GunConfig gunConfig, int currentAmmunition, int maximumAmmunition) {
+        if (gunConfig.reloadAmount() < maximumAmmunition) {
+            return true;
+        }
+
+        return currentAmmunition < maximumAmmunition * RELOAD_THRESHOLD;
     }
 }
