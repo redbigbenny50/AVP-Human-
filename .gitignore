@@ -41,3 +41,6 @@ replay_*.log
 
 # publishing
 key.properties
+/avp_human.zip
+/avp_human0.1.7-fork.zip
+/avp_human_current.zip
