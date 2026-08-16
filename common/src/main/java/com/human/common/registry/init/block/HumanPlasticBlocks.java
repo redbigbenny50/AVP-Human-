@@ -321,6 +321,22 @@ public class HumanPlasticBlocks {
                 )
         );
 
+    public static final Map<DyeColor, BLibHolder<Block>> DYE_COLOR_TO_PLASTIC_WALL =
+        Collections.unmodifiableMap(
+            Arrays.stream(DyeColor.values())
+                .collect(
+                    Collectors.toMap(
+                        Function.identity(),
+                        dyeColor -> create(
+                            dyeColor.getName() + "_plastic_wall",
+                            () -> new WallBlock(HumanBlockProperties.DYE_COLOR_TO_PLASTIC_PROPERTIES.get(dyeColor).build())
+                        ),
+                        (a, b) -> b,
+                        LinkedHashMap::new
+                    )
+                )
+        );
+
     public static final Map<DyeColor, BLibHolder<Block>> DYE_COLOR_TO_PLASTIC_STAIRS =
         Collections.unmodifiableMap(
             Arrays.stream(DyeColor.values())

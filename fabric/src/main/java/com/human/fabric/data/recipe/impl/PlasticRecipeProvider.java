@@ -236,6 +236,9 @@ public class PlasticRecipeProvider {
             var stairBlock = HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_STAIRS.get(dyeColor).get();
             RecipeUtil.createStairBlockManualAndStonecutterRecipes(builder, block, stairBlock);
 
+            var wallBlock = HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.get(dyeColor).get();
+            RecipeUtil.createWallBlockManualAndStonecutterRecipes(builder, block, wallBlock);
+
             var stonecut = builder.stonecut(block);
 
             var cutBlock = HumanPlasticBlocks.DYE_COLOR_TO_CUT_PLASTIC.get(dyeColor).get();

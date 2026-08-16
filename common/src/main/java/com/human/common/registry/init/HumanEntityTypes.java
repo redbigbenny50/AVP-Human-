@@ -78,6 +78,11 @@ public class HumanEntityTypes {
         "mushroom_cloud",
         EntityType.Builder.<MushroomCloudEntity>of(MushroomCloudEntity::new, MobCategory.MISC)
             .sized(1.0F, 1.0F)
+            // ⚠ WITHOUT THIS THE MUSHROOM CLOUD IS INVISIBLE TO ALMOST EVERYONE.
+            // clientTrackingRange defaults to 5 CHUNKS (80 blocks), so the entity was only ever sent to players
+            // standing inside the crater. MushroomCloudRenderer expects to draw it out to max(1200, radius * 10)
+            // and the flash/shake reaches 900 blocks, so every player at a survivable distance got the flash and
+            // no cloud at all. 32 chunks = 512 blocks, matching the branch this visual came from.
             .clientTrackingRange(32)
             .updateInterval(1)
     );

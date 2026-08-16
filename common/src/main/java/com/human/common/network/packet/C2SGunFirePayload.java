@@ -11,9 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public record C2SGunFirePayload(
     int tickProgress,
     float yaw,
-    float pitch,
-    int predictedEntityId,
-    String predictedLimbId
+    float pitch
 ) implements CustomPacketPayload {
 
     public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gun_fire");
@@ -27,10 +25,6 @@ public record C2SGunFirePayload(
         C2SGunFirePayload::yaw,
         StreamCodecs.FLOAT,
         C2SGunFirePayload::pitch,
-        StreamCodecs.INT,
-        C2SGunFirePayload::predictedEntityId,
-        StreamCodecs.STRING_UTF8,
-        C2SGunFirePayload::predictedLimbId,
         C2SGunFirePayload::new
     );
 

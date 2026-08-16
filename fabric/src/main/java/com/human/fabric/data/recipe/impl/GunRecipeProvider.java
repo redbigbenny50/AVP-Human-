@@ -28,10 +28,36 @@ public class GunRecipeProvider {
             .pattern("SSS")
             .into(1, HumanItems.ROCKET);
 
+        createDrumRecipes(builder);
         createBulletRecipes(builder);
         createGunPartRecipes(builder);
         createGunRecipes(builder);
         createGrenadeRecipes(builder);
+    }
+
+    /**
+     * The machine guns' magazines. Brass for Old Painless's heavy cannister, clay for the smartgun's caseless drum,
+     * both packed with gunpowder. The brass block is taken by COMMON TAG rather than by item, so a pack that gets its
+     * brass from another mod can still feed the gun.
+     */
+    private static void createDrumRecipes(RecipeBuilder builder) {
+        builder.shaped()
+            .withCategory(RecipeCategory.COMBAT)
+            .define('B', HumanCommonItemTags.STORAGE_BLOCKS_BRASS)
+            .define('G', Items.GUNPOWDER)
+            .pattern("GGG")
+            .pattern("GBG")
+            .pattern("GGG")
+            .into(1, HumanItems.DRUM_CANNISTER);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.COMBAT)
+            .define('C', Items.CLAY)
+            .define('G', Items.GUNPOWDER)
+            .pattern("GGG")
+            .pattern("GCG")
+            .pattern("GGG")
+            .into(1, HumanItems.DRUM_CARTRIDGE);
     }
 
     private static void createGrenadeRecipes(RecipeBuilder builder) {

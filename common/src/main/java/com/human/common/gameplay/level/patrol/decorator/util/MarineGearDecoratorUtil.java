@@ -19,6 +19,9 @@ import java.util.function.Supplier;
 
 public class MarineGearDecoratorUtil {
 
+    /** Full reloads a marine is issued beyond the magazine already in the gun. */
+    private static final int SPARE_RELOADS = 2;
+
     private static final EquipmentSlot[] SLOTS = new EquipmentSlot[] {
         EquipmentSlot.HEAD,
         EquipmentSlot.CHEST,
@@ -75,6 +78,8 @@ public class MarineGearDecoratorUtil {
     public static void giveItem(Marine marine, ItemStack itemStack, boolean marineOwned) {
         if (itemStack.getItem() instanceof GunItem gunItem) {
             itemStack.set(HumanDataComponents.AMMUNITION.get(), gunItem.getGunConfig().maximumAmmunition());
+
+            giveSpareAmmunition(marine, gunItem);
         }
 
         if (marineOwned) {
@@ -82,6 +87,38 @@ public class MarineGearDecoratorUtil {
         }
 
         marine.getInventory().addItemStack(itemStack);
+    }
+
+    /**
+     * Issues spare magazines alongside a freshly handed-out gun.
+     * <p>
+     * A marine used to be given a full magazine and nothing else, which was invisible while they never reloaded. Now
+     * that they do, a gunner with no spares simply falls silent partway through a fight. Machine gunners included —
+     * their drums hold more, but they also empty them faster.
+     */
+    private static void giveSpareAmmunition(Marine marine, GunItem gunItem) {
+        var gunConfig = gunItem.getGunConfig();
+        var ammunitionItemSupplier = gunConfig.ammunitionItemSupplier();
+
+        if (ammunitionItemSupplier == null) {
+            return;
+        }
+
+        var reloadAmount = Math.max(1, gunConfig.reloadAmount());
+        // Items per reload, exactly as GunReloading works it out: a drum is one item, loose rounds are many.
+        var itemsPerReload = (int) Math.ceil(gunConfig.maximumAmmunition() / (float) reloadAmount);
+        var spareItems = itemsPerReload * SPARE_RELOADS;
+
+        if (spareItems <= 0) {
+            return;
+        }
+
+        var spareStack = new ItemStack(ammunitionItemSupplier.get(), spareItems);
+
+        // Marine-owned, so a player cannot farm drums off a corpse — issued kit stays issued.
+        spareStack.set(HumanDataComponents.MARINE_OWNED.get(), true);
+
+        marine.getInventory().addItemStack(spareStack);
     }
 
     public static void giveWeightedItemFromPool(Marine marine, List<Tuple2<Integer, Supplier<Item>>> pool) {

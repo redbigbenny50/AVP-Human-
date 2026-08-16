@@ -4,13 +4,16 @@ import com.blib.api.common.network.v1.NetworkHandler;
 import com.blib.api.common.registry.v1.impl.BLibNetworkRegistry;
 import com.human.Human;
 import com.human.client.network.HumanClientListener;
+import com.human.common.network.packet.C2SDaggerOffHandAttackPayload;
 import com.human.common.network.packet.C2SGunFirePayload;
 import com.human.common.network.packet.C2SGunReloadPayload;
+import com.human.common.network.packet.C2SMarineSentryFilterPayload;
 import com.human.common.network.packet.C2SPlayerToggleCrawlPayload;
 import com.human.common.network.packet.S2CBulletHitBlockPayload;
 import com.human.common.network.packet.S2CGunKillEffectPayload;
 import com.human.common.network.packet.S2CGunRecoilPayload;
 import com.human.common.network.packet.S2CGunVoxelEffectPayload;
+import com.human.common.network.packet.S2CMarineSentryFilterPayload;
 import com.human.common.network.packet.S2CNukeEffectPayload;
 
 public class HumanServerPacketHandlerRegistry {
@@ -23,6 +26,13 @@ public class HumanServerPacketHandlerRegistry {
     }
 
     private static void registerServerBoundPacketHandlers() {
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                C2SDaggerOffHandAttackPayload.TYPE,
+                C2SDaggerOffHandAttackPayload.CODEC,
+                HumanServerListener::handleDaggerOffHandAttackPayload
+            )
+        );
         REGISTRY.registerPacketHandler(
             new NetworkHandler.FromClient<>(
                 C2SGunFirePayload.TYPE,
@@ -44,14 +54,35 @@ public class HumanServerPacketHandlerRegistry {
                 HumanServerListener::handlePlayerToggleCrawlPayload
             )
         );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                C2SMarineSentryFilterPayload.TYPE,
+                C2SMarineSentryFilterPayload.CODEC,
+                HumanServerListener::handleMarineSentryFilterPayload
+            )
+        );
     }
 
     private static void registerClientBoundPacketHandlers() {
         REGISTRY.registerPacketHandler(
             new NetworkHandler.FromServer<>(
+                S2CMarineSentryFilterPayload.TYPE,
+                S2CMarineSentryFilterPayload.CODEC,
+                (payload, player) -> HumanClientListener.handleMarineSentryFilter(payload)
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
                 S2CBulletHitBlockPayload.TYPE,
                 S2CBulletHitBlockPayload.CODEC,
                 (payload, player) -> HumanClientListener.handleBulletHitBlockPayload(payload)
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                S2CGunRecoilPayload.TYPE,
+                S2CGunRecoilPayload.CODEC,
+                HumanClientListener::handleGunRecoil
             )
         );
         REGISTRY.registerPacketHandler(
@@ -66,13 +97,6 @@ public class HumanServerPacketHandlerRegistry {
                 S2CGunKillEffectPayload.TYPE,
                 S2CGunKillEffectPayload.CODEC,
                 (payload, player) -> HumanClientListener.handleGunKillEffect(payload)
-            )
-        );
-        REGISTRY.registerPacketHandler(
-            new NetworkHandler.FromServer<>(
-                S2CGunRecoilPayload.TYPE,
-                S2CGunRecoilPayload.CODEC,
-                HumanClientListener::handleGunRecoil
             )
         );
         REGISTRY.registerPacketHandler(

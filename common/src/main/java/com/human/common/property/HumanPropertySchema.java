@@ -24,31 +24,6 @@ public class HumanPropertySchema {
             HumanProperties.Blocks.Nuke.ENABLED.key(),
             HumanProperties.Blocks.Nuke.ENABLED.defaultValue()
         )
-        .addComment("Horizontal blast radius in blocks.")
-        .addProperty(
-            HumanProperties.Blocks.Nuke.HORIZONTAL_RADIUS.key(),
-            HumanProperties.Blocks.Nuke.HORIZONTAL_RADIUS.defaultValue()
-        )
-        .addComment("Upward blast radius in blocks.")
-        .addProperty(
-            HumanProperties.Blocks.Nuke.UPWARD_RADIUS.key(),
-            HumanProperties.Blocks.Nuke.UPWARD_RADIUS.defaultValue()
-        )
-        .addComment("Downward blast radius in blocks.")
-        .addProperty(
-            HumanProperties.Blocks.Nuke.DOWNWARD_RADIUS.key(),
-            HumanProperties.Blocks.Nuke.DOWNWARD_RADIUS.defaultValue()
-        )
-        .addComment("Terrain sample budget per server tick while a nuke crater is being carved.")
-        .addProperty(
-            HumanProperties.Blocks.Nuke.TERRAIN_BLOCKS_PER_TICK.key(),
-            HumanProperties.Blocks.Nuke.TERRAIN_BLOCKS_PER_TICK.defaultValue()
-        )
-        .addComment("Maximum active nuke terrain jobs per server level.")
-        .addProperty(
-            HumanProperties.Blocks.Nuke.MAX_ACTIVE_NUKE_JOBS.key(),
-            HumanProperties.Blocks.Nuke.MAX_ACTIVE_NUKE_JOBS.defaultValue()
-        )
         .addComment("Maximum cloudlets rendered for one mushroom cloud effect.")
         .addProperty(
             HumanProperties.Blocks.Nuke.CLOUD_PARTICLE_BUDGET.key(),

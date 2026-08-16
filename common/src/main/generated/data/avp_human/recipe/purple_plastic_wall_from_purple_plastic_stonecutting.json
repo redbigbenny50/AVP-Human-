@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "avp_human:purple_plastic"
+  },
+  "result": {
+    "count": 1,
+    "id": "avp_human:purple_plastic_wall"
+  }
+}

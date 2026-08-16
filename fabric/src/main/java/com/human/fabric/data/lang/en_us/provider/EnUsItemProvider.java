@@ -24,6 +24,8 @@ public class EnUsItemProvider {
         addItem(builder, HumanGunItems.F903WE_RIFLE, "F903WE Rifle");
         addItem(builder, HumanGunItems.FLAMETHROWER_SEVASTOPOL, "Flamethrower (Sevastopol)");
         addItem(builder, HumanItems.FUEL_TANK, "Fuel Tank");
+        addItem(builder, HumanItems.DRUM_CARTRIDGE, "Drum Cartridge");
+        addItem(builder, HumanItems.DRUM_CANNISTER, "Drum Cannister");
         addItem(builder, HumanItems.HEAVY_BULLET, "Heavy Bullet");
         addItem(builder, HumanGunItems.M37_12_SHOTGUN, "M37-12 Shotgun");
         addItem(builder, HumanGunItems.M41A_PULSE_RIFLE, "M41A Pulse Rifle");
@@ -97,6 +99,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.BLUEPRINT_ZX_76_SHOTGUN, "ZX-76 Shotgun Blueprint");
         addItem(builder, HumanItems.BRASS_INGOT, "Brass Ingot");
         addItem(builder, HumanItems.CAPACITOR, "Capacitor");
+        addItem(builder, HumanItems.ASH_BALL, "Ash Ball");
         addItem(builder, HumanItems.CARBON_DUST, "Carbon Dust");
         addItem(builder, HumanItems.CORNBREAD, "Cornbread");
         addItem(builder, HumanItems.CPU, "CPU");

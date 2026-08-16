@@ -30,7 +30,17 @@ public record FireModeConfig(
     float pelletSpreadDegrees,
     float damageFalloffStartFraction,
     float minimumDamageMultiplier,
-    int tracerFrequency
+    int tracerFrequency,
+
+    /**
+     * How many rounds a non-player shooter fires before pausing. 1 means no burst — it simply keeps firing at
+     * {@link #cooldownInTicks}, which is what a flamethrower or a pump shotgun wants.
+     * <p>
+     * This exists because a marine holds the trigger perfectly and forever, so a weapon's rate of fire alone does not
+     * describe how it should SOUND in their hands. A pulse rifle is a three-round-burst weapon; a smartgun is meant to
+     * shred; Old Painless spins up and then empties. That is per-weapon character, so it lives on the weapon.
+     */
+    int burstRounds
 ) {
 
     public static Builder builder() {
@@ -83,6 +93,8 @@ public record FireModeConfig(
 
         private int tracerFrequency;
 
+        private int burstRounds;
+
         private Builder() {
             this.consumedAmmunitionPerShot = 1;
             this.cooldownInTicks = 0;
@@ -101,6 +113,7 @@ public record FireModeConfig(
             this.damageFalloffStartFraction = 0.55F;
             this.minimumDamageMultiplier = 0.55F;
             this.tracerFrequency = 4;
+            this.burstRounds = 1;
         }
 
         public Builder withConsumedAmmunitionPerShot(int consumedAmmunitionPerShot) {
@@ -204,6 +217,13 @@ public record FireModeConfig(
             return this;
         }
 
+        /** Rounds a non-player shooter fires per burst. Leave unset for weapons that should simply keep firing. */
+        public Builder withBurstRounds(int burstRounds) {
+            this.burstRounds = burstRounds;
+
+            return this;
+        }
+
         public Builder withTracerFrequency(int tracerFrequency) {
             this.tracerFrequency = tracerFrequency;
             return this;
@@ -232,7 +252,8 @@ public record FireModeConfig(
                 Math.max(0.0F, pelletSpreadDegrees),
                 Math.clamp(damageFalloffStartFraction, 0.0F, 1.0F),
                 Math.clamp(minimumDamageMultiplier, 0.0F, 1.0F),
-                Math.max(1, tracerFrequency)
+                Math.max(1, tracerFrequency),
+                Math.max(1, burstRounds)
             );
         }
     }

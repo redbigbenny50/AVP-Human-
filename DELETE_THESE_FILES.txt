@@ -1,0 +1,38 @@
+avp_human: blib-gradle -> buildSrc migration
+============================================
+
+DELETE (the plugin is coming out entirely, per your call):
+
+  blib-gradle/                 <- the whole directory, including its .git if it is a submodule
+
+Nothing else is deleted. The eight files in this zip REPLACE their counterparts:
+
+  settings.gradle              (rewritten - includeBuild + blib-multiloader-settings removed)
+  build.gradle                 (rewritten - blib { } DSL removed, repos + resolutionStrategy kept)
+  gradle.properties            (rewritten - 37 properties added, blib_gradle_version removed)
+  common/build.gradle          (rewritten)
+  fabric/build.gradle          (rewritten)
+  neoforge/build.gradle        (rewritten)
+  buildSrc/build.gradle                                   (NEW)
+  buildSrc/src/main/groovy/multiloader-common.gradle      (NEW)
+  buildSrc/src/main/groovy/multiloader-loader.gradle      (NEW)
+
+ALSO CHECK, not automatable
+---------------------------
+1. If blib-gradle is a git submodule, remove it properly:
+       git submodule deinit -f blib-gradle
+       git rm -f blib-gradle
+       rm -rf .git/modules/blib-gradle
+
+2. eclipse-formatter.xml must exist at the repo root - multiloader-common's spotless block
+   references "$rootDir/eclipse-formatter.xml". AVP-Alien has one; copy it across if avp_human
+   does not (the blib plugin supplied its own formatter config).
+
+3. CHANGELOG.md must exist at the repo root - both publishMods blocks read it.
+
+4. key.properties at the root gates publishing. Without it the publishMods blocks are skipped
+   entirely, so a normal build is unaffected.
+
+5. The Discord webhook from the old blib { mod { publish { discordWebhook { } } } } block has
+   NO equivalent in me.modmuss50.mod-publish-plugin and is NOT reproduced. If the MU/TH/UR
+   announcement matters it needs a separate CI step.

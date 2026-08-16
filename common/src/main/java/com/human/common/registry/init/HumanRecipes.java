@@ -3,6 +3,7 @@ package com.human.common.registry.init;
 import com.blib.api.common.registry.v1.BLibHolder;
 import com.blib.api.common.registry.v1.BLibRegistry;
 import com.human.Human;
+import com.human.common.gameplay.recipe.GunUnloadRecipe;
 import com.human.common.gameplay.recipe.IndustrialFurnaceRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SimpleCookingSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import org.jetbrains.annotations.NotNull;
 
 public class HumanRecipes {
@@ -26,6 +28,13 @@ public class HumanRecipes {
             "industrial_furnace",
             IndustrialFurnaceRecipe::new,
             100
+        );
+
+    /** Empties any gun placed alone in a crafting grid, keeping every other component. See {@link GunUnloadRecipe}. */
+    public static final BLibHolder<SimpleCraftingRecipeSerializer<GunUnloadRecipe>> GUN_UNLOAD_RECIPE_SERIALIZER =
+        SERIALIZER_REGISTRY.createHolder(
+            "gun_unload",
+            () -> new SimpleCraftingRecipeSerializer<>(GunUnloadRecipe::new)
         );
 
     private static @NotNull <T extends AbstractCookingRecipe> BLibHolder<SimpleCookingSerializer<T>> create(

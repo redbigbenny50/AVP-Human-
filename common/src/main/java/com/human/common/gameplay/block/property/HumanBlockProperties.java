@@ -272,12 +272,25 @@ public class HumanBlockProperties {
             )
         );
 
+    /**
+     * Padding, built to wool's numbers WITHOUT inheriting from it.
+     * <p>
+     * ⚠ Inheriting `Blocks.WHITE_WOOL` copied its {@code ignitedByLava()} flag, which is what let lava and fire set
+     * padding alight and burn it away. Vanilla's {@code Properties} has a setter for that flag and no way to clear it,
+     * so the only way to be rid of it is to stop copying wool and state the values outright.
+     * <p>
+     * Everything wool actually declares is reproduced here - map colour, guitar instrument, 0.8 strength, wool sound -
+     * so padding keeps looking, sounding and mining exactly as it did. Only the fire behaviour changes.
+     */
     public static final Map<DyeColor, BlockPropertyBuilder> DYE_COLOR_TO_PADDING_PROPERTIES = Arrays.stream(DyeColor.values())
         .collect(
             Collectors.toMap(
                 Function.identity(),
-                dyeColor -> BlockPropertyBuilder.inherit(Blocks.WHITE_WOOL)
-                    .mapColor(dyeColor),
+                dyeColor -> BlockPropertyBuilder.of()
+                    .mapColor(dyeColor)
+                    .instrument(NoteBlockInstrument.GUITAR)
+                    .strength(0.8F)
+                    .sound(SoundType.WOOL),
                 (a, b) -> b,
                 LinkedHashMap::new
             )

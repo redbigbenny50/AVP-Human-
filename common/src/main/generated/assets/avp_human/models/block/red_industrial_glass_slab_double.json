@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "avp_human:block/red_industrial_glass",
+    "side": "avp_human:block/red_industrial_glass_slab_side"
+  }
+}

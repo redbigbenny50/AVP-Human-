@@ -18,6 +18,8 @@ public class GunData {
         .withAmmunitionItemSupplier(() -> Objects.requireNonNull(HumanItems.SMALL_BULLET).get())
         .withFireMode(
             FireModeConfig.builder()
+                // Service rifle - short controlled bursts.
+                .withBurstRounds(5)
                 .withCooldownInTicks(2)
                 .withDamage(2F * 2)
                 .withRange(64)
@@ -87,6 +89,8 @@ public class GunData {
                 .withRecoilProfile(
                     new RecoilProfile(1.10F, 0.45F, 0.14F, 1.60F, 0.13F, 0.45F, new float[] { -0.15F, 0.45F, -0.50F, 0.25F })
                 )
+                // M41A pulse rifle - the three-round burst it is known for.
+                .withBurstRounds(3)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M41A_PULSE_RIFLE_SHOOT)
                 .build()
         )
@@ -125,6 +129,8 @@ public class GunData {
                 .withRecoilProfile(
                     new RecoilProfile(0.72F, 0.42F, 0.09F, 1.15F, 0.18F, 0.55F, new float[] { 0.35F, -0.35F, 0.50F, -0.20F })
                 )
+                // Battle rifle - short controlled bursts.
+                .withBurstRounds(5)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M4RA_BATTLE_RIFLE_SHOOT)
                 .build()
         )
@@ -132,9 +138,10 @@ public class GunData {
 
     public static final GunConfig M56_SMARTGUN = GunConfig.builder()
         .withDurability(4096)
-        .withMaximumAmmunition(500)
-        .withReloadTimeInTicks(20 * 7)
-        .withAmmunitionItemSupplier(() -> Objects.requireNonNull(HumanItems.CASELESS_BULLET.get()))
+        .withMaximumAmmunition(800)
+        .withReloadAmount(800)
+        .withReloadTimeInTicks(20 * 4)
+        .withAmmunitionItemSupplier(() -> Objects.requireNonNull(HumanItems.DRUM_CARTRIDGE.get()))
         .withFireMode(
             FireModeConfig.builder()
                 .withCooldownInTicks(1)
@@ -144,6 +151,8 @@ public class GunData {
                 .withRecoilProfile(
                     new RecoilProfile(0.48F, 0.38F, 0.12F, 2.20F, 0.08F, 0.60F, new float[] { -0.45F, 0.40F, -0.20F, 0.55F, -0.30F })
                 )
+                // M56 Smartgun - long bursts; it is meant to shred.
+                .withBurstRounds(16)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M56_SMARTGUN_SHOOT)
                 .build()
         )
@@ -189,9 +198,10 @@ public class GunData {
     public static final GunConfig OLD_PAINLESS = GunConfig.builder()
         .withAnimationDispatcher(OldPainlessAnimationDispatcher.INSTANCE)
         .withDurability(4096)
-        .withMaximumAmmunition(Integer.MAX_VALUE)
-        .withReloadTimeInTicks(0)
-        .withAmmunitionItemSupplier(() -> Objects.requireNonNull(HumanItems.HEAVY_BULLET.get()))
+        .withMaximumAmmunition(1500)
+        .withReloadAmount(1500)
+        .withReloadTimeInTicks(20 * 4)
+        .withAmmunitionItemSupplier(() -> Objects.requireNonNull(HumanItems.DRUM_CANNISTER.get()))
         .withFireMode(
             FireModeConfig.builder()
                 .withCooldownInTicks(1)
@@ -201,6 +211,10 @@ public class GunData {
                 .withRecoilProfile(
                     new RecoilProfile(0.60F, 0.48F, 0.15F, 2.75F, 0.06F, 0.65F, new float[] { -0.40F, 0.35F, -0.25F, 0.55F, -0.50F })
                 )
+                // Old Painless — spins up, then empties. A short burst would waste the spin-up, so it stays long: a
+                // minigun that fired in taps would read as a rifle. 64 of its 1500 is a bit over three seconds on the
+                // trigger before the pause, which is the steadiest cadence of anything in the mod.
+                .withBurstRounds(64)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_OLD_PAINLESS_SHOOT)
                 .withPrimaryShootSoundFrequencyInTicks(10)
                 .withSecondaryShootSound(HumanSoundEvents.WEAPON_OLD_PAINLESS_SHOOT_SPINNING)

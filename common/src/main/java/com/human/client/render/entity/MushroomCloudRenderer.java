@@ -2,6 +2,8 @@ package com.human.client.render.entity;
 
 import com.human.HumanResources;
 import com.human.common.gameplay.entity.nuke.MushroomCloudEntity;
+import com.human.common.property.HumanProperties;
+import com.human.common.property.HumanPropertyAccess;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -30,7 +32,19 @@ public class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEntity> {
 
     private static final double MIN_RENDER_DISTANCE = 1200.0D;
 
-    private static final int MAX_CLOUDLETS_PER_EFFECT = 7_500;
+    /**
+     * Hard ceiling on cloudlets, matching the clamp the config exposes.
+     * <p>
+     * The per-effect budget itself is READ FROM CONFIG ({@code blocks.nuke.cloud_particle_budget}) rather than fixed
+     * here - the property existed but nothing consulted it, so the knob did nothing.
+     * </p>
+     */
+    private static final int MAX_CLOUDLETS_PER_EFFECT = 20_000;
+
+    private static final int MIN_CLOUDLETS_PER_EFFECT = 512;
+
+    /** How often the cache is swept for clouds that have finished. */
+    private static final int CACHE_PRUNE_INTERVAL_IN_TICKS = 20;
 
     private static final ResourceLocation CLOUDLET_TEXTURE = HumanResources.location("textures/particle/nuclear_cloudlet.png");
 
@@ -39,6 +53,8 @@ public class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEntity> {
     private static final int FULL_BRIGHT = LightTexture.pack(15, 15);
 
     private final Map<Integer, CloudletSet> cloudletCache = new HashMap<>();
+
+    private int lastCachePruneTick = Integer.MIN_VALUE;
 
     public MushroomCloudRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -81,7 +97,51 @@ public class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEntity> {
         return CLOUDLET_TEXTURE;
     }
 
+    /**
+     * Reads the configured cloudlet budget, clamped to the same range the config schema documents.
+     */
+    private static int cloudletBudget() {
+        return Mth.clamp(
+            HumanPropertyAccess.INSTANCE.get(HumanProperties.Blocks.Nuke.CLOUD_PARTICLE_BUDGET),
+            MIN_CLOUDLETS_PER_EFFECT,
+            MAX_CLOUDLETS_PER_EFFECT
+        );
+    }
+
+    /**
+     * Drops cached cloudlet sets whose cloud no longer exists.
+     * <p>
+     * WITHOUT THIS THE CACHE LEAKS FOR THE WHOLE SESSION. It is keyed on entity id and nothing ever removed from it, so
+     * every detonation left its set - up to a full budget of Cloudlet objects each - retained until the renderer itself
+     * was discarded. A handful of nukes over a long session is real memory held for nothing.
+     * </p>
+     * <p>
+     * Swept once a second rather than per frame, and only when something is actually cached; at most a couple of clouds
+     * are ever live at once, so the walk is trivial.
+     * </p>
+     */
+    private void pruneCloudletCache(MushroomCloudEntity entity) {
+        if (cloudletCache.isEmpty()) {
+            return;
+        }
+
+        var level = entity.level();
+        var now = entity.tickCount;
+
+        if (lastCachePruneTick != Integer.MIN_VALUE && now - lastCachePruneTick < CACHE_PRUNE_INTERVAL_IN_TICKS) {
+            return;
+        }
+
+        lastCachePruneTick = now;
+        cloudletCache.keySet().removeIf(id -> {
+            var cloud = level.getEntity(id);
+            return cloud == null || cloud.isRemoved();
+        });
+    }
+
     private CloudletSet cloudletsFor(MushroomCloudEntity entity) {
+        pruneCloudletCache(entity);
+
         var cached = cloudletCache.get(entity.getId());
         if (
             cached == null ||
@@ -361,7 +421,7 @@ public class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEntity> {
         }
 
         private int spawnBudget(int requested) {
-            return Math.max(0, Math.min(requested, MAX_CLOUDLETS_PER_EFFECT - cloudlets.size()));
+            return Math.max(0, Math.min(requested, cloudletBudget() - cloudlets.size()));
         }
 
         private int cloudletLife(int minimum, int maximum) {

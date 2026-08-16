@@ -25,7 +25,8 @@ public class TagProviderUtil {
             HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_GRATE_SLAB,
             HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_GRATE_STAIRS,
             HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_SLAB,
-            HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_STAIRS
+            HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_STAIRS,
+            HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL
         )
             .map(Map::values)
             .flatMap(Collection::stream)

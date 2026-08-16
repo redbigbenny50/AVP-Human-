@@ -112,12 +112,12 @@ public final class GunKillBloodEffect {
             .normalize();
     }
 
-    private static float[] colorFor(int fluidType) {
+    static float[] colorFor(int fluidType) {
         return switch (fluidType) {
-            case 1 -> new float[] { 0.22F, 1.0F, 0.02F };
-            case 2 -> new float[] { 0.12F, 0.74F, 1.0F };
-            case 3 -> new float[] { 0.025F, 0.07F, 0.35F };
-            case 4 -> new float[] { 0.02F, 0.94F, 1.0F };
+            // These are the base RGB values used by AVP-Alien's AcidParticle, BlueAcidParticle and
+            // IrradiatedAcidParticle.
+            case 1 -> new float[] { 160.0F / 255.0F, 158.0F / 255.0F, 9.0F / 255.0F };
+            case 2, 3, 4 -> new float[] { 78.0F / 255.0F, 101.0F / 255.0F, 229.0F / 255.0F };
             default -> new float[] { 0.92F, 0.015F, 0.02F };
         };
     }

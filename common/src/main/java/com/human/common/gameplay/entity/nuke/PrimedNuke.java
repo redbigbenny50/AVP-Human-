@@ -1,6 +1,6 @@
 package com.human.common.gameplay.entity.nuke;
 
-import com.human.common.gameplay.explosion.nuke.NuclearExplosionEngine;
+import com.blib.api.common.server.v1.ServerScheduler;
 import com.human.common.property.HumanProperties;
 import com.human.common.property.HumanPropertyAccess;
 import com.human.common.registry.init.HumanBlocks;
@@ -21,6 +21,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.Duration;
 
 public class PrimedNuke extends Entity {
 
@@ -107,13 +109,16 @@ public class PrimedNuke extends Entity {
 
         if (fuseValue <= 0 && !level.isClientSide && level instanceof ServerLevel serverLevel) {
             if (isNukeEnabled(serverLevel)) {
-                NuclearExplosionUtil.detonateNuke(serverLevel, blockPosition().getCenter(), this);
-            } else {
-                NuclearExplosionEngine.releasePrimedNukeTicket(
-                    serverLevel,
-                    blockPosition(),
-                    getUUID()
-                );
+                ServerScheduler.schedule(() -> {
+                    var explosion = NuclearExplosionUtil.createNuclearExplosion(
+                        serverLevel,
+                        blockPosition().getCenter(),
+                        NuclearExplosionUtil.RADIUS,
+                        NuclearExplosionUtil.MAX_KNOCKBACK
+                    );
+
+                    explosion.explode();
+                }, Duration.ofSeconds(1));
             }
 
             discard();

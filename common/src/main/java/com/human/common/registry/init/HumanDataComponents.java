@@ -56,6 +56,21 @@ public class HumanDataComponents {
             .cacheEncoding()
     );
 
+    /**
+     * ⭐ Which phase of the barrel spin Old Painless is in: 0 stopped, 1 spinning up, 2 looping.
+     * <p>
+     * ⚠ ON THE STACK, NOT IN A FIELD ON THE ITEM. Item instances are singletons shared by every player and every
+     * stack, so a field would have one wielder's spin state stomping another's. Persistent so a gun saved mid-burst
+     * comes back honest, and network-synchronised because the CLIENT animator is what reads it.
+     * </p>
+     */
+    public static final BLibHolder<DataComponentType<Integer>> OLD_PAINLESS_SPIN_PHASE = create(
+        "old_painless_spin_phase",
+        builder -> builder.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
     public static final BLibHolder<DataComponentType<GeneReaderContents>> GENE_READER_CONTENTS = create(
         "gene_reader_contents",
         builder -> builder.persistent(GeneReaderContents.CODEC)
@@ -84,20 +99,6 @@ public class HumanDataComponents {
             .cacheEncoding()
     );
 
-    public static final BLibHolder<DataComponentType<Integer>> OLD_PAINLESS_HEAT = create(
-        "old_painless_heat",
-        builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT)
-            .networkSynchronized(ByteBufCodecs.VAR_INT)
-            .cacheEncoding()
-    );
-
-    public static final BLibHolder<DataComponentType<Boolean>> OLD_PAINLESS_OVERHEATED = create(
-        "old_painless_overheated",
-        builder -> builder.persistent(Codec.BOOL)
-            .networkSynchronized(ByteBufCodecs.BOOL)
-            .cacheEncoding()
-    );
-
     public static final BLibHolder<DataComponentType<Integer>> MUZZLE_FLASH_DURATION_IN_TICKS = create(
         "muzzle_flash_duration_in_ticks",
         builder -> builder.persistent(Codec.INT)
@@ -115,6 +116,22 @@ public class HumanDataComponents {
         "syringe_mode",
         builder -> builder.persistent(SyringeMode.CODEC)
             .networkSynchronized(new J2MStreamCodecAdapter<>(SyringeMode.STREAM_CODEC))
+            .cacheEncoding()
+    );
+
+    // OLD PAINLESS OVERHEAT. Heat is a persisted, network-synced component so the HUD/heat render layer and the
+    // server-side firing lockout agree without a bespoke packet.
+    public static final BLibHolder<DataComponentType<Integer>> OLD_PAINLESS_HEAT = create(
+        "old_painless_heat",
+        builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT)
+            .networkSynchronized(ByteBufCodecs.VAR_INT)
+            .cacheEncoding()
+    );
+
+    public static final BLibHolder<DataComponentType<Boolean>> OLD_PAINLESS_OVERHEATED = create(
+        "old_painless_overheated",
+        builder -> builder.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL)
             .cacheEncoding()
     );
 

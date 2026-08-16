@@ -1,0 +1,7 @@
+{
+  "parent": "blib:block/template_wall_side",
+  "textures": {
+    "top": "avp_human:block/industrial_glass",
+    "wall": "avp_human:block/industrial_glass"
+  }
+}

@@ -3,11 +3,14 @@ package com.human.common.gameplay.entity.living.dog;
 import com.human.HumanResources;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.registry.init.HumanEntityTypes;
+import com.human.common.registry.init.item.HumanItems;
 import com.human.mixin.MixinWolf_Accessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
@@ -24,11 +27,24 @@ public class MarineDog extends Wolf {
 
     private static final ResourceLocation TEXTURE = HumanResources.entityTextureLocation("marine_dog");
 
+    private static final String NBT_ASSIGNED_TO_MARINE = "AssignedToMarine";
+
+    /**
+     * True once a Marine has claimed this dog. Only THEN does losing its owner mean anything.
+     * <p>
+     * The despawn rule used to read "no Marine owner" as "invalid", which was right for the patrol dogs it was written
+     * for but killed a spawn-egg dog on its first tick, before a player could even look at it. A dog that never
+     * belonged to a Marine is not an orphan; it is just a dog.
+     */
+    private boolean assignedToMarine;
+
     public MarineDog(EntityType<? extends MarineDog> entityType, Level level) {
         super(entityType, level);
     }
 
     public void assignMarineOwner(Marine marine) {
+        assignedToMarine = true;
+
         setTame(true, true);
         setOwnerUUID(marine.getUUID());
         getNavigation().stop();
@@ -49,8 +65,15 @@ public class MarineDog extends Wolf {
             return;
         }
 
+        if (!assignedToMarine) {
+            // Player-owned or still stray: it lives or dies on its own terms, like any other wolf.
+            return;
+        }
+
         var owner = getOwner();
 
+        // A Marine's dog outlives neither its Marine nor a reassignment away from one. This is what stops patrol dogs
+        // accumulating in the world forever, which is the reason the rule exists at all.
         if (!(owner instanceof Marine) || !owner.isAlive() || owner.isRemoved()) {
             discard();
         }
@@ -61,14 +84,68 @@ public class MarineDog extends Wolf {
         return TEXTURE;
     }
 
+    /**
+     * A Marine's dog cannot be won over — it already has a handler. A stray one is tamed with CORNBREAD rather than the
+     * bones a vanilla wolf wants: these are working dogs raised on rations, not wild animals.
+     */
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand interactionHand) {
-        return InteractionResult.CONSUME;
+        if (assignedToMarine) {
+            return InteractionResult.CONSUME;
+        }
+
+        var heldItem = player.getItemInHand(interactionHand);
+
+        if (isTame() || !heldItem.is(HumanItems.CORNBREAD.get())) {
+            // Already someone's dog, or the player is holding something else: hand back to Wolf, which covers sitting,
+            // healing, dyeing the collar and fitting armour.
+            return super.mobInteract(player, interactionHand);
+        }
+
+        if (level().isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
+        heldItem.consume(1, player);
+
+        // Same one-in-three vanilla wolves use, so it takes a few pieces and feels like winning it over.
+        if (getRandom().nextInt(3) == 0) {
+            tame(player);
+            setOrderedToSit(true);
+            level().broadcastEntityEvent(this, EntityEvent.TAMING_SUCCEEDED);
+        } else {
+            level().broadcastEntityEvent(this, EntityEvent.TAMING_FAILED);
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public boolean isFood(@NotNull ItemStack itemStack) {
+        return itemStack.is(HumanItems.CORNBREAD.get());
     }
 
     @Override
     public void tame(Player player) {
-        // Marine dogs are assigned to Marines only.
+        if (assignedToMarine) {
+            // Assigned dogs answer to their Marine and to nobody else.
+            return;
+        }
+
+        super.tame(player);
+        getNavigation().stop();
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean(NBT_ASSIGNED_TO_MARINE, assignedToMarine);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        assignedToMarine = tag.getBoolean(NBT_ASSIGNED_TO_MARINE);
     }
 
     @Override

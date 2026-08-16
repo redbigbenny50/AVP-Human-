@@ -18,6 +18,8 @@ public class HumanItemTags {
 
     public static final TagKey<Item> EXTREMELY_RADIOACTIVE_ITEMS = create("extremely_radioactive_items");
 
+    public static final TagKey<Item> DAGGERS = create("daggers");
+
     public static final TagKey<Item> GUNS = create("guns");
 
     public static final TagKey<Item> INDUSTRIAL_GLASS = create("industrial_glass");
@@ -47,6 +49,9 @@ public class HumanItemTags {
     public static final TagKey<Item> RADIATION_RESISTANT_ARMORS = create("radiation_resistant_armors");
 
     public static final TagKey<Item> RADIOACTIVE_ITEMS = create("radioactive_items");
+
+    /** Base resin blocks from every alien strain, the industrial furnace's shortcut into plastic. */
+    public static final TagKey<Item> RESIN_BLOCKS = create("resin_blocks");
 
     public static final TagKey<Item> STEEL_ARMOR_REPAIR_INGREDIENTS = create("steel_armor_repair_ingredients");
 

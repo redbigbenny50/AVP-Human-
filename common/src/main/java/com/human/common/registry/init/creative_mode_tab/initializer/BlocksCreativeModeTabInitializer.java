@@ -45,6 +45,7 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR);
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB);
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL);
 
         // Ferroaluminum
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.FERROALUMINUM_BLOCK);
@@ -168,15 +169,6 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.RAZOR_WIRE);
         CreativeModeTabUtil.accept(output, HumanBlocks.BLUEPRINT_BLOCK);
         CreativeModeTabUtil.accept(output, HumanBlocks.CABLE);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYOTUBE);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_TOP_CORE);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_BOTTOM_CORE);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_TOP_CENTER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_MIDDLE_CENTER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_BOTTOM_CENTER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_TOP_CORNER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_MIDDLE_CORNER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CRYO_BOTTOM_CORNER);
         CreativeModeTabUtil.accept(output, HumanBlocks.REDSTONE_GENERATOR);
         CreativeModeTabUtil.accept(output, HumanBlocks.INDUSTRIAL_FURNACE);
         CreativeModeTabUtil.accept(output, HumanBlocks.BATTERY);

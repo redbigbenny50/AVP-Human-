@@ -24,15 +24,6 @@ public class EnUsBlockProvider {
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         addBlock(builder, HumanBlocks.BLUEPRINT_BLOCK, "Blueprint Block");
         addBlock(builder, HumanBlocks.CABLE, "Cable");
-        addBlock(builder, HumanBlocks.CRYOTUBE, "Cryotube");
-        addBlock(builder, HumanBlocks.CRYO_TOP_CORE, "Cryo Top Core");
-        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CORE, "Cryo Bottom Core");
-        addBlock(builder, HumanBlocks.CRYO_TOP_CENTER, "Cryo Top Center");
-        addBlock(builder, HumanBlocks.CRYO_MIDDLE_CENTER, "Cryo Middle Center");
-        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CENTER, "Cryo Bottom Center");
-        addBlock(builder, HumanBlocks.CRYO_TOP_CORNER, "Cryo Top Corner");
-        addBlock(builder, HumanBlocks.CRYO_MIDDLE_CORNER, "Cryo Middle Corner");
-        addBlock(builder, HumanBlocks.CRYO_BOTTOM_CORNER, "Cryo Bottom Corner");
         addBlock(builder, HumanBlocks.REDSTONE_GENERATOR, "Redstone Generator");
         addBlock(builder, HumanBlocks.DESK_TERMINAL_BLOCK, "Desk Terminal");
         addBlock(builder, HumanBlocks.RESONATOR_BLOCK, "Resonator");
@@ -81,6 +72,7 @@ public class EnUsBlockProvider {
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR, "Industrial Glass Trap Door");
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_SLAB, "Industrial Glass Slab");
         addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS, "Industrial Glass Stairs");
+        addBlock(builder, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL, "Industrial Glass Wall");
         addBlock(builder, CoreBlocks.LEAD_BLOCK, "Block of Lead");
         addBlock(builder, HumanBlocks.LEAD_CHEST, "Lead Chest");
         addBlock(builder, HumanFerroaluminumBlocks.FERROALUMINUM_FASTENED_STANDING_SLAB, "Ferroaluminum Fastened Standing Slab");
@@ -134,6 +126,24 @@ public class EnUsBlockProvider {
         );
         HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE.forEach(
             (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Pane")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Stairs")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Slab")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Door")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Trap Door")
+        );
+        HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Industrial Glass Wall")
+        );
+        HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.forEach(
+            (key, value) -> addBlock(builder, value, format(key.getName()) + " Plastic Wall")
         );
 
         addBlock(builder, CoreBlocks.LITHIUM_BLOCK, "Block of Lithium");

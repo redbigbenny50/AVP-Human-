@@ -18,31 +18,10 @@ public class HumanProperties {
                 false
             );
 
-            public static final HumanProperty<Integer> HORIZONTAL_RADIUS = new HumanProperty<>(
-                NUKE.leaf("horizontal_radius", BLibPropertySerializers.INT),
-                128
-            );
-
-            public static final HumanProperty<Integer> UPWARD_RADIUS = new HumanProperty<>(
-                NUKE.leaf("upward_radius", BLibPropertySerializers.INT),
-                64
-            );
-
-            public static final HumanProperty<Integer> DOWNWARD_RADIUS = new HumanProperty<>(
-                NUKE.leaf("downward_radius", BLibPropertySerializers.INT),
-                32
-            );
-
-            public static final HumanProperty<Integer> TERRAIN_BLOCKS_PER_TICK = new HumanProperty<>(
-                NUKE.leaf("terrain_blocks_per_tick", BLibPropertySerializers.INT),
-                6000
-            );
-
-            public static final HumanProperty<Integer> MAX_ACTIVE_NUKE_JOBS = new HumanProperty<>(
-                NUKE.leaf("max_active_jobs", BLibPropertySerializers.INT),
-                1
-            );
-
+            // VISUAL BUDGETS ONLY. The branch also exposed horizontal/upward/downward radius here, defaulting to
+            // 128/64/32 - the same 128 that was diagnosed as the wrong crater size and corrected to a 5-chunk (80)
+            // radius in NuclearExplosionUtil. Those leaves are deliberately NOT carried over; the crater geometry
+            // stays with the constants that were tuned against it.
             public static final HumanProperty<Integer> CLOUD_PARTICLE_BUDGET = new HumanProperty<>(
                 NUKE.leaf("cloud_particle_budget", BLibPropertySerializers.INT),
                 8000
@@ -57,6 +36,7 @@ public class HumanProperties {
                 NUKE.leaf("screen_shake_intensity", BLibPropertySerializers.FLOAT),
                 0.75F
             );
+
         }
 
         public static class Resonator {

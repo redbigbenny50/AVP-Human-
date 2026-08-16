@@ -302,6 +302,21 @@ public class HumanPlasticBlockItems {
                 )
             );
 
+    public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_PLASTIC_WALL =
+        HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> create(
+                        entry.getKey().getName() + "_plastic_wall",
+                        entry.getValue()
+                    ),
+                    (a, b) -> b,
+                    LinkedHashMap::new
+                )
+            );
+
     public static final Map<DyeColor, Supplier<BlockItem>> DYE_COLOR_TO_PLASTIC_SLAB =
         HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_SLAB.entrySet()
             .stream()

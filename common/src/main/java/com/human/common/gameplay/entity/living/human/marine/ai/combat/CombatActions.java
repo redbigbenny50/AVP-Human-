@@ -65,6 +65,7 @@ public class CombatActions {
         .addPrecondition(CombatSensors.IS_ATTACK_TARGET_IN_RANGE_OF_EQUIPPED_BEST_WEAPON.key(), Expressions.Boolean.isTrue())
         .addEffect(GOAPSensors.HAS_ATTACK_TARGET.key().asDerived(), false)
         .withPerformCallback(UseWeaponAction::perform)
+        .withFinishCallback(UseWeaponAction::onFinish)
         .build();
 
     private CombatActions() {

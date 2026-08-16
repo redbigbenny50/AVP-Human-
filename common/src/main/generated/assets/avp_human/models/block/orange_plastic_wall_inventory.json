@@ -1,0 +1,7 @@
+{
+  "parent": "blib:block/template_wall_inventory",
+  "textures": {
+    "top": "avp_human:block/orange_plastic",
+    "wall": "avp_human:block/orange_plastic"
+  }
+}

@@ -4,6 +4,7 @@ import com.blib.api.common.registry.v1.BLibHolder;
 import com.blib.api.common.registry.v1.BLibRegistry;
 import com.human.Human;
 import com.human.common.gameplay.item.ArmorCaseItem;
+import com.human.common.gameplay.item.DaggerItem;
 import com.human.common.gameplay.item.GeneReaderItem;
 import com.human.common.gameplay.item.SyringeItem;
 import com.human.common.gameplay.item.canister.CanisterItem;
@@ -40,6 +41,8 @@ public class HumanItems {
     );
 
     public static final BLibHolder<Item> AUTUNITE_DUST = create("autunite_dust");
+
+    public static final BLibHolder<Item> ASH_BALL = create("ash_ball");
 
     public static final BLibHolder<Item> BARREL = create("barrel");
 
@@ -82,9 +85,17 @@ public class HumanItems {
 
     public static final BLibHolder<Item> CASELESS_BULLET = create("caseless_bullet");
 
+    /**
+     * Field rations, and deliberately better than a loaf of bread.
+     * <p>
+     * Vanilla BREAD is nutrition 5 / modifier 0.6, i.e. 6.0 saturation. Cornbread was 3 / 0.3 = 1.8 saturation, which
+     * made it WORSE than bread despite costing wheat, an egg, a bucket of milk and a dye. At 6 / 0.8 it restores one
+     * more hunger point than bread and 9.6 saturation - 60% more staying power - which lands it level with cooked
+     * mutton and still short of cooked beef, so it is worth carrying without displacing real meat.
+     */
     public static final BLibHolder<Item> CORNBREAD = create(
         "cornbread",
-        new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build())
+        new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.8F).build())
     );
 
     public static final BLibHolder<Item> CPU = create("cpu");
@@ -92,6 +103,12 @@ public class HumanItems {
     public static final BLibHolder<Item> DIODE = create("diode");
 
     public static final BLibHolder<Item> DOG_TAG = create("dog_tag");
+
+    /** Old Painless's belt drum. One cannister is one full 1500-round load; it is consumed whole on reload. */
+    public static final BLibHolder<Item> DRUM_CANNISTER = create("drum_cannister", new Item.Properties().stacksTo(1));
+
+    /** The M56 Smartgun's drum. One cartridge is one full 800-round load; it is consumed whole on reload. */
+    public static final BLibHolder<Item> DRUM_CARTRIDGE = create("drum_cartridge", new Item.Properties().stacksTo(1));
 
     public static final BLibHolder<Item> FERROALUMINUM_INGOT = create("ferroaluminum_ingot");
 
@@ -238,7 +255,7 @@ public class HumanItems {
 
     public static final BLibHolder<Item> TACTICAL_KNIFE = create(
         "tactical_knife",
-        () -> new SwordItem(HumanTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(HumanTiers.STEEL, 1, -1.8F)))
+        () -> new DaggerItem(HumanTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(HumanTiers.STEEL, 1, -1.8F)))
     );
 
     public static final BLibHolder<Item> TITANIUM_AXE = create(

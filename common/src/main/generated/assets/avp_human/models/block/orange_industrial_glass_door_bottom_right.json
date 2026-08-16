@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right",
+  "textures": {
+    "bottom": "avp_human:block/orange_industrial_glass_door_bottom",
+    "top": "avp_human:block/orange_industrial_glass_door_top"
+  }
+}

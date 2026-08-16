@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.WallBlock;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
@@ -121,9 +122,25 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
             ($, blockItemSupplier) -> industrialGlassPaneTagBuilder.add(blockItemSupplier.get())
         );
 
-        getOrCreateTagBuilder(HumanItemTags.INDUSTRIAL_GLASS)
+        var industrialGlassTagBuilder = getOrCreateTagBuilder(HumanItemTags.INDUSTRIAL_GLASS)
             .addTag(HumanItemTags.INDUSTRIAL_GLASS_BLOCK)
             .addTag(HumanItemTags.INDUSTRIAL_GLASS_PANE);
+
+        industrialGlassTagBuilder.add(HumanIndustrialGlassBlockItems.INDUSTRIAL_GLASS_DOOR.get());
+        industrialGlassTagBuilder.add(HumanIndustrialGlassBlockItems.INDUSTRIAL_GLASS_SLAB.get());
+        industrialGlassTagBuilder.add(HumanIndustrialGlassBlockItems.INDUSTRIAL_GLASS_STAIRS.get());
+        industrialGlassTagBuilder.add(HumanIndustrialGlassBlockItems.INDUSTRIAL_GLASS_TRAP_DOOR.get());
+        industrialGlassTagBuilder.add(HumanIndustrialGlassBlockItems.INDUSTRIAL_GLASS_WALL.get());
+        Stream.of(
+            HumanIndustrialGlassBlockItems.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS,
+            HumanIndustrialGlassBlockItems.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB,
+            HumanIndustrialGlassBlockItems.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR,
+            HumanIndustrialGlassBlockItems.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR,
+            HumanIndustrialGlassBlockItems.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL
+        )
+            .flatMap(map -> map.values().stream())
+            .map(Supplier::get)
+            .forEach(industrialGlassTagBuilder::add);
 
         getOrCreateTagBuilder(HumanItemTags.LITHIUM)
             .add(
@@ -510,6 +527,26 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
     private void addCompatibilityItems() {
         getOrCreateTagBuilder(foreignItemTag("avp_alien", "facehugger_resistant_helmets"))
             .add(HumanArmorItems.WY_APE_HELMET.get());
+
+        // avp_alien has a resin_blocks BLOCK tag holding exactly the four base strain blocks, but no ITEM equivalent,
+        // and a smelting ingredient needs an item tag. The ids are added by raw ResourceLocation because avp_alien is
+        // compile-only here -- see foreignItemTag below -- and as optional entries so the tag is simply empty, and the
+        // recipe simply never matches, when avp_alien is absent. The optional tag reference means that if avp_alien
+        // ever does ship an item tag of its own, its contents merge in without a change here.
+        getOrCreateTagBuilder(HumanItemTags.RESIN_BLOCKS)
+            .addOptionalTag(ResourceLocation.fromNamespaceAndPath("avp_alien", "resin_blocks"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "resin"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "aberrant_resin"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "irradiated_resin"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_resin"));
+
+        // Stellaris judges whether an entity can breathe in a vacuum by checking that all four equipment slots hold
+        // items in its own stellaris:oxygenated_armor tag, which it declares but deliberately ships empty for other
+        // mods to fill. Topping up vanilla air supply, which is what these suits do, has no bearing on that check --
+        // Stellaris deals its own damage type directly and never reads the air supply.
+        getOrCreateTagBuilder(foreignItemTag("stellaris", "oxygenated_armor"))
+            .addTag(HumanItemTags.MK50_ARMOR)
+            .addTag(HumanItemTags.PRESSURE_ARMOR);
     }
 
     private void addAutomatedTagItems() {
@@ -535,6 +572,10 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var shovelTagProvider = getOrCreateTagBuilder(ItemTags.SHOVELS);
 
         // Weapons
+        // Daggers. The behaviour keys off this tag rather than the item class, so a dagger from another mod joins in
+        // by being tagged and one added here never needs code changes.
+        getOrCreateTagBuilder(HumanItemTags.DAGGERS).add(HumanItems.TACTICAL_KNIFE.get());
+
         var gunTagProvider = getOrCreateTagBuilder(HumanItemTags.GUNS);
         var swordTagProvider = getOrCreateTagBuilder(ItemTags.SWORDS);
 

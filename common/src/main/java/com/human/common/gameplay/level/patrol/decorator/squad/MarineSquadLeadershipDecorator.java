@@ -26,7 +26,10 @@ public class MarineSquadLeadershipDecorator implements MarineSquadDecorator {
                 continue;
             }
 
-            marine.setLeader(leader);
+            // ⚠⚠ setSquadLeader, NOT setLeader. Writing a MARINE into the employer slot is what made every patrol
+            // member permanently unhireable and un-openable - hasLeader() was already true so the diamond was
+            // refused, and the inventory gate compares the leader to the clicking PLAYER so it never matched.
+            marine.setSquadLeader(leader);
         }
     }
 }

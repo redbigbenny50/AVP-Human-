@@ -5,6 +5,7 @@ import com.human.common.registry.init.HumanEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -53,6 +54,13 @@ public class SentryTurretBlock extends Block {
 
         serverLevel.addFreshEntity(sentryTurret);
         level.removeBlock(pos, false);
+
+        // Tell whoever placed it what it is still waiting on. A turret with no power and no chest is silent and
+        // motionless, which is indistinguishable from broken - and the item tooltip has long since been dismissed by
+        // the time anyone actually places one.
+        if (placer instanceof Player player) {
+            sentryTurret.sendStatusReport(player);
+        }
     }
 
 }

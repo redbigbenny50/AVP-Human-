@@ -1,7 +1,6 @@
 package com.human.common.gameplay.item.gun.pipeline;
 
 import com.blib.api.common.block.v1.DynamicBlockLighting;
-import com.blib.api.common.dismemberment.v1.hitbox.LimbHitPrediction;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.ItemCooldownUser;
@@ -33,8 +32,7 @@ public record GunShootContext(
     boolean isShooterImmortal,
     ItemStack itemStack,
     LivingEntity shooter,
-    int tickProgress,
-    LimbHitPrediction prediction
+    int tickProgress
 ) {
 
     public static Option<GunShootContext> create(
@@ -42,18 +40,9 @@ public record GunShootContext(
         ItemStack itemStack,
         int tickProgress
     ) {
-        return create(shooter, itemStack, tickProgress, null);
-    }
-
-    public static Option<GunShootContext> create(
-        LivingEntity shooter,
-        ItemStack itemStack,
-        int tickProgress,
-        LimbHitPrediction prediction
-    ) {
         return !(itemStack.getItem() instanceof GunItem gunItem)
             ? Option.none()
-            : Option.some(new GunShootContext(shooter, gunItem, itemStack, tickProgress, prediction));
+            : Option.some(new GunShootContext(shooter, gunItem, itemStack, tickProgress));
     }
 
     // TODO: Maybe the cooldown step should come before the shoot delay step?
@@ -63,7 +52,7 @@ public record GunShootContext(
         CheckReloadingStep.INSTANCE
     );
 
-    public GunShootContext(LivingEntity shooter, GunItem gunItem, ItemStack itemStack, int tickProgress, LimbHitPrediction prediction) {
+    public GunShootContext(LivingEntity shooter, GunItem gunItem, ItemStack itemStack, int tickProgress) {
         this(
             itemStack.getOrDefault(HumanDataComponents.AMMUNITION.get(), 0),
             gunItem.getGunConfig().getDefaultFireMode(),
@@ -73,8 +62,7 @@ public record GunShootContext(
             BLibEntityPredicates.isInvulnerable(shooter),
             itemStack,
             shooter,
-            tickProgress,
-            prediction
+            tickProgress
         );
     }
 
@@ -91,7 +79,7 @@ public record GunShootContext(
             }
         }
 
-        var gunAttackConfig = new GunAttackConfig(gunConfig, fireModeConfig, shooter, itemStack, prediction);
+        var gunAttackConfig = new GunAttackConfig(gunConfig, fireModeConfig, shooter, itemStack);
         var result = fireModeConfig
             .gunAttackAction()
             .shoot(gunAttackConfig);

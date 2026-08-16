@@ -28,6 +28,13 @@ public class ColoredBlocksCreativeModeTabInitializer {
         Arrays.stream(DyeColor.values())
             .forEach(dyeColor -> output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS.get(dyeColor).get()));
 
+        Arrays.stream(DyeColor.values()).forEach(dyeColor -> {
+            output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.get(dyeColor).get());
+            output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.get(dyeColor).get());
+            output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.get(dyeColor).get());
+            output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.get(dyeColor).get());
+            output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.get(dyeColor).get());
+        });
         CreativeModeTabUtil.accept(output, HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_PANE);
         Arrays.stream(DyeColor.values())
             .forEach(dyeColor -> output.accept(HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE.get(dyeColor).get()));
@@ -60,6 +67,7 @@ public class ColoredBlocksCreativeModeTabInitializer {
             output.accept(HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC.get(dyeColor).get());
             output.accept(HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_STAIRS.get(dyeColor).get());
             output.accept(HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_SLAB.get(dyeColor).get());
+            output.accept(HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC_WALL.get(dyeColor).get());
         });
 
         Arrays.stream(DyeColor.values()).forEach(dyeColor -> {

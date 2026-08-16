@@ -15,10 +15,18 @@ import java.util.List;
 
 public class SentryTurretBlockItem extends BlockItem {
 
+    /**
+     * ⚠ The two control lines are not decoration. Picking the turret up USED to be a plain right-click and is now sneak
+     * + right-click, because plain right-click reports what the turret is waiting on - and a player who learned the old
+     * gesture has no other way to discover the new one.
+     */
     private static final List<Component> TOOLTIP_COMPONENTS = new TooltipHintBuilder()
         .addCategory(TooltipCategoryType.REQUIREMENTS)
         .addNegativeEffect(HumanTooltipTranslationKeys.REQUIRES_REDSTONE_POWER)
         .addNegativeEffect(HumanTooltipTranslationKeys.REQUIRES_NEARBY_AMMO_CHEST_WITH_AMMO)
+        .addCategory(TooltipCategoryType.WHEN_PLACED_IN_WORLD)
+        .addPositiveEffect(HumanTooltipTranslationKeys.USE_CHECK_TURRET_STATUS)
+        .addPositiveEffect(HumanTooltipTranslationKeys.USE_PICK_UP_TURRET)
         .build();
 
     public SentryTurretBlockItem() {

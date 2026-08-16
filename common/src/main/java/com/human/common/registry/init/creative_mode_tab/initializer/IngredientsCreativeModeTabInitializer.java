@@ -10,6 +10,7 @@ public class IngredientsCreativeModeTabInitializer {
     public static final Consumer<CreativeModeTab.Output> OUTPUT_CONSUMER = output -> {
         // Raw materials
         CreativeModeTabUtil.accept(output, HumanItems.AUTUNITE_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.ASH_BALL);
         CreativeModeTabUtil.accept(output, HumanItems.CARBON_DUST);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_BAUXITE);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_BRASS);

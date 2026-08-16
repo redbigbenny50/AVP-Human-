@@ -1,7 +1,5 @@
 package com.human.common.gameplay.item.gun.attack.hitscan;
 
-import com.alien.common.gameplay.entity.living.alien.Alien;
-import com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxDamage;
 import com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxRegistry;
 import com.blib.api.common.enchantment.v1.EnchantmentUtil;
 import com.blib.api.common.entity.v1.BLibEntityPredicates;
@@ -16,6 +14,7 @@ import com.human.common.gameplay.item.gun.pipeline.GunShootResult;
 import com.human.common.network.packet.S2CGunKillEffectPayload;
 import com.human.common.network.packet.S2CGunRecoilPayload;
 import com.human.common.network.packet.S2CGunVoxelEffectPayload;
+import com.human.compatibility.avp_alien.HumanAlienBlood;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +25,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -129,8 +129,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             baseConfig.fireModeConfig(),
             shooter,
             baseConfig.gunItemStack(),
-            damageMultiplier,
-            baseConfig.prediction()
+            damageMultiplier
         );
         var current = shooter.getEyePosition();
         var remainingDistance = (double) config.fireModeConfig().range();
@@ -142,33 +141,21 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             var requestedEnd = current.add(direction.scale(remainingDistance));
             var blockHit = level.clip(new ClipContext(current, requestedEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, shooter));
             var blockEnd = blockHit.getType() == HitResult.Type.BLOCK ? blockHit.getLocation() : requestedEnd;
-            var entityHit = findNearestEntityHit(level, shooter, current, blockEnd, hitEntities, config.prediction());
+            var entityHit = findNearestEntityHit(level, shooter, current, blockEnd, hitEntities);
 
             if (entityHit != null) {
                 var entity = entityHit.entity();
                 var hitLocation = entityHit.location();
                 hitEntities.add(entity.getUUID());
-                if (entityHit.limbHit() != null && ArmoredHeadResistance.blocks(config.gunConfig(), entityHit.limbHit())) {
-                    // An armoured head is a solid terminal impact for small and medium rounds: no health damage,
-                    // no headshot bonus, no limb damage, and no acid-blood impact effect.
-                    allHits.add(new GunHitResult.Entity(entity.getUUID()));
-                    return Impact.armoredHead(hitLocation, direction);
-                }
                 var hitDistance = shooter.getEyePosition().distanceTo(hitLocation);
                 var impactConfig = withDamageFalloff(config, hitDistance);
-                var hitboxDamageMultiplier = entityHit.limbHit() == null
-                    ? 1.0F
-                    : entityHit.limbHit().volume().healthDamageMultiplier();
                 var damageResult = EntityGunHitResultHandler.handle(
                     impactConfig,
                     entity,
                     hitEntities.size() - 1,
-                    hitboxDamageMultiplier
+                    entityHit.limbHit()
                 );
                 allHits.add(new GunHitResult.Entity(entity.getUUID()));
-                if (entityHit.limbHit() != null && entity instanceof LivingEntity livingEntity) {
-                    LimbHitboxDamage.apply(livingEntity, entityHit.limbHit(), damageResult.attemptedDamage());
-                }
                 if (damageResult.lethal()) {
                     var burstCount = config.fireModeConfig().pelletCount() > 1 ? 24 : 18;
                     sendBloodBurst(level, shooter, entity, hitLocation, direction, burstCount);
@@ -206,8 +193,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         LivingEntity shooter,
         Vec3 rayStart,
         Vec3 rayEnd,
-        HashSet<UUID> ignored,
-        com.blib.api.common.dismemberment.v1.hitbox.LimbHitPrediction prediction
+        HashSet<UUID> ignored
     ) {
         EntityTraceHit nearest = null;
         var nearestDistance = Double.MAX_VALUE;
@@ -221,25 +207,24 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                     && (candidate.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(candidate))
             )
         ) {
-            LimbHitboxRegistry.Hit limbHit = null;
-            Vec3 location = null;
-            if (entity instanceof LivingEntity livingEntity) {
-                limbHit = LimbHitboxRegistry.findNearest(livingEntity, rayStart, rayEnd).orElse(null);
-                if (limbHit == null && prediction != null && prediction.entityId() == entity.getId()) {
-                    limbHit = findValidatedVisualLimbHit(livingEntity, rayStart, rayEnd, prediction.limbId());
-                }
-                if (limbHit != null) {
-                    location = limbHit.location();
-                }
-            }
+            // Limb volumes are a hit surface IN THEIR OWN RIGHT, not a refinement of a bounding-box hit. A
+            // xenomorph's tail trails well outside its AABB, so testing limbs only after the box succeeded would
+            // leave the tail permanently unshootable - which is exactly what testers reported.
+            var limbHit = entity instanceof LivingEntity living
+                ? LimbHitboxRegistry.findNearest(living, rayStart, rayEnd).orElse(null)
+                : null;
             var bodyLocation = entity.getBoundingBox().inflate(0.3D).clip(rayStart, rayEnd).orElse(null);
-            if (bodyLocation != null && location == null) {
-                location = bodyLocation;
-                limbHit = null;
-            }
+
+            // Prefer the limb when there is one: the volumes are the authored geometry, the AABB is a crude box whose
+            // entry point is almost always nearer than anything inside it. Nearest-wins would make every shot a body
+            // shot. The box stays as the fallback so entities with no authored volumes still take bullets normally,
+            // and so a shot that slips between volumes is not silently lost.
+            var location = limbHit != null ? limbHit.location() : bodyLocation;
+
             if (location == null) {
                 continue;
             }
+
             var distance = rayStart.distanceToSqr(location);
             if (distance < nearestDistance) {
                 nearestDistance = distance;
@@ -247,39 +232,6 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             }
         }
         return nearest;
-    }
-
-    /**
-     * The client only names a rendered limb. The server reconstructs that limb from the existing profile and requires
-     * the server-owned shot ray to cross a deliberately limited envelope around it before damage is allowed.
-     */
-    private static LimbHitboxRegistry.Hit findValidatedVisualLimbHit(
-        LivingEntity entity,
-        Vec3 rayStart,
-        Vec3 rayEnd,
-        net.minecraft.resources.ResourceLocation limbId
-    ) {
-        var tolerance = new Vec3(0.25D, 0.25D, 0.25D);
-        return LimbHitboxRegistry.getHitboxes(entity)
-            .stream()
-            .filter(volume -> volume.limbId().equals(limbId))
-            .map(volume -> {
-                var envelope = new com.blib.api.common.dismemberment.v1.hitbox.LimbHitboxVolume(
-                    volume.limbId(),
-                    volume.center(),
-                    volume.xAxis(),
-                    volume.yAxis(),
-                    volume.zAxis(),
-                    volume.halfExtents().add(tolerance),
-                    volume.healthDamageMultiplier(),
-                    volume.limbDamageMultiplier(),
-                    volume.limbDamageThreshold()
-                );
-                return envelope.clip(rayStart, rayEnd).map(location -> new LimbHitboxRegistry.Hit(volume, location)).orElse(null);
-            })
-            .filter(java.util.Objects::nonNull)
-            .min(java.util.Comparator.comparingDouble(hit -> rayStart.distanceToSqr(hit.location())))
-            .orElse(null);
     }
 
     private static void sendBloodBurst(
@@ -304,14 +256,11 @@ public final class HitScanGunAttackAction implements GunAttackAction {
     }
 
     private static int killFluidType(net.minecraft.world.entity.Entity entity) {
-        if (entity instanceof Alien alien) {
-            if (alien.isIrradiated()) {
-                return 4;
-            }
-            if (alien.isNetherAfflicted()) {
-                return 3;
-            }
-            return 1;
+        // Via the compat proxy, NOT a direct Alien reference: this method is on the firing path of every gun, and a
+        // hard link to another mod's class here crashes anyone running avp_human without avp_alien.
+        var strainFluid = HumanAlienBlood.fluidType(entity);
+        if (strainFluid.isPresent()) {
+            return strainFluid.getAsInt();
         }
         var key = entity.getType().builtInRegistryHolder().key().location();
         var namespace = key.getNamespace();
@@ -349,17 +298,15 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         private static Impact miss(Vec3 position) {
             return new Impact(position, false, Vec3.ZERO, 0);
         }
-
-        private static Impact armoredHead(Vec3 position, Vec3 shotDirection) {
-            // A non-entity impact routes through the existing orange shard impact effect rather than blood/acid.
-            return new Impact(position, false, shotDirection.scale(-1.0D), 0);
-        }
     }
 
+    /**
+     * @param limbHit the limb volume struck, or null when the ray only met the entity's plain bounding box.
+     */
     private record EntityTraceHit(
         Entity entity,
         Vec3 location,
-        LimbHitboxRegistry.Hit limbHit
+        @Nullable LimbHitboxRegistry.Hit limbHit
     ) {}
 
     private static boolean canSeeImpact(ServerLevel level, ServerPlayer viewer, Impact impact) {
@@ -387,8 +334,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             fireMode,
             config.shooter(),
             config.gunItemStack(),
-            config.damageMultiplier() * multiplier,
-            config.prediction()
+            config.damageMultiplier() * multiplier
         );
     }
 

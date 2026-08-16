@@ -23,6 +23,14 @@ public class MeleeWeaponStrategy implements WeaponStrategy {
 
     private static final StateKey<Integer> ATTACK_DELAY_IN_TICKS = StateKey.sensed("attack_delay_in_ticks");
 
+    private static final double TICKS_PER_SECOND = 20.0;
+
+    /** Four swings a second, so no weapon or enchantment can turn a marine into a blender. */
+    private static final int MINIMUM_ATTACK_DELAY_IN_TICKS = 5;
+
+    /** One swing every two seconds, the floor for a very heavy weapon or a nonsensical attribute. */
+    private static final int MAXIMUM_ATTACK_DELAY_IN_TICKS = 40;
+
     @Override
     public boolean isValidItemStack(ItemStack itemStack) {
         // TODO: Replace with "melee weapons" tag.
@@ -97,10 +105,35 @@ public class MeleeWeaponStrategy implements WeaponStrategy {
 
             var modifiedAttackSpeed = AttributeUtil.computeModifiedAttributeValue(mob, Attributes.ATTACK_SPEED, itemStack, equipmentSlot);
 
-            blackboard.set(ATTACK_DELAY_IN_TICKS, Math.abs((int) (modifiedAttackSpeed * 20)));
+            blackboard.set(ATTACK_DELAY_IN_TICKS, computeAttackDelayInTicks(modifiedAttackSpeed));
         });
 
         return Action.Signal.CONTINUE;
+    }
+
+    /**
+     * How long to wait between swings, from the weapon's attack speed.
+     * <p>
+     * ⚠⚠ THIS USED TO BE {@code attackSpeed * 20} AND THAT IS BACKWARDS. {@code ATTACK_SPEED} is attacks PER SECOND, so
+     * the gap between swings is {@code 20 / speed} - dividing, not multiplying. Multiplying inverts the whole
+     * relationship: the FASTER a weapon is, the LONGER the marine waited with it.
+     * <p>
+     * A tactical knife is speed 2.2 (base 4.0, item modifier -1.8), so it should swing every 9 ticks. It was waiting 44
+     * - nearly five times too slow, and slower than the axe, which is the weapon it is supposed to be quicker than. At
+     * 44 ticks a zombie lands roughly two hits between swings, which is exactly what the tester counted.
+     * <p>
+     * The old {@code Math.abs} was papering over the same mistake from the other end: a weapon whose modifier drove the
+     * speed negative produced a negative delay, and the absolute value hid it rather than fixing the formula.
+     */
+    private static int computeAttackDelayInTicks(double attackSpeed) {
+        if (attackSpeed <= 0.0) {
+            // A weapon this heavy would divide toward an infinite wait. One swing every two seconds is the floor.
+            return MAXIMUM_ATTACK_DELAY_IN_TICKS;
+        }
+
+        var delayInTicks = (int) Math.round(TICKS_PER_SECOND / attackSpeed);
+
+        return Math.clamp(delayInTicks, MINIMUM_ATTACK_DELAY_IN_TICKS, MAXIMUM_ATTACK_DELAY_IN_TICKS);
     }
 
     private double computeEffectivenessScore(Mob mob, LivingEntity target, ReadableWorldState worldState, ItemStack itemStack) {

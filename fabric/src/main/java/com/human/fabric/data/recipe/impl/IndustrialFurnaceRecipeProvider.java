@@ -1,9 +1,14 @@
 package com.human.fabric.data.recipe.impl;
 
 import com.blib.fabric.data.recipe.builder.RecipeBuilder;
+import com.human.common.registry.init.block.HumanPlasticBlocks;
+import com.human.common.registry.tag.HumanItemTags;
 import com.human.fabric.data.recipe.builder.IndustrialFurnaceRecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -213,6 +218,36 @@ public class IndustrialFurnaceRecipeProvider {
             .withExperience(0.35f)
             .withCookingTime(100)
             .into(Items.TERRACOTTA);
+
+        // Alien Recipes
+        //
+        // The long way round is four resin balls smelted to slime balls, smelted to polymer, then crafted into a
+        // plastic block. Since four resin balls are also one resin block, cooking the block whole lands on the same
+        // plastic block for the same resin -- it buys steps, not material. Every strain's base resin qualifies.
+        industrialFurnaceSmelting(HumanItemTags.RESIN_BLOCKS, "resin_blocks")
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .withExperience(0.1f)
+            .withCookingTime(100)
+            .into(HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC.get(DyeColor.GREEN).get());
+    }
+
+    /**
+     * Tag-input variant. The item overload below derives its unlock criterion and recipe id from the input item, and a
+     * tag has neither, so both are passed in: the recipe unlocks on the RESULT being obtained, and the caller names the
+     * recipe explicitly.
+     */
+    private static IndustrialFurnaceRecipeBuilder industrialFurnaceSmelting(TagKey<Item> tag, String name) {
+        IndustrialFurnaceRecipeBuilder builder = IndustrialFurnaceRecipeBuilder.smelting(
+            Ingredient.of(tag),
+            RecipeCategory.MISC,
+            HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC.get(DyeColor.GREEN).get(),
+            0.1f,
+            100
+        );
+
+        builder.group(name);
+
+        return builder;
     }
 
     private static IndustrialFurnaceRecipeBuilder industrialFurnaceSmelting(ItemLike item) {

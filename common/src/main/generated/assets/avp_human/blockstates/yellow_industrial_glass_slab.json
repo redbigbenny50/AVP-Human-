@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/yellow_industrial_glass_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/yellow_industrial_glass_slab_double"
+    },
+    "type=top": {
+      "model": "avp_human:block/yellow_industrial_glass_slab_top"
+    }
+  }
+}

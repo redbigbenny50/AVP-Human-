@@ -3,6 +3,7 @@ package com.human.fabric.data.recipe.impl;
 import com.blib.fabric.data.recipe.RecipeConstants;
 import com.blib.fabric.data.recipe.RecipeTemplates;
 import com.blib.fabric.data.recipe.builder.RecipeBuilder;
+import com.blib.fabric.data.recipe.util.RecipeUtil;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.world.item.DyeItem;
@@ -47,6 +48,11 @@ public class GlassRecipeProvider {
             HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS.get(),
             HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_STAIRS.get()
         );
+        RecipeUtil.createWallBlockManualAndStonecutterRecipes(
+            builder,
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS.get(),
+            HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_WALL.get()
+        );
 
         createIndustrialGlassBlockVariantRecipes(builder);
 
@@ -70,6 +76,32 @@ public class GlassRecipeProvider {
                 .pattern("AAA")
                 .pattern("AAA")
                 .into(16, HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_PANE.get(dyeColor).get());
+
+            createStandardSlabRecipe(
+                builder,
+                block,
+                HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_SLAB.get(dyeColor).get()
+            );
+            createStandardStairRecipe(
+                builder,
+                block,
+                HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_STAIRS.get(dyeColor).get()
+            );
+            RecipeUtil.createWallBlockManualAndStonecutterRecipes(
+                builder,
+                block,
+                HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_WALL.get(dyeColor).get()
+            );
+
+            builder.shaped()
+                .withCategory(RecipeCategory.REDSTONE)
+                .apply(RecipeTemplates.DOOR_BLOCK.apply(block))
+                .into(3, HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_DOOR.get(dyeColor).get());
+
+            builder.shaped()
+                .withCategory(RecipeCategory.REDSTONE)
+                .apply(RecipeTemplates.TRAP_DOOR_BLOCK.apply(block))
+                .into(2, HumanIndustrialGlassBlocks.DYE_COLOR_TO_INDUSTRIAL_GLASS_TRAP_DOOR.get(dyeColor).get());
 
             // All colored industrial glass blocks can be blasted again to remove dyed colors.
             builder.blast(block)

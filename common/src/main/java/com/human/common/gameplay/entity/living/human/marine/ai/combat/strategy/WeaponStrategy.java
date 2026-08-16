@@ -24,14 +24,24 @@ public interface WeaponStrategy extends ItemStrategy {
         Negative negative
     ) {
 
+        /**
+         * ⚠ RANGE CARRIES THE MOST WEIGHT, and that is the point of these numbers.
+         * <p>
+         * A marine picking the strongest gun it owns regardless of where the enemy is standing was the complaint. Raw
+         * killing power and suitability to the current distance are worth the same, and CROWD and FAMILIARITY are
+         * tie-breakers rather than drivers: enough to settle two guns that are otherwise close, never enough to hand a
+         * marine a shotgun for a target across a field.
+         */
         public static final Weights DEFAULT = new Weights(
-            new Positive(30, 30),
+            new Positive(30, 30, 12, 8),
             new Negative(40)
         );
 
         record Positive(
             int effectiveness,
-            int range
+            int range,
+            int crowdControl,
+            int familiarity
         ) {}
 
         record Negative(
@@ -51,8 +61,12 @@ public interface WeaponStrategy extends ItemStrategy {
 
         private double riskScore;
 
+        private double crowdControlScore;
+
+        private double familiarityScore;
+
         public static ScoreResult zero() {
-            return of(Weights.DEFAULT, 0, 0, 0);
+            return of(Weights.DEFAULT, 0, 0, 0, 0, 0);
         }
 
         public static ScoreResult of(
@@ -61,12 +75,27 @@ public interface WeaponStrategy extends ItemStrategy {
             double rangeScore,
             double riskScore
         ) {
+            // Neutral on both new axes - what a weapon with no opinion about crowds and no history with this marine
+            // scores. Melee uses this form.
+            return of(weights, effectivenessScore, rangeScore, riskScore, 0.5, 0.0);
+        }
+
+        public static ScoreResult of(
+            Weights weights,
+            double effectivenessScore,
+            double rangeScore,
+            double riskScore,
+            double crowdControlScore,
+            double familiarityScore
+        ) {
             var scoreResult = THREAD_LOCAL.get();
 
             scoreResult.weights = weights;
             scoreResult.effectivenessScore = effectivenessScore;
             scoreResult.rangeScore = rangeScore;
             scoreResult.riskScore = riskScore;
+            scoreResult.crowdControlScore = crowdControlScore;
+            scoreResult.familiarityScore = familiarityScore;
 
             return scoreResult;
         }
@@ -77,7 +106,9 @@ public interface WeaponStrategy extends ItemStrategy {
 
         public double weightedAverage() {
             var positiveWeight = weights.positive().effectiveness()
-                + weights.positive().range();
+                + weights.positive().range()
+                + weights.positive().crowdControl()
+                + weights.positive().familiarity();
             var negativeWeight = weights.negative().risk();
 
             if (positiveWeight <= 0.0 || negativeWeight <= 0.0) {
@@ -85,7 +116,9 @@ public interface WeaponStrategy extends ItemStrategy {
             }
 
             var positiveScore = clampWeight(effectivenessScore, weights.positive().effectiveness())
-                + clampWeight(rangeScore, weights.positive().range());
+                + clampWeight(rangeScore, weights.positive().range())
+                + clampWeight(crowdControlScore, weights.positive().crowdControl())
+                + clampWeight(familiarityScore, weights.positive().familiarity());
 
             positiveScore /= positiveWeight;
 

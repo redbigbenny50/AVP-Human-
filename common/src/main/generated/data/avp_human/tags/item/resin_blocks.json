@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#avp_alien:resin_blocks",
+      "required": false
+    },
+    {
+      "id": "avp_alien:resin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:aberrant_resin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:irradiated_resin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_resin",
+      "required": false
+    }
+  ]
+}
