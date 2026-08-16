@@ -48,6 +48,15 @@ repositories {
         }
     }
     maven { url "https://maven.terraformersmc.com/releases" } // modmenu
+    // ⚠⚠ REI'S OWN MAVEN. The blib-gradle plugin supplied this implicitly; AVP-Alien's convention script does not,
+    // because Alien only needs the REI jar itself and picks that up from architectury's mirror. avp_human ALSO needs
+    // me.shedaniel.cloth:basic-math (me.shedaniel.math.Rectangle, used by HumanREIClient), which architectury does
+    // NOT mirror - this is the only place it is published. Without this repo the REI api resolves and the math
+    // library does not, which reads as "package me.shedaniel.math does not exist" and nothing else.
+    maven {
+        name = 'Shedaniel'
+        url = 'https://maven.shedaniel.me'
+    }
     maven { url 'https://maven.azuredoom.com/mods' }
     maven {
         name = 'Parchment'
@@ -124,10 +133,32 @@ processResources {
             "java_version": java_version,
             "azurelib_version": azurelib_version,
             "blib_version": blib_version,
-            "avp_human_version": avp_human_version,
+            "avp_alien_version": avp_alien_version,
             "avp_predator_version": avp_predator_version,
             "gigeresque_version": gigeresque_version,
-            "blib_engine_version": blib_engine_version
+            "blib_engine_version": blib_engine_version,
+            "just_codec_version": just_codec_version,
+            "just_core_version": just_core_version,
+            "just_goap_version": just_goap_version,
+            // ⭐⭐ ALIASES FOR THE NAMES avp_human's RESOURCE TEMPLATES ALREADY USE. The blib-gradle plugin
+            // supplied these; AVP-Alien's convention script never needed them because Alien's templates use the
+            // names above. Rather than rewrite fabric.mod.json / neoforge.mods.toml / the mixin configs, the map
+            // answers to BOTH spellings - fewer files touched, and the templates stay diffable against upstream.
+            // ⚠ THE FULL SET, extracted by grepping every ${...} in every template at once. Adding them one at a
+            // time does not work: processResources stops at the FIRST missing key per file, so each build only ever
+            // reveals one more.
+            "mod_version": version,
+            "mod_icon": mod_logo,
+            "neoforge_version": neo_version,
+            "neoforge_loader_version_range": loader_version_range,
+            // ⚠ The *_excl_end_version values are the EXCLUSIVE UPPER BOUNDS of the dependency ranges in
+            // neoforge.mods.toml, e.g. "[${blib_version},${blib_excl_end_version})". They must be a HIGHER base
+            // version than their lower bound or the range is degenerate and NeoForge rejects the whole jar with
+            // "not a valid mod file" - see the 0.2.0-fork/0.2.0 incident.
+            "blib_excl_end_version": blib_excl_end_version,
+            "avp_alien_excl_end_version": avp_alien_excl_end_version,
+            "avp_predator_excl_end_version": avp_predator_excl_end_version,
+            "gigeresque_excl_end_version": gigeresque_excl_end_version
     ]
 
     filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {

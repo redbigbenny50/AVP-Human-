@@ -1,5 +1,16 @@
+// Converted from the blib-gradle plugin to buildSrc, matching AVP-Alien.
+//
+// ⚠ The `blib { mod { ... } }` DSL that used to live here is GONE. Everything it declared — id, name, author,
+// description, license, icon, group, version — is now in gradle.properties, because that is where the buildSrc
+// convention scripts read from and where processResources expands from.
+//
+// ⚠ PUBLISHING MOVED, IT DID NOT DISAPPEAR. The CurseForge/Modrinth/Discord block the plugin owned is now the
+// `me.modmuss50.mod-publish-plugin` block in fabric/build.gradle and neoforge/build.gradle, gated on key.properties
+// exactly as AVP-Alien gates it. The Discord webhook has no equivalent in that plugin — see the note in fabric.
 plugins {
-    id 'blib-multiloader-root'
+    // Required for NeoGradle
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.4.1"
+    id 'com.diffplug.spotless' version "8.8.0" apply(false)
 }
 
 allprojects {
@@ -11,79 +22,15 @@ allprojects {
         }
     }
 
+    // ⚠ KEEP THIS. Several published AVP/BLib POMs name BLib versions that were never uploaded, so a transitive
+    // resolve picks a version that does not exist and the build dies with a confusing "could not find" on a module
+    // nobody asked for directly. Pinning every com.blib:blib-* to the one in gradle.properties is what makes the
+    // dependency graph resolvable at all. It came across from the blib-gradle setup unchanged.
     configurations.configureEach {
         resolutionStrategy.eachDependency { details ->
             if (details.requested.group == 'com.blib' && details.requested.name.startsWith('blib-')) {
                 details.useVersion rootProject.blib_version
                 details.because 'Some published AVP/BLib POMs point at missing BLib versions.'
-            }
-        }
-    }
-}
-
-blib {
-    version = project.blib_version
-    recipeViewer = 'rei'
-
-    mod {
-        author = 'Stargazer Studios'
-        credits = 'Stargazer Studios'
-        description = 'A module for the AVP universe that adds human content.'
-        group = 'com.avp.human'
-        icon = 'assets/avp_human/icon.png'
-        id = 'avp_human'
-        license = 'All Rights Reserved'
-        name = 'AVP (Human)'
-        version = '0.1.7-fork'
-
-        publish {
-            dryRun = true
-
-            discordWebhook {
-                username = "MU/TH/UR"
-                avatarUrl = "https://i.imgur.com/5Y0EZ9x.jpeg"
-                thumbnailUrl = "https://cdn.modrinth.com/data/Uqo0H9FX/8ffabe2f364c34e6b0f13019664c5fe4989c2f95_96.webp"
-            }
-
-            curseforge {
-                projectId = '1406348'
-                projectSlug = 'avp-human'
-            }
-
-            modrinth {
-                projectId = 't2hZvxHn'
-            }
-        }
-    }
-
-    maven {
-        repository 'https://maven.bvanseghi.dev/avp_alien'
-        repository 'https://maven.bvanseghi.dev/avp_predator'
-        repository 'https://maven.bvanseghi.dev/blib_engine'
-
-        publish {
-            url = 'https://maven.bvanseghi.dev/avp_human/'
-
-            credentials {
-                usernameEnv = 'AVP_MAVEN_USERNAME'
-                passwordEnv = 'AVP_MAVEN_PASSWORD'
-            }
-        }
-    }
-}
-subprojects {
-    plugins.withId('maven-publish') {
-        publishing {
-            repositories {
-                maven {
-                    name = 'blib_engine'
-                    url = uri('https://maven.aliensvspredatormod.com/releases')
-
-                    credentials {
-                        username = System.getenv('MAVEN_USERNAME') ?: 'unused'
-                        password = System.getenv('MAVEN_PASSWORD') ?: 'unused'
-                    }
-                }
             }
         }
     }

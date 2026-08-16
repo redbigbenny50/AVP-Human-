@@ -1,36 +1,156 @@
 //file:noinspection GroovyAssignabilityCheck
+// Converted from 'blib-multiloader-neoforge' to the buildSrc conventions + net.neoforged.moddev, matching AVP-Alien.
+//
+// ⚠⚠ CONFIGURATION MAPPING (moddev has no separate "mod" configurations - everything is a plain dependency):
+//     blibMod          -> implementation
+//     blibCompileOnly  -> compileOnly
+//     blibRuntimeOnly  -> runtimeOnly
 plugins {
-    id 'blib-multiloader-neoforge'
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev' version "${neo_moddev}"
+    id 'me.modmuss50.mod-publish-plugin' version "${modmuss50_mod_publish_version}"
+    id 'com.diffplug.spotless'
 }
+
+configurations {
+    localRuntime {
+        canBeConsumed = false
+        visible = false
+    }
+
+    named(sourceSets.main.runtimeClasspathConfigurationName) {
+        extendsFrom(configurations.localRuntime)
+    }
+}
+
+neoForge {
+    version = "${neo_version}"
+    accessTransformers = ["../common/src/main/resources/META-INF/accesstransformer.cfg"]
+
+    parchment {
+        minecraftVersion = "${parchment_minecraft}"
+        mappingsVersion = "${parchment_version}"
+    }
+
+    runs {
+        client {
+            client()
+            gameDirectory = this.mkdir(this.file('runs/client'))
+        }
+
+        // ⚠ Writes STRAIGHT into common's generated tree, so neoforge never leaves a second copy behind. This is the
+        // arrangement AVP-Alien uses and the reason its build does not need a duplicatesStrategy net.
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('../common/src/main/generated/').getAbsolutePath(), '--existing', file('../common/src/main/resources/').getAbsolutePath()
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            gameDirectory = this.mkdir(this.file('runs/server'))
+        }
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})"
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+// ⚠ MIRRORS AVP-Alien's localAvpHumanJar, pointing the other way. During local AVP development this uses the freshly
+// built Alien module instead of Gradle's remote artifact cache; CI and standalone checkouts fall through to the
+// published Maven dependency. ⚠ The filename is built from avp_alien_version - if your local Alien build outputs a
+// different suffix (e.g. -fork) than the property, this silently misses and uses the remote artifact instead.
+def localAvpAlienJar = rootProject.file("../AVP-Alien-/neoforge/build/libs/avp_alien-neoforge-${minecraft_version}-${project.avp_alien_version}.jar")
 
 dependencies {
-    implementation "com.just:just-codec:${project.just_codec_version}"
-    implementation "com.just:just-core:${project.just_core_version}"
-    implementation "com.just:just-goap:${project.just_goap_version}"
-
-    blibMod "dev.architectury:architectury-neoforge:${project.architectury_version}"
-    blibMod "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
-
-    // Compatibility
-    blibCompileOnly("com.avp.alien:avp_alien-neoforge-1.21.1:${project.avp_alien_version}") {
-        exclude group: 'com.blib'
-    }
-    blibCompileOnly("com.avp.predator:avp_predator-neoforge-1.21.1:${project.avp_predator_version}") {
-        exclude group: 'com.blib'
+    implementation "dev.architectury:architectury-neoforge:${project.architectury_version}"
+    implementation "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
+    implementation("com.blib:blib-neoforge-${minecraft_version}:${project.blib_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    blibMod "maven.modrinth:gigeresque:${project.gigeresque_version}"
-    blibRuntimeOnly "mod.azure.azurelib:azurelib-neo-${project.minecraft_version}:${project.azurelib_version}"
+    // ⚠ NOT bundled here and NOT `include`d - on neoforge these arrive through BLib's own jar-in-jar. Declaring them
+    // implementation matches the pre-migration script exactly.
+    implementation ("com.just:just-codec:${project.just_codec_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    implementation ("com.just:just-core:${project.just_core_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    implementation ("com.just:just-goap:${project.just_goap_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+    // Compatibility - was blibCompileOnly, so it stays OPTIONAL in the shipped jar.
+    if (localAvpAlienJar.exists()) {
+        compileOnly files(localAvpAlienJar)
+    } else {
+        compileOnly("com.avp.alien:avp_alien-neoforge-1.21.1:${project.avp_alien_version}") {
+            exclude group: 'com.blib'
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+    }
+    compileOnly("com.avp.predator:avp_predator-neoforge-1.21.1:${project.avp_predator_version}") {
+        exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+    implementation "maven.modrinth:gigeresque:${project.gigeresque_version}"
+    runtimeOnly "mod.azure.azurelib:azurelib-neo-${minecraft_version}:${project.azurelib_version}"
+
+    // recipeViewer = 'rei' used to do this for you.
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
+    compileOnly "mezz.jei:jei-$minecraft_version-neoforge:${jei_version}"
+    compileOnly "dev.emi:emi-neoforge:${emi_version}"
 }
 
-// The generated-resources tree is contributed to processResources from more than one source root, so the same
-// asset can arrive twice and Gradle 9 refuses to pick a winner. The copies are byte-identical (they differ only
-// in line endings), so taking the first and dropping later duplicates is safe.
-//
-// This is a SAFETY NET, not the cure: the real fix is a single generated tree. Datagen currently writes to
-// <module>/src/main/generated while common/src/main/generated is also a resource root - avp_alien has only the
-// common one and builds clean. Without this net a crashed datagen run leaves a partial tree behind that then
-// blocks the NEXT build before datagen can retry, which is a loop you cannot escape from inside the project.
+// See the note in common/build.gradle - SAFETY NET while two generated trees exist, not the cure.
 tasks.named('processResources') {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// ⚠ PUBLISHING PORTED FROM THE blib DSL, gated on key.properties like AVP-Alien. Discord webhook not reproduced -
+// mod-publish-plugin has no equivalent; see the note in fabric/build.gradle.
+def keyPropsFile = new File(rootProject.projectDir, "key.properties")
+if (keyPropsFile.exists()) {
+    publishMods {
+        def releaseProp = new Properties()
+        releaseProp.load(new FileInputStream(keyPropsFile))
+        file = jar.archiveFile
+        changelog = rootProject.file("CHANGELOG.md").text
+        type = STABLE
+        modLoaders.add("neoforge")
+
+        curseforge {
+            projectId = project.curseforgeID
+            projectSlug = project.projectSlug
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "blib-resurrection"
+            }
+            javaVersions.add(JavaVersion.VERSION_21)
+            client = true
+            server = true
+        }
+        modrinth {
+            projectId = project.modrinthID
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "blib-resurrection"
+            }
+            environment = CLIENT_AND_SERVER
+        }
+    }
 }

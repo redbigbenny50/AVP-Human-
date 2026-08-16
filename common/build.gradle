@@ -1,19 +1,133 @@
+// Converted from 'blib-multiloader-common' to the buildSrc conventions, matching AVP-Alien's common module.
+//
+// ⚠ THE PLUGIN USED TO CONFIGURE MODDEV FOR YOU. `neoForge { }` below is not new behaviour — it is the same
+// NeoForm-based common compile the blib plugin was setting up internally, now written out.
 plugins {
-    id 'blib-multiloader-common'
+    id 'multiloader-common'
+    id 'net.neoforged.moddev' version "${neo_moddev}"
+    id 'com.diffplug.spotless'
+}
+
+neoForge {
+    neoFormVersion = "${neoform_version}"
+
+    accessTransformers = ["../common/src/main/resources/META-INF/accesstransformer.cfg"]
+
+    parchment {
+        minecraftVersion = "${parchment_minecraft}"
+        mappingsVersion = "${parchment_version}"
+    }
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
 }
 
 dependencies {
-    compileOnly "com.just:just-codec:${project.just_codec_version}"
-    compileOnly "com.just:just-core:${project.just_core_version}"
-    compileOnly "com.just:just-goap:${project.just_goap_version}"
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    compileOnly "mod.azure.azurelib:azurelib-common-${minecraft_version}:${azurelib_version}"
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-    // Compatibility
+    // ⚠ BLib was implicit under the old plugin; the conventions do not add it, so it is declared here exactly as
+    // AVP-Alien declares it. The slf4j exclusion matters: BLib ships its own and it collides with Minecraft's.
+    implementation("com.blib:blib-common-${minecraft_version}:${project.blib_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    compileOnly "com.blib.engine:blib_engine-common-1.21.1:${project.blib_engine_version}"
+
+    // ⚠ The just-* libraries were `compileOnly` here before and stay `compileOnly` here. They are BUNDLED by the
+    // fabric module (include) and by BLib's own jar-in-jar on neoforge - do not add them to the shipped set twice.
+    compileOnly ("com.just:just-codec:${project.just_codec_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    compileOnly ("com.just:just-core:${project.just_core_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    compileOnly ("com.just:just-goap:${project.just_goap_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+    // Compatibility - all optional at runtime, so compileOnly.
     compileOnly("com.avp.alien:avp_alien-common-1.21.1:${project.avp_alien_version}") {
         exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     compileOnly("com.avp.predator:avp_predator-common-1.21.1:${project.avp_predator_version}") {
         exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
     compileOnly "maven.modrinth:gigeresque:${project.gigeresque_version}"
+    compileOnly "maven.modrinth:u6dRKJwZ:Tbomhybz"
+    compileOnly "maven.modrinth:9s6osm5g:15.0.140+fabric"
+    // ⭐⭐ THE COORDINATES ARE `-api-neoforge` AND `-neoforge`, VERSION 16.0.799 WITH NO SUFFIX. Verified against
+    // the jars Gradle has already cached (RoughlyEnoughItems-api-neoforge-16.0.799.jar,
+    // RoughlyEnoughItems-neoforge-16.0.799.jar). The NEOFORGE flavours are correct here because `common` is a
+    // NeoForm compile - the fabric variant was always the wrong one in this module.
+    // ⚠⚠ DO NOT WRITE `+fabric`. That is a MODRINTH version string, not a Maven version; those coordinates 404
+    // on every repository including maven.shedaniel.me, and the build only appeared to work while stale jars sat in
+    // Gradle's cache. A `clean` exposed it.
+    // ⚠ KEEP THEM compileOnly. Making them `implementation` forces REI's whole transitive graph to resolve here,
+    // which turns one missing symbol into a cascade.
+    compileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:${rei_version}"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
+
+    // ⚠⚠ me.shedaniel.math.Rectangle IS NOT IN THE REI API JAR. It lives in cloth-basic-math - group
+    // me.shedaniel.cloth, artifact basic-math - which REI declares transitively, and Gradle's compileOnly does NOT
+    // resolve transitives. That is why the rei.api.* imports compiled while me.shedaniel.math alone failed.
+    // ⚠ REQUIRES the Shedaniel maven in buildSrc/src/main/groovy/multiloader-common.gradle - the only place this
+    // is published; architectury's mirror does NOT carry it.
+    compileOnly "me.shedaniel.cloth:basic-math:0.6.1"
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+// ⚠ AVP-Human's datagen currently writes into <loader>/src/main/generated as well as common's, which is what forced
+// the duplicatesStrategy nets in the loader scripts. This mirrors AVP-Alien: common owns the generated tree, and the
+// loader runDatagen tasks copy into it. Creating the directory up front stops processResources failing on a clean
+// checkout that has never run datagen.
+tasks.register('prepareGeneratedDir') {
+    doLast {
+        file('src/main/generated').mkdirs()
+    }
+}
+
+tasks.named('processResources') {
+    dependsOn 'prepareGeneratedDir'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/generated'
+        }
+    }
+}
+
+tasks.register('packageCommonResources', Sync) {
+    from sourceSets.main.resources
+    into layout.buildDirectory.dir("commonResourcesOut")
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+
+    commonResources(tasks.named('packageCommonResources').get().outputs.files.singleFile) {
+        builtBy tasks.named('packageCommonResources')
+    }
 }
