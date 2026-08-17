@@ -1,57 +1,191 @@
 //file:noinspection GroovyAssignabilityCheck
+// Converted from 'blib-multiloader-fabric' to the buildSrc conventions + fabric-loom, matching AVP-Alien.
+//
+// ⚠⚠ THE blib* CONFIGURATIONS HAVE NO buildSrc EQUIVALENT. This is the whole risk of the migration, so the mapping
+// used throughout is written out here:
+//     blibMod              -> modImplementation   (present at runtime, shipped as a dependency)
+//     blibModCompileOnly   -> modCompileOnly      (compile against it, optional at runtime)
+//     blibModRuntimeOnly   -> modRuntimeOnly      (dev/datagen classpath only, NOT shipped)
+//     blibCompileOnly      -> compileOnly         (non-mod artifacts)
+//     blibRuntimeOnly      -> runtimeOnly
+// `include` is unchanged - it was always plain loom.
 plugins {
-    id 'blib-multiloader-fabric'
+    id 'multiloader-loader'
+    id 'fabric-loom' version "${fabric_loom_version}"
+    id 'me.modmuss50.mod-publish-plugin' version "${modmuss50_mod_publish_version}"
+    id 'com.diffplug.spotless'
 }
 
 configurations.configureEach {
     exclude group: 'dev.emi'
 }
 
+fabricApi {
+    configureDataGeneration({
+        modId = project.mod_id
+    })
+}
+
+// Datagen writes into this module, then everything is moved into common's generated tree so there is ONE source of
+// truth. Carried over from AVP-Alien verbatim; it is also what lets the duplicatesStrategy net below stay a net
+// rather than the cure.
+tasks.named('runDatagen') {
+    doLast {
+        def generatedDir = new File(project.projectDir, 'src/main/generated')
+        def targetDir = new File(rootProject.projectDir, 'common/src/main/generated')
+
+        println "Checking generatedDir: ${generatedDir.absolutePath}"
+
+        if (generatedDir.exists()) {
+            targetDir.mkdirs()
+
+            ant.copy(todir: targetDir) {
+                fileset(dir: generatedDir)
+            }
+
+            println "Copied generated data to: ${targetDir}"
+
+            if (generatedDir.deleteDir()) {
+                println "Deleted original generated directory: ${generatedDir}"
+            } else {
+                println "Failed to delete: ${generatedDir} — possibly contains files still in use"
+            }
+        } else {
+            println "No generated data found at: ${generatedDir}"
+        }
+    }
+}
+
 dependencies {
-    implementation "com.just:just-codec:${project.just_codec_version}"
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
+    }
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation("com.blib:blib-fabric-${minecraft_version}:${project.blib_version}")
+
+    // ⚠ BUNDLED, NOT JUST COMPILED AGAINST. `include` is what puts these inside the shipped jar; dropping it would
+    // leave avp_human loading against classes only BLib happens to carry.
+    implementation ("com.just:just-codec:${project.just_codec_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     include "com.just:just-codec:${project.just_codec_version}"
-    implementation "com.just:just-core:${project.just_core_version}"
+    implementation ("com.just:just-core:${project.just_core_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     include "com.just:just-core:${project.just_core_version}"
-    implementation "com.just:just-goap:${project.just_goap_version}"
+    implementation ("com.just:just-goap:${project.just_goap_version}"){
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     include "com.just:just-goap:${project.just_goap_version}"
 
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
     modApi "dev.architectury:architectury-fabric:${project.architectury_version}"
     modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}"
 
-    // Compatibility
-    blibModCompileOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
+    // Compatibility - was blibModCompileOnly, so it stays OPTIONAL in the shipped jar.
+    modCompileOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
         exclude group: 'com.blib'
         exclude group: 'dev.emi'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    blibModCompileOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
+    modCompileOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
         exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    // DATAGEN CLASSPATH. avp_alien and avp_predator are compileOnly above so they stay OPTIONAL in the shipped
-    // jar - but datagen RUNS the providers, and several of them need the real classes, not just ids:
-    // ChestRawMaterialLootTable builds loot entries from AlienItems, and a LootItem needs an actual Item object.
-    // runtimeOnly puts them on the dev/datagen classpath WITHOUT bundling them or making them a hard dependency.
-    // Build avp_alien first; it compiles standalone, so there is no circular build order.
-    blibModRuntimeOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
+    // ⚠⚠ DO NOT COLLAPSE THIS INTO THE modCompileOnly ABOVE. Original comment, still true: avp_alien and
+    // avp_predator are compileOnly so they stay OPTIONAL in the shipped jar - but datagen RUNS the providers, and
+    // several need the real classes, not just ids (ChestRawMaterialLootTable builds loot entries from AlienItems,
+    // and a LootItem needs an actual Item object). modRuntimeOnly puts them on the dev/datagen classpath WITHOUT
+    // bundling them or making them a hard dependency. Build avp_alien first; it compiles standalone, so there is no
+    // circular build order.
+    modRuntimeOnly("com.avp.alien:avp_alien-fabric-1.21.1:${project.avp_alien_version}") {
         exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    blibModRuntimeOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
+    modRuntimeOnly("com.avp.predator:avp_predator-fabric-1.21.1:${project.avp_predator_version}") {
         exclude group: 'com.blib'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    blibMod "maven.modrinth:gigeresque:${project.gigeresque_modrinth_version}"
-    blibModRuntimeOnly "mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azurelib_version}"
+    modImplementation "maven.modrinth:gigeresque:${project.gigeresque_modrinth_version}"
+    modRuntimeOnly "mod.azure.azurelib:azurelib-fabric-${project.minecraft_version}:${project.azurelib_version}"
+
+    // recipeViewer = 'rei' used to do this for you.
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+    modCompileOnly "mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}"
 }
 
-// The generated-resources tree is contributed to processResources from more than one source root, so the same
-// asset can arrive twice and Gradle 9 refuses to pick a winner. The copies are byte-identical (they differ only
-// in line endings), so taking the first and dropping later duplicates is safe.
-//
-// This is a SAFETY NET, not the cure: the real fix is a single generated tree. Datagen currently writes to
-// <module>/src/main/generated while common/src/main/generated is also a resource root - avp_alien has only the
-// common one and builds clean. Without this net a crashed datagen run leaves a partial tree behind that then
-// blocks the NEXT build before datagen can retry, which is a loop you cannot escape from inside the project.
+loom {
+    def aw = project(":common").file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("runs/client")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("runs/server")
+        }
+    }
+}
+
+// See the note in common/build.gradle - this is a SAFETY NET while two generated trees exist, not the cure.
 tasks.named('processResources') {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// ⚠ PUBLISHING PORTED FROM THE blib { mod { publish { ... } } } DSL, gated on key.properties like AVP-Alien.
+// ⚠ THE DISCORD WEBHOOK HAS NO EQUIVALENT in mod-publish-plugin and is NOT reproduced here - if the MU/TH/UR
+// announcement matters, it needs a separate step (a CI webhook call) rather than a Gradle block.
+def keyPropsFile = new File(rootProject.projectDir, "key.properties")
+if (keyPropsFile.exists()) {
+    publishMods {
+        def releaseProp = new Properties()
+        releaseProp.load(new FileInputStream(keyPropsFile))
+        file = remapJar.archiveFile
+        changelog = rootProject.file("CHANGELOG.md").text
+        type = STABLE
+        modLoaders.add("fabric")
+
+        curseforge {
+            projectId = project.curseforgeID
+            projectSlug = project.projectSlug
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "fabric-api"
+            }
+            requires {
+                slug = "blib-resurrection"
+            }
+            client = true
+            server = true
+        }
+        modrinth {
+            projectId = project.modrinthID
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "fabric-api"
+            }
+            requires {
+                slug = "blib-resurrection"
+            }
+            environment = CLIENT_AND_SERVER
+        }
+    }
 }

@@ -31,6 +31,12 @@ public class HumanServerListener {
         var itemStack = serverPlayer.getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemStack.getItem() instanceof GunItem gunItem) {
+            // ⭐ Old Painless spins its barrels from the FIRE path, not from onUseTick - a player's trigger is the
+            // attack button and never makes the item "in use". Server-side so every tracking client sees the spin.
+            if (gunItem instanceof com.human.common.gameplay.item.old_painless.OldPainlessItem oldPainless) {
+                oldPainless.onFired(itemStack, serverPlayer, gunFirePayload.tickProgress());
+            }
+
             gunItem.fire(serverPlayer.level(), serverPlayer, itemStack, gunFirePayload.tickProgress());
         }
     }

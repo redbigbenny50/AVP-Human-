@@ -23,11 +23,28 @@ public class OldPainlessAnimationDispatcher implements GunAnimationDispatcher {
         .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_LOOP, AzPlayBehaviors.LOOP)
         .build();
 
-    private final AzCommand<ItemStack> SPIN_DOWN = AzCommand.<ItemStack>replay()
+    /**
+     * ⚠⚠ IDEMPOTENT, NOT replay(). {@code GunItemAnimator.runGunAnimationEvents} is called from
+     * {@code setCustomAnimations}, which runs EVERY RENDER FRAME, and its only guard is {@code previousAnimationId} -
+     * an instance field. Any time that field does not hold (a fresh animator for first-person, third-person, the GUI
+     * icon or a dropped stack) the CURRENT animation type is dispatched again.
+     * <p>
+     * With {@code replay()} that RESTARTS the clip on every such dispatch, which is what produced the "hyperspinning /
+     * stacked" barrels - and because the type persists on the stack after firing stops, a newly created animator
+     * replayed it unprompted, so the gun span on its own with no trigger held.
+     * </p>
+     * <p>
+     * ⭐ {@code idempotent()} is {@code PLAY_IF_NOT_PLAYING}: re-dispatching something already playing is a no-op, so
+     * frame-rate no longer drives the animation. SPIN_LOOP was always idempotent, which is exactly why it was the one
+     * phase that never misbehaved.
+     * </p>
+     */
+    private final AzCommand<ItemStack> SPIN_DOWN = AzCommand.<ItemStack>idempotent()
         .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_DOWN, AzPlayBehaviors.HOLD_ON_LAST_FRAME)
         .build();
 
-    private final AzCommand<ItemStack> SPIN_UP = AzCommand.<ItemStack>replay()
+    /** ⚠ IDEMPOTENT for the same reason as SPIN_DOWN above - see that javadoc before changing either. */
+    private final AzCommand<ItemStack> SPIN_UP = AzCommand.<ItemStack>idempotent()
         .play(AzTarget.track(CONTROLLER_MAIN), ANIMATION_SPIN_UP, AzPlayBehaviors.PLAY_ONCE)
         .build();
 

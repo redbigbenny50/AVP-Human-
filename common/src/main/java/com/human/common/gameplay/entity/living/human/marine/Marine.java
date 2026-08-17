@@ -428,10 +428,12 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             compoundTag.putInt(NBT_RESUPPLY_TICK, Math.max(0, resupply.getResupplyTick() - tickCount));
         }
         leaderUUIDOption.ifSome(leaderUUID -> compoundTag.put(NBT_LEADER_UUID, Codecs.UUID.encode(BLibCodecs.Schema.NBT, leaderUUID)));
-        squadLeaderUUIDOption.ifSome(squadLeaderUUID -> compoundTag.put(
-            NBT_SQUAD_LEADER_UUID,
-            Codecs.UUID.encode(BLibCodecs.Schema.NBT, squadLeaderUUID)
-        ));
+        squadLeaderUUIDOption.ifSome(
+            squadLeaderUUID -> compoundTag.put(
+                NBT_SQUAD_LEADER_UUID,
+                Codecs.UUID.encode(BLibCodecs.Schema.NBT, squadLeaderUUID)
+            )
+        );
     }
 
     public BiomeSenseCache getBiomeSenseCache() {
@@ -538,9 +540,9 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
      * that: 232 interactions, every one {@code leaderMatches=false}, against a leader UUID belonging to no player.
      * </p>
      * <p>
-     * ⚠ TWO FIELDS, TWO MEANINGS: {@link #leaderUUIDOption} is the PLAYER who hired this marine (the contract, and
-     * what the GUI keys off). {@code squadLeaderUUIDOption} is the marine it walks behind on patrol. Hiring CLEARS
-     * the squad leader - taking the job means leaving the squad.
+     * ⚠ TWO FIELDS, TWO MEANINGS: {@link #leaderUUIDOption} is the PLAYER who hired this marine (the contract, and what
+     * the GUI keys off). {@code squadLeaderUUIDOption} is the marine it walks behind on patrol. Hiring CLEARS the squad
+     * leader - taking the job means leaving the squad.
      * </p>
      */
     public Option<UUID> getSquadLeaderUUID() {
@@ -558,10 +560,10 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
     /**
      * Whoever this marine currently answers to - the employer if hired, otherwise the squad leader.
      * <p>
-     * ⚠ THIS IS WHAT THE COMBAT RULES WANT, NOT {@code getLeaderUUID()}. "Never shoot your leader", "defend whoever
-     * is attacking your leader" and "do not retaliate against your leader" all have to hold for a squad marine that
-     * has never been hired, or a patrol turns on its own sergeant. Same for {@code MarineHostility.sideOf}, where
-     * this value IS the squad's identity.
+     * ⚠ THIS IS WHAT THE COMBAT RULES WANT, NOT {@code getLeaderUUID()}. "Never shoot your leader", "defend whoever is
+     * attacking your leader" and "do not retaliate against your leader" all have to hold for a squad marine that has
+     * never been hired, or a patrol turns on its own sergeant. Same for {@code MarineHostility.sideOf}, where this
+     * value IS the squad's identity.
      * </p>
      */
     public Option<UUID> getAllegianceUUID() {
@@ -571,15 +573,15 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
     /**
      * ⚠⚠ EXISTING WORLDS HAVE A MARINE UUID SITTING IN {@code leaderUUID}, AND WITHOUT THIS THEY STAY UNHIREABLE.
      * <p>
-     * Every patrol marine spawned before the split wrote its SQUAD leader into the employer field. Nothing at load
-     * time can tell a player UUID from an entity one - offline-mode players are v3 and online-mode players are v4,
-     * the same version entities get - so the only reliable test is to RESOLVE it and see what comes back.
+     * Every patrol marine spawned before the split wrote its SQUAD leader into the employer field. Nothing at load time
+     * can tell a player UUID from an entity one - offline-mode players are v3 and online-mode players are v4, the same
+     * version entities get - so the only reliable test is to RESOLVE it and see what comes back.
      * </p>
      * <p>
-     * ⚠ Deliberately lazy and one-shot. It runs on the first server tick where the leader is resolvable; squads
-     * spawn and travel together so the sergeant is almost always loaded alongside. If he never resolves (dead, or a
-     * genuinely absent player) nothing moves and the marine keeps what it had - a wrong guess here would hand a
-     * stranger's marine to the next person who walks past.
+     * ⚠ Deliberately lazy and one-shot. It runs on the first server tick where the leader is resolvable; squads spawn
+     * and travel together so the sergeant is almost always loaded alongside. If he never resolves (dead, or a genuinely
+     * absent player) nothing moves and the marine keeps what it had - a wrong guess here would hand a stranger's marine
+     * to the next person who walks past.
      * </p>
      */
     private void migrateLegacySquadLeader() {

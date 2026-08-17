@@ -37,6 +37,7 @@
     "client.MixinGameRenderer_GunZoom",
     "client.MixinGui_CrosshairPickEntityWithinGunRange",
     "client.MixinGui_SniperScopeOverlay",
+    "client.MixinGuiGraphics_GunCooldownOverlayOnHeldSlotOnly",
     "client.MixinItemInHandRenderer_AdjustHandRenderingForGun",
     "client.MixinLevelRenderer_GunVoxels",
     "client.MixinMinecraft_DaggerControls",

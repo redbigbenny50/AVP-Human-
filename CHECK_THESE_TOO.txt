@@ -1,0 +1,37 @@
+avp_human — migrated root files, restored
+=========================================
+
+gradle.properties was overwritten by the stale-git copy (27 lines instead of 82). The other root
+files were almost certainly hit by the same sweep, so all five are here. Compare before pasting -
+if one of yours is already the migrated version, leave it.
+
+  gradle.properties                                  82 lines. blib_version = 0.3.1-fork.
+  settings.gradle                                    no includeBuild 'blib-gradle'
+  build.gradle                                       no blib { } DSL; keeps avpReleases + the
+                                                     com.blib resolutionStrategy
+  buildSrc/build.gradle                              NEW under the migration
+  buildSrc/src/main/groovy/multiloader-common.gradle NEW - includes the Shedaniel maven AND the
+                                                     8 expandProps aliases
+  buildSrc/src/main/groovy/multiloader-loader.gradle NEW under the migration
+
+HOW TO TELL AT A GLANCE WHETHER YOURS ARE STALE
+-----------------------------------------------
+  gradle.properties      - 27 lines = STALE. 82 = migrated.
+  settings.gradle        - contains "blib-gradle" = STALE.
+  build.gradle           - contains "blib {" = STALE.
+  buildSrc/              - missing entirely = STALE (the migration created it).
+  multiloader-common     - no "shedaniel.me" or no "mod_version": version = STALE.
+
+ALSO NOT ROOT FILES, BUT CHECK THEM
+-----------------------------------
+The same sweep replaced common/fabric/neoforge src. You already restored those from the backup.
+The three MODULE build.gradle files (common/, fabric/, neoforge/) are NOT in this zip because
+yours were confirmed good earlier - but if the build complains about a missing plugin or an
+unknown property, check them next: they should apply 'multiloader-common' / 'multiloader-loader',
+not any blib- plugin.
+
+AFTER PASTING
+-------------
+  .\gradlew clean build
+No --refresh-dependencies needed: blib 0.3.1-fork is a version Gradle has never seen, so it
+cannot be served from a stale cache. That is the whole point of the bump.
