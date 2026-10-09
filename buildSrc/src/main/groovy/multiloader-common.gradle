@@ -16,6 +16,19 @@ java {
 repositories {
     mavenLocal()
     mavenCentral()
+    // Sep 27 - com.just (just-core, just-codec, just-goap) comes ONLY from BLib's local repository, one folder over at
+    // ../blib/libs/just-maven. just-goap 0.4.1 is our own build and exists nowhere else; this mod declares the just
+    // libraries directly AND gets them through BLib's POM, so both routes need to find it here. exclusiveContent stops
+    // Gradle asking any other repository for com.just. Requires the blib and avp_human repos to sit side by side.
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'JustLocal'
+                url = rootProject.file('../blib/libs/just-maven').toURI()
+            }
+        }
+        filter { includeGroup('com.just') }
+    }
     // https://docs.gradle.org/current/userguide/declaring_repositories.html#declaring_content_exclusively_found_in_one_repository
     exclusiveContent {
         forRepository {

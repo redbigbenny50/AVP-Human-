@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "avp_human:block/composite_column_top",
+    "side": "avp_human:block/composite_column"
+  }
+}

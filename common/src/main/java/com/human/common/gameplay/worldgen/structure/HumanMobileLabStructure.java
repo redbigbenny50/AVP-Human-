@@ -56,7 +56,8 @@ public class HumanMobileLabStructure extends JigsawBackedStructure {
             return Optional.empty();
         }
 
-        if (!StructureUtil.hasAtLeast1NonWaterCorner(generationContext)) {
+        // [stated] Oct 4: the whole site must be dry, not just one corner block.
+        if (!StructureUtil.isSiteDry(generationContext)) {
             return Optional.empty();
         }
 

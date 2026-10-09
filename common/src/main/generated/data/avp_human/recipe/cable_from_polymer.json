@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "avp_human:copper_coil"
+    },
+    {
+      "item": "avp_human:polymer"
+    },
+    {
+      "item": "avp_human:polymer"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "avp_human:cable"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "tag": "minecraft:jungle_logs"
+  },
+  "fluid": {
+    "fluid": "avp_human:latex",
+    "amount": 250
+  }
+}

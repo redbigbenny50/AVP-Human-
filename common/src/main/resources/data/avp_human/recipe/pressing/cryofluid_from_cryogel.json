@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "item": "avp_human:cryogel"
+  },
+  "fluid": {
+    "fluid": "avp_human:cryofluid",
+    "amount": 250
+  }
+}

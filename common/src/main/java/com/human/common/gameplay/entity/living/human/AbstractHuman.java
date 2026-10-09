@@ -8,17 +8,24 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractHuman extends PathfinderMob implements DataUser {
+
+    /**
+     * The water cost humans path with: cheap, so they cross a pond rather than walk around it (vanilla's default is 8).
+     * Following a leader drops it to 0 for a while; Marine.tick puts this back (see Marine.markFollowingLeader).
+     */
+    public static final float DEFAULT_WATER_MALUS = 0.5F;
 
     public static final int MAX_IDLE_TIME_IN_TICKS = 12 * 20;
 
@@ -36,11 +43,14 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
 
     public final DataAccessor<Integer> skinColor;
 
+    /** Oct 5 - which wall a pit scramble faces (Direction 2D value), or -1. Written by HumanWallScramble only. */
+    public final DataAccessor<Integer> scrambleDirection;
+
     public final DataAccessor<Integer> ticksUntilBored;
 
     protected final MovementAnalyzer movementAnalyzer;
 
-    private final HumanNavigationManager navigationManager;
+    private final HumanWaterMovement waterMovement;
 
     private final HumanFeatureManager humanFeatureManager;
 
@@ -53,9 +63,20 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
         this.hairVariant = new DataAccessor<>(this, HumanDataSyncKeys.MARINE_HAIR_VARIANT.get());
         this.isMale = new DataAccessor<>(this, HumanDataSyncKeys.MARINE_IS_MALE.get());
         this.skinColor = new DataAccessor<>(this, HumanDataSyncKeys.MARINE_SKIN_COLOR.get());
+        this.scrambleDirection = new DataAccessor<>(this, HumanDataSyncKeys.HUMAN_SCRAMBLE_DIRECTION.get());
 
         this.movementAnalyzer = new MovementAnalyzer(this);
-        this.navigationManager = new HumanNavigationManager(this, moveControl);
+        this.waterMovement = new HumanWaterMovement(this);
+
+        // The ground navigator's tuning, kept from the old navigation manager: humans open doors, and water is cheap
+        // to path through (vanilla's default malus of 8 makes a mob route around a pond it could just cross). Floating
+        // starts on and HumanWaterMovement toggles it per tick.
+        if (getNavigation() instanceof GroundPathNavigation groundPathNavigation) {
+            groundPathNavigation.setCanOpenDoors(true);
+        }
+
+        setPathfindingMalus(PathType.WATER, DEFAULT_WATER_MALUS);
+        getNavigation().setCanFloat(true);
         this.humanFeatureManager = new HumanFeatureManager(this);
 
         this.ticksUntilBored = new DataAccessor<>(this, HumanDataSyncKeys.MARINE_TICKS_UNTIL_BORED.get());
@@ -93,28 +114,60 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
         }
     }
 
+    /**
+     * Water behaviour lives in {@link HumanWaterMovement}; read its class note before touching anything here. The
+     * {@code travel} override and the navigation swap that used to sit in this class are gone on purpose - they were a
+     * copied Drowned rig that sank every marine and, as a side effect, replaced the marine's own move control every
+     * tick.
+     * <p>
+     * {@code customServerAiStep} is the hook vanilla leaves open inside the (final) {@code serverAiStep}, and it runs
+     * BEFORE {@code jumpControl.tick()} there - which is what turns a queued jump into the {@code jumping} flag. A jump
+     * queued any later is a tick late.
+     */
     @Override
-    public void travel(@NotNull Vec3 vec3) {
-        if (isControlledByLocalInstance() && isUnderWater()) {
-            moveRelative(0.01F, vec3);
-            move(MoverType.SELF, getDeltaMovement());
-            setDeltaMovement(getDeltaMovement().scale(0.8));
-        } else {
-            super.travel(vec3);
-        }
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        waterMovement.tick();
+        // Oct 5 - after the water movement, so a scramble's velocity is the one the travel step uses this tick.
+        HumanWallScramble.tick(this);
     }
 
+    /**
+     * Server side only. The swimming flag and the pose are synced entity data, so the client must NOT run vanilla's
+     * version - for a mob it evaluates to {@code isSprinting() && ...}, which is always false, and would clear the flag
+     * locally every tick after the server set it.
+     */
     @Override
     public void updateSwimming() {
         if (!level().isClientSide) {
-            if (isEffectiveAi() && isUnderWater()) {
-                navigationManager.switchToWater(this, 4, goalSelector);
-                setSwimming(true);
-            } else {
-                navigationManager.switchToGround(this, 4, goalSelector);
-                setSwimming(false);
-            }
+            waterMovement.updateSwimming();
         }
+    }
+
+    /**
+     * A human is a player in every way that matters, so it gets the player's swimming box: 0.6 wide and tall, eyes at
+     * 0.4. That is what lets it swim through a one-block gap and crawl under a low ceiling the way a player can.
+     */
+    @Override
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pose) {
+        if (pose == Pose.SWIMMING) {
+            return EntityDimensions.scalable(0.6F, 0.6F).withEyeHeight(0.4F).scale(getAgeScale());
+        }
+
+        return super.getDefaultDimensions(pose);
+    }
+
+    /**
+     * The entity this human mirrors in the water, or null to act on its own. A marine returns its allegiance - the
+     * hiring player or its squad leader - and an assigned mission marine can return the mission's player from the same
+     * hook when that lands.
+     */
+    public @Nullable LivingEntity getWaterMovementLeaderOrNull() {
+        return null;
+    }
+
+    public HumanWaterMovement getWaterMovement() {
+        return waterMovement;
     }
 
     @Override
@@ -149,11 +202,4 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
         this.ticksUntilBored.set(getRandom().nextIntBetweenInclusive(MIN_IDLE_TIME_IN_TICKS, MAX_IDLE_TIME_IN_TICKS));
     }
 
-    void setMoveControl(MoveControl moveControl) {
-        this.moveControl = moveControl;
-    }
-
-    void setNavigation(PathNavigation navigation) {
-        this.navigation = navigation;
-    }
 }

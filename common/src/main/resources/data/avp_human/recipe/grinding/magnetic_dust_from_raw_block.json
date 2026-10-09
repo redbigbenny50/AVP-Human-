@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:raw_monazite_block"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:magnetic_dust",
+        "count": 18
+      }
+    }
+  ],
+  "time": 1800
+}

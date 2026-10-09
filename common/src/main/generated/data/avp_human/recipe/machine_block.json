@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "avp_human:copper_coil"
+    },
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "H": {
+      "item": "avp_human:heat_sink"
+    },
+    "L": {
+      "item": "avp_human:led"
+    },
+    "P": {
+      "item": "avp_human:power_supply"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "pattern": [
+    "SLS",
+    "FHC",
+    "SPS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:machine_block"
+  }
+}

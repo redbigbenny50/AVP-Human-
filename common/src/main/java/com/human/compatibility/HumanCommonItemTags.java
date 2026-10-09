@@ -11,7 +11,35 @@ public class HumanCommonItemTags {
 
     public static final TagKey<Item> DUSTS_LITHIUM = create("dusts/lithium");
 
+    public static final TagKey<Item> DUSTS_IRON = create("dusts/iron");
+
+    public static final TagKey<Item> DUSTS_GOLD = create("dusts/gold");
+
+    public static final TagKey<Item> DUSTS_COPPER = create("dusts/copper");
+
+    public static final TagKey<Item> DUSTS_TITANIUM = create("dusts/titanium");
+
+    public static final TagKey<Item> DUSTS_ALUMINUM = create("dusts/aluminum");
+
+    public static final TagKey<Item> DUSTS_FERROALUMINUM = create("dusts/ferroaluminum");
+
+    public static final TagKey<Item> DUSTS_LEAD = create("dusts/lead");
+
+    public static final TagKey<Item> DUSTS_ZINC = create("dusts/zinc");
+
+    public static final TagKey<Item> DUSTS_BRASS = create("dusts/brass");
+
+    public static final TagKey<Item> DUSTS_STEEL = create("dusts/steel");
+
+    public static final TagKey<Item> DUSTS_NEODYMIUM = create("dusts/neodymium");
+
     public static final TagKey<Item> INGOTS_ALUMINUM = create("ingots/aluminum");
+
+    /** [stated] Sep 24: a c tag so any other mod's latex sheet and ours are interchangeable. */
+    public static final TagKey<Item> LATEX = create("latex");
+
+    /** [stated] Sep 24: the same for rubber globules. */
+    public static final TagKey<Item> RUBBER = create("rubber");
 
     public static final TagKey<Item> INGOTS_BRASS = create("ingots/brass");
 
@@ -20,6 +48,9 @@ public class HumanCommonItemTags {
     public static final TagKey<Item> INGOTS_LEAD = create("ingots/lead");
 
     public static final TagKey<Item> INGOTS_STEEL = create("ingots/steel");
+
+    /** [stated] Oct 3: composite - 2 polymer and a steel ingot make one. */
+    public static final TagKey<Item> INGOTS_COMPOSITE = create("ingots/composite");
 
     public static final TagKey<Item> INGOTS_TITANIUM = create("ingots/titanium");
 
@@ -30,6 +61,11 @@ public class HumanCommonItemTags {
     public static final TagKey<Item> NUGGETS_ALUMINUM = create("nuggets/aluminum");
 
     public static final TagKey<Item> NUGGETS_BRASS = create("nuggets/brass");
+
+    /**
+     * [stated] Oct 3: the heat sink needs copper nuggets, and nothing filled this tag - vanilla has no copper nugget.
+     */
+    public static final TagKey<Item> NUGGETS_COPPER = create("nuggets/copper");
 
     public static final TagKey<Item> NUGGETS_FERROALUMINUM = create("nuggets/ferroaluminum");
 

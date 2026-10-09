@@ -53,6 +53,7 @@ public class ExtinguishFireActions {
         .addMasks(ActionMasks.USE_MAIN_HAND)
         .addPrecondition(GOAPSensors.IS_ON_GROUND.key(), Expressions.Boolean.isTrue())
         .addPrecondition(MarineGOAPSensors.IS_IN_ULTRA_WARM_DIMENSION.key(), Expressions.Boolean.isFalse())
+        .addPrecondition(ExtinguishFireSensors.SHOULD_USE_BUCKET_ON_FIRE.key(), Expressions.Boolean.isTrue())
         .addPrecondition(ExtinguishFireSensors.HAS_WATER_BUCKET_EQUIPPED.key(), Expressions.Boolean.isTrue())
         .addPrecondition(MarineGOAPSensors.IS_CURRENT_BLOCK_POS_REPLACEABLE.key(), Expressions.Boolean.isTrue())
         .addEffect(GOAPSensors.IS_ON_FIRE.key().asDerived(), false)

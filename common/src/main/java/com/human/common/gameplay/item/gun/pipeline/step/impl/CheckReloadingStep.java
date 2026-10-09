@@ -4,9 +4,33 @@ import com.human.common.gameplay.item.gun.GunReloading;
 import com.human.common.gameplay.item.gun.pipeline.GunShootContext;
 import com.human.common.gameplay.item.gun.pipeline.GunShootResult;
 import com.human.common.gameplay.item.gun.pipeline.step.GunShootStep;
-import com.human.common.registry.init.item.HumanGunItems;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * Decides whether the gun has a round to fire, and starts a reload when it does not.
+ * <p>
+ * ⚠⚠ DO NOT RE-ADD AN OLD PAINLESS SPECIAL CASE HERE. This step used to open with a hardcoded Old Painless branch that
+ * ignored the AMMUNITION component entirely and instead tried to consume {@code consumedAmmunitionPerShot} AMMUNITION
+ * ITEMS straight out of the player's inventory on every single shot. That was correct for the ORIGINAL Old Painless,
+ * which had {@code maximumAmmunition(Integer.MAX_VALUE)}, no reload at all, and ate loose bullets as it fired. The
+ * drum-cannister pass gave it a real 1500-round magazine, a real reload and a whole-unit ammunition item - and that
+ * branch was not removed with the rest of the old design.
+ * </p>
+ * <p>
+ * ⭐⭐ THE RESULT WAS A GUN THAT COULD ONLY FIRE IN CREATIVE. With a drum as the ammunition item and
+ * {@code consumedAmmunitionPerShot} at 6, the branch demanded SIX DRUM CANNISTERS in the inventory PER SHOT - and a
+ * drum is {@code stacksTo(1)}, so six free slots of drums bought one round and the player's spares evaporated. In
+ * practice it never once returned Full, so every shot returned FAILURE. The barrels still span, because the spin phase
+ * is stamped by {@code OldPainlessItem.onFired} from the packet handler BEFORE the pipeline runs, and the reload still
+ * worked and still ate the drum, because that path never came through here. Creative was unaffected only because
+ * {@code isShooterImmortal} returns early above.
+ * </p>
+ * <p>
+ * Old Painless is now an ordinary magazine-fed gun as far as this step is concerned: the drum is consumed by
+ * {@code GunReloading.reload}, the magazine is spent 6 rounds at a time by {@code GunShootContext.consumeAmmunition},
+ * and an empty magazine falls through to the auto-reload below like every other weapon.
+ * </p>
+ */
 public class CheckReloadingStep implements GunShootStep {
 
     public static final CheckReloadingStep INSTANCE = new CheckReloadingStep();
@@ -16,12 +40,9 @@ public class CheckReloadingStep implements GunShootStep {
     @Override
     public GunShootResult apply(GunShootContext context) {
         var currentAmmunition = context.currentAmmunition();
-        var gunConfig = context.gunConfig();
-        var gunItem = context.gunItem();
         var isShooterImmortal = context.isShooterImmortal();
         var shooter = context.shooter();
         var level = shooter.level();
-        var supplier = gunConfig.ammunitionItemSupplier();
 
         if (
             // If shooter is not a player...
@@ -30,32 +51,12 @@ public class CheckReloadingStep implements GunShootStep {
                 || isShooterImmortal
         ) {
             // Then don't bother checking for reload requirements, just continue.
+            // ⚠ Marines come through here: their ammunition is issued by MarineGearDecoratorUtil and spent from the
+            // AMMUNITION component, and GunStrategy owns their reload. Nothing to check on their behalf.
             return GunShootResult.CONTINUE;
         }
 
-        // TODO: Don't hardcode old painless check here.
-        if (
-            gunItem == HumanGunItems.OLD_PAINLESS.get()
-                && supplier != null
-        ) {
-            var ammunitionItem = supplier.get();
-            var amountToConsume = gunConfig.getDefaultFireMode().consumedAmmunitionPerShot();
-            // Run a simulation to see if we can succeed in consuming a single bullet.
-            var itemConsumptionResult = GunReloading.consumeItemAmountFromInventory(player, ammunitionItem, amountToConsume, false);
-
-            // This check should be able to pass on both the client side and the server side.
-            if (itemConsumptionResult == GunReloading.ItemConsumptionResult.Full.INSTANCE) {
-                // TODO: Figure out how to remove this side-effect.
-                // Run an actual consume process instead of a simulation.
-                if (!level.isClientSide) {
-                    // Only consume the ammunition server-side.
-                    GunReloading.consumeItemAmountFromInventory(player, ammunitionItem, amountToConsume, true);
-                }
-            } else {
-                // Otherwise if we could not consume any ammunition, return a failure.
-                return GunShootResult.FAILURE;
-            }
-        } else if (currentAmmunition <= 0) {
+        if (currentAmmunition <= 0) {
             // NO-OP client-side, this step should run on both sides if set up correctly.
 
             if (!level.isClientSide) {

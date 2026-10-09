@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crafting_table": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:crafting_table"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_industrial_glass_pane": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:industrial_glass_pane"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/steel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/steel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_integrated_circuit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:integrated_circuit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:electronics_workstation"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_industrial_glass_pane",
+      "has_integrated_circuit",
+      "has_crafting_table",
+      "has_ingots/steel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:electronics_workstation"
+    ]
+  }
+}

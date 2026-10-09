@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "S": {
+      "item": "avp_human:servo"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ASA",
+    " A "
+  ],
+  "result": {
+    "count": 2,
+    "id": "avp_human:fan"
+  }
+}

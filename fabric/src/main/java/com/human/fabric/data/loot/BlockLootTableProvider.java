@@ -2,6 +2,7 @@ package com.human.fabric.data.loot;
 
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanIndustrialConcreteBlocks;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
@@ -45,6 +46,90 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
 
     public BlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
+    }
+
+    /**
+     * The battery's table: the storage table plus its UPGRADE SLOTS ({@code minecraft:container}), so a broken battery
+     * keeps its upgrades the way it keeps its charge. Kept separate from {@link #createPowerStorageTable} so the
+     * generators sharing that one are untouched.
+     */
+    private net.minecraft.world.level.storage.loot.LootTable.Builder createBatteryTable(
+        net.minecraft.world.level.block.Block block
+    ) {
+        return net.minecraft.world.level.storage.loot.LootTable.lootTable()
+            .withPool(
+                applyExplosionCondition(
+                    block,
+                    net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                        .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                        .add(
+                            net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
+                                .apply(
+                                    net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                        .copyComponents(
+                                            net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
+                                        )
+                                        .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+                                        .include(com.human.common.registry.init.HumanDataComponents.STORED_POWER.get())
+                                        .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
+                                        .include(net.minecraft.core.component.DataComponents.CONTAINER)
+                                )
+                        )
+                )
+            );
+    }
+
+    /** Oct 2: the cryotube controller - its name, breakers, cryofluid buffer and hub chip all ride on the item. */
+    private net.minecraft.world.level.storage.loot.LootTable.Builder createCryotubeControllerTable(
+        net.minecraft.world.level.block.Block block
+    ) {
+        return net.minecraft.world.level.storage.loot.LootTable.lootTable()
+            .withPool(
+                applyExplosionCondition(
+                    block,
+                    net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                        .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                        .add(
+                            net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
+                                .apply(
+                                    net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                        .copyComponents(
+                                            net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
+                                        )
+                                        .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+                                        .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
+                                        .include(com.human.common.registry.init.HumanDataComponents.FLUID_CONTENT.get())
+                                        .include(net.minecraft.core.component.DataComponents.CONTAINER)
+                                )
+                        )
+                )
+            );
+    }
+
+    /** Drops the block carrying both its name and its stored charge. */
+    private net.minecraft.world.level.storage.loot.LootTable.Builder createPowerStorageTable(
+        net.minecraft.world.level.block.Block block
+    ) {
+        return net.minecraft.world.level.storage.loot.LootTable.lootTable()
+            .withPool(
+                applyExplosionCondition(
+                    block,
+                    net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                        .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                        .add(
+                            net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
+                                .apply(
+                                    net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                        .copyComponents(
+                                            net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
+                                        )
+                                        .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+                                        .include(com.human.common.registry.init.HumanDataComponents.STORED_POWER.get())
+                                        .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
+                                )
+                        )
+                )
+            );
     }
 
     @Override
@@ -104,6 +189,13 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(CoreBlocks.ALUMINUM_BLOCK);
         dropSelf(CoreBlocks.AUTUNITE_BLOCK);
         dropSelf(HumanBlocks.CABLE);
+        dropSelf(HumanBlocks.CRYOCONDUIT);
+        dropSelf(HumanBlocks.CRYOTANK);
+        // The controller keeps its cryofluid, hub chip and breaker on a break, like every power machine.
+        add(HumanBlocks.CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
+        add(HumanBlocks.STEEL_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
+        add(HumanBlocks.WY_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
+        add(HumanBlocks.USCM_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
         dropSelf(HumanBlocks.BLUEPRINT_BLOCK);
         dropSelf(CoreBlocks.BRASS_BLOCK);
         dropSelf(HumanFerroaluminumBlocks.CHISELED_FERROALUMINUM);
@@ -337,13 +429,84 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
             .forEach(blockSupplier -> add(blockSupplier, this::createDoorTable));
         add(HumanFerroaluminumBlocks.FERROALUMINUM_DOOR, this::createDoorTable);
         add(HumanSteelBlocks.STEEL_DOOR, this::createDoorTable);
+
+        dropSelf(HumanCompositeBlocks.CHISELED_COMPOSITE);
+        dropSelf(HumanCompositeBlocks.CUT_COMPOSITE);
+        dropSelf(HumanCompositeBlocks.CUT_COMPOSITE_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_BLOCK);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_BUTTON);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_COLUMN);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_GRATE);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_PLATING);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_PLATING_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_PRESSURE_PLATE);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_SIDING);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_SIDING_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_STANDING);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_STANDING_STAIRS);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_TRAP_DOOR);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_TREAD);
+        dropSelf(HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS);
+        dropSlab(HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_GRATE_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_PLATING_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_SIDING_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_STANDING_SLAB);
+        dropSlab(HumanCompositeBlocks.COMPOSITE_TREAD_SLAB);
+        add(HumanCompositeBlocks.COMPOSITE_DOOR, this::createDoorTable);
         add(HumanTitaniumBlocks.TITANIUM_DOOR, this::createDoorTable);
-        add(HumanBlocks.BATTERY, this::createNameableBlockEntityTable);
+        // ⭐ NOT createNameableBlockEntityTable: that copies CUSTOM_NAME and nothing else, so a full ESU would drop
+        // empty and destroy everything stored. Tier-2 recipes consume the tier-1 block, so breaking one to upgrade is
+        // the intended path - the charge has to survive it.
+        add(HumanBlocks.BATTERY.get(), this::createBatteryTable);
+        add(HumanBlocks.CHARGING_HUB.get(), this::createPowerStorageTable);
+        // Machines keep their custom name; their contents spill when broken, as a furnace's do.
+        add(HumanBlocks.ELECTRIC_FURNACE, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_SMOKER, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_BLAST_FURNACE, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_GRINDER, this::createNameableBlockEntityTable);
+        add(HumanBlocks.FUSE_PANEL, this::createNameableBlockEntityTable);
+        dropSelf(HumanBlocks.FLUID_PIPE);
+        dropSelf(HumanBlocks.ITEM_PIPE);
+        add(HumanBlocks.ELECTRIC_PRESS, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_HYDRATOR, this::createNameableBlockEntityTable);
+        add(HumanBlocks.ELECTRIC_FREEZER, this::createNameableBlockEntityTable);
+        dropSelf(HumanBlocks.MACHINE_BLOCK);
+        dropSelf(HumanBlocks.ELECTRONICS_WORKSTATION);
+
+        // Fluid tanks drop as plain blocks - the item form does not keep fluid, as in Create.
+        dropSelf(HumanBlocks.STEEL_FLUID_TANK);
+        dropSelf(HumanBlocks.FERROALUMINUM_FLUID_TANK);
+        dropSelf(HumanBlocks.ALUMINUM_FLUID_TANK);
+        dropSelf(HumanBlocks.TITANIUM_FLUID_TANK);
+        dropSelf(HumanBlocks.WY_FLUID_TANK);
+        dropSelf(HumanBlocks.USCM_FLUID_TANK);
         add(HumanBlocks.INDUSTRIAL_FURNACE, this::createNameableBlockEntityTable);
         add(HumanBlocks.INFINITE_POWER_GENERATOR, this::createNameableBlockEntityTable);
-        add(HumanBlocks.SOLAR_PANEL, this::createNameableBlockEntityTable);
-        add(HumanBlocks.THERMAL_GENERATOR, this::createNameableBlockEntityTable);
-        add(HumanBlocks.WIND_TURBINE, this::createNameableBlockEntityTable);
+        dropSelf(CoreBlocks.LATEX_BLOCK.get());
+        dropSelf(CoreBlocks.KELP_BLOCK.get());
+        dropSelf(CoreBlocks.LATEX_TAP.get());
+        // Breaking a latex cauldron gives back the cauldron; the latex inside is lost, as with every vanilla cauldron.
+        add(CoreBlocks.LATEX_CAULDRON.get(), createSingleItemTable(net.minecraft.world.level.block.Blocks.CAULDRON));
+        dropSelf(CoreBlocks.RUBBER_BLOCK.get());
+        // ⚠ THE SAME TABLE AS THE BATTERY, and not because generators hold charge - they do not. They hold a BREAKER
+        // LAYOUT, and vanilla's nameable table copies CUSTOM_NAME only, so every port a player closed would reopen
+        // the moment they moved the block. A machine should come back configured the way it left.
+        add(HumanBlocks.HYDROELECTRIC_GENERATOR.get(), this::createPowerStorageTable);
+        add(HumanBlocks.SOLAR_PANEL.get(), this::createPowerStorageTable);
+        add(HumanBlocks.THERMOELECTRIC_GENERATOR.get(), this::createPowerStorageTable);
+        add(HumanBlocks.AEROKINETIC_GENERATOR.get(), this::createPowerStorageTable);
     }
 
     private void generateOtherDrops() {}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/iron_bars_side",
+  "textures": {
+    "bars": "avp_human:block/composite_chain_fence",
+    "edge": "avp_human:block/composite_chain_fence",
+    "particle": "avp_human:block/composite_chain_fence"
+  }
+}

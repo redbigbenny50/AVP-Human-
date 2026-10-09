@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:ingots/brass"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "   ",
+    "BBB"
+  ],
+  "result": {
+    "count": 16,
+    "id": "avp_human:fluid_pipe"
+  }
+}

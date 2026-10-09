@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:dead_tube_coral_fan"
+  },
+  "result": {
+    "id": "minecraft:tube_coral_fan"
+  }
+}

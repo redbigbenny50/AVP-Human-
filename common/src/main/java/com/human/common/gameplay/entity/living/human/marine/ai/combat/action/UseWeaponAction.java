@@ -20,6 +20,12 @@ public class UseWeaponAction {
 
         setAggressive(context, true);
 
+        // [stated] Oct 4: stamp it - the marine drops the aim pose itself once this stops running, because the GOAP
+        // library never calls onFinish for a plan it replaces or abandons.
+        if (context.getActor() instanceof com.human.common.gameplay.entity.living.human.marine.Marine marine) {
+            marine.markWeaponUse();
+        }
+
         return itemTargetOption.unwrap().strategy().execute(context);
     }
 

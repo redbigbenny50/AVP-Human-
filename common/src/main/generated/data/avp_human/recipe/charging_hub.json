@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "C": {
+      "item": "avp_human:copper_coil"
+    },
+    "F": {
+      "tag": "c:ingots/ferroaluminum"
+    },
+    "L": {
+      "item": "avp_human:lithium_block"
+    },
+    "M": {
+      "item": "avp_human:neodymium_magnet"
+    },
+    "X": {
+      "item": "avp_human:machine_block"
+    }
+  },
+  "pattern": [
+    "AXA",
+    "MCM",
+    "FLF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:charging_hub"
+  }
+}

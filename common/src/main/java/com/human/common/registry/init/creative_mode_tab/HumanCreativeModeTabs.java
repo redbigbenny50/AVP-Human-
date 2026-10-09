@@ -10,6 +10,7 @@ import com.human.common.registry.init.creative_mode_tab.initializer.ColoredBlock
 import com.human.common.registry.init.creative_mode_tab.initializer.CombatCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.FoodAndDrinksCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.IngredientsCreativeModeTabInitializer;
+import com.human.common.registry.init.creative_mode_tab.initializer.PowerCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.SpawnEggsCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.ToolsAndUtilitiesCreativeModeTabInitializer;
 import com.human.common.registry.init.item.HumanGunItems;
@@ -60,6 +61,12 @@ public class HumanCreativeModeTabs {
         HumanCreativeModeTabKeys.INGREDIENTS_KEY,
         () -> new ItemStack(HumanItems.BLUEPRINT_M41A_PULSE_RIFLE.get()),
         IngredientsCreativeModeTabInitializer.OUTPUT_CONSUMER
+    );
+
+    public static final BLibHolder<CreativeModeTab> POWER = create(
+        HumanCreativeModeTabKeys.POWER_KEY,
+        () -> new ItemStack(HumanBlocks.BATTERY.get()),
+        PowerCreativeModeTabInitializer.OUTPUT_CONSUMER
     );
 
     public static final BLibHolder<CreativeModeTab> SPAWN_EGGS = create(

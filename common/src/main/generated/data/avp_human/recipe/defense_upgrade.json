@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:emerald"
+    },
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "N": {
+      "item": "minecraft:gold_nugget"
+    },
+    "S": {
+      "tag": "c:silicon"
+    },
+    "X": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "pattern": [
+    "NSN",
+    "GIX",
+    "NSN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:defense_upgrade"
+  }
+}

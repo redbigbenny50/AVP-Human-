@@ -95,7 +95,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -107,7 +108,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_alien:alien_music_disc_1_fragment",
+          "name": "avp_human:loot/alien_music_disc_fragments",
           "weight": 10
         }
       ],
@@ -123,7 +124,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -135,7 +137,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_predator:predator_music_disc_1_fragment",
+          "name": "avp_human:loot/predator_music_disc_fragments",
           "weight": 10
         }
       ],
@@ -145,13 +147,14 @@
       "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
           "conditions": [
             {
               "condition": "blib:mod_loaded",
               "modId": "avp_alien"
             }
           ],
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -163,16 +166,17 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_alien:alien_music_disc_1_fragment"
+          "name": "avp_human:loot/alien_music_disc_fragments"
         },
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
           "conditions": [
             {
               "condition": "blib:mod_loaded",
               "modId": "avp_predator"
             }
           ],
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -184,7 +188,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_predator:predator_music_disc_1_fragment"
+          "name": "avp_human:loot/predator_music_disc_fragments"
         }
       ],
       "rolls": 1.0

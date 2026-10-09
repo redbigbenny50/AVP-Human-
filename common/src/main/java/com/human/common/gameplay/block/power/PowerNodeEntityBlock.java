@@ -3,6 +3,7 @@ package com.human.common.gameplay.block.power;
 import com.human.common.gameplay.block.entity.power.PowerNodeBlockEntity;
 import com.human.common.gameplay.power.PowerNode;
 import com.human.common.gameplay.power.PowerSystem;
+import com.human.common.gameplay.power.grid.PowerGridExploreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,6 +17,69 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PowerNodeEntityBlock<T extends PowerNodeBlockEntity & PowerNode> extends BaseEntityBlock {
+
+    /**
+     * SNEAK + right-click a face to open or close its breaker.
+     * <p>
+     * ⭐ [stated] Sep 25: the wiring tool should be able to toggle ports "instead just relying on the gui". This is that
+     * interaction, on the shared base so EVERY power machine gets it rather than the battery alone - and it is what
+     * makes the port state testable before either the screen or the tool exists.
+     * </p>
+     * <p>
+     * ⚠ SNEAK is required so a plain right-click stays free for the machine's own screen. A toggle is a topology
+     * change, so {@code setPortClosed} routes it through the queued split the block-removal path already uses; the face
+     * the player clicked is the one that changes, which is the only unambiguous meaning of "this port".
+     * </p>
+     */
+    @Override
+    protected @NotNull net.minecraft.world.InteractionResult useWithoutItem(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.player.Player player,
+        @NotNull net.minecraft.world.phys.BlockHitResult hitResult
+    ) {
+        if (!player.isShiftKeyDown()) {
+            return super.useWithoutItem(state, level, pos, player, hitResult);
+        }
+
+        if (!(level.getBlockEntity(pos) instanceof PowerNodeBlockEntity node)) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+
+        var face = hitResult.getDirection();
+
+        // ⚠ A face that can never carry power has no breaker - a machine's sides, a battery's front. That click belongs
+        // to the block's own interaction, so hand it back rather than swallowing it with a silent no-op.
+        if (!node.canConnectOn(face)) {
+            return super.useWithoutItem(state, level, pos, player, hitResult);
+        }
+
+        if (!level.isClientSide) {
+            var closed = !node.getPorts().isClosed(face);
+
+            node.setPortClosed(face, closed);
+            level.playSound(
+                null,
+                pos,
+                closed ? net.minecraft.sounds.SoundEvents.LEVER_CLICK : net.minecraft.sounds.SoundEvents.LEVER_CLICK,
+                net.minecraft.sounds.SoundSource.BLOCKS,
+                0.6F,
+                closed ? 0.6F : 1.2F
+            );
+            player.displayClientMessage(
+                net.minecraft.network.chat.Component.translatable(
+                    closed ? "message.avp_human.port_closed" : "message.avp_human.port_opened",
+                    net.minecraft.network.chat.Component.translatable(
+                        "message.avp_human.direction." + face.getSerializedName()
+                    )
+                ),
+                true
+            );
+        }
+
+        return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
+    }
 
     private static final Direction[] VALUES = Direction.values();
 
@@ -58,10 +122,12 @@ public abstract class PowerNodeEntityBlock<T extends PowerNodeBlockEntity & Powe
 
         for (var direction : VALUES) {
             var neighbor = pos.relative(direction);
-            var neighborState = level.getBlockState(neighbor);
 
-            // TODO: Use block tags here.
-            if (neighborState.getBlock() instanceof CableBlock || level.getBlockEntity(neighbor) instanceof PowerNode) {
+            // ⚠⚠ PORTS DECIDE, ON BOTH SIDES OF THE FACE. This used to union with any cable or power block touching it,
+            // so a machine placed sideways against a battery would join its grid through a face that can never carry
+            // power, and a block placed against a CLOSED breaker merged straight through it until the next rebuild.
+            // The grid walk already asked the ports; placement now asks exactly the same question.
+            if (PowerGridExploreUtil.portsOpen(level, pos, direction) && PowerGridExploreUtil.isConnectable(level, neighbor)) {
                 manager.union(pos, neighbor);
             }
         }
@@ -76,7 +142,9 @@ public abstract class PowerNodeEntityBlock<T extends PowerNodeBlockEntity & Powe
         boolean movedByPiston
     ) {
         if (!level.isClientSide && state.getBlock() != newState.getBlock()) {
-            PowerSystem.get((ServerLevel) level).splitGrid(level, pos);
+            // Queued, not rebuilt now: one explosion can remove hundreds of blocks in a single tick, and each
+            // immediate rebuild walked the whole network up to six times.
+            PowerSystem.get((ServerLevel) level).queueSplit(pos);
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t": "avp_human:block/titanium_fluid_tank_inner",
+    "particle": "avp_human:block/titanium_fluid_tank_inner"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.01
+      ],
+      "to": [
+        16,
+        16,
+        0.01
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ]
+}

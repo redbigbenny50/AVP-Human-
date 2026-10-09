@@ -52,6 +52,30 @@ public class HumanRecipes {
         "industrial_furnace"
     );
 
+    /** The electric grinder's recipes - see {@link com.human.common.gameplay.recipe.GrinderRecipe}. */
+    public static final BLibHolder<RecipeType<com.human.common.gameplay.recipe.GrinderRecipe>> GRINDING_TYPE = create("grinding");
+
+    public static final BLibHolder<RecipeSerializer<com.human.common.gameplay.recipe.GrinderRecipe>> GRINDING_SERIALIZER =
+        SERIALIZER_REGISTRY.createHolder("grinding", com.human.common.gameplay.recipe.GrinderRecipe.Serializer::new);
+
+    /** The electric press's recipes - see {@link com.human.common.gameplay.recipe.PressRecipe}. */
+    public static final BLibHolder<RecipeType<com.human.common.gameplay.recipe.PressRecipe>> PRESSING_TYPE = create("pressing");
+
+    public static final BLibHolder<RecipeSerializer<com.human.common.gameplay.recipe.PressRecipe>> PRESSING_SERIALIZER =
+        SERIALIZER_REGISTRY.createHolder("pressing", com.human.common.gameplay.recipe.PressRecipe.Serializer::new);
+
+    /** The electric hydrator's recipes - see {@link com.human.common.gameplay.recipe.HydratorRecipe}. */
+    public static final BLibHolder<RecipeType<com.human.common.gameplay.recipe.HydratorRecipe>> HYDRATING_TYPE = create("hydrating");
+
+    public static final BLibHolder<RecipeSerializer<com.human.common.gameplay.recipe.HydratorRecipe>> HYDRATING_SERIALIZER =
+        SERIALIZER_REGISTRY.createHolder("hydrating", com.human.common.gameplay.recipe.HydratorRecipe.Serializer::new);
+
+    /** The electric freezer's recipes - see {@link com.human.common.gameplay.recipe.FreezerRecipe}. */
+    public static final BLibHolder<RecipeType<com.human.common.gameplay.recipe.FreezerRecipe>> FREEZING_TYPE = create("freezing");
+
+    public static final BLibHolder<RecipeSerializer<com.human.common.gameplay.recipe.FreezerRecipe>> FREEZING_SERIALIZER =
+        SERIALIZER_REGISTRY.createHolder("freezing", com.human.common.gameplay.recipe.FreezerRecipe.Serializer::new);
+
     private static @NotNull <T extends Recipe<?>> BLibHolder<RecipeType<T>> create(String path) {
         return TYPE_REGISTRY.createHolder(path, () -> new RecipeType<>() {
 

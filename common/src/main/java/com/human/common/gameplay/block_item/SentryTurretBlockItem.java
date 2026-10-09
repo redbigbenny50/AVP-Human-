@@ -22,10 +22,11 @@ public class SentryTurretBlockItem extends BlockItem {
      */
     private static final List<Component> TOOLTIP_COMPONENTS = new TooltipHintBuilder()
         .addCategory(TooltipCategoryType.REQUIREMENTS)
-        .addNegativeEffect(HumanTooltipTranslationKeys.REQUIRES_REDSTONE_POWER)
+        // [stated] Sep 30: power, not redstone - a battery in its slot or a fuse panel.
+        .addNegativeEffect("tooltip.avp_human.requires_sentry_power")
         .addNegativeEffect(HumanTooltipTranslationKeys.REQUIRES_NEARBY_AMMO_CHEST_WITH_AMMO)
         .addCategory(TooltipCategoryType.WHEN_PLACED_IN_WORLD)
-        .addPositiveEffect(HumanTooltipTranslationKeys.USE_CHECK_TURRET_STATUS)
+        .addPositiveEffect("tooltip.avp_human.use.open_turret")
         .addPositiveEffect(HumanTooltipTranslationKeys.USE_PICK_UP_TURRET)
         .build();
 

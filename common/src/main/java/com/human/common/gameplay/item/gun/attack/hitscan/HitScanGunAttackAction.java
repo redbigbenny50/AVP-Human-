@@ -204,6 +204,10 @@ public final class HitScanGunAttackAction implements GunAttackAction {
                 searchBounds,
                 candidate -> !ignored.contains(candidate.getUUID())
                     && !MarineAllyUtil.isMarineAlly(shooter, candidate)
+                    // Oct 5 - a marine firing at a xeno that is carrying a captive must not hit the captive riding on
+                    // top of it (a hired player, a villager...). Marine shooters only: player gunfire is unchanged.
+                    && !(shooter instanceof com.human.common.gameplay.entity.living.human.marine.Marine
+                        && com.human.compatibility.avp_alien.AlienCaptives.isCarriedOff(candidate))
                     && (candidate.getType() == EntityType.END_CRYSTAL || BLibEntityPredicates.isAlive(candidate))
             )
         ) {

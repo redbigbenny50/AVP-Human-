@@ -4,6 +4,7 @@ import com.blib.api.common.tag.v1.CommonBlockTags;
 import com.human.Human;
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanIndustrialConcreteBlocks;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
@@ -56,9 +57,11 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         addPaddingBlocks();
         addPlasticBlocks();
         addSteelBlocks();
+        addCompositeBlocks();
         addTitaniumBlocks();
         addClimbableBlocks();
         addMineableWithAxeBlocks();
+        addMineableWithHoeBlocks();
         addMineableWithPickaxeBlocks();
         addMineableWithShovelBlocks();
         addNeedsStoneToolBlocks();
@@ -74,6 +77,9 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     private void addRazorWireBlocks() {
         getOrCreateTagBuilder(HumanBlockTags.RAZOR_WIRE).add(HumanBlocks.RAZOR_WIRE.get());
+        // [stated] Sep 30: what a fuse panel powers as-is. Machines need a hub chip instead; lights, doors and access
+        // panels join this tag when they exist.
+        getOrCreateTagBuilder(HumanBlockTags.FUSE_DEVICES).add(HumanBlocks.DESK_TERMINAL_BLOCK.get(), HumanBlocks.RESONATOR_BLOCK.get());
     }
 
     /**
@@ -169,11 +175,25 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
             .addTag(HumanBlockTags.INDUSTRIAL_CONCRETE)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
+            .addTag(HumanBlockTags.COMPOSITE)
             .addTag(HumanBlockTags.STEEL)
             .addTag(HumanBlockTags.TITANIUM)
             .add(
                 HumanBlocks.AMMO_CHEST.get(),
                 HumanBlocks.BATTERY.get(),
+                HumanBlocks.CHARGING_HUB.get(),
+                HumanBlocks.MACHINE_BLOCK.get(),
+                HumanBlocks.ELECTRIC_FURNACE.get(),
+                HumanBlocks.ELECTRIC_SMOKER.get(),
+                HumanBlocks.ELECTRIC_BLAST_FURNACE.get(),
+                HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE.get(),
+                HumanBlocks.ELECTRIC_GRINDER.get(),
+                HumanBlocks.FUSE_PANEL.get(),
+                HumanBlocks.ELECTRIC_PRESS.get(),
+                HumanBlocks.ELECTRIC_HYDRATOR.get(),
+                HumanBlocks.ELECTRIC_FREEZER.get(),
+                HumanBlocks.ELECTRONICS_WORKSTATION.get(),
+                // Faster with a pickaxe; deliberately NOT in needs_*_tool - see CanisterBlock.
                 CoreBlocks.DEEPSLATE_TITANIUM_ORE.get(),
                 HumanBlocks.DESK_TERMINAL_BLOCK.get(),
                 HumanBlocks.INDUSTRIAL_FURNACE.get(),
@@ -184,9 +204,10 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 HumanBlocks.REDSTONE_GENERATOR.get(),
                 HumanBlocks.RESONATOR_BLOCK.get(),
                 HumanBlocks.SENTRY_TURRET.get(),
+                HumanBlocks.HYDROELECTRIC_GENERATOR.get(),
                 HumanBlocks.SOLAR_PANEL.get(),
-                HumanBlocks.THERMAL_GENERATOR.get(),
-                HumanBlocks.WIND_TURBINE.get(),
+                HumanBlocks.THERMOELECTRIC_GENERATOR.get(),
+                HumanBlocks.AEROKINETIC_GENERATOR.get(),
                 CoreBlocks.TRINITITE_BLOCK.get(),
                 CoreBlocks.URANIUM_BLOCK.get()
             );
@@ -222,6 +243,7 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PADDING)
             .addTag(HumanBlockTags.PLASTIC)
+            .addTag(HumanBlockTags.COMPOSITE)
             .addTag(HumanBlockTags.STEEL)
             .addTag(HumanBlockTags.TITANIUM)
             .add(
@@ -246,9 +268,31 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CoreBlocks.MONAZITE_ORE.get(),
 
                 HumanBlocks.BATTERY.get(),
+                HumanBlocks.CHARGING_HUB.get(),
+                HumanBlocks.MACHINE_BLOCK.get(),
+                HumanBlocks.ELECTRIC_FURNACE.get(),
+                HumanBlocks.ELECTRIC_SMOKER.get(),
+                HumanBlocks.ELECTRIC_BLAST_FURNACE.get(),
+                HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE.get(),
+                HumanBlocks.ELECTRIC_GRINDER.get(),
+                HumanBlocks.FUSE_PANEL.get(),
+                HumanBlocks.FLUID_PIPE.get(),
+                HumanBlocks.ITEM_PIPE.get(),
+                HumanBlocks.CANISTER_BLOCK.get(),
+                HumanBlocks.STEEL_FLUID_TANK.get(),
+                HumanBlocks.FERROALUMINUM_FLUID_TANK.get(),
+                HumanBlocks.ALUMINUM_FLUID_TANK.get(),
+                HumanBlocks.TITANIUM_FLUID_TANK.get(),
+                HumanBlocks.WY_FLUID_TANK.get(),
+                HumanBlocks.USCM_FLUID_TANK.get(),
+                HumanBlocks.ELECTRIC_PRESS.get(),
+                HumanBlocks.ELECTRIC_HYDRATOR.get(),
+                HumanBlocks.ELECTRIC_FREEZER.get(),
+                HumanBlocks.ELECTRONICS_WORKSTATION.get(),
+                HumanBlocks.HYDROELECTRIC_GENERATOR.get(),
                 HumanBlocks.SOLAR_PANEL.get(),
-                HumanBlocks.THERMAL_GENERATOR.get(),
-                HumanBlocks.WIND_TURBINE.get(),
+                HumanBlocks.THERMOELECTRIC_GENERATOR.get(),
+                HumanBlocks.AEROKINETIC_GENERATOR.get(),
 
                 HumanBlocks.NUKE_BLOCK.get(),
                 CoreBlocks.RAW_BAUXITE_BLOCK.get(),
@@ -263,7 +307,13 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CoreBlocks.TRINITITE_BLOCK.get(),
                 CoreBlocks.URANIUM_BLOCK.get(),
                 CoreBlocks.ZINC_BLOCK.get(),
-                CoreBlocks.ZINC_ORE.get()
+                CoreBlocks.ZINC_ORE.get(),
+                HumanBlocks.CRYOCONDUIT.get(),
+                HumanBlocks.CRYOTANK.get(),
+                HumanBlocks.CRYOTUBE_CONTROLLER.get(),
+                HumanBlocks.STEEL_CRYOTUBE_CONTROLLER.get(),
+                HumanBlocks.WY_CRYOTUBE_CONTROLLER.get(),
+                HumanBlocks.USCM_CRYOTUBE_CONTROLLER.get()
             );
     }
 
@@ -275,11 +325,18 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             );
     }
 
+    /** Oct 1: the kelp block breaks like the hay bale it copies. */
+    private void addMineableWithHoeBlocks() {
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_HOE)
+            .add(CoreBlocks.KELP_BLOCK.get());
+    }
+
     private void addClimbableBlocks() {
         getOrCreateTagBuilder(BlockTags.CLIMBABLE)
             .add(
                 HumanFerroaluminumBlocks.FERROALUMINUM_CHAIN_FENCE.get(),
                 HumanSteelBlocks.STEEL_CHAIN_FENCE.get(),
+                HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE.get(),
                 HumanTitaniumBlocks.TITANIUM_CHAIN_FENCE.get()
             );
     }
@@ -364,6 +421,46 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 HumanSteelBlocks.STEEL_TREAD.get(),
                 HumanSteelBlocks.STEEL_TREAD_SLAB.get(),
                 HumanSteelBlocks.STEEL_TREAD_STAIRS.get()
+            );
+    }
+
+    private void addCompositeBlocks() {
+        getOrCreateTagBuilder(HumanBlockTags.COMPOSITE)
+            .add(
+                HumanCompositeBlocks.CHISELED_COMPOSITE.get(),
+                HumanCompositeBlocks.CUT_COMPOSITE.get(),
+                HumanCompositeBlocks.CUT_COMPOSITE_SLAB.get(),
+                HumanCompositeBlocks.CUT_COMPOSITE_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_BLOCK.get(),
+                HumanCompositeBlocks.COMPOSITE_BUTTON.get(),
+                HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE.get(),
+                HumanCompositeBlocks.COMPOSITE_COLUMN.get(),
+                HumanCompositeBlocks.COMPOSITE_DOOR.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_GRATE.get(),
+                HumanCompositeBlocks.COMPOSITE_GRATE_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_PLATING.get(),
+                HumanCompositeBlocks.COMPOSITE_PLATING_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_PLATING_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_PRESSURE_PLATE.get(),
+                HumanCompositeBlocks.COMPOSITE_SIDING.get(),
+                HumanCompositeBlocks.COMPOSITE_SIDING_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_SIDING_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_STANDING.get(),
+                HumanCompositeBlocks.COMPOSITE_STANDING_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_STANDING_STAIRS.get(),
+                HumanCompositeBlocks.COMPOSITE_TRAP_DOOR.get(),
+                HumanCompositeBlocks.COMPOSITE_TREAD.get(),
+                HumanCompositeBlocks.COMPOSITE_TREAD_SLAB.get(),
+                HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS.get()
             );
     }
 
@@ -639,8 +736,13 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             .addTag(HumanBlockTags.PLASTIC);
 
         getOrCreateTagBuilder(foreignBlockTag("gigeresque", "acid_resistant"))
+            .addTag(HumanBlockTags.COMPOSITE)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
+
+        // [stated] Oct 3: composite stands up to xenomorph acid three times longer than steel.
+        getOrCreateTagBuilder(HumanBlockTags.ACID_RESISTANT_3X)
+            .addTag(HumanBlockTags.COMPOSITE);
     }
 
     /**

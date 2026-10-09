@@ -1,6 +1,7 @@
 package com.human.fabric.data.recipe.impl;
 
 import com.blib.fabric.data.recipe.builder.RecipeBuilder;
+import com.human.common.registry.init.block.CoreBlocks;
 import com.human.common.registry.init.block.HumanPlasticBlocks;
 import com.human.common.registry.tag.HumanItemTags;
 import com.human.fabric.data.recipe.builder.IndustrialFurnaceRecipeBuilder;
@@ -16,6 +17,15 @@ import net.minecraft.world.level.ItemLike;
 public class IndustrialFurnaceRecipeProvider {
 
     public static void provide(RecipeBuilder builder) {
+        // Latex -> Rubber. [stated] Sep 24: "if you cook latex blocks in an industrial furnace you will get rubber
+        // blocks." Only the industrial furnace does it - a vanilla furnace will not, which is what makes the
+        // industrial one worth building before the power tree.
+        industrialFurnaceSmelting(CoreBlocks.LATEX_BLOCK.get())
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .withExperience(0.3f)
+            .withCookingTime(200)
+            .into(CoreBlocks.RUBBER_BLOCK.get());
+
         // Stone Recipes
         industrialFurnaceSmelting(Items.COBBLESTONE)
             .withCategory(RecipeCategory.BUILDING_BLOCKS)

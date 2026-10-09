@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "minecraft:wool"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "minecraft:string",
+        "count": 4
+      }
+    }
+  ],
+  "time": 200
+}

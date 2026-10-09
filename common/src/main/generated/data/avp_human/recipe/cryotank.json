@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "GGG",
+    "SSS"
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:cryotank"
+  }
+}

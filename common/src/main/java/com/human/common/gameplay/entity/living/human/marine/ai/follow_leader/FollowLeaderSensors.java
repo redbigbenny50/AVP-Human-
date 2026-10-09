@@ -34,7 +34,12 @@ public class FollowLeaderSensors {
     public static final Sensor.Mono<Marine, Boolean> IS_CLOSE_TO_LEADER = Sensors.map(
         StateKey.sensed("is_close_to_leader"),
         marine -> marine.getLeader()
-            .isSomeAnd(leader -> marine.distanceToSqr(leader) < 9)
+            // Oct 5 - tactic 10: in its place in the formation counts as close too, so it stops there instead of
+            // crowding onto the leader's back.
+            .isSomeAnd(
+                leader -> marine.distanceToSqr(leader) < 9
+                    || com.human.common.gameplay.entity.living.human.marine.squad.MarineSquads.isAtFormationSlot(marine, leader)
+            )
     );
 
     private FollowLeaderSensors() {

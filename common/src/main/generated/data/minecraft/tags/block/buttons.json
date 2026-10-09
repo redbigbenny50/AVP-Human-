@@ -2,6 +2,7 @@
   "values": [
     "avp_human:ferroaluminum_button",
     "avp_human:steel_button",
+    "avp_human:composite_button",
     "avp_human:titanium_button"
   ]
 }

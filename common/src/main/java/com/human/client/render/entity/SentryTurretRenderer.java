@@ -19,7 +19,11 @@ public class SentryTurretRenderer extends AzEntityRenderer<SentryTurret> {
 
     public SentryTurretRenderer(EntityRendererProvider.Context context) {
         super(
-            AzEntityRendererConfig.<SentryTurret>builder(GEO, TEX)
+            // [stated] Oct 2: each turret draws its own skin, falling back to the USCM texture.
+            AzEntityRendererConfig.<SentryTurret>builder(
+                turret -> GEO,
+                turret -> com.human.client.skin.SentrySkins.texture(turret.getSkin(), TEX)
+            )
                 .setAnimatorProvider(SentryTurretAnimator::new)
                 .addRenderLayer(new AzAutoGlowingLayer<>())
                 .build(),

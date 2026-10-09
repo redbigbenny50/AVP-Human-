@@ -1,0 +1,76 @@
+{
+  "textures": {
+    "pipe": "avp_human:block/item_pipe",
+    "particle": "avp_human:block/item_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        6,
+        5
+      ],
+      "to": [
+        11,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            8,
+            0,
+            14,
+            6
+          ],
+          "texture": "#pipe"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            14,
+            6
+          ],
+          "texture": "#pipe"
+        },
+        "south": {
+          "uv": [
+            14,
+            0,
+            8,
+            6
+          ],
+          "texture": "#pipe"
+        },
+        "west": {
+          "uv": [
+            14,
+            0,
+            8,
+            6
+          ],
+          "texture": "#pipe"
+        },
+        "up": {
+          "uv": [
+            14,
+            6,
+            8,
+            0
+          ],
+          "texture": "#pipe"
+        },
+        "down": {
+          "uv": [
+            14,
+            0,
+            8,
+            6
+          ],
+          "texture": "#pipe"
+        }
+      }
+    }
+  ]
+}

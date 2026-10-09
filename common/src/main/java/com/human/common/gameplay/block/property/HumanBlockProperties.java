@@ -33,6 +33,18 @@ public class HumanBlockProperties {
         )
         .pushReaction(PushReaction.DESTROY);
 
+    /** Soft and springy: quick to break by hand, and it lands like a cushion rather than stone. */
+    public static final BlockPropertyBuilder LATEX_BLOCK = BlockPropertyBuilder.of()
+        .mapColor(MapColor.SAND)
+        .strength(0.5F)
+        .sound(SoundType.SLIME_BLOCK);
+
+    /** Cured latex: tougher than the raw block and no longer sticky or bouncy. */
+    public static final BlockPropertyBuilder RUBBER_BLOCK = BlockPropertyBuilder.of()
+        .mapColor(MapColor.COLOR_BLACK)
+        .strength(1.0F)
+        .sound(SoundType.WOOL);
+
     public static final BlockPropertyBuilder STEEL_BARS = BlockPropertyBuilder.of()
         .instrument(NoteBlockInstrument.IRON_XYLOPHONE)
         .mapColor(MapColor.COLOR_GRAY)

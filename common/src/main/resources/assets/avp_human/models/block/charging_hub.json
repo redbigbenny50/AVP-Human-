@@ -1,0 +1,10 @@
+{
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "particle": "avp_human:block/charging_hub"
+  }
+}

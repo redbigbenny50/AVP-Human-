@@ -2,6 +2,7 @@
   "values": [
     "avp_human:ferroaluminum_pressure_plate",
     "avp_human:steel_pressure_plate",
+    "avp_human:composite_pressure_plate",
     "avp_human:titanium_pressure_plate"
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "c:storage_blocks/raw_titanium"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:titanium_dust",
+        "count": 18
+      }
+    }
+  ],
+  "time": 1800
+}

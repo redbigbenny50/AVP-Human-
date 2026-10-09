@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "avp_human:industrial_glass_pane"
+    },
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "ITI",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electronics_workstation"
+  }
+}

@@ -37,12 +37,15 @@ public class CombatSensors {
                 .build()::sense
         );
 
-    public static final Sensor.Mono<Marine, Option<WeaponStrategyResult<ItemTarget.World>>> BEST_WEAPON_IN_WORLD = Sensors
-        .lazyCompose(
+    /** Oct 6 - held like the armour world-item sensors; see EquipArmorSensors.WORLD_ITEM_REFRESH_TICKS. */
+    public static final Sensor.Mono<Marine, Option<WeaponStrategyResult<ItemTarget.World>>> BEST_WEAPON_IN_WORLD = Sensors.every(
+        com.human.common.gameplay.entity.living.human.marine.ai.equip_armor.EquipArmorSensors.WORLD_ITEM_REFRESH_TICKS,
+        Sensors.lazyCompose(
             StateKey.sensed("best_weapon_in_world"),
             ItemInWorldSensor.builder(WeaponStrategySet.INSTANCE::getAll, WeaponStrategyResult::new)
                 .build()::sense
-        );
+        )
+    );
 
     public static final Sensor.Mono<LivingEntity, Option<WeaponStrategyResult<? extends ItemTarget>>> BEST_WEAPON = Sensors.lazyCompose(
         StateKey.sensed("best_weapon"),
@@ -86,7 +89,10 @@ public class CombatSensors {
                 var rangeInBlocks = weaponStrategyResult.strategy().getRangeForWeapon(mob, itemStackOrNull);
                 var rangeInBlocksSqr = rangeInBlocks * rangeInBlocks;
 
-                return mob.distanceToSqr(attackTarget) <= rangeInBlocksSqr;
+                // [stated] Oct 5: in range AND in sight - otherwise a marine behind cover stood aiming at a wall
+                // forever, because "move closer" only runs when this is false.
+                return mob.distanceToSqr(attackTarget) <= rangeInBlocksSqr
+                    && mob.getSensing().hasLineOfSight(attackTarget);
             })
         );
 

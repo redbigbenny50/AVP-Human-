@@ -11,11 +11,29 @@ public class EnUsSoundEventProvider {
 
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_APE, "APE armor rustles");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_FURNACE, "Electric furnace hums");
+        addSound(builder, HumanSoundEvents.CRYO_CONTROLLER_ACTIVATE, "Cryotube controller powers up");
+        addSound(builder, HumanSoundEvents.CRYO_CONTROLLER_DEACTIVATE, "Cryotube controller powers down");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_SMOKER, "Electric smoker hums");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_BLAST_FURNACE, "Electric blast furnace roars");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_INDUSTRIAL_FURNACE, "Industrial furnace roars");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_GRINDER, "Grinder grinds");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_PRESS, "Press stamps");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_HYDRATOR, "Hydrator sprays");
+        addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_FREEZER, "Freezer hums");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_MK50, "MK50 armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_PRESSURE, "Pressure armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_STEEL, "Steel armor clanks");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_TACTICAL, "Tactical armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_TITANIUM, "Titanium armor clanks");
+        addSound(builder, HumanSoundEvents.MARINE_RADIO_CHATTER, "Marine radio chatter");
+
+        // ⚠ ALL FOUR SMART HUD CUES NEED SUBTITLES, NOT JUST FLAVOUR. The lock tone grants accuracy and armour
+        // penetration, so a player without sound loses a MECHANIC if it is unsubtitled, not just some atmosphere.
+        addSound(builder, HumanSoundEvents.SMART_HUD_ACQUIRE, "Targeting system detects contact");
+        addSound(builder, HumanSoundEvents.SMART_HUD_BOOT, "Targeting system powers on");
+        addSound(builder, HumanSoundEvents.SMART_HUD_LOCK, "Targeting system locks on");
+        addSound(builder, HumanSoundEvents.SMART_HUD_LOCK_LOST, "Targeting system loses lock");
 
         addSound(builder, HumanSoundEvents.WEAPON_FLAMETHROWER_SEVASTOPOL_RELOAD_FINISH, "Flamethrower finishes reloading");
         addSound(builder, HumanSoundEvents.WEAPON_FLAMETHROWER_SEVASTOPOL_RELOAD_START, "Flamethrower reloads");

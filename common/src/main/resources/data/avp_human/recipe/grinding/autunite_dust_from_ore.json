@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "c:ores/autunite"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:autunite_dust",
+        "count": 9
+      }
+    }
+  ],
+  "time": 200
+}

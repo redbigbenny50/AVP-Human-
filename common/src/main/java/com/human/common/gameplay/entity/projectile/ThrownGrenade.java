@@ -79,18 +79,63 @@ public class ThrownGrenade extends BouncingItemProjectile {
             return;
         }
 
-        level.explode(
-            this,
-            getX(),
-            getY(),
-            getZ(),
-            isIrradiated ? 9F : 3F,
-            isIncendiary,
-            Level.ExplosionInteraction.BLOCK
-        );
+        if (getOwner() instanceof com.human.common.gameplay.entity.living.human.marine.Marine marine) {
+            // ⚠ Oct 5 squad tactics - A MARINE'S GRENADE SPARES ITS OWN SIDE AND ITS CAMP, like its rockets: no harm to
+            // marine allies, and blocks only break if the server allows gunfire to break them.
+            var interaction = com.human.common.property.HumanPropertyAccess.INSTANCE.get(
+                com.human.common.property.HumanProperties.Weapons.BULLETS_DAMAGE_BLOCKS_ENABLED
+            )
+                ? Level.ExplosionInteraction.BLOCK
+                : Level.ExplosionInteraction.NONE;
+
+            level.explode(
+                this,
+                null,
+                new MarineSafeExplosionDamageCalculator(marine),
+                getX(),
+                getY(),
+                getZ(),
+                isIrradiated ? 9F : 3F,
+                isIncendiary,
+                interaction
+            );
+        } else {
+            level.explode(
+                this,
+                getX(),
+                getY(),
+                getZ(),
+                isIrradiated ? 9F : 3F,
+                isIncendiary,
+                Level.ExplosionInteraction.BLOCK
+            );
+        }
 
         if (isIrradiated) {
             createIrradiatedCloudEffect(level);
+        }
+    }
+
+    /** A marine's grenade does not hurt or knock back the marine's allies. */
+    private static final class MarineSafeExplosionDamageCalculator extends net.minecraft.world.level.ExplosionDamageCalculator {
+
+        private final net.minecraft.world.entity.Entity thrower;
+
+        private MarineSafeExplosionDamageCalculator(net.minecraft.world.entity.Entity thrower) {
+            this.thrower = thrower;
+        }
+
+        @Override
+        public boolean shouldDamageEntity(net.minecraft.world.level.Explosion explosion, net.minecraft.world.entity.Entity entity) {
+            return !com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil.isMarineAlly(thrower, entity)
+                && super.shouldDamageEntity(explosion, entity);
+        }
+
+        @Override
+        public float getKnockbackMultiplier(net.minecraft.world.entity.Entity entity) {
+            return com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil.isMarineAlly(thrower, entity)
+                ? 0.0F
+                : super.getKnockbackMultiplier(entity);
         }
     }
 
@@ -124,7 +169,7 @@ public class ThrownGrenade extends BouncingItemProjectile {
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putBoolean(IS_INCENDIARY_KEY, isIncendiary);
-        compoundTag.putBoolean(IS_IRRADIATED_KEY, isIncendiary);
+        compoundTag.putBoolean(IS_IRRADIATED_KEY, isIrradiated);
     }
 
     public void setIncendiary(boolean incendiary) {

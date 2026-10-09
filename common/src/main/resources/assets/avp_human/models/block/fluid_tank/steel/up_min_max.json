@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t": "avp_human:block/steel_fluid_tank_top",
+    "particle": "avp_human:block/steel_fluid_tank_top"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        16,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0.0,
+            8.0,
+            4.0,
+            12.0
+          ],
+          "texture": "#t",
+          "cullface": "up"
+        }
+      }
+    }
+  ]
+}

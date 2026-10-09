@@ -2,10 +2,10 @@ package com.human.common.gameplay.item;
 
 import com.blib.api.common.tooltip.v1.TooltipUtil;
 import com.human.common.gameplay.item.gun.GunConfig;
+import com.human.common.gameplay.item.gun.GunHeat;
 import com.human.common.gameplay.item.gun.animation.GunAnimationEvents;
 import com.human.common.gameplay.item.gun.pipeline.GunShootContext;
 import com.human.common.registry.init.HumanDataComponents;
-import com.human.common.registry.init.item.HumanGunItems;
 import com.human.compatibility.HumanCommonItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -114,7 +114,10 @@ public class GunItem extends Item {
                         playUseAnimations(livingEntity, itemStack);
 
                         itemStack.set(HumanDataComponents.IS_FIRING.get(), true);
-                        itemStack.set(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 5);
+                        itemStack.set(
+                            HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(),
+                            gunConfig.getDefaultFireMode().muzzleFlashDurationInTicks()
+                        );
                     }
                 }
             });
@@ -135,19 +138,78 @@ public class GunItem extends Item {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int i, boolean bl) {
+    public void inventoryTick(
+        @NotNull ItemStack itemStack,
+        @NotNull Level level,
+        @NotNull Entity entity,
+        int slotId,
+        boolean selected
+    ) {
         removeBlockedEnchantments(itemStack);
 
+        tickMuzzleFlash(itemStack, level);
+
+        tickHeat(itemStack, level, entity, selected);
+
+        super.inventoryTick(itemStack, level, entity, slotId, selected);
+    }
+
+    /**
+     * Burns the muzzle flash down and drops the firing flag when it expires.
+     * <p>
+     * ⚠⚠ SERVER-SIDE ONLY, AND THAT IS THE WHOLE POINT. Both components are network-synchronised, so the server owns
+     * them and the client renders whatever it was last sent. This used to run on BOTH sides: the client counted its own
+     * copy down to zero and cleared IS_FIRING locally, while the server - re-lighting the flash every tick of a held
+     * trigger - saw no CHANGE to send, so the correction never arrived. A client that edits a synced component is
+     * racing the server for a value it does not own.
+     * </p>
+     */
+    private void tickMuzzleFlash(ItemStack itemStack, Level level) {
+        if (level.isClientSide) {
+            return;
+        }
+
         var muzzleFlashDurationInTicks = itemStack.getOrDefault(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 0);
-        var newMuzzleFlashDurationInTicks = Math.max(muzzleFlashDurationInTicks - 1, 0);
+
+        if (muzzleFlashDurationInTicks <= 0) {
+            return;
+        }
+
+        var newMuzzleFlashDurationInTicks = muzzleFlashDurationInTicks - 1;
 
         itemStack.set(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), newMuzzleFlashDurationInTicks);
 
         if (newMuzzleFlashDurationInTicks == 0) {
             itemStack.set(HumanDataComponents.IS_FIRING.get(), false);
         }
+    }
 
-        super.inventoryTick(itemStack, level, entity, i, bl);
+    /**
+     * Cooling, smoke and the overheat warning, for any gun that has a heat profile.
+     * <p>
+     * ⚠⚠ THIS IS THE ONLY PLACE COOLING IS TICKED. It used to live in {@code OldPainlessItem.inventoryTick}; a second
+     * caller would double the passive cooling rate and halve the gun's time to overheat, and it would do so silently -
+     * nothing would look broken, the ceiling would just never arrive when the numbers say it should.
+     * </p>
+     * <p>
+     * ⚠ SMOKE AND THE WARNING ARE GATED ON {@code selected}, COOLING IS NOT. A hot gun stowed in the pack still cools
+     * down; it simply does not smoke through its owner's chest or shout at them about a gun they are not holding.
+     * </p>
+     */
+    private void tickHeat(ItemStack itemStack, Level level, Entity entity, boolean selected) {
+        var heatProfile = gunConfig.heatProfile();
+
+        if (heatProfile == null || level.isClientSide) {
+            // Heat is server-owned; the client only reads the synced components to render with.
+            return;
+        }
+
+        GunHeat.cool(itemStack, heatProfile);
+
+        if (selected) {
+            GunHeat.tickSmoke(entity, itemStack, heatProfile);
+            GunHeat.tickWarning(entity, itemStack, heatProfile);
+        }
     }
 
     private static void removeBlockedEnchantments(ItemStack itemStack) {
@@ -204,14 +266,15 @@ public class GunItem extends Item {
             );
         }
 
-        // TODO: Don't hardcode old painless here.
-        if (this != HumanGunItems.OLD_PAINLESS.get()) {
-            TooltipUtil.appendLabel(
-                list,
-                "tooltip.avp.ammunition",
-                Component.literal(currentAmmunition + " / " + gunConfig.maximumAmmunition())
-            );
-        }
+        // ⚠ THE OLD PAINLESS EXCLUSION THAT USED TO SIT HERE IS GONE. It was correct when the gun had
+        // maximumAmmunition(Integer.MAX_VALUE) and no magazine to report - printing "37 / 2147483647" would have been
+        // noise. Since the drum pass it holds a real 1500 and hides the one number that tells the player when to
+        // reload.
+        TooltipUtil.appendLabel(
+            list,
+            "tooltip.avp.ammunition",
+            Component.literal(currentAmmunition + " / " + gunConfig.maximumAmmunition())
+        );
 
         TooltipUtil.appendLabel(
             list,

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "avp_human:block/fuse_panel_front",
+    "south": "avp_human:block/fuse_panel_back",
+    "east": "avp_human:block/fuse_panel_side",
+    "west": "avp_human:block/fuse_panel_side",
+    "up": "avp_human:block/fuse_panel_topbottom",
+    "down": "avp_human:block/fuse_panel_topbottom",
+    "particle": "avp_human:block/fuse_panel_side"
+  }
+}

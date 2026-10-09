@@ -54,6 +54,40 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
+        getOrCreateTagBuilder(HumanCommonItemTags.LATEX).add(HumanItems.LATEX_SHEET.get());
+        // Oct 7 - [stated] the APE suit mask is ignored by Gigeresque facehuggers.
+        getOrCreateTagBuilder(com.human.common.registry.tag.HumanItemTags.FACEHUGGER_PROOF_HELMETS)
+            .add(com.human.common.registry.init.item.HumanArmorItems.WY_APE_HELMET.get());
+        // [stated] Sep 29/30: what the electronics workstation makes. It only ever crafts a member of this tag.
+        // Empty on purpose: the grinder decrafts anything with a crafting recipe; pack makers list exceptions here.
+        getOrCreateTagBuilder(com.human.common.registry.tag.HumanItemTags.NO_DECRAFT);
+
+        getOrCreateTagBuilder(com.human.common.registry.tag.HumanItemTags.ELECTRONICS)
+            .add(HumanItems.BATTERY_PACK.get())
+            .add(HumanItems.CAPACITOR.get())
+            .add(HumanItems.CPU.get())
+            .add(HumanItems.FAN.get())
+            .add(HumanItems.HEAT_SINK.get())
+            .add(HumanItems.COPPER_COIL.get())
+            .add(HumanItems.RAM.get())
+            .add(HumanItems.SSD.get())
+            .add(HumanItems.MOTHERBOARD.get())
+            .add(HumanItems.POWER_SUPPLY.get())
+            .add(HumanItems.DIODE.get())
+            .add(HumanItems.INTEGRATED_CIRCUIT.get())
+            .add(HumanItems.LED.get())
+            .add(HumanItems.LED_DISPLAY.get())
+            .add(HumanItems.NEODYMIUM_MAGNET.get())
+            .add(HumanItems.RECEIVER.get())
+            .add(HumanItems.REGULATOR.get())
+            .add(HumanItems.RESISTOR.get())
+            .add(HumanItems.SERVO.get())
+            .add(HumanItems.SMART_RECEIVER.get())
+            .add(HumanItems.TRANSISTOR.get())
+            .add(com.human.common.registry.init.item.HumanBlockItems.DESK_TERMINAL_BLOCK.get())
+            .add(com.human.common.registry.init.item.HumanBlockItems.MACHINE_BLOCK.get());
+        getOrCreateTagBuilder(HumanCommonItemTags.RUBBER).add(HumanItems.RUBBER_GLOBULE.get());
+
         addArmors();
         addRadioactiveItems();
         addCommonItems();
@@ -291,11 +325,57 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .setReplace(false)
             .add(HumanItems.LITHIUM_DUST.get());
 
+        // [stated] Sep 29: the metal dusts, each under its metal's c: tag so other mods' grinders and furnaces agree.
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_IRON)
+            .setReplace(false)
+            .add(HumanItems.IRON_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_GOLD)
+            .setReplace(false)
+            .add(HumanItems.GOLD_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_COPPER)
+            .setReplace(false)
+            .add(HumanItems.COPPER_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_TITANIUM)
+            .setReplace(false)
+            .add(HumanItems.TITANIUM_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_ALUMINUM)
+            .setReplace(false)
+            .add(HumanItems.ALUMINUM_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_FERROALUMINUM)
+            .setReplace(false)
+            .add(HumanItems.FERROALUMINUM_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_LEAD)
+            .setReplace(false)
+            .add(HumanItems.LEAD_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_ZINC)
+            .setReplace(false)
+            .add(HumanItems.ZINC_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_BRASS)
+            .setReplace(false)
+            .add(HumanItems.BRASS_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_STEEL)
+            .setReplace(false)
+            .add(HumanItems.STEEL_DUST.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.DUSTS_NEODYMIUM)
+            .setReplace(false)
+            .add(HumanItems.MAGNETIC_DUST.get());
+
         getOrCreateTagBuilder(CommonItemTags.INGOTS)
             .setReplace(false)
             .addTag(HumanCommonItemTags.INGOTS_ALUMINUM)
             .addTag(HumanCommonItemTags.INGOTS_BRASS)
             .addTag(HumanCommonItemTags.INGOTS_FERROALUMINUM)
+            .addTag(HumanCommonItemTags.INGOTS_COMPOSITE)
             .addTag(HumanCommonItemTags.INGOTS_LEAD)
             .addTag(HumanCommonItemTags.INGOTS_STEEL)
             .addTag(HumanCommonItemTags.INGOTS_TITANIUM)
@@ -321,6 +401,10 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(HumanCommonItemTags.INGOTS_STEEL)
             .setReplace(false)
             .add(HumanItems.STEEL_INGOT.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.INGOTS_COMPOSITE)
+            .setReplace(false)
+            .add(HumanItems.COMPOSITE_INGOT.get());
 
         getOrCreateTagBuilder(HumanCommonItemTags.INGOTS_TITANIUM)
             .setReplace(false)
@@ -376,6 +460,10 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(HumanCommonItemTags.NUGGETS_ZINC)
             .setReplace(false)
             .add(HumanItems.ZINC_NUGGET.get());
+
+        getOrCreateTagBuilder(HumanCommonItemTags.NUGGETS_COPPER)
+            .setReplace(false)
+            .add(HumanItems.COPPER_NUGGET.get());
 
         getOrCreateTagBuilder(CommonItemTags.ORES)
             .setReplace(false)
@@ -533,6 +621,18 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // compile-only here -- see foreignItemTag below -- and as optional entries so the tag is simply empty, and the
         // recipe simply never matches, when avp_alien is absent. The optional tag reference means that if avp_alien
         // ever does ship an item tag of its own, its contents merge in without a change here.
+        // The two sibling mods' music-disc fragments, each in its own tag so marine_chest_personal can offer them
+        // without avp_human requiring either mod. Added as OPTIONAL raw ResourceLocations for the same two reasons as
+        // the resin blocks below: avp_alien/avp_predator are modCompileOnly, so touching their item classes here would
+        // throw NoClassDefFoundError inside datagen and take the entire provider down with it; and an optional entry
+        // leaves the tag simply EMPTY when the mod is absent, which is exactly the wanted behaviour - the loot entry
+        // rolls to nothing instead of breaking the table.
+        getOrCreateTagBuilder(HumanItemTags.ALIEN_MUSIC_DISC_FRAGMENTS)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "alien_music_disc_1_fragment"));
+
+        getOrCreateTagBuilder(HumanItemTags.PREDATOR_MUSIC_DISC_FRAGMENTS)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_predator", "predator_music_disc_1_fragment"));
+
         getOrCreateTagBuilder(HumanItemTags.RESIN_BLOCKS)
             .addOptionalTag(ResourceLocation.fromNamespaceAndPath("avp_alien", "resin_blocks"))
             .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "resin"))
@@ -547,6 +647,30 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(foreignItemTag("stellaris", "oxygenated_armor"))
             .addTag(HumanItemTags.MK50_ARMOR)
             .addTag(HumanItemTags.PRESSURE_ARMOR);
+
+        // Ad Astra checks a FULL SET against each of these (SpaceSuitItem.hasFullSet walks all four slots; read from
+        // the 1.16.26 jar). Sep 21 rulings: "pressure suit is for oxygen, mk50 is all four, no tank needed its a built
+        // in recycling system." Acid rain has no armor tag in Ad Astra - that one is handled at the damage, see
+        // MixinLivingEntity_SuitHazardImmunity.
+        getOrCreateTagBuilder(foreignItemTag("ad_astra", "space_resistant_armor"))
+            .addTag(HumanItemTags.MK50_ARMOR)
+            .addTag(HumanItemTags.PRESSURE_ARMOR);
+
+        getOrCreateTagBuilder(foreignItemTag("ad_astra", "oxygen_supplying_armor"))
+            .addTag(HumanItemTags.MK50_ARMOR)
+            .addTag(HumanItemTags.PRESSURE_ARMOR);
+
+        getOrCreateTagBuilder(foreignItemTag("ad_astra", "heat_resistant_armor"))
+            .addTag(HumanItemTags.MK50_ARMOR);
+
+        getOrCreateTagBuilder(foreignItemTag("ad_astra", "freeze_resistant_armor"))
+            .addTag(HumanItemTags.MK50_ARMOR);
+
+        // [stated] Oct 1: only proper suits keep cryofluid out - the MK50 or any other environmental hazard suit, as a
+        // full set. Ad Astra's freeze tag is OPTIONAL so this still loads without Ad Astra installed.
+        getOrCreateTagBuilder(HumanItemTags.CRYO_PROTECTIVE_ARMOR)
+            .addTag(HumanItemTags.MK50_ARMOR)
+            .addOptionalTag(foreignItemTag("ad_astra", "freeze_resistant_armor"));
     }
 
     private void addAutomatedTagItems() {

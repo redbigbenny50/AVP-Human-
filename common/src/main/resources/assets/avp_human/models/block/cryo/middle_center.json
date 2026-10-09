@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "0": "avp_human:block/cryo/middle_center",
+    "particle": "avp_human:block/cryo/middle_center"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "name": "cube",
+      "faces": {
+        "north": {
+          "uv": [
+            4.0,
+            4.0,
+            4.5,
+            8.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            4.0,
+            8.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.5,
+            4.0,
+            9.0,
+            8.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            4.5,
+            4.0,
+            8.5,
+            8.0
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            4.5,
+            4.0,
+            4.0,
+            0.0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            5.0,
+            0.0,
+            4.5,
+            4.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

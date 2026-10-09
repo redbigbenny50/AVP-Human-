@@ -105,9 +105,34 @@ public class FallBackSensors {
      * keep out of the way should test this, not {@link #SHOULD_FALL_BACK} - that one stops being true as soon as the
      * marine is more than a charge away from its attacker, which is a third of the way into the withdrawal.
      */
+    /**
+     * Oct 7 - the nearest attack target is a tough enemy: fought for two seconds and still not dropping. See
+     * {@link MarineEngagement}.
+     */
+    public static final Sensor.Mono<Marine, Boolean> IS_ATTACK_TARGET_TOUGH = Sensors.lazyCompose(
+        StateKey.sensed("is_attack_target_tough"),
+        (marine, worldState) -> {
+            var attackTargetOption = worldState.getOrDefault(GOAPSensors.NEAREST_ATTACKABLE_TARGET.key(), Option.none());
+
+            return attackTargetOption.isSomeAnd(
+                attackTarget -> attackTarget instanceof LivingEntity living && MarineEngagement.isTough(marine, living)
+            );
+        }
+    );
+
+    /**
+     * Oct 7 - a reason to give ground: running low on ammunition (the original rule) OR fighting a tough enemy. Either
+     * way the marine keeps firing while it backs off; only the distance rules below decide when it moves.
+     */
+    public static final Sensor.Mono<Marine, Boolean> SHOULD_WITHDRAW = Sensors.lazyCompose(
+        StateKey.sensed("should_withdraw"),
+        (marine, worldState) -> worldState.getOrDefault(IS_LOW_ON_AMMUNITION.key(), false)
+            || worldState.getOrDefault(IS_ATTACK_TARGET_TOUGH.key(), false)
+    );
+
     public static final Sensor.Mono<Marine, Boolean> IS_FALLING_BACK = Sensors.lazyCompose(
         StateKey.sensed("is_falling_back"),
-        (marine, worldState) -> worldState.getOrDefault(IS_LOW_ON_AMMUNITION.key(), false)
+        (marine, worldState) -> worldState.getOrDefault(SHOULD_WITHDRAW.key(), false)
             && worldState.getOrDefault(GOAPSensors.HAS_ATTACK_TARGET.key(), false)
             && !worldState.getOrDefault(IS_AT_SAFE_DISTANCE.key(), false)
     );

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "L": {
+      "tag": "c:dusts/lithium"
+    },
+    "N": {
+      "item": "minecraft:gold_nugget"
+    },
+    "S": {
+      "tag": "c:silicon"
+    },
+    "X": {
+      "item": "avp_human:capacitor"
+    }
+  },
+  "pattern": [
+    "NXN",
+    "SIS",
+    "NLN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:capacity_upgrade"
+  }
+}

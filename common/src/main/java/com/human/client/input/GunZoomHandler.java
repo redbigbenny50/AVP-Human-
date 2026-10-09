@@ -54,6 +54,20 @@ public class GunZoomHandler {
         return isAimingGun(minecraft) && isSniper(minecraft.player.getUseItem());
     }
 
+    /**
+     * Oct 6 - whether the local player is using (aiming) the sniper, WITH OR WITHOUT a screen open. The renderer hides
+     * the sniper on this, not on {@link #isAimingSniper}: the aim pose that pulls the gun up to the eye
+     * (MixinItemInHandRenderer_AdjustHandRenderingForGun) follows {@code isUsingItem()} alone, so whenever the scope
+     * test failed for any other reason - an open inventory being the one testers found - the rifle drew in that pose
+     * with the camera inside it: giant stock and scope pieces filling the view. Hiding it on exactly the pose's own
+     * condition means the two can never disagree again. The scope overlay and zoom still switch off behind a screen.
+     */
+    public static boolean isUsingSniper(Minecraft minecraft) {
+        return minecraft.player != null
+            && minecraft.player.isUsingItem()
+            && isSniper(minecraft.player.getUseItem());
+    }
+
     public static boolean isAimingRocketLauncher(Minecraft minecraft) {
         return isAimingGun(minecraft)
             && minecraft.player.getUseItem().getItem() == HumanGunItems.M6B_ROCKET_LAUNCHER.get();

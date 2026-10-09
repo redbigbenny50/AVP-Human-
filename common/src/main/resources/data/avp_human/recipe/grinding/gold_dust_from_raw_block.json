@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "c:storage_blocks/raw_gold"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:gold_dust",
+        "count": 18
+      }
+    }
+  ],
+  "time": 1800
+}

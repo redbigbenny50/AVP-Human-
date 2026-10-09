@@ -6,6 +6,7 @@ import com.blib.api.client.mod.v1.BLibClientMod;
 import com.blib.api.common.registry.v1.BLibHolder;
 import com.human.Human;
 import com.human.client.input.keybind.HumanKeybindingRegistry;
+import com.human.client.machine.MachineClientHooks;
 import com.human.client.render.armor.ApeArmorRenderer;
 import com.human.client.render.armor.MK50ArmorRenderer;
 import com.human.client.render.armor.PressureArmorRenderer;
@@ -13,9 +14,14 @@ import com.human.client.render.armor.TacticalArmorRenderer;
 import com.human.client.render.armor.TacticalCamoArmorRenderer;
 import com.human.client.render.armor.WYCommandoArmorRenderer;
 import com.human.client.render.armor.WYEliteArmorRenderer;
+import com.human.client.render.block.AerokineticGeneratorRenderer;
+import com.human.client.render.block.ChargingHubRenderer;
 import com.human.client.render.block.DeskTerminalRenderer;
+import com.human.client.render.block.ElectricMachineRenderer;
+import com.human.client.render.block.HydroelectricGeneratorRenderer;
 import com.human.client.render.block.ResonatorRenderer;
 import com.human.client.render.block.SolarPanelRenderer;
+import com.human.client.render.block.ThermoelectricGeneratorRenderer;
 import com.human.client.render.entity.FlamethrowRenderer;
 import com.human.client.render.entity.MarineDogRenderer;
 import com.human.client.render.entity.MarineRenderer;
@@ -23,10 +29,15 @@ import com.human.client.render.entity.MushroomCloudRenderer;
 import com.human.client.render.entity.NukeRenderer;
 import com.human.client.render.entity.RocketRenderer;
 import com.human.client.render.entity.SentryTurretRenderer;
+import com.human.client.render.item.AerokineticGeneratorItemRenderer;
+import com.human.client.render.item.ChargingHubItemRenderer;
 import com.human.client.render.item.DeskTerminalItemRenderer;
+import com.human.client.render.item.HydroelectricGeneratorItemRenderer;
 import com.human.client.render.item.ResonatorItemRenderer;
 import com.human.client.render.item.SentryTurretItemRenderer;
 import com.human.client.render.item.SimpleItemRenderer;
+import com.human.client.render.item.SolarPanelItemRenderer;
+import com.human.client.render.item.ThermoelectricGeneratorItemRenderer;
 import com.human.client.render.item.gun.SevastopolFlamethrowerItemRenderer;
 import com.human.client.render.item.gun.muzzled.impl.F903WEItemRenderer;
 import com.human.client.render.item.gun.muzzled.impl.M3712ShotgunItemRenderer;
@@ -39,13 +50,16 @@ import com.human.client.render.item.gun.muzzled.impl.M88Mod4CombatPistolItemRend
 import com.human.client.render.item.gun.muzzled.impl.OldPainlessItemRenderer;
 import com.human.client.render.item.gun.muzzled.impl.ZX76ShotgunItemRenderer;
 import com.human.client.screen.ArmorCaseScreen;
+import com.human.client.screen.ElectricMachineScreen;
 import com.human.client.screen.IndustrialFurnaceScreen;
 import com.human.client.screen.MarineInventoryScreen;
+import com.human.common.gameplay.block.entity.machine.ElectricMachineBlockEntity;
 import com.human.common.registry.init.HumanBlockEntityTypes;
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.HumanEntityTypes;
 import com.human.common.registry.init.HumanMenuTypes;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
 import com.human.common.registry.init.block.HumanPlasticBlocks;
@@ -84,6 +98,10 @@ public class HumanClient {
         registerItemRenderers();
         registerMenuScreens();
 
+        // The machines' client tick - animation clock and working sound. Handed in from here so common code never
+        // names a client class.
+        ElectricMachineBlockEntity.clientTicker = MachineClientHooks::tick;
+
         HumanKeybindingRegistry.initialize();
 
         if (AVPAlien.MOD.isLoaded()) {
@@ -104,6 +122,11 @@ public class HumanClient {
                     HumanArmorItems.WY_APE_LEGGINGS,
                     HumanArmorItems.WY_APE_BOOTS
                 )
+            );
+        MOD.registries()
+            .registerArmorRenderer(
+                com.human.client.render.armor.ElectricianArmorRenderer::new,
+                List.of(HumanArmorItems.ELECTRICIAN_HARD_HAT, HumanArmorItems.ELECTRICIAN_JACKET)
             );
         MOD.registries()
             .registerArmorRenderer(
@@ -171,6 +194,11 @@ public class HumanClient {
         MOD.registries().registerBlockEntityRenderer(HumanBlockEntityTypes.AMMO_CHEST, ChestRenderer::new);
         MOD.registries()
             .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.CRYOTANK,
+                com.human.client.render.block.CryotankRenderer::new
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
                 HumanBlockEntityTypes.DESK_TERMINAL,
                 (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new DeskTerminalRenderer()
             );
@@ -185,9 +213,79 @@ public class HumanClient {
                 HumanBlockEntityTypes.SOLAR_PANEL,
                 (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new SolarPanelRenderer()
             );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.HYDROELECTRIC_GENERATOR,
+                (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new HydroelectricGeneratorRenderer()
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.CHARGING_HUB,
+                (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new ChargingHubRenderer()
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.CABLE,
+                com.human.client.render.block.CableFlangeRenderer::new
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.FLUID_PIPE,
+                context -> new com.human.client.render.block.PipeFlangeRenderer<>("block/fluid_pipe_flange")
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.ITEM_PIPE,
+                context -> new com.human.client.render.block.PipeFlangeRenderer<>("block/item_pipe")
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.FLUID_TANK,
+                (BlockEntityRendererProvider.Context context) -> new com.human.client.render.block.FluidTankRenderer()
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.CANISTER,
+                (BlockEntityRendererProvider.Context context) -> new com.human.client.render.block.CanisterBlockRenderer()
+            );
+        // The new battery is a plain baked block and has no renderer. The machines draw their working front and LED.
+        MOD.registries().registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_FURNACE, ElectricMachineRenderer::new);
+        MOD.registries().registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_SMOKER, ElectricMachineRenderer::new);
+        MOD.registries().registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_BLAST_FURNACE, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_INDUSTRIAL_FURNACE, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_GRINDER, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_PRESS, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_HYDRATOR, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(HumanBlockEntityTypes.ELECTRIC_FREEZER, ElectricMachineRenderer::new);
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.AEROKINETIC_GENERATOR,
+                (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new AerokineticGeneratorRenderer()
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                HumanBlockEntityTypes.THERMOELECTRIC_GENERATOR,
+                (BlockEntityRendererProvider.Context rendererDispatcherIn) -> new ThermoelectricGeneratorRenderer()
+            );
     }
 
     private static void registerItemColors() {
+        registerCanisterColor();
+
+        // [stated] Oct 2: a Skin Kit's label takes its skin's colour.
+        MOD.registries()
+            .registerItemColor(
+                (itemStack, layer) -> layer == 1
+                    ? com.human.client.skin.SentrySkins.colour(com.human.common.gameplay.item.SkinKitItem.skinOf(itemStack))
+                    : -1,
+                List.of(com.human.common.registry.init.item.HumanItems.SKIN_KIT)
+            );
+
         registerItemColor(HumanArmorItems.MK50_HELMET);
         registerItemColor(HumanArmorItems.MK50_CHESTPLATE);
         registerItemColor(HumanArmorItems.MK50_LEGGINGS);
@@ -209,6 +307,26 @@ public class HumanClient {
         registerItemColor(HumanArmorItems.WY_ELITE_BOOTS);
     }
 
+    /**
+     * The universal canister's window: layer 1 is a greyscale window tinted by whatever fluid is inside, so every fluid
+     * from every mod shows its own colour with no art of its own. Layer 0, the canister body, is left untinted.
+     */
+    private static void registerCanisterColor() {
+        MOD.registries()
+            .registerItemColor(
+                (itemStack, layer) -> {
+                    if (layer != 1) {
+                        return -1;
+                    }
+
+                    var content = com.human.common.gameplay.item.canister.UniversalCanisterItem.getContent(itemStack);
+
+                    return content.isEmpty() ? -1 : com.human.client.fluid.FluidColors.colorOf(content.fluid());
+                },
+                List.of(com.human.common.registry.init.item.HumanItems.CANISTER)
+            );
+    }
+
     private static void registerItemColor(BLibHolder<ArmorItem> holder) {
         MOD.registries()
             .registerItemColor(
@@ -218,6 +336,19 @@ public class HumanClient {
     }
 
     private static void registerBlockRenderLayers() {
+        // Fluid tanks: the window glass is clear with a translucent glint, so the whole tank draws translucent.
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.STEEL_FLUID_TANK, RenderType.translucent());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.FLUID_PIPE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.ITEM_PIPE, RenderType.cutout());
+        MOD.registries()
+            .registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.FERROALUMINUM_FLUID_TANK, RenderType.translucent());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.ALUMINUM_FLUID_TANK, RenderType.translucent());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.TITANIUM_FLUID_TANK, RenderType.translucent());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.WY_FLUID_TANK, RenderType.translucent());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.USCM_FLUID_TANK, RenderType.translucent());
+        // Cryotanks: frame and glass, so the frozen specimen shows through.
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.CRYOTANK, RenderType.translucent());
+
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_CHAIN_FENCE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_GRATE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_BARS, RenderType.cutout());
@@ -226,6 +357,18 @@ public class HumanClient {
         MOD.registries().registerBlockRenderLayer(HumanTitaniumBlocks.TITANIUM_CHAIN_FENCE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanTitaniumBlocks.TITANIUM_GRATE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanBlocks.RAZOR_WIRE, RenderType.cutout());
+        // ⚠ CUTOUT, NOT SOLID: the battery gauge and the machines' LED are overlay faces with transparent pixels. On
+        // the
+        // default solid layer every transparent pixel draws BLACK and hides the face underneath.
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.BATTERY, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_FURNACE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_SMOKER, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_BLAST_FURNACE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_GRINDER, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_PRESS, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_HYDRATOR, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_FREEZER, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_DOOR, RenderType.cutout());
@@ -237,6 +380,12 @@ public class HumanClient {
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_GRATE_STAIRS, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_GRATE_SLAB, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_GRATE_STAIRS, RenderType.cutout());
+
+        MOD.registries().registerBlockRenderLayer(HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanCompositeBlocks.COMPOSITE_GRATE, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanCompositeBlocks.COMPOSITE_DOOR, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanCompositeBlocks.COMPOSITE_GRATE_SLAB, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanTitaniumBlocks.TITANIUM_GRATE_SLAB, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanTitaniumBlocks.TITANIUM_GRATE_STAIRS, RenderType.cutout());
 
@@ -277,6 +426,12 @@ public class HumanClient {
         MOD.registries().registerEntityRenderer(HumanEntityTypes.FLAMETHROW, FlamethrowRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.GRENADE_THROWN, ThrownItemRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE, MarineRenderer::new);
+        MOD.registries().registerEntityRenderer(HumanEntityTypes.COLONIST, com.human.client.render.entity.ColonistRenderer::new);
+        // [stated] Sep 30: colonists pick a random jumpsuit from every outfit texture present - listed here, on the
+        // client.
+        com.human.common.gameplay.entity.living.human.colonist.ColonistFeatureManager.installOutfitCatalog(
+            com.human.client.render.entity.ColonistOutfits::forSex
+        );
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE_DOG, MarineDogRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MUSHROOM_CLOUD, MushroomCloudRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.NUKE, NukeRenderer::new);
@@ -287,6 +442,17 @@ public class HumanClient {
     private static void registerItemRenderers() {
         MOD.registries().registerItemRenderer(HumanItems.ARMOR_CASE, name -> () -> new SimpleItemRenderer(name));
         MOD.registries().registerItemRenderer(HumanBlockItems.DESK_TERMINAL_BLOCK, name -> DeskTerminalItemRenderer::new);
+        MOD.registries().registerItemRenderer(HumanBlockItems.CHARGING_HUB, name -> ChargingHubItemRenderer::new);
+        MOD.registries().registerItemRenderer(HumanBlockItems.SOLAR_PANEL, name -> SolarPanelItemRenderer::new);
+        MOD.registries()
+            .registerItemRenderer(HumanBlockItems.HYDROELECTRIC_GENERATOR, name -> HydroelectricGeneratorItemRenderer::new);
+        MOD.registries()
+            .registerItemRenderer(HumanBlockItems.AEROKINETIC_GENERATOR, name -> AerokineticGeneratorItemRenderer::new);
+        MOD.registries()
+            .registerItemRenderer(
+                HumanBlockItems.THERMOELECTRIC_GENERATOR,
+                name -> ThermoelectricGeneratorItemRenderer::new
+            );
         MOD.registries().registerItemRenderer(HumanGunItems.F903WE_RIFLE, name -> () -> new F903WEItemRenderer(name));
         MOD.registries()
             .registerItemRenderer(
@@ -328,8 +494,29 @@ public class HumanClient {
 
     private static void registerMenuScreens() {
         MOD.registries().registerMenuScreen(HumanMenuTypes.ARMOR_CASE, ArmorCaseScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.BATTERY, com.human.client.screen.BatteryScreen::new);
         MOD.registries().registerMenuScreen(HumanMenuTypes.INDUSTRIAL_FURNACE_MENU, IndustrialFurnaceScreen::new);
         MOD.registries().registerMenuScreen(HumanMenuTypes.MARINE_INVENTORY, MarineInventoryScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_FURNACE, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_SMOKER, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_BLAST_FURNACE, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_INDUSTRIAL_FURNACE, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_GRINDER, ElectricMachineScreen::new);
+        MOD.registries()
+            .registerMenuScreen(HumanMenuTypes.ELECTRONICS_WORKSTATION, com.human.client.screen.ElectronicsWorkstationScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.FUSE_PANEL, com.human.client.screen.FusePanelScreen::new);
+        MOD.registries()
+            .registerMenuScreen(
+                HumanMenuTypes.CRYOTUBE_CONTROLLER,
+                com.human.client.screen.CryotubeControllerScreen::new
+            );
+        MOD.registries().registerMenuScreen(HumanMenuTypes.SENTRY_TURRET, com.human.client.screen.SentryTurretScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.DESK_TERMINAL, com.human.client.screen.DeskTerminalScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.CABLE_PORTS, com.human.client.screen.CablePortScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.PIPE_END, com.human.client.screen.PipeEndScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_PRESS, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_HYDRATOR, ElectricMachineScreen::new);
+        MOD.registries().registerMenuScreen(HumanMenuTypes.ELECTRIC_FREEZER, ElectricMachineScreen::new);
     }
 
     private static void registerParasiteHeadAttachmentOffsetData() {

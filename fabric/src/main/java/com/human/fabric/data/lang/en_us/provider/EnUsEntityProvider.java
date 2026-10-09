@@ -17,6 +17,9 @@ public class EnUsEntityProvider {
         addEntity(builder, HumanEntityTypes.GRENADE_THROWN, "Grenade");
         addEntity(builder, HumanEntityTypes.MARINE_DOG, "Marine Dog");
         addEntity(builder, HumanEntityTypes.MARINE, "Marine");
+        addEntity(builder, HumanEntityTypes.COLONIST, "Colonist");
+        // The trade screen title and name of a colonist holding the job - see ElectricianProfession.
+        builder.add("entity.avp_human.colonist.electrician", "Electrician");
         addEntity(builder, HumanEntityTypes.MUSHROOM_CLOUD, "Mushroom Cloud");
         addEntity(builder, HumanEntityTypes.NUKE, "Nuke");
         addEntity(builder, HumanEntityTypes.ROCKET, "Rocket");

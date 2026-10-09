@@ -1,0 +1,108 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0,
+                "max": 3
+              },
+              "add": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "Expedition 92 - Day 3",
+              "author": "Dr. Sora Matsushita",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "pages": [
+                {
+                  "raw": "We sustained some damage to the mobile lab during an encounter with local fauna. The guards have begun affectionately calling them creepers.\n\nLuckily for us one of the guards found a supply of slimes and we began to smelt them into polymer to "
+                },
+                {
+                  "raw": "replace the missing plastic.\n\nHowever, fortune aside I had to reprimand the scientist responsible for enciting this creeper that destroyed my office."
+                }
+              ],
+              "mode": "replace_all"
+            }
+          ],
+          "name": "minecraft:written_book",
+          "weight": 10
+        }
+      ],
+      "rolls": 1,
+      "functions": []
+    },
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 15,
+                "max": 30
+              },
+              "conditions": []
+            },
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2,
+                "min": 0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:book",
+          "weight": 5
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "avp_alien:book/mobilelab",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1,
+              "add": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

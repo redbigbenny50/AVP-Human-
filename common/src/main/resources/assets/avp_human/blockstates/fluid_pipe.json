@@ -1,0 +1,158 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_core"
+      }
+    },
+    {
+      "when": {
+        "north": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm"
+      }
+    },
+    {
+      "when": {
+        "east": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm_up"
+      }
+    },
+    {
+      "when": {
+        "down": "pipe|port"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_arm_down"
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "north": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner"
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "east": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "south": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "west": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "up": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner_up"
+      }
+    },
+    {
+      "when": {
+        "run": "5",
+        "down": "pipe"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner_down"
+      }
+    },
+    {
+      "when": {
+        "run": "4",
+        "east": "pipe",
+        "north": "none",
+        "south": "none",
+        "up": "none",
+        "down": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "run": "4",
+        "south": "pipe",
+        "east": "none",
+        "west": "none",
+        "up": "none",
+        "down": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "run": "4",
+        "up": "pipe",
+        "north": "none",
+        "south": "none",
+        "east": "none",
+        "west": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_pipe_joiner_up"
+      }
+    }
+  ]
+}

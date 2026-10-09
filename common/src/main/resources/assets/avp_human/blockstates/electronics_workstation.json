@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/electronics_workstation"
+    },
+    "facing=east": {
+      "model": "avp_human:block/electronics_workstation",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "avp_human:block/electronics_workstation",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/electronics_workstation",
+      "y": 270
+    }
+  }
+}

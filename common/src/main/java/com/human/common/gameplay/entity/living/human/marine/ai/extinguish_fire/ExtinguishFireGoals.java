@@ -8,6 +8,7 @@ public class ExtinguishFireGoals {
 
     public static final Goal EXTINGUISH_SELF_GOAL = Goal.builder("ExtinguishSelfGoal")
         .addPrecondition(GOAPSensors.HAS_FIRE_RESISTANCE.key(), Expressions.Boolean.isFalse())
+        .addPrecondition(ExtinguishFireSensors.SHOULD_USE_BUCKET_ON_FIRE.key(), Expressions.Boolean.isTrue())
         .addDesiredCondition(GOAPSensors.IS_ON_FIRE.key().asDerived(), Expressions.Boolean.isFalse())
         .build();
 

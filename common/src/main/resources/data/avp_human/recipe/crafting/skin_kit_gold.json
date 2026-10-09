@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "avp_human:polymer"
+    },
+    {
+      "item": "avp_human:polymer"
+    },
+    {
+      "item": "minecraft:gold_block"
+    }
+  ],
+  "result": {
+    "id": "avp_human:skin_kit",
+    "count": 1,
+    "components": {
+      "avp_human:sentry_skin": "avp_human:gold"
+    }
+  }
+}

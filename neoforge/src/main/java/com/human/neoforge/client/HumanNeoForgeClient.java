@@ -10,5 +10,6 @@ public class HumanNeoForgeClient {
 
     public HumanNeoForgeClient() {
         HumanClient.initialize();
+        NeoForgeFluidClientInfo.install();
     }
 }

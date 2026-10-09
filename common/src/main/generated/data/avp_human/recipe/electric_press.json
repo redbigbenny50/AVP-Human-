@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:cauldron"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "N": {
+      "tag": "c:nuggets/aluminum"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "pattern": [
+    "NCN",
+    "NPN",
+    "NMN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electric_press"
+  }
+}

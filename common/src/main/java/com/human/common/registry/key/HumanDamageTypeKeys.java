@@ -15,6 +15,9 @@ public class HumanDamageTypeKeys {
 
     public static final ResourceKey<DamageType> RADIATION = create("radiation");
 
+    /** [stated] Oct 1: standing in cryofluid without a full environmental suit. */
+    public static final ResourceKey<DamageType> CRYOFLUID = create("cryofluid");
+
     private static ResourceKey<DamageType> create(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, HumanResources.location(id));
     }

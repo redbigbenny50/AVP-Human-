@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "item": "minecraft:snow_block"
+  },
+  "fluid": {
+    "fluid": "minecraft:water",
+    "amount": 500
+  }
+}

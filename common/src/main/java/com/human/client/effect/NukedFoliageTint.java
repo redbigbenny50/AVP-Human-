@@ -74,6 +74,42 @@ public final class NukedFoliageTint {
      *
      * @param originalColor what the normal handler returned; {@code -1} (white) when there was no handler
      */
+    /**
+     * ⚠ WHITE MEANS "NO HANDLER", AND IT IS NOT THE SAME AS A WHITE TINT. {@code BlockColors.getColor} returns -1 for a
+     * block nobody registered a colour handler for, which the renderer treats as white - so the texture renders at full
+     * strength. Leaves in that state carry their colour in the TEXTURE rather than in a tint.
+     */
+    private static final int NO_TINT = 0xFFFFFF;
+
+    /**
+     * How far a texture-coloured leaf is pulled toward the fallout colour.
+     * <p>
+     * ⚠⚠ NOT 100%, AND THAT IS THE WHOLE FIX. The final pixel is texture x tint, so applying the full fallout colour to
+     * a leaf whose texture is ALREADY coloured multiplies twice and crushes it to near-black. Measured against the real
+     * Biomes O' Plenty textures: fir (47,84,58) lands on (27,21,15) at full strength - the black leaves that were
+     * reported - against (36,49,34) here. Vanilla leaves never showed it because their textures are pale and rely on
+     * the tint for their colour.
+     * </p>
+     */
+    private static final float UNTINTED_LEAF_STRENGTH = 0.52F;
+
+    /**
+     * ⭐⭐ THREE KINDS OF LEAF, TOLD APART AT RUNTIME WITH NO PER-MOD LISTS.
+     * <ol>
+     * <li>ALREADY BIOME-TINTED - the handler returned exactly the biome's foliage colour, so inside this biome it is
+     * already the fallout colour and there is nothing to do. Vanilla oak and jungle, and six of Biomes O' Plenty's
+     * leaves.</li>
+     * <li>FIXED TINT - a real colour that is not the biome's. Vanilla birch and spruce. Their textures are nearly
+     * greyscale and depend on the tint, so replacing it with the fallout colour is exactly right. THIS IS WHAT THE
+     * EFFECT WAS BUILT FOR AND IT IS UNCHANGED.</li>
+     * <li>NO TINT AT ALL - fifteen of Biomes O' Plenty's twenty-two leaves. Their colour lives in the texture, so they
+     * get a partial pull instead of a full replacement.</li>
+     * </ol>
+     * <p>
+     * ⚠ THE TEST IS THE RETURNED COLOUR, NOT THE BLOCK. That is what keeps this working for any mod's trees without
+     * naming a single one - the same reason the effect hooks the colour lookup rather than re-registering handlers.
+     * </p>
+     */
     public static int applyTo(int originalColor, BlockAndTintGetter level, BlockPos pos) {
         var weight = level.getBlockTint(pos, FALLOUT_WEIGHT_RESOLVER);
 
@@ -81,7 +117,20 @@ public final class NukedFoliageTint {
             return originalColor;
         }
 
-        return blend(originalColor, BiomeColors.getAverageFoliageColor(level, pos), Math.min(weight, FULL_WEIGHT));
+        var falloutColor = BiomeColors.getAverageFoliageColor(level, pos);
+
+        // 1. Already pulling the biome's colour - it IS the fallout colour here.
+        if ((originalColor & 0xFFFFFF) == (falloutColor & 0xFFFFFF)) {
+            return originalColor;
+        }
+
+        // 3. No handler: the texture carries the colour, so pull it only part of the way.
+        var destination = (originalColor & 0xFFFFFF) == NO_TINT
+            ? blend(NO_TINT, falloutColor, Math.round(UNTINTED_LEAF_STRENGTH * FULL_WEIGHT))
+            // 2. A real fixed tint: replace it outright, as before.
+            : falloutColor;
+
+        return blend(originalColor, destination, Math.min(weight, FULL_WEIGHT));
     }
 
     private static int blend(int from, int to, int weight) {

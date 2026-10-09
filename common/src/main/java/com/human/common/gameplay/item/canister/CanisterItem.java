@@ -48,6 +48,48 @@ public class CanisterItem extends Item implements DispensibleContainerItem {
         this.content = content;
     }
 
+    /**
+     * ⭐ LEGACY. The water, lava and latex canisters are one-item-per-fluid, from before the universal canister
+     * ({@link UniversalCanisterItem}). They stay registered - so any sitting in a chest still load instead of vanishing
+     * - but the moment one is in a player's inventory it turns itself into a universal canister holding the same fluid
+     * and the same number of buckets. [stated] Sep 29: yes to universal canisters, with existing ones converted.
+     * <p>
+     * ⚠ Replaced by IDENTITY in the player's inventory lists, not by {@code slotId}: vanilla ticks the main inventory,
+     * the armour and the off-hand with their own separate indexes, so slot 0 could mean the hotbar or the off-hand.
+     * </p>
+     */
+    @Override
+    public void inventoryTick(
+        @NotNull ItemStack stack,
+        @NotNull Level level,
+        @NotNull net.minecraft.world.entity.Entity entity,
+        int slotId,
+        boolean isSelected
+    ) {
+        if (level.isClientSide || this.content == Fluids.EMPTY || !(entity instanceof Player player)) {
+            return;
+        }
+
+        var buckets = Math.max(1, stack.getOrDefault(HumanDataComponents.CANISTER_CAPACITY.get(), 1));
+        var replacement = UniversalCanisterItem.filled(
+            this.content,
+            buckets * com.human.common.gameplay.fluid.FluidContent.BUCKET
+        );
+
+        replaceByIdentity(player.getInventory().items, stack, replacement);
+        replaceByIdentity(player.getInventory().armor, stack, replacement);
+        replaceByIdentity(player.getInventory().offhand, stack, replacement);
+    }
+
+    private static void replaceByIdentity(java.util.List<ItemStack> list, ItemStack target, ItemStack replacement) {
+        for (var index = 0; index < list.size(); index++) {
+            if (list.get(index) == target) {
+                list.set(index, replacement);
+                return;
+            }
+        }
+    }
+
     @Override
     public void appendHoverText(
         @NotNull ItemStack stack,
@@ -210,6 +252,19 @@ public class CanisterItem extends Item implements DispensibleContainerItem {
         return stack;
     }
 
+    /**
+     * Takes the source into this canister, or returns {@link ItemStack#EMPTY} - and removes NOTHING - when it cannot.
+     * <h2>⚠⚠ DECIDE FIRST, THEN TAKE</h2> This used to call {@code pickupBlock} FIRST and only then work out which
+     * canister to return. Two bugs came from that order, both now closed:
+     * <ul>
+     * <li>An EMPTY canister on a fluid it had no canister for - latex, anything modded - removed the source and handed
+     * back the same empty canister. The source was simply destroyed.</li>
+     * <li>A FILLED canister topped itself up from ANY source: a latex canister clicked on water drank the water and
+     * counted it as latex.</li>
+     * </ul>
+     * Now the result is chosen from what is actually there, and the world is only touched once there is an answer. An
+     * empty return makes the caller fail the click, so nothing is lost.
+     */
     private ItemStack pickupBlock(
         Player player,
         Level level,
@@ -218,21 +273,52 @@ public class CanisterItem extends Item implements DispensibleContainerItem {
         BlockPos blockPos,
         BlockState blockState
     ) {
-        var bucketItem = bucketPickup.pickupBlock(player, level, blockPos, blockState);
+        var fluidHere = level.getFluidState(blockPos).getType();
+        ItemStack result;
 
         if (this.content != Fluids.EMPTY) {
-            return canisterStack;
+            // Topping up: only from the same fluid.
+            if (fluidHere == Fluids.EMPTY || !this.content.isSame(fluidHere)) {
+                return ItemStack.EMPTY;
+            }
+
+            result = canisterStack;
+        } else {
+            result = filledCanisterFor(fluidHere, blockState);
+
+            if (result.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
         }
 
-        if (bucketItem.is(Items.WATER_BUCKET)) {
-            return new ItemStack(HumanItems.WATER_CANISTER.get());
-        } else if (bucketItem.is(Items.LAVA_BUCKET))
-            return new ItemStack(HumanItems.LAVA_CANISTER.get());
-        else if (bucketItem.is(Items.POWDER_SNOW_BUCKET)) {
+        var picked = bucketPickup.pickupBlock(player, level, blockPos, blockState);
+
+        // Something refused to give up its contents after all - keep the canister as it was.
+        return picked.isEmpty() ? ItemStack.EMPTY : result;
+    }
+
+    /**
+     * The filled canister for what is at the clicked spot, or EMPTY when there is no canister for it. Powder snow is a
+     * block with no fluid, so it is recognised by the block.
+     */
+    private static ItemStack filledCanisterFor(Fluid fluid, BlockState blockState) {
+        if (blockState.is(net.minecraft.world.level.block.Blocks.POWDER_SNOW)) {
             return new ItemStack(HumanItems.POWDER_SNOW_CANISTER.get());
         }
 
-        return canisterStack;
+        if (fluid.isSame(Fluids.WATER)) {
+            return new ItemStack(HumanItems.WATER_CANISTER.get());
+        }
+
+        if (fluid.isSame(Fluids.LAVA)) {
+            return new ItemStack(HumanItems.LAVA_CANISTER.get());
+        }
+
+        if (fluid.isSame(com.human.common.registry.init.HumanFluids.LATEX.get())) {
+            return new ItemStack(HumanItems.LATEX_CANISTER.get());
+        }
+
+        return ItemStack.EMPTY;
     }
 
     public static ItemStack getEmptySuccessItem(ItemStack canisterStack, Player player) {

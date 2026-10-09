@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/latex_tap",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "avp_human:block/latex_tap"
+    },
+    "facing=west": {
+      "model": "avp_human:block/latex_tap",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "avp_human:block/latex_tap",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "avp_human:block/composite_grate",
+    "side": "avp_human:block/composite_grate",
+    "top": "avp_human:block/composite_grate"
+  }
+}

@@ -19,8 +19,18 @@ public class OldPainlessItemRenderer extends MuzzledGunItemRenderer {
 
     private static final double BARREL_SPIN_RADIANS_PER_TICK = 2.8D;
 
-    private static final List<String> MUZZLE_FLASH_BONE_NAME_LIST = List.of(
-        "gFlash",
+    /*
+     * ⭐ Oct 6 - ONLY THE TOP BARREL FIRES. [stated] "the old painless is supposed to only flash the top barrel because
+     * if you think about it only the top barrel fires not all at once." The six flash bones are fixed to the gun, not
+     * to the spinning barrel cluster, one at each barrel station; gFlash is the top one (its pivot sits highest, y 15.3
+     * against 11.8 for gFlash4 at the bottom). Barrels spin through that station and fire there, so gFlash is the only
+     * flash the shared muzzle-flash logic drives, and the other five are hidden on every frame below. ⚠ They must be
+     * hidden explicitly: a bone not in the flash list keeps whatever visibility it was baked with, and the animation
+     * clips only scale them - so leaving them out of the list alone would leave five flashes always on.
+     */
+    private static final List<String> MUZZLE_FLASH_BONE_NAME_LIST = List.of("gFlash");
+
+    private static final List<String> UNUSED_MUZZLE_FLASH_BONE_NAMES = List.of(
         "gFlash2",
         "gFlash3",
         "gFlash4",
@@ -41,6 +51,15 @@ public class OldPainlessItemRenderer extends MuzzledGunItemRenderer {
 
     private static Function<AzRendererPipelineContext<UUID, ItemStack>, AzRendererPipelineContext<UUID, ItemStack>> createOldPainlessPrerender() {
         return context -> {
+            // Oct 6 - only the top barrel's flash is ever drawn (see MUZZLE_FLASH_BONE_NAME_LIST).
+            for (var boneName : UNUSED_MUZZLE_FLASH_BONE_NAMES) {
+                var bone = context.bakedModel().getBoneOrNull(boneName);
+
+                if (bone != null) {
+                    bone.setHidden(true);
+                }
+            }
+
             var itemStack = context.animatable();
             // ⭐⭐ GUI, GROUND, FRAME AND HEAD RENDERS GET A STATIC GUN. [stated] "in the gui when firing the gun and
             // spinning the model also spins and fires it doesnt stay static ... it's doing it to all of the old

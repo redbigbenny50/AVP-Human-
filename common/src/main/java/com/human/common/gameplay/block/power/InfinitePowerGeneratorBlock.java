@@ -17,6 +17,17 @@ public class InfinitePowerGeneratorBlock extends PowerNodeEntityBlock<InfinitePo
         super(properties);
     }
 
+    /**
+     * [stated] Oct 3: draw the block's model. ⚠ It inherits BaseEntityBlock's render shape, which is INVISIBLE - and
+     * with no block renderer of its own, the generator was invisible in the world.
+     */
+    @Override
+    protected @NotNull net.minecraft.world.level.block.RenderShape getRenderShape(
+        @NotNull net.minecraft.world.level.block.state.BlockState state
+    ) {
+        return net.minecraft.world.level.block.RenderShape.MODEL;
+    }
+
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;

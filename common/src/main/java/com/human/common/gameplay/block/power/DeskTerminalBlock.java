@@ -106,6 +106,33 @@ public class DeskTerminalBlock extends PowerNodeEntityBlock<DeskTerminalBlockEnt
         return CODEC;
     }
 
+    /**
+     * [stated] Oct 2: right-click opens the terminal - a list of the turrets on the network. Sneak-right-click stays
+     * the power-port toggle every power block has.
+     */
+    @Override
+    protected @NotNull net.minecraft.world.InteractionResult useWithoutItem(
+        @NotNull BlockState state,
+        @NotNull net.minecraft.world.level.Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.player.Player player,
+        @NotNull net.minecraft.world.phys.BlockHitResult hitResult
+    ) {
+        if (player.isShiftKeyDown()) {
+            return super.useWithoutItem(state, level, pos, player, hitResult);
+        }
+
+        // Oct 7 - it only opens with power from its fuse panel; see DeskTerminalBlockEntity.
+        if (
+            player instanceof net.minecraft.server.level.ServerPlayer serverPlayer
+                && level.getBlockEntity(pos) instanceof DeskTerminalBlockEntity terminal
+        ) {
+            terminal.requestOpen(serverPlayer);
+        }
+
+        return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
     @Override
     public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new DeskTerminalBlockEntity(blockPos, blockState);

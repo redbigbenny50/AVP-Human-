@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "avp_human:item/canister",
+    "layer1": "avp_human:item/canister_fluid"
+  }
+}

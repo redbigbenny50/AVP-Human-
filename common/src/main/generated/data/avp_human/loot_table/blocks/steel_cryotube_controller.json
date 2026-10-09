@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name",
+                "avp_human:power_ports",
+                "avp_human:fluid_content",
+                "minecraft:container"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "avp_human:steel_cryotube_controller"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

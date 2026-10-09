@@ -2,6 +2,7 @@
   "values": [
     "avp_human:ferroaluminum_chain_fence",
     "avp_human:steel_chain_fence",
+    "avp_human:composite_chain_fence",
     "avp_human:titanium_chain_fence"
   ]
 }

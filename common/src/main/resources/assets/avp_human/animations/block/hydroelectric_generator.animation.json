@@ -1,0 +1,98 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "heg.backspin": {
+      "loop": true,
+      "animation_length": 1,
+      "bones": {
+        "gTurbine": {
+          "rotation": {
+            "0": {
+              "vector": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "0.25": {
+              "vector": [
+                0.0,
+                -90.0,
+                0.0
+              ]
+            },
+            "0.5": {
+              "vector": [
+                0.0,
+                -180.0,
+                0.0
+              ]
+            },
+            "0.75": {
+              "vector": [
+                0.0,
+                -270.0,
+                0.0
+              ]
+            },
+            "1": {
+              "vector": [
+                0.0,
+                -360.0,
+                0.0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "heg.forwardspin": {
+      "loop": true,
+      "animation_length": 1,
+      "bones": {
+        "gTurbine": {
+          "rotation": {
+            "0": {
+              "vector": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "0.25": {
+              "vector": [
+                0.0,
+                90.0,
+                0.0
+              ]
+            },
+            "0.5": {
+              "vector": [
+                0.0,
+                180.0,
+                0.0
+              ]
+            },
+            "0.75": {
+              "vector": [
+                0.0,
+                270.0,
+                0.0
+              ]
+            },
+            "1": {
+              "vector": [
+                0.0,
+                360.0,
+                0.0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "heg.hold": {
+      "loop": true
+    }
+  }
+}

@@ -105,6 +105,12 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
+    // Ad Astra + Stellaris, compile-only, for the marine space-hazard sensors (AdAstraHazards / StellarisHazards).
+    // Referenced only inside inner classes that never load unless the mod is present; nothing is bundled. The NeoForge
+    // flavour is used in every module because all three compile against mojang mappings.
+    compileOnly files("${rootProject.projectDir}/libs/adastra-1.21.1-1.16.26-neoforge.jar")
+    compileOnly files("${rootProject.projectDir}/libs/stellaris-1.21-neoforge-1.4.25.jar")
+
     implementation "maven.modrinth:gigeresque:${project.gigeresque_version}"
     runtimeOnly "mod.azure.azurelib:azurelib-neo-${minecraft_version}:${project.azurelib_version}"
 

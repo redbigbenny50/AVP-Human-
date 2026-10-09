@@ -5,15 +5,25 @@ import com.blib.api.common.registry.v1.BLibHolder;
 import com.blib.api.common.registry.v1.BLibRegistry;
 import com.human.Human;
 import com.human.common.gameplay.block.AshBlock;
+import com.human.common.gameplay.block.CryofluidLiquidBlock;
+import com.human.common.gameplay.block.HoneyLiquidBlock;
+import com.human.common.gameplay.block.LatexBlock;
+import com.human.common.gameplay.block.LatexCauldronBlock;
+import com.human.common.gameplay.block.LatexLiquidBlock;
+import com.human.common.gameplay.block.LatexTapBlock;
 import com.human.common.gameplay.block.LithiumBlock;
 import com.human.common.gameplay.block.RadiatedBlock;
 import com.human.common.gameplay.block.property.HumanBlockProperties;
+import com.human.common.registry.init.HumanFluids;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Supplier;
 
@@ -26,6 +36,68 @@ public class CoreBlocks {
     public static final BLibHolder<Block> ASH_BLOCK = create(
         "ash_block",
         () -> new AshBlock(HumanBlockProperties.ASH_BLOCK.build())
+    );
+
+    public static final BLibHolder<LiquidBlock> LATEX = create(
+        "latex",
+        // ⚠ Water's own properties, copied wholesale. A liquid block needs liquid() and noLootTable(), which
+        // BlockPropertyBuilder does not expose - copying water is both shorter and guaranteed correct.
+        () -> new LatexLiquidBlock(
+            (FlowingFluid) HumanFluids.LATEX.get(),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.SAND)
+        )
+    );
+
+    /** Liquid honey, placed. Water's properties for the same reason as latex. */
+    public static final BLibHolder<LiquidBlock> HONEY = create(
+        "honey",
+        () -> new HoneyLiquidBlock(
+            (FlowingFluid) HumanFluids.HONEY.get(),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_ORANGE)
+        )
+    );
+
+    /**
+     * [stated] Oct 1: placed cryofluid. Water's properties like the other liquids; it gives off no light, unlike lava.
+     */
+    public static final BLibHolder<LiquidBlock> CRYOFLUID = create(
+        "cryofluid",
+        () -> new CryofluidLiquidBlock(
+            (FlowingFluid) HumanFluids.CRYOFLUID.get(),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.ICE)
+        )
+    );
+
+    /**
+     * [stated] Oct 1: a hay-bale of kelp. 9 kelp make one, it cooks into a dried kelp block, composts at 100% per layer
+     * and grinds into a slimeball - an alternative slime source for cryogel. Hay bale's properties, so it is as easy to
+     * break and as soft to land on.
+     */
+    public static final BLibHolder<Block> KELP_BLOCK = create(
+        "kelp_block",
+        () -> new net.minecraft.world.level.block.RotatedPillarBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.HAY_BLOCK).mapColor(MapColor.COLOR_GREEN)
+        )
+    );
+
+    public static final BLibHolder<LatexTapBlock> LATEX_TAP = create(
+        "latex_tap",
+        () -> new LatexTapBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).noOcclusion())
+    );
+
+    public static final BLibHolder<LatexCauldronBlock> LATEX_CAULDRON = create(
+        "latex_cauldron",
+        () -> new LatexCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON))
+    );
+
+    public static final BLibHolder<Block> LATEX_BLOCK = create(
+        "latex_block",
+        () -> new LatexBlock(HumanBlockProperties.LATEX_BLOCK.build())
+    );
+
+    public static final BLibHolder<Block> RUBBER_BLOCK = create(
+        "rubber_block",
+        () -> new Block(HumanBlockProperties.RUBBER_BLOCK.build())
     );
 
     public static final BLibHolder<Block> AUTUNITE_BLOCK = create(

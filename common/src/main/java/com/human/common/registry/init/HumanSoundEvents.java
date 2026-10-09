@@ -87,7 +87,65 @@ public class HumanSoundEvents {
 
     public static final BLibHolder<SoundEvent> WEAPON_OLD_PAINLESS_SHOOT_START = create("item.weapon.old_painless.shoot_start");
 
+    /**
+     * ⚠ NAMED FOR THE SYSTEM, NOT THE WEAPON. Every smart tracker shares these - the smartgun today, a second smart
+     * weapon and a bolt-on module later. A gun that wants its own voice names different events on its targeting profile
+     * rather than earning a branch in the playback code.
+     */
+    public static final BLibHolder<SoundEvent> SMART_HUD_ACQUIRE = create("item.smart_hud.acquire");
+
+    public static final BLibHolder<SoundEvent> SMART_HUD_BOOT = create("item.smart_hud.boot");
+
+    public static final BLibHolder<SoundEvent> SMART_HUD_LOCK = create("item.smart_hud.lock");
+
+    public static final BLibHolder<SoundEvent> SMART_HUD_LOCK_LOST = create("item.smart_hud.lock_lost");
+
     public static final BLibHolder<SoundEvent> WEAPON_ZX_76_SHOTGUN_SHOOT = create("item.weapon.zx_76_shotgun.shoot");
+
+    // ---- Tier-1 machine working loops. [stated] Sep 29: his recordings, one per machine. ----
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_FURNACE = create("block.machine.electric_furnace");
+
+    // ---- Cryotube controller. [stated] Oct 2: carried over from his dropship mod's MU-TH-UR terminal. ----
+
+    public static final BLibHolder<SoundEvent> TERMINAL_MENU_OPEN = create("gui.terminal.menu_open");
+
+    public static final BLibHolder<SoundEvent> TERMINAL_MENU_CLOSE = create("gui.terminal.menu_close");
+
+    public static final BLibHolder<SoundEvent> TERMINAL_MOUSEOVER = create("gui.terminal.mouseover");
+
+    public static final BLibHolder<SoundEvent> TERMINAL_SELECT = create("gui.terminal.select");
+
+    public static final BLibHolder<SoundEvent> TERMINAL_CONFIRM = create("gui.terminal.confirm");
+
+    public static final BLibHolder<SoundEvent> TERMINAL_CANCEL = create("gui.terminal.cancel");
+
+    public static final BLibHolder<SoundEvent> CRYO_CONTROLLER_ACTIVATE = create("block.cryo.controller_activate");
+
+    public static final BLibHolder<SoundEvent> CRYO_CONTROLLER_DEACTIVATE = create("block.cryo.controller_deactivate");
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_SMOKER = create("block.machine.electric_smoker");
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_BLAST_FURNACE = create("block.machine.electric_blast_furnace");
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_INDUSTRIAL_FURNACE = create(
+        "block.machine.electric_industrial_furnace"
+    );
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_GRINDER = create("block.machine.electric_grinder");
+
+    /** ⚠ A 4-second, TWO-stroke loop: the second stroke is pitched down with a duller ping. Keep it one sound. */
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_PRESS = create("block.machine.electric_press");
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_HYDRATOR = create("block.machine.electric_hydrator");
+
+    public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_FREEZER = create("block.machine.electric_freezer");
+
+    /**
+     * Oct 5 - squad callouts: a marine that is hit keys its radio, and squadmates answer. Eight scrambled radio clips,
+     * cut from the chatter loops he supplied and distorted past the point of being words.
+     */
+    public static final BLibHolder<SoundEvent> MARINE_RADIO_CHATTER = create("entity.marine.radio_chatter");
 
     private static BLibHolder<SoundEvent> create(String path) {
         return REGISTRY.createHolder(path, () -> SoundEvent.createVariableRangeEvent(HumanResources.location(path)));

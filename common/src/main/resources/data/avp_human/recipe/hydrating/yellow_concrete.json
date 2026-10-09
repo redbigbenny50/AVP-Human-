@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:yellow_concrete_powder"
+  },
+  "result": {
+    "id": "minecraft:yellow_concrete"
+  }
+}

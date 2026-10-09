@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "minecraft:smoker"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "N": {
+      "tag": "c:nuggets/aluminum"
+    }
+  },
+  "pattern": [
+    "NNN",
+    "NFN",
+    "NMN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electric_smoker"
+  }
+}

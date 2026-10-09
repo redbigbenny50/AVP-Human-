@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/composite_tread_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/composite_tread"
+    },
+    "type=top": {
+      "model": "avp_human:block/composite_tread_slab_top"
+    }
+  }
+}

@@ -11,6 +11,8 @@ public class TameWolfGoals {
      */
     public static final Goal TAME_WOLF_GOAL = Goal.builder("TameWolfGoal")
         .addPrecondition(TameWolfSensors.HAS_UNTAMED_WOLF_NEARBY.key(), Expressions.Boolean.isTrue())
+        // Oct 5 audit - never mid-fight: it swapped the gun for a bone and walked off.
+        .addPrecondition(com.blib.api.common.goap.v1.GOAPSensors.HAS_ATTACK_TARGET.key(), Expressions.Boolean.isFalse())
         .addDesiredCondition(TameWolfSensors.HAS_UNTAMED_WOLF_NEARBY.key().asDerived(), Expressions.Boolean.isFalse())
         .build();
 
@@ -20,6 +22,7 @@ public class TameWolfGoals {
      */
     public static final Goal COLLECT_BONES_GOAL = Goal.builder("CollectBonesGoal")
         .addPrecondition(TameWolfSensors.SHOULD_COLLECT_MORE_BONES.key(), Expressions.Boolean.isTrue())
+        .addPrecondition(com.blib.api.common.goap.v1.GOAPSensors.HAS_ATTACK_TARGET.key(), Expressions.Boolean.isFalse())
         .addDesiredCondition(TameWolfSensors.HAS_BONE_IN_INVENTORY.key().asDerived(), Expressions.Boolean.isTrue())
         .build();
 

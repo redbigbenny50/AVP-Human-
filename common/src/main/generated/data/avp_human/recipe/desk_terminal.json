@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "avp_human:cpu"
+    },
+    "D": {
+      "item": "avp_human:ssd"
+    },
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "L": {
+      "item": "avp_human:led"
+    },
+    "M": {
+      "item": "avp_human:motherboard"
+    },
+    "P": {
+      "item": "avp_human:polymer"
+    },
+    "R": {
+      "item": "avp_human:ram"
+    },
+    "W": {
+      "item": "avp_human:power_supply"
+    }
+  },
+  "pattern": [
+    "PLP",
+    "FMC",
+    "RWD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:desk_terminal"
+  }
+}

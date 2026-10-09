@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_latex_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:latex_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:latex_sheet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_latex_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:latex_sheet"
+    ]
+  }
+}

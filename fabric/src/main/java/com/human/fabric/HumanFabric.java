@@ -14,7 +14,59 @@ public class HumanFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // ⚠ BEFORE Human.initialize() is not required - the bridge is consulted at interaction time, long after
+        // registration - but installing it first keeps it impossible to forget behind a later early-return.
+        com.human.fabric.power.FabricItemEnergyBridge.install();
+        // [stated] Sep 30: the FE adapter - cables see other mods' energy blocks.
+        com.human.fabric.power.FabricExternalEnergy.install();
+        // [stated] Sep 30: fluid pipes reach other mods' fluid blocks.
+        com.human.fabric.fluid.FabricPipeFluidAccess.install();
+        com.human.fabric.fluid.FabricPipeItemAccess.install();
+        com.human.fabric.fluid.FabricFluidConnections.install();
+
         Human.initialize();
+
+        // After registration: the universal canister as Fabric fluid storage, for other mods' tanks and pipes.
+        com.human.fabric.fluid.FabricCanisterFluidStorage.register();
+        // [stated] Sep 30: the battery pack and nuclear battery as Team Reborn Energy items.
+        com.human.fabric.power.FabricBatteryEnergy.register();
+        // Fluid endpoints as blocks: the placed canister and all six tanks. Each face's rule comes from the endpoint.
+        net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlockEntity(
+            com.human.fabric.fluid.FabricFluidEndpointStorage::forSide,
+            com.human.common.registry.init.HumanBlockEntityTypes.CANISTER.get()
+        );
+        net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlockEntity(
+            com.human.fabric.fluid.FabricFluidEndpointStorage::forSide,
+            com.human.common.registry.init.HumanBlockEntityTypes.FLUID_TANK.get()
+        );
+        // [stated] Oct 3: the cryotube controller takes cryofluid in through the port on its TOP. It was a fluid
+        // endpoint all along but was never registered, so pipes could not see it and would not connect.
+        net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlockEntity(
+            com.human.fabric.fluid.FabricFluidEndpointStorage::forSide,
+            com.human.common.registry.init.HumanBlockEntityTypes.CRYOTUBE_CONTROLLER.get()
+        );
+        // The machines with tanks: press and hydrator give fluid out of their bottom, the freezer takes it in on its
+        // left.
+        net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlockEntities(
+            (blockEntity, direction) -> blockEntity instanceof com.human.common.gameplay.fluid.FluidEndpoint endpoint
+                ? com.human.fabric.fluid.FabricFluidEndpointStorage.forSide(endpoint, direction)
+                : null,
+            com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_PRESS.get(),
+            com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_HYDRATOR.get(),
+            com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_FREEZER.get()
+        );
+
+        // Shift + left-click with a canister places it as a block. SUCCESS on the client cancels the mining and still
+        // sends the click to the server, where this same callback does the placing.
+        net.fabricmc.fabric.api.event.player.AttackBlockCallback.EVENT.register(
+            (player, level, hand, pos, direction) -> com.human.common.gameplay.item.canister.CanisterPlacement.tryPlace(
+                player,
+                level,
+                hand,
+                pos,
+                direction
+            ) ? net.minecraft.world.InteractionResult.SUCCESS : net.minecraft.world.InteractionResult.PASS
+        );
 
         // Core
         WorldGen.initialize();

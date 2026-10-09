@@ -14,6 +14,7 @@ import com.human.fabric.data.recipe.impl.MetalRecipeProvider;
 import com.human.fabric.data.recipe.impl.MiscellaneousRecipeProvider;
 import com.human.fabric.data.recipe.impl.PaddingRecipeProvider;
 import com.human.fabric.data.recipe.impl.PlasticRecipeProvider;
+import com.human.fabric.data.recipe.impl.PowerRecipeProvider;
 import com.human.fabric.data.recipe.impl.ToolRecipeProvider;
 import com.human.fabric.data.recipe.impl.vanilla.VanillaChestRecipeProvider;
 import com.human.fabric.data.recipe.impl.vanilla.VanillaConcreteRecipeProvider;
@@ -49,6 +50,7 @@ public class RecipeProvider extends FabricRecipeProvider {
         MiscellaneousRecipeProvider.provide(builder);
         PaddingRecipeProvider.provide(builder);
         PlasticRecipeProvider.provide(builder);
+        PowerRecipeProvider.provide(builder);
         ToolRecipeProvider.provide(builder);
 
         VanillaChestRecipeProvider.provide(builder);

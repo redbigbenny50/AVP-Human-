@@ -1,0 +1,2744 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "top",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "mid",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "bottom",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "single",
+        "y_pos": "single",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_mid",
+          "y": 0,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_mid",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_mid",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_mid",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_mid",
+          "y": 0,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_bottom",
+          "y": 0,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_bottom",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_bottom",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_bottom",
+          "y": 0,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_bottom",
+          "y": 0,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_top",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_mid",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_bottom",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_single",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "top",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "mid",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "bottom",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "single",
+        "y_pos": "single",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_mid",
+          "y": 90,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_mid",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_mid",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_mid",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_mid",
+          "y": 90,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_bottom",
+          "y": 90,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_bottom",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_bottom",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_bottom",
+          "y": 90,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_bottom",
+          "y": 90,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_top",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_mid",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_single",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "top",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "mid",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "bottom",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "single",
+        "y_pos": "single",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "min",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_mid",
+          "y": 180,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_mid",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_mid",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_mid",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_mid",
+          "y": 180,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_bottom",
+          "y": 180,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_bottom",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_bottom",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_bottom",
+          "y": 180,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_bottom",
+          "y": 180,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "mid",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "top",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_top",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "mid",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_mid",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "bottom",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_bottom",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max",
+        "x_pos": "max",
+        "y_pos": "single",
+        "x_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_single",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "z_pos": "single|max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "top",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "mid",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "bottom",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_solo_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "single",
+        "y_pos": "single",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_1_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_left_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_3_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "min",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_mid",
+          "y": 270,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_mid",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_mid",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_mid",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_mid",
+          "y": 270,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": [
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/side_middle_bottom",
+          "y": 270,
+          "weight": 12
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_0_bottom",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_1_bottom",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_2_bottom",
+          "y": 270,
+          "weight": 1
+        },
+        {
+          "model": "avp_human:block/fluid_tank/aluminum/detail_3_bottom",
+          "y": 270,
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_middle_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "full"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_0_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "mid",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_4_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "top",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_top",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "mid",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_mid",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "bottom",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_bottom",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "none"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/side_right_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "low"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_2_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min",
+        "z_pos": "max",
+        "y_pos": "single",
+        "z_window": "high"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/window_5_single",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "x_pos": "single|min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "single",
+        "z_pos": "single"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_single"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "min",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_min_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "mid",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_mid_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "max",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_max_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "min",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_min_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "mid",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_mid_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "max",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_max_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "min",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_min_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "mid",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_mid_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top",
+        "x_pos": "max",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/up_max_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|top"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner_up"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "single",
+        "z_pos": "single"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_single"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "min",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_min_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "mid",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_mid_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "max",
+        "z_pos": "min"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_max_min"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "min",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_min_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "mid",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_mid_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "max",
+        "z_pos": "mid"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_max_mid"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "min",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_min_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "mid",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_mid_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom",
+        "x_pos": "max",
+        "z_pos": "max"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/down_max_max"
+      }
+    },
+    {
+      "when": {
+        "y_pos": "single|bottom"
+      },
+      "apply": {
+        "model": "avp_human:block/fluid_tank/aluminum/inner_down"
+      }
+    }
+  ]
+}

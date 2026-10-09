@@ -53,6 +53,30 @@
     ],
     "subtitle": "subtitles.item.armor.equip_titanium"
   },
+  "item.smart_hud.acquire": {
+    "sounds": [
+      "avp_human:item/smart_hud/acquire"
+    ],
+    "subtitle": "subtitles.item.smart_hud.acquire"
+  },
+  "item.smart_hud.boot": {
+    "sounds": [
+      "avp_human:item/smart_hud/boot"
+    ],
+    "subtitle": "subtitles.item.smart_hud.boot"
+  },
+  "item.smart_hud.lock": {
+    "sounds": [
+      "avp_human:item/smart_hud/lock"
+    ],
+    "subtitle": "subtitles.item.smart_hud.lock"
+  },
+  "item.smart_hud.lock_lost": {
+    "sounds": [
+      "avp_human:item/smart_hud/lock_lost"
+    ],
+    "subtitle": "subtitles.item.smart_hud.lock_lost"
+  },
   "item.weapon.flamethrower_sevastopol.reload_finish": {
     "sounds": [
       "avp_human:item/weapon/flamethrower_sevastopol/reload_finish"
@@ -71,7 +95,6 @@
     ],
     "subtitle": "subtitles.item.weapon.flamethrower_sevastopol.shoot"
   },
-
   "item.weapon.fx.ricochet.dirt": {
     "sounds": [
       "avp_human:item/weapon/fx/ricochet/dirt/impact0",
@@ -243,5 +266,180 @@
       "avp_human:item/weapon/zx_76_shotgun/shoot1"
     ],
     "subtitle": "subtitles.item.weapon.zx_76_shotgun.shoot"
+  },
+  "block.machine.electric_furnace": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_furnace",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_furnace"
+  },
+  "block.machine.electric_smoker": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_smoker",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_smoker"
+  },
+  "block.machine.electric_blast_furnace": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_blast_furnace",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_blast_furnace"
+  },
+  "block.machine.electric_industrial_furnace": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_industrial_furnace",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_industrial_furnace"
+  },
+  "block.machine.electric_grinder": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_grinder",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_grinder"
+  },
+  "block.machine.electric_press": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_press",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_press"
+  },
+  "block.machine.electric_hydrator": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/hydrator",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_hydrator"
+  },
+  "block.machine.electric_freezer": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/electric_freezer_working",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.electric_freezer"
+  },
+  "gui.terminal.menu_open": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/menu_open",
+        "stream": false
+      }
+    ]
+  },
+  "gui.terminal.menu_close": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/menu_close",
+        "stream": false
+      }
+    ]
+  },
+  "gui.terminal.mouseover": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/mouseover",
+        "stream": false
+      }
+    ]
+  },
+  "gui.terminal.select": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/select",
+        "stream": false
+      }
+    ]
+  },
+  "gui.terminal.confirm": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/confirm",
+        "stream": false
+      }
+    ]
+  },
+  "gui.terminal.cancel": {
+    "sounds": [
+      {
+        "name": "avp_human:gui/terminal/cancel",
+        "stream": false
+      }
+    ]
+  },
+  "block.cryo.controller_activate": {
+    "sounds": [
+      {
+        "name": "avp_human:block/cryo/controller_activate",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.cryo.controller_activate"
+  },
+  "block.cryo.controller_deactivate": {
+    "sounds": [
+      {
+        "name": "avp_human:block/cryo/controller_deactivate",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.cryo.controller_deactivate"
+  },
+  "entity.marine.radio_chatter": {
+    "sounds": [
+      {
+        "name": "avp_human:entity/marine/radio_1",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_2",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_3",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_4",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_5",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_6",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_7",
+        "stream": false
+      },
+      {
+        "name": "avp_human:entity/marine/radio_8",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.entity.marine.radio_chatter"
   }
 }

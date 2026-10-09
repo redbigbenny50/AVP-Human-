@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "H": {
+      "item": "avp_human:heat_sink"
+    },
+    "L": {
+      "item": "avp_human:copper_coil"
+    },
+    "P": {
+      "item": "avp_human:thermal_plate"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "pattern": [
+    "SFS",
+    "PLP",
+    "PHP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:thermoelectric_generator"
+  }
+}

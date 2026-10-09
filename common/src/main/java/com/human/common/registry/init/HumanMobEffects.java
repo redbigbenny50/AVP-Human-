@@ -20,6 +20,16 @@ public class HumanMobEffects {
         return RADIATION.getBackingHolder();
     }
 
+    /** Frozen solid — the shared freeze rule (see FrozenSolid). */
+    private static final BLibHolder<MobEffect> FROZEN_SOLID = create(
+        "frozen_solid",
+        com.human.common.gameplay.freeze.FrozenSolidStatusEffect::new
+    );
+
+    public static Holder<MobEffect> getFrozenSolidHolder() {
+        return FROZEN_SOLID.getBackingHolder();
+    }
+
     private static BLibHolder<MobEffect> create(String path, Supplier<MobEffect> mobEffectSupplier) {
         return REGISTRY.createHolder(path, mobEffectSupplier);
     }

@@ -23,7 +23,8 @@ public class FallBackActions {
     public static final Action<Marine> FALL_BACK_FROM_ATTACK_TARGET = BLibAction.<Marine>builder("FallBackFromAttackTargetAction")
         .addMasks(ActionMasks.MOVE)
         .addPlanTimePrecondition(FallBackSensors.IS_ATTACK_TARGET_CHARGING.key(), Expressions.Boolean.isTrue())
-        .addPrecondition(FallBackSensors.IS_LOW_ON_AMMUNITION.key(), Expressions.Boolean.isTrue())
+        // Oct 7 - low on ammunition OR fighting a tough enemy (was low on ammunition only).
+        .addPrecondition(FallBackSensors.SHOULD_WITHDRAW.key(), Expressions.Boolean.isTrue())
         .addPrecondition(GOAPSensors.HAS_ATTACK_TARGET.key(), Expressions.Boolean.isTrue())
         .addEffect(FallBackSensors.IS_AT_SAFE_DISTANCE.key().asDerived(), true)
         .withPerformCallback(FallBackFromAttackTargetAction::perform)

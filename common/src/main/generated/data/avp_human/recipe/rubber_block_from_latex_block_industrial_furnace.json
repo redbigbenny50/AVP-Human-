@@ -1,0 +1,12 @@
+{
+  "type": "avp_human:industrial_furnace",
+  "category": "blocks",
+  "cookingtime": 200,
+  "experience": 0.3,
+  "ingredient": {
+    "item": "avp_human:latex_block"
+  },
+  "result": {
+    "id": "avp_human:rubber_block"
+  }
+}

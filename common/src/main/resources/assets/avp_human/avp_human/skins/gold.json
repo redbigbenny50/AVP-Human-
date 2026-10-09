@@ -1,0 +1,8 @@
+{
+  "name": "Gold",
+  "targets": [
+    "avp_human:sentry_turret"
+  ],
+  "texture": "avp_human:textures/block/sentry_turret_gold.png",
+  "colour": "#D4AA28"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "avp_human:industrial_furnace",
+  "category": "blocks",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "tag": "avp_human:resin_blocks"
+  },
+  "result": {
+    "id": "avp_human:green_plastic"
+  }
+}

@@ -9,12 +9,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
-
-import java.util.Map;
 
 /**
  * Applies the nuke's terrain transformation and particles to one sampled block.
@@ -34,16 +31,6 @@ import java.util.Map;
  * </ul>
  */
 public class NuclearExplosionEffects {
-
-    private static final Map<Block, Block> BLOCK_TRANSFORMER_MAP = Map.ofEntries(
-        Map.entry(Blocks.ANDESITE, Blocks.GRAVEL),
-        Map.entry(Blocks.DEEPSLATE, Blocks.COBBLED_DEEPSLATE),
-        Map.entry(Blocks.DIORITE, Blocks.SAND),
-        Map.entry(Blocks.GRANITE, Blocks.RED_SAND),
-        Map.entry(Blocks.GRASS_BLOCK, Blocks.COARSE_DIRT),
-        Map.entry(Blocks.LAVA, Blocks.MAGMA_BLOCK),
-        Map.entry(Blocks.STONE, Blocks.COBBLESTONE)
-    );
 
     /**
      * Everything at or beyond this normalised distance is the transformed outer band — the visible rim of the crater,
@@ -164,19 +151,9 @@ public class NuclearExplosionEffects {
             if (rand > horizontalDistance) {
                 transformedBlock = Blocks.BLACKSTONE;
             } else {
-                if (blockState.is(BlockTags.DIRT)) {
-                    transformedBlock = Blocks.BASALT;
-                } else if (blockState.is(BlockTags.SAND) || blockState.is(Blocks.SANDSTONE) || blockState.is(Blocks.RED_SANDSTONE)) {
-                    var rand2 = level.random.nextInt(100);
-
-                    if (rand2 < 66) {
-                        transformedBlock = CoreBlocks.TRINITITE_BLOCK.get();
-                    } else {
-                        transformedBlock = Blocks.MAGMA_BLOCK;
-                    }
-                } else {
-                    transformedBlock = BLOCK_TRANSFORMER_MAP.getOrDefault(blockState.getBlock(), Blocks.BASALT);
-                }
+                // [stated] Oct 2: the rim conversions live in data-pack JSON (data/<ns>/avp_human/nuke_conversions/),
+                // so other mods' blocks can be added. Anything unlisted still becomes basalt.
+                transformedBlock = NukeConversions.convert(blockState, level.random);
             }
 
             if (blockState.isSolidRender(level, pos) && level.getRandom().nextInt(10) < 2) {

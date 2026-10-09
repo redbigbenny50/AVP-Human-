@@ -4,8 +4,8 @@ import com.blib.api.client.model.v1.AzBone;
 import com.blib.api.client.render.v1.AzRendererPipelineContext;
 import com.blib.api.client.render.v1.item.pipeline.AzItemRendererPipelineContext;
 import com.blib.api.client.render.v1.layer.AzRenderLayer;
-import com.human.common.gameplay.item.old_painless.OldPainlessHeat;
-import com.human.common.registry.init.HumanDataComponents;
+import com.human.common.gameplay.item.GunItem;
+import com.human.common.gameplay.item.gun.GunHeat;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 
@@ -48,7 +48,22 @@ public class OldPainlessHeatLayer implements AzRenderLayer<UUID, ItemStack> {
             return;
         }
 
-        var heat = OldPainlessHeat.getHeat(context.animatable()) / (float) OldPainlessHeat.MAX_HEAT;
+        // ⚠ THE CEILING COMES FROM THE GUN'S OWN HEAT PROFILE, NOT A CONSTANT IN THIS FILE. It used to read
+        // OldPainlessHeat.MAX_HEAT; now that heat is shared machinery, a copy of that number here would be a second
+        // source of truth waiting to drift from GunData.
+        var itemStack = context.animatable();
+
+        if (!(itemStack.getItem() instanceof GunItem gunItem)) {
+            return;
+        }
+
+        var heatProfile = gunItem.getGunConfig().heatProfile();
+
+        if (heatProfile == null) {
+            return;
+        }
+
+        var heat = GunHeat.getHeatFraction(itemStack, heatProfile);
         if (heat <= VISIBLE_HEAT_THRESHOLD) {
             return;
         }
@@ -58,7 +73,7 @@ public class OldPainlessHeatLayer implements AzRenderLayer<UUID, ItemStack> {
             return;
         }
 
-        var overheated = context.animatable().getOrDefault(HumanDataComponents.OLD_PAINLESS_OVERHEATED.get(), false);
+        var overheated = GunHeat.isOverheated(itemStack);
         var intensity = overheated
             ? 1.0F
             : Math.min(1.0F, (heat - VISIBLE_HEAT_THRESHOLD) / (1.0F - VISIBLE_HEAT_THRESHOLD));

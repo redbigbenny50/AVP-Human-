@@ -137,6 +137,60 @@ public class ElectronicItemRecipeProvider {
             .pattern("SCS")
             .into(1, HumanItems.CPU);
 
+        // [stated] Oct 2: computer parts, made at the electronics workstation.
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('I', HumanItems.INTEGRATED_CIRCUIT)
+            .define('S', HumanCommonItemTags.SILICON)
+            .define('T', HumanItems.TRANSISTOR)
+            .define('G', CommonItemTags.NUGGETS_GOLD)
+            .define('R', CommonItemTags.DUSTS_REDSTONE)
+            .pattern("III")
+            .pattern("STS")
+            .pattern("GRG")
+            .into(1, HumanItems.RAM);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('R', HumanItems.RAM)
+            .define('T', HumanItems.TRANSISTOR)
+            .define('I', HumanItems.INTEGRATED_CIRCUIT)
+            .define('G', CommonItemTags.NUGGETS_GOLD)
+            .define('C', HumanItems.CAPACITOR)
+            .pattern("RRR")
+            .pattern("TIT")
+            .pattern("GCG")
+            .into(1, HumanItems.SSD);
+
+        // His layout: I R D / Re S T / C S L - "Re" (resistor) is X here, since a key is one character.
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('I', HumanItems.INTEGRATED_CIRCUIT)
+            .define('R', HumanItems.REGULATOR)
+            .define('D', HumanItems.DIODE)
+            .define('X', HumanItems.RESISTOR)
+            .define('S', HumanCommonItemTags.SILICON)
+            .define('T', HumanItems.TRANSISTOR)
+            .define('C', HumanItems.CAPACITOR)
+            .define('L', HumanItems.LED)
+            .pattern("IRD")
+            .pattern("XST")
+            .pattern("CSL")
+            .into(1, HumanItems.MOTHERBOARD);
+
+        // His layout: A F A / Ca M Ca / A C A - "Ca" (capacitor) is P here, C is the copper coil.
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('A', HumanCommonItemTags.INGOTS_ALUMINUM)
+            .define('F', HumanItems.FAN)
+            .define('P', HumanItems.CAPACITOR)
+            .define('M', HumanItems.NEODYMIUM_MAGNET)
+            .define('C', HumanItems.COPPER_COIL)
+            .pattern("AFA")
+            .pattern("PMP")
+            .pattern("ACA")
+            .into(1, HumanItems.POWER_SUPPLY);
+
         builder.shaped()
             .withCategory(RecipeCategory.MISC)
             .define('A', HumanCommonItemTags.INGOTS_ALUMINUM)

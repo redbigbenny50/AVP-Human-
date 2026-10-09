@@ -32,6 +32,62 @@
     "minecraft:slime",
     "minecraft:spider",
     "minecraft:vex",
-    "minecraft:warden"
+    "minecraft:warden",
+    {
+      "id": "ad_astra:star_crawler",
+      "required": false
+    },
+    {
+      "id": "ad_astra:zombified_mogler",
+      "required": false
+    },
+    {
+      "id": "ad_astra:zombified_pygro",
+      "required": false
+    },
+    {
+      "id": "ad_astra:sulfur_creeper",
+      "required": false
+    },
+    {
+      "id": "ad_astra:corrupted_lunarian",
+      "required": false
+    },
+    {
+      "id": "ad_astra:pygro",
+      "required": false
+    },
+    {
+      "id": "ad_astra:pygro_brute",
+      "required": false
+    },
+    {
+      "id": "ad_astra:martian_raptor",
+      "required": false
+    },
+    {
+      "id": "ad_astra:mogler",
+      "required": false
+    },
+    {
+      "id": "ad_astra:glacian_ram",
+      "required": false
+    },
+    {
+      "id": "slimpatch:pillager",
+      "required": false
+    },
+    {
+      "id": "slimpatch:vindicator",
+      "required": false
+    },
+    {
+      "id": "slimpatch:evoker",
+      "required": false
+    },
+    {
+      "id": "#avp_alien:aliens",
+      "required": false
+    }
   ]
 }

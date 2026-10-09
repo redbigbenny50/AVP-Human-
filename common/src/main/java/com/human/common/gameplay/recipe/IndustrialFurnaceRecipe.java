@@ -1,7 +1,11 @@
 package com.human.common.gameplay.recipe;
 
 import com.human.common.registry.init.HumanRecipes;
+import com.human.common.registry.init.block.HumanPlasticBlocks;
+import com.human.common.registry.tag.HumanItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -12,11 +16,31 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class IndustrialFurnaceRecipe extends AbstractCookingRecipe {
 
     public static final Map<Item, Item> MELTING_RECIPES = new HashMap<>();
+
+    /**
+     * Melting recipes whose INPUT is a tag rather than a single item.
+     * <p>
+     * ⚠⚠ THIS EXISTS BECAUSE A TAG CANNOT LIVE IN {@code Map<Item, Item>}, AND THAT IS WHY THE RESIN RECIPE NEVER
+     * WORKED. The datagen side already had a tag-input builder - IndustrialFurnaceRecipeProvider calls it for
+     * RESIN_BLOCKS - but the runtime had nowhere to put the result, so the builder produced an object nobody ever
+     * registered. No recipe JSON was generated and {@code fromItem} had nothing to match, so resin blocks simply sat in
+     * the furnace doing nothing.
+     * </p>
+     * <p>
+     * ⚠ A TAG IS THE ONLY SANE WAY TO EXPRESS THIS ONE. Resin comes from avp_alien, which is an OPTIONAL dependency,
+     * and every strain has its own block - normal, aberrant, irradiated, nether, plus whatever is added later.
+     * Enumerating them here would mean hard references to classes that may not exist at runtime; the tag already lists
+     * them with {@code required: false} and simply comes back empty when the mod is absent.
+     * </p>
+     */
+    public static final Map<TagKey<Item>, Supplier<Item>> MELTING_TAG_RECIPES = new LinkedHashMap<>();
 
     private static final float SPEED_MULTIPLIER = 0.5f; // 50% faster than regular furnace
 
@@ -55,10 +79,43 @@ public class IndustrialFurnaceRecipe extends AbstractCookingRecipe {
         registerMeltingRecipe(Items.RED_SAND, Items.GLASS);
         registerMeltingRecipe(Items.MUD, Items.CLAY);
         registerMeltingRecipe(Items.CLAY, Items.TERRACOTTA);
+
+        // ⭐ EVERY STRAIN'S RESIN BLOCK COOKS TO GREEN PLASTIC. The long way round is four resin balls smelted to
+        // slime, smelted to polymer, then crafted into a plastic block - and since four resin balls are also one
+        // resin block, cooking the block whole lands on the same plastic for the same resin. It buys steps, not
+        // material.
+        // ⚠ REGISTERED HERE, IN COMMON, RATHER THAN IN THE DATAGEN PROVIDER. The provider's builders only mirror this
+        // map for the recipe book; they do not create anything. A recipe that exists only in the provider - which is
+        // exactly what the resin one was - never reaches the furnace at all.
+        // ⚠ LAMBDA, NOT A RESOLVED ITEM - see registerMeltingRecipe below. This line runs during class init.
+        registerMeltingRecipe(
+            HumanItemTags.RESIN_BLOCKS,
+            () -> HumanPlasticBlocks.DYE_COLOR_TO_PLASTIC.get(DyeColor.GREEN).get().asItem()
+        );
     }
 
     private static void registerMeltingRecipe(Item input, Item output) {
         MELTING_RECIPES.put(input, output);
+    }
+
+    /**
+     * ⚠ ORDER MATTERS FOR THE RECIPE ID, which is why this is a LinkedHashMap - the generated JSON filename is derived
+     * from iteration order, and a HashMap would shuffle it between builds for no reason.
+     */
+    /**
+     * ⚠⚠ THE OUTPUT IS A SUPPLIER, NOT AN ITEM, AND THAT IS NOT TIDINESS. This map is filled from a STATIC INITIALISER,
+     * and the plastic block is a registry holder - resolving it eagerly means calling {@code BLibHolder.get()} during
+     * class init, before anything guarantees the block registry has been populated. Registry access during static init
+     * is the trap that has to be avoided here: it boots fine in one load order and throws in another. Resolved lazily,
+     * the lookup happens the first time a furnace actually runs, when the registries are certainly ready.
+     * </p>
+     * <p>
+     * ⚠ ORDER MATTERS FOR THE RECIPE ID, which is why this is a LinkedHashMap - the generated JSON filename is derived
+     * from iteration order, and a HashMap would shuffle it between builds for no reason.
+     * </p>
+     */
+    public static void registerMeltingRecipe(TagKey<Item> input, Supplier<Item> output) {
+        MELTING_TAG_RECIPES.put(input, output);
     }
 
     public IndustrialFurnaceRecipe(
@@ -77,6 +134,13 @@ public class IndustrialFurnaceRecipe extends AbstractCookingRecipe {
      */
     public static IndustrialFurnaceRecipe fromItem(Item input) {
         var output = MELTING_RECIPES.get(input);
+
+        // ⚠ ITEM FIRST, THEN TAGS. An exact item entry should always win over a tag that happens to contain it, so a
+        // future one-off override of a single resin strain does not need the tag rewritten around it.
+        if (output == null) {
+            output = fromTag(input);
+        }
+
         if (output == null) {
             return null;
         }
@@ -94,6 +158,22 @@ public class IndustrialFurnaceRecipe extends AbstractCookingRecipe {
             0.1f, // Default experience
             processTime
         );
+    }
+
+    /**
+     * ⚠ USES {@code builtInRegistryHolder}, NOT AN ItemStack. Building a throwaway stack per lookup would allocate on
+     * every furnace tick for every slot; the registry holder is the item's own tag membership and costs nothing.
+     */
+    private static Item fromTag(Item input) {
+        var holder = input.builtInRegistryHolder();
+
+        for (var entry : MELTING_TAG_RECIPES.entrySet()) {
+            if (holder.is(entry.getKey())) {
+                return entry.getValue().get();
+            }
+        }
+
+        return null;
     }
 
     private static CookingBookCategory determineRecipeCategory(Item item) {

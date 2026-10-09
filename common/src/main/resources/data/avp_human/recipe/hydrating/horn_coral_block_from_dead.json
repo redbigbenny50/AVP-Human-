@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:dead_horn_coral_block"
+  },
+  "result": {
+    "id": "minecraft:horn_coral_block"
+  }
+}

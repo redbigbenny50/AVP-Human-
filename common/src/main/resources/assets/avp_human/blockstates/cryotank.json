@@ -1,0 +1,2534 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "formed": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/cryotank"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost1"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost2"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost3"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_center_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_core"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost1"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost2"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost3"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "bottom",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bottom_corner_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "single",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bs"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "single",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bs_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "single",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bs_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "single",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/bs_frost3"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost3"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "false",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "false",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "false",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "false",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_center_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost3"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "false",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "false",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "false",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "false",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "false",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/middle_corner_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost1"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost2"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost3"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_center_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_core"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost1"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost2"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost3"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "0"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "1"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "1"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "2"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "2"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "formed": "true",
+            "layer": "single",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "3"
+          },
+          {
+            "formed": "true",
+            "layer": "top",
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true",
+            "frost": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/top_corner_frost3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "bottom",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_bottom"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "bottom",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_bottom_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "bottom",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_bottom_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "bottom",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_bottom_frost3"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_middle"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_middle_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_middle_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "middle",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_middle_frost3"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "top",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "0"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_top"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "top",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "1"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_top_frost1"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "top",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "2"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_top_frost2"
+      }
+    },
+    {
+      "when": {
+        "formed": "true",
+        "layer": "top",
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true",
+        "frost": "3"
+      },
+      "apply": {
+        "model": "avp_human:block/cryo/tube_top_frost3"
+      }
+    }
+  ]
+}

@@ -143,7 +143,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -155,7 +156,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_alien:alien_music_disc_1_fragment",
+          "name": "avp_human:loot/alien_music_disc_fragments",
           "weight": 5
         }
       ],
@@ -171,7 +172,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
+          "expand": false,
           "functions": [
             {
               "add": false,
@@ -183,7 +185,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "avp_predator:predator_music_disc_1_fragment",
+          "name": "avp_human:loot/predator_music_disc_fragments",
           "weight": 5
         }
       ],

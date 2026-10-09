@@ -6,6 +6,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -172,27 +173,61 @@ public class IndustrialFurnaceRecipeBuilder implements RecipeBuilder {
                     "_industrial_furnace"
             );
 
-            var recipe = new IndustrialFurnaceRecipe(
-                "",
-                CookingBookCategory.BLOCKS,
-                Ingredient.of(input),
-                new ItemStack(output),
-                0.1f,
-                100
-            );
-
-            var advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
-                .rewards(AdvancementRewards.Builder.recipe(recipeId))
-                .requirements(AdvancementRequirements.Strategy.OR);
-
-            advancementBuilder.addCriterion("has_item", has(input));
-
-            recipeOutput.accept(
-                recipeId,
-                recipe,
-                advancementBuilder.build(recipeId.withPrefix("recipes/building_blocks/"))
-            );
+            emit(recipeOutput, recipeId, Ingredient.of(input), output, has(input));
         }
+
+        // ⚠⚠ TAG RECIPES NEED THEIR OWN LOOP, and their absence is why the resin recipe was invisible. The loop above
+        // builds its id and its unlock criterion from BuiltInRegistries.ITEM.getKey(input) - a tag has no item key, so
+        // it can never come through that path. Without this, a tag melt works in the furnace but appears in no recipe
+        // book and no JEI listing, which looks exactly like a broken recipe.
+        for (var entry : IndustrialFurnaceRecipe.MELTING_TAG_RECIPES.entrySet()) {
+            var tag = entry.getKey();
+            // ⚠ .get() IS SAFE HERE - datagen runs long after registration, unlike the static initialiser that fills
+            // the map, which is why the map stores a supplier rather than the item itself.
+            var output = entry.getValue().get();
+
+            var recipeId = ResourceLocation.fromNamespaceAndPath(
+                Human.MOD_ID,
+                BuiltInRegistries.ITEM.getKey(output).getPath() +
+                    "_from_" +
+                    tag.location().getPath() +
+                    "_industrial_furnace"
+            );
+
+            // ⚠ UNLOCKS ON THE RESULT, NOT THE INPUT. `has(tag)` would be the obvious choice and is wrong here: the
+            // tag's members come from an OPTIONAL sibling mod, so on an install without it the criterion could never
+            // be met and the advancement would sit unearnable forever.
+            emit(recipeOutput, recipeId, Ingredient.of(tag), output, has(output));
+        }
+    }
+
+    private static void emit(
+        RecipeOutput recipeOutput,
+        ResourceLocation recipeId,
+        Ingredient ingredient,
+        Item output,
+        Criterion<InventoryChangeTrigger.TriggerInstance> criterion
+    ) {
+        var recipe = new IndustrialFurnaceRecipe(
+            "",
+            CookingBookCategory.BLOCKS,
+            ingredient,
+            new ItemStack(output),
+            0.1f,
+            100
+        );
+
+        var advancementBuilder = recipeOutput.advancement()
+            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
+            .rewards(AdvancementRewards.Builder.recipe(recipeId))
+            .requirements(AdvancementRequirements.Strategy.OR);
+
+        advancementBuilder.addCriterion("has_item", criterion);
+
+        recipeOutput.accept(
+            recipeId,
+            recipe,
+            advancementBuilder.build(recipeId.withPrefix("recipes/building_blocks/"))
+        );
     }
 }

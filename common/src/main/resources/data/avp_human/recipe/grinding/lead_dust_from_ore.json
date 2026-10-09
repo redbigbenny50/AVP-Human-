@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "c:ores/lead"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:lead_dust",
+        "count": 2
+      }
+    }
+  ],
+  "time": 200
+}

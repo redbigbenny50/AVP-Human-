@@ -1,0 +1,13 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "item": "minecraft:magma_block"
+  },
+  "result": {
+    "id": "minecraft:netherrack"
+  },
+  "fluid": {
+    "fluid": "minecraft:lava",
+    "amount": 250
+  }
+}

@@ -75,6 +75,14 @@ public final class VoxelGunEffects {
     }
 
     public static void clientTick(Minecraft minecraft) {
+        // [stated] Oct 5: crash when exiting the game. Effects still animating when the world closed went on tracing
+        // their paths with the local player as the collision entity - and once you leave, there is no player, so the
+        // trace threw. Every effect here belongs to the world being shown; with no world or no player, drop them all.
+        if (minecraft.level == null || minecraft.player == null) {
+            clearAll();
+            return;
+        }
+
         GunKillBloodEffect.tick(minecraft);
         for (Iterator<LineSegment> iterator = SEGMENTS.iterator(); iterator.hasNext();) {
             var segment = iterator.next();
@@ -106,7 +114,23 @@ public final class VoxelGunEffects {
         }
     }
 
+    /** Drops every effect (leaving a world - see clientTick). */
+    public static void clearAll() {
+        SEGMENTS.clear();
+        KILL_DROPLETS.clear();
+        KILL_JETS.clear();
+        KILL_SPLATS.clear();
+        GunKillBloodEffect.clear();
+    }
+
     public static void render(PoseStack poseStack, MultiBufferSource buffers, Vec3 cameraPosition, float partialTick) {
+        var minecraft = Minecraft.getInstance();
+
+        // Same guard as clientTick: drawing traces visibility against the world with the player.
+        if (minecraft.level == null || minecraft.player == null) {
+            return;
+        }
+
         GunKillBloodEffect.render(poseStack, buffers, cameraPosition, partialTick);
         var vertices = buffers.getBuffer(RenderType.lines());
         var matrix = poseStack.last().pose();

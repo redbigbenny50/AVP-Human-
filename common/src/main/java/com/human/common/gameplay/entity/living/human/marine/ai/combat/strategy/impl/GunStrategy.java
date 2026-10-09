@@ -117,6 +117,11 @@ public class GunStrategy implements WeaponStrategy {
             return ScoreResult.zero();
         }
 
+        // Oct 5 audit - a rocket that would land danger-close scores nothing, so the marine switches to another gun.
+        if (isRocketLauncher(itemStack) && isDangerClose(mob, target)) {
+            return ScoreResult.zero();
+        }
+
         var effectivenessScore = computeEffectivenessScore(mob, target, worldState, itemStack);
         var rangeScore = computeRangeScore(mob, target, worldState, itemStack);
         var riskScore = computeRiskScore(mob, target, worldState, itemStack);
@@ -192,14 +197,129 @@ public class GunStrategy implements WeaponStrategy {
                     return;
                 }
 
-                if (canPullTrigger(mob, blackboard)) {
+                // ⚠ Oct 5 audit - NEVER A ROCKET DANGER-CLOSE. Its blast (stronger than TNT) only spares marines: one
+                // fired at a zombie beside the leader hit the leader. Held here as well as scored out above, for the
+                // ticks before the weapon choice catches up.
+                if (isRocketLauncher(itemStack) && isDangerClose(mob, target)) {
+                    return;
+                }
+
+                // Oct 7 - only check for a shot that is actually about to be taken. /blib perf: UseBestWeaponAction
+                // cost a marine 159 us per tick (~0.55 ms per run) - the line-of-fire scan pulled every living thing in
+                // a box spanning the whole gun range, every tick, even between shots. The trigger and sight tests are
+                // cheap (sight is cached per tick by vanilla), so they go first; the scan only runs when firing.
+                if (!canPullTrigger(mob, blackboard) || !mob.getSensing().hasLineOfSight(target)) {
+                    return;
+                }
+
+                // ⚠⚠ Oct 5 audit - CHECK THE LINE OF FIRE. Bullets only skipped other marines and marine dogs, so the
+                // leader, other players, colonists, villagers and pets standing in the line were shot. A friendly in
+                // the line means hold fire and step sideways to clear it.
+                var perfLap = com.blib.api.common.perf.v1.BLibPerf.start();
+                var clear = hasClearLineOfFire(mob, target);
+                perfLap = com.blib.api.common.perf.v1.BLibPerf.lap(mob, "marine.gun.lineOfFire", perfLap);
+
+                if (!clear) {
+                    sidestep(mob);
+                    return;
+                }
+
+                // [stated] Oct 5: no shots into walls - only fire with a clear line of sight to the target (checked
+                // above).
+                {
                     gunItem.onUseTick(mob.level(), mob, itemStack, tickCountdown);
+                    com.blib.api.common.perf.v1.BLibPerf.lap(mob, "marine.gun.fire", perfLap);
+
+                    // Oct 5 squad tactics - an anchor's shot pulls the big threat back onto it (MarineSquads).
+                    if (mob instanceof com.human.common.gameplay.entity.living.human.marine.Marine marine) {
+                        com.human.common.gameplay.entity.living.human.marine.squad.MarineSquads.onShot(marine, target);
+                    }
+
                     scheduleNextShot(mob, blackboard, gunItem);
                 }
             }
         });
 
         return Action.Signal.CONTINUE;
+    }
+
+    /** Oct 5 audit - how close a rocket may land to the marine or to anything friendly, in blocks. */
+    public static final double DANGER_CLOSE_IN_BLOCKS = 6.0;
+
+    private static boolean isRocketLauncher(ItemStack itemStack) {
+        return itemStack.getItem() instanceof GunItem gunItem
+            && gunItem.getGunConfig()
+                .getDefaultFireMode()
+                .gunAttackAction() == com.human.common.gameplay.item.gun.attack.projectile.RocketProjectileGunAttackAction.INSTANCE;
+    }
+
+    /** The target is within the blast radius of the marine itself, or of anything friendly. */
+    private static boolean isDangerClose(Mob mob, LivingEntity target) {
+        if (mob.distanceToSqr(target) < DANGER_CLOSE_IN_BLOCKS * DANGER_CLOSE_IN_BLOCKS) {
+            return true;
+        }
+
+        return !mob.level()
+            .getEntitiesOfClass(
+                LivingEntity.class,
+                target.getBoundingBox().inflate(DANGER_CLOSE_IN_BLOCKS),
+                other -> other != mob && other != target && other.isAlive() && isFriendly(mob, other)
+            )
+            .isEmpty();
+    }
+
+    /** Nothing friendly between the muzzle and the target. */
+    private static boolean hasClearLineOfFire(Mob mob, LivingEntity target) {
+        var from = mob.getEyePosition();
+        var to = target.getBoundingBox().getCenter();
+        var corridor = new net.minecraft.world.phys.AABB(from, to).inflate(1.0);
+
+        for (var other : mob.level().getEntitiesOfClass(LivingEntity.class, corridor, LivingEntity::isAlive)) {
+            if (other == mob || other == target || !isFriendly(mob, other)) {
+                continue;
+            }
+
+            if (other.getBoundingBox().inflate(0.3).clip(from, to).isPresent()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Who a marine must not shoot through or blow up: any player that is not its target (its leader above all), every
+     * human (marines, colonists), villagers and iron golems, and anyone's tamed animal.
+     */
+    /**
+     * @param mob   the marine
+     * @param other the entity in question
+     * @return true when the marine must not shoot through or blow up {@code other}
+     */
+    public static boolean isFriendly(Mob mob, LivingEntity other) {
+        if (other instanceof net.minecraft.world.entity.player.Player player) {
+            return !player.isSpectator();
+        }
+
+        return other instanceof com.human.common.gameplay.entity.living.human.AbstractHuman
+            || other instanceof net.minecraft.world.entity.npc.AbstractVillager
+            || other instanceof net.minecraft.world.entity.animal.IronGolem
+            || (other instanceof net.minecraft.world.entity.OwnableEntity ownable && ownable.getOwnerUUID() != null)
+            || com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil.isMarineAlly(mob, other)
+            // Oct 5 - the alien truce: a yautja fighting the same xenos is not shot through, or grenaded.
+            || (mob instanceof com.human.common.gameplay.entity.living.human.marine.Marine marine
+                && com.human.common.gameplay.entity.living.human.marine.MarineAlienTruce.spares(marine, other));
+    }
+
+    /** A step to one side to clear a blocked shot; the side alternates each second so it never walks off for good. */
+    private static void sidestep(Mob mob) {
+        if (
+            mob.onGround()
+                && mob.getMoveControl() instanceof com.human.common.gameplay.entity.living.human.marine.MarineMoveControl moveControl
+        ) {
+            var side = ((mob.tickCount / 20 + mob.getId()) & 1) == 0 ? 1.0F : -1.0F;
+            moveControl.strafe(0.0F, side, 1.0D);
+        }
     }
 
     private double computeEffectivenessScore(Mob mob, LivingEntity target, ReadableWorldState worldState, ItemStack itemStack) {
@@ -426,7 +546,15 @@ public class GunStrategy implements WeaponStrategy {
 
         var currentAmmunition = itemStack.getOrDefault(HumanDataComponents.AMMUNITION.get(), 0);
 
-        if (currentAmmunition >= gunConfig.maximumAmmunition() * RELOAD_THRESHOLD) {
+        // ⚠ Oct 5 - OR ON THE LAST ROUND. For a small magazine 10% is under one round (a shotgun), so this could only
+        // fire at zero - the moment the gun stops being a valid weapon and is put away unreloaded. Never on a full gun,
+        // or a one-round weapon would sit in a reload after every shot.
+        var maximumAmmunition = gunConfig.maximumAmmunition();
+
+        if (
+            currentAmmunition >= maximumAmmunition
+                || (currentAmmunition >= maximumAmmunition * RELOAD_THRESHOLD && currentAmmunition > 1)
+        ) {
             return false;
         }
 
@@ -435,6 +563,11 @@ public class GunStrategy implements WeaponStrategy {
         }
 
         blackboard.set(RELOAD_FINISH_TICK, mob.tickCount + Math.max(1, gunConfig.reloadTimeInTicks()));
+
+        // Oct 5 squad tactics - "cover me": the squad shoots whatever is on this marine while it reloads.
+        if (mob instanceof com.human.common.gameplay.entity.living.human.marine.Marine marine) {
+            com.human.common.gameplay.entity.living.human.marine.squad.MarineSquads.requestCover(marine);
+        }
         // Open the next magazine with a fresh burst rather than resuming mid-string.
         blackboard.set(BURST_REMAINING, gunConfig.getDefaultFireMode().burstRounds());
 
@@ -442,6 +575,19 @@ public class GunStrategy implements WeaponStrategy {
         playReloadSound(mob, gunConfig.getDefaultFireMode().reloadStartSoundEvent());
 
         return true;
+    }
+
+    /**
+     * Loads {@code itemStack} from the mob's pack, exactly as the end of an in-use reload does: as many ammunition
+     * items as the gun can take, a partial load when that is all there is, and the reload-finish sound. Used by
+     * MarineResupply for guns that ran empty and were put away.
+     *
+     * @param mob       the mob carrying the gun and the ammunition
+     * @param gunItem   the gun's item
+     * @param itemStack the gun stack to load
+     */
+    public static void reloadFromPack(Mob mob, GunItem gunItem, ItemStack itemStack) {
+        finishReload(mob, gunItem, itemStack);
     }
 
     private static void finishReload(Mob mob, GunItem gunItem, ItemStack itemStack) {

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "Z": {
+      "tag": "c:ingots/zinc"
+    }
+  },
+  "pattern": [
+    "SZS",
+    "   ",
+    "SZS"
+  ],
+  "result": {
+    "count": 16,
+    "id": "avp_human:item_pipe"
+  }
+}

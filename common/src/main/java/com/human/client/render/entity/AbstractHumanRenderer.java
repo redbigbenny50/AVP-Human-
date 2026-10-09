@@ -2,6 +2,7 @@ package com.human.client.render.entity;
 
 import com.blib.api.client.render.v1.entity.AzEntityRenderer;
 import com.blib.api.client.render.v1.entity.AzEntityRendererConfig;
+import com.blib.api.client.render.v1.entity.pipeline.AzEntityRendererPipeline;
 import com.human.HumanResources;
 import com.human.client.render.layer.human.HumanArmorLayer;
 import com.human.client.render.layer.human.HumanBeardLayer;
@@ -41,6 +42,13 @@ public abstract class AbstractHumanRenderer<T extends AbstractHuman> extends AzE
 
     protected static <T extends AbstractHuman> AzEntityRendererConfig.Builder<T> createConfig() {
         return AzEntityRendererConfig.<T>builder(AbstractHumanRenderer::getModel, AbstractHumanRenderer::getTexture)
+            // The human model renderer adds vanilla's swimming body tilt; everything else is BLib's default.
+            .setModelRenderer(
+                (pipeline, layerRenderer) -> new HumanEntityModelRenderer<>(
+                    (AzEntityRendererPipeline<T>) pipeline,
+                    layerRenderer
+                )
+            )
             .addRenderLayer(new HumanArmorLayer<>())
             .addRenderLayer(new HumanHairLayer<>())
             .addRenderLayer(new HumanEyesLayer<>())

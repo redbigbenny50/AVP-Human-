@@ -22,6 +22,40 @@ public class HumanDataSyncKeys {
             .build(false)
     );
 
+    /**
+     * Whether a mob is held by a titanium capture cord rather than a lead - sent to clients so the cord can be drawn as
+     * a braided cable. The SERVER's truth is the mob's {@code avp_human.capture_cord} tag, which vanilla saves; this
+     * flag only mirrors it, refreshed every tick by {@code MixinEntity_CaptureCordTick}.
+     */
+    public static final BLibHolder<DataSyncKey<Boolean>> ENTITY_ON_CAPTURE_CORD = create(
+        "entity_on_capture_cord",
+        builder -> builder.networkSynchronized(StreamCodecs.BOOLEAN)
+            .build(false)
+    );
+
+    /**
+     * [stated] Oct 3: who holds a mob on a titanium capture cord - their entity id, or -1. Synced so every client can
+     * draw the cord; the server's truth is the tether itself. Not saved: a restart drops the cord rather than keep a
+     * holder id that no longer means anything.
+     */
+    public static final BLibHolder<DataSyncKey<Integer>> ENTITY_CAPTURE_CORD_HOLDER = create(
+        "entity_capture_cord_holder",
+        builder -> builder.networkSynchronized(StreamCodecs.INT)
+            .build(-1)
+    );
+
+    /**
+     * Oct 5 - the side of the pit a human is scrambling up, as a horizontal {@code Direction} 2D value, or -1 when it
+     * is not scrambling. Synced so every client can stand the body upright with its chest to that wall instead of
+     * drawing the flat swimming tilt (see HumanWallScramble and HumanEntityModelRenderer). Not saved: a scramble does
+     * not survive a reload.
+     */
+    public static final BLibHolder<DataSyncKey<Integer>> HUMAN_SCRAMBLE_DIRECTION = create(
+        "human_scramble_direction",
+        builder -> builder.networkSynchronized(StreamCodecs.INT)
+            .build(-1)
+    );
+
     public static final BLibHolder<DataSyncKey<Integer>> MARINE_SKIN_COLOR = create(
         "marine_skin_color",
         builder -> builder.networkSynchronized(StreamCodecs.INT)

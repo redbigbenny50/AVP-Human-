@@ -40,6 +40,16 @@ public class SentryTurretBlock extends Block {
 
         sentryTurret.setPos(pos.getCenter());
 
+        // A turret picked up with charge keeps it.
+        var stored = stack.get(com.human.common.registry.init.HumanDataComponents.STORED_POWER.get());
+
+        if (stored != null) {
+            sentryTurret.setEnergy(stored);
+        }
+
+        // [stated] Oct 2: a picked-up turret carries its ammo, cards, lens, network card, battery and targeting.
+        sentryTurret.unpackFromItem(stack);
+
         if (placer != null) {
             sentryTurret.setOwner(placer);
 

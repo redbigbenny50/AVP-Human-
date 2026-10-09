@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#avp_human:mk50_armor",
+    {
+      "id": "#ad_astra:freeze_resistant_armor",
+      "required": false
+    }
+  ]
+}

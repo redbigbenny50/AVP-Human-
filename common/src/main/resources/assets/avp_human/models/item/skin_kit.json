@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "avp_human:item/skin_kit",
+    "layer1": "avp_human:item/skin_kit_overlay"
+  }
+}

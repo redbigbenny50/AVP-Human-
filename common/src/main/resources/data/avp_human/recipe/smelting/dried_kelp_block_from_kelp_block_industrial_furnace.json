@@ -1,0 +1,12 @@
+{
+  "type": "avp_human:industrial_furnace",
+  "category": "blocks",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "avp_human:kelp_block"
+  },
+  "result": {
+    "id": "minecraft:dried_kelp_block"
+  }
+}

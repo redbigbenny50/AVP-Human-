@@ -48,6 +48,12 @@ public final class GunKillBloodEffect {
         }
     }
 
+    /** Drops every jet and splat (leaving a world - see VoxelGunEffects.clientTick). */
+    public static void clear() {
+        JETS.clear();
+        SPLATS.clear();
+    }
+
     public static void tick(Minecraft minecraft) {
         for (Iterator<BloodJet> iterator = JETS.iterator(); iterator.hasNext();) {
             var jet = iterator.next();

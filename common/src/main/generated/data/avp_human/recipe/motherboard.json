@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "avp_human:capacitor"
+    },
+    "D": {
+      "item": "avp_human:diode"
+    },
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "L": {
+      "item": "avp_human:led"
+    },
+    "R": {
+      "item": "avp_human:regulator"
+    },
+    "S": {
+      "tag": "c:silicon"
+    },
+    "T": {
+      "item": "avp_human:transistor"
+    },
+    "X": {
+      "item": "avp_human:resistor"
+    }
+  },
+  "pattern": [
+    "IRD",
+    "XST",
+    "CSL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:motherboard"
+  }
+}

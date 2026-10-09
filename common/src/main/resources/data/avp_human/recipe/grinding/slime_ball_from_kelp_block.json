@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:kelp_block"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "minecraft:slime_ball",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

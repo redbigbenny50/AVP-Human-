@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:freezing",
+  "fluid": {
+    "fluid": "avp_human:honey",
+    "amount": 1000
+  },
+  "result": {
+    "id": "minecraft:honey_block"
+  }
+}

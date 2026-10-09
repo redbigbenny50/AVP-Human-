@@ -4,6 +4,7 @@ import com.human.common.gameplay.item.gun.animation.dispatcher.impl.M42A3SniperR
 import com.human.common.gameplay.item.gun.animation.dispatcher.impl.OldPainlessAnimationDispatcher;
 import com.human.common.gameplay.item.gun.attack.projectile.FlamethrowProjectileGunAttackAction;
 import com.human.common.gameplay.item.gun.attack.projectile.RocketProjectileGunAttackAction;
+import com.human.common.gameplay.item.gun.targeting.GunTargetingProfile;
 import com.human.common.registry.init.HumanSoundEvents;
 import com.human.common.registry.init.item.HumanItems;
 
@@ -21,6 +22,9 @@ public class GunData {
                 // Service rifle - short controlled bursts.
                 .withBurstRounds(5)
                 .withCooldownInTicks(2)
+                // ⭐ Oct 6 - one flash per round, not one long flash: see the battle rifle below.
+                .withMuzzleFlashDurationInTicks(2)
+                .withMuzzleFlashStrobeIntervalInTicks(1)
                 .withDamage(2F * 2)
                 .withRange(64)
                 .withRecoil(2.5F)
@@ -91,6 +95,20 @@ public class GunData {
                 )
                 // M41A pulse rifle - the three-round burst it is known for.
                 .withBurstRounds(3)
+                // ⭐ FOUR FLASHES PER TRIGGER PULL - ONE PER ROUND THE SHOT ACTUALLY CONSUMES. [stated] "have it do 4
+                // flashes one for each round consumed. it will make it feel more real."
+                // <p>
+                // ⚠ THE BALLISTICS ARE STILL ONE SHOT. consumedAmmunitionPerShot is 4 and the trace, the damage and
+                // the ammunition are unchanged - this is the muzzle telling the truth about the four rounds the gun
+                // already spends, not four separate bullets. Turning it into four real traces is a damage decision,
+                // and a separate one.
+                // </p>
+                // ⚠ THE ARITHMETIC MATTERS: an 8-tick lit window strobed every tick contains EXACTLY four lit ticks
+                // wherever in the tick cycle the shot lands, and 8 fits inside the 10-tick cooldown, so the burst
+                // always finishes before the next one can start. Change one of these three numbers and the flash
+                // count changes with it.
+                .withMuzzleFlashDurationInTicks(8)
+                .withMuzzleFlashStrobeIntervalInTicks(1)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M41A_PULSE_RIFLE_SHOOT)
                 .build()
         )
@@ -131,13 +149,75 @@ public class GunData {
                 )
                 // Battle rifle - short controlled bursts.
                 .withBurstRounds(5)
+                // ⭐ Oct 6 - [stated] "rather than it being in spurts like how other guns are so flash, no flash then
+                // flash again when continually firing its just a single flash". A round every 2 ticks against the
+                // default 5-tick flash kept it lit the whole burst. Same cure as the smartgun: a 2-tick flash chopped
+                // one tick on, one tick off, so every round reads as its own flash.
+                .withMuzzleFlashDurationInTicks(2)
+                .withMuzzleFlashStrobeIntervalInTicks(1)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M4RA_BATTLE_RIFLE_SHOOT)
                 .build()
         )
         .build();
 
+    /**
+     * ⭐ TUNED AGAINST THE MAGAZINE, NOT THE CLOCK. [stated] the smartgun should overheat "the same overheat thing that
+     * old painless does", and the option chosen was to match Old Painless's DRUM FRACTION rather than its seconds.
+     * <p>
+     * The smartgun spends ONE round per trigger tick where Old Painless spends six, so its 800 drum is forty seconds of
+     * fire against the minigun's twelve and a half. Copying the minigun's seven seconds would have overheated it nearly
+     * six times per drum and fought the "meant to shred" brief. At 2 heat a shot against 1 passive cooling it accrues a
+     * net 1 per tick, so it overheats after 420 ticks - TWENTY-ONE SECONDS and 420 rounds, a little over half the drum,
+     * which is the same rhythm Old Painless has to its own magazine (840 of 1500).
+     * </p>
+     * <p>
+     * ⚠ ITS SUSTAINABLE DUTY CYCLE IS 50% (passive / per-shot). Marines fire 16-round bursts with a flat 30-tick pause
+     * - about 35% - so a marine smartgunner will NEVER overheat. That is a consequence of the burst pause, not of these
+     * numbers; the lever for changing it is BURST_PAUSE_IN_TICKS in GunStrategy.
+     * </p>
+     * <p>
+     * ⚠ NO RED-HOT BARREL. Unlike Old Painless it has no heat texture, so the warning is carried entirely by the
+     * flashing action-bar message that {@code warningThreshold} switches on - hence the threshold being set here and
+     * left at zero on the minigun, which glows instead.
+     * </p>
+     */
     public static final GunConfig M56_SMARTGUN = GunConfig.builder()
         .withDurability(4096)
+        // ⭐ The first smart tracker. Frame, dwell and the locked-shot bonuses all live on the profile so a second
+        // smart weapon - or a bolt-on module fitted to a pistol - is a config block rather than a second system.
+        .withTargetingProfile(
+            GunTargetingProfile.builder()
+                .withFrameSize(220, 180)
+                // Half a second of holding the target before the lock circle completes.
+                .withLockDwellTicks(10)
+                .withRange(48.0D)
+                .withLockedSpreadMultiplier(0.45F)
+                .withArmourPenetration(0.20F)
+                .withShowWeaponHeat(true)
+                // ⭐ THE OUTLINE IS THE MU/TH/UR GREEN, the same 0x11B852 as the HUD lines - so the marked creature
+                // and the frame around it read as one system rather than two effects that happen to be on screen
+                // together.
+                // ⚠ ONLY THE OUTLINE CAN BE THIS COLOUR. It is drawn in its own pass with its own colour and owes
+                // nothing to the creature's texture. A vertex tint MULTIPLIES, so on a near-black xenomorph green is
+                // simply unreachable - which is why the body is marked with neutral white instead and the colour is
+                // left entirely to the outline.
+                // ⚠ STRENGTH STAYS 0: the vertex tint is off. Raising it only darkens the body.
+                .withHighlight(0x11B852, 0.0F)
+                .build()
+        )
+        .withHeatProfile(
+            GunHeatProfile.builder()
+                .withDisplayName("M56 SMARTGUN")
+                .withMaxHeat(420)
+                .withHeatPerShot(2)
+                .withPassiveCoolingPerTick(1)
+                .withOverheatedCoolingPerTick(4)
+                .withLockoutTicks(100)
+                .withSmokeThreshold(0.30F)
+                // Roughly four seconds of trigger left when it starts flashing.
+                .withWarningThreshold(0.80F)
+                .build()
+        )
         .withMaximumAmmunition(800)
         .withReloadAmount(800)
         .withReloadTimeInTicks(20 * 4)
@@ -153,6 +233,11 @@ public class GunData {
                 )
                 // M56 Smartgun - long bursts; it is meant to shred.
                 .withBurstRounds(16)
+                // ⭐ TWENTY ROUNDS A SECOND CANNOT BE SHOWN AS TWENTY FLASHES - the game only ticks twenty times a
+                // second, and a flash needs an off-frame to read as a flash at all. One tick lit, one tick dark, is
+                // the fastest honest blink there is, and it reads as sustained automatic fire rather than a flame.
+                .withMuzzleFlashDurationInTicks(2)
+                .withMuzzleFlashStrobeIntervalInTicks(1)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M56_SMARTGUN_SHOOT)
                 .build()
         )
@@ -189,15 +274,39 @@ public class GunData {
                 .withRange(32)
                 .withRecoil(0.35F)
                 .withRecoilProfile(new RecoilProfile(0.42F, 0.20F, 0.06F, 0.55F, 0.24F, 0.60F, new float[] { 0.0F, 0.35F, -0.25F }))
+                // ⭐ Oct 6 - a shot every 5 ticks against the default 5-tick flash re-lit it the moment it went out, so
+                // rapid fire read as one flash. 3 ticks lit leaves 2 dark between shots.
+                .withMuzzleFlashDurationInTicks(3)
                 .withReloadStartSound(HumanSoundEvents.WEAPON_M88_MOD_4_COMBAT_PISTOL_RELOAD)
                 .withPrimaryShootSound(HumanSoundEvents.WEAPON_M88_MOD_4_COMBAT_PISTOL_SHOOT)
                 .build()
         )
         .build();
 
+    /**
+     * ⚠ THESE HEAT NUMBERS ARE UNCHANGED FROM THE HARDCODED {@code OldPainlessHeat} THEY REPLACED. 4 heat a shot
+     * against 1 passive cooling is a net 3 per tick, so continuous fire overheats at 140 ticks - seven seconds, 140
+     * shots, 840 of the drum's 1500 rounds. Its sustainable duty cycle is 25%, which is why marines (68% on a 64-round
+     * burst) reliably cook their barrels and smartgunners do not.
+     * <p>
+     * ⚠ {@code warningThreshold} IS DELIBERATELY LEFT AT ZERO. This gun's barrel glows red and smokes from 30% heat via
+     * OldPainlessHeatLayer, so it already warns the player; adding a flashing message on top would be noise.
+     * </p>
+     */
     public static final GunConfig OLD_PAINLESS = GunConfig.builder()
         .withAnimationDispatcher(OldPainlessAnimationDispatcher.INSTANCE)
         .withDurability(4096)
+        .withHeatProfile(
+            GunHeatProfile.builder()
+                .withDisplayName("OLD PAINLESS")
+                .withMaxHeat(420)
+                .withHeatPerShot(4)
+                .withPassiveCoolingPerTick(1)
+                .withOverheatedCoolingPerTick(4)
+                .withLockoutTicks(100)
+                .withSmokeThreshold(0.30F)
+                .build()
+        )
         .withMaximumAmmunition(1500)
         .withReloadAmount(1500)
         .withReloadTimeInTicks(20 * 4)

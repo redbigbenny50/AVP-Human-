@@ -61,9 +61,44 @@ public class HumanServerPacketHandlerRegistry {
                 HumanServerListener::handleMarineSentryFilterPayload
             )
         );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                com.human.common.network.packet.C2SPipeFilterPayload.TYPE,
+                com.human.common.network.packet.C2SPipeFilterPayload.CODEC,
+                HumanServerListener::handlePipeFilterPayload
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                com.human.common.network.packet.C2SSentryViewPayload.TYPE,
+                com.human.common.network.packet.C2SSentryViewPayload.CODEC,
+                HumanServerListener::handleSentryViewPayload
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
+                com.human.common.network.packet.C2SSentryControlPayload.TYPE,
+                com.human.common.network.packet.C2SSentryControlPayload.CODEC,
+                HumanServerListener::handleSentryControlPayload
+            )
+        );
     }
 
     private static void registerClientBoundPacketHandlers() {
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                com.human.common.network.packet.S2CSentryViewPayload.TYPE,
+                com.human.common.network.packet.S2CSentryViewPayload.CODEC,
+                (payload, player) -> com.human.client.camera.SentryCameraClient.handleView(payload)
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                com.human.common.network.packet.S2CSentryNetworkPayload.TYPE,
+                com.human.common.network.packet.S2CSentryNetworkPayload.CODEC,
+                (payload, player) -> com.human.client.screen.DeskTerminalScreen.handleNetwork(payload)
+            )
+        );
         REGISTRY.registerPacketHandler(
             new NetworkHandler.FromServer<>(
                 S2CMarineSentryFilterPayload.TYPE,
@@ -83,6 +118,13 @@ public class HumanServerPacketHandlerRegistry {
                 S2CGunRecoilPayload.TYPE,
                 S2CGunRecoilPayload.CODEC,
                 HumanClientListener::handleGunRecoil
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                com.human.common.network.packet.S2CFrozenSolidPayload.TYPE,
+                com.human.common.network.packet.S2CFrozenSolidPayload.CODEC,
+                (payload, player) -> com.human.client.freeze.FrozenSolidClient.onReport(payload)
             )
         );
         REGISTRY.registerPacketHandler(

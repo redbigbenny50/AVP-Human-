@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_copper_coil": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:copper_coil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/aluminum": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/aluminum"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/steel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/steel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_neodymium_magnet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:neodymium_magnet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:electric_motor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ingots/aluminum",
+      "has_copper_coil",
+      "has_neodymium_magnet",
+      "has_ingots/steel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:electric_motor"
+    ]
+  }
+}

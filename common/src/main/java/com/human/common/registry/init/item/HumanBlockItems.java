@@ -7,6 +7,7 @@ import com.human.Human;
 import com.human.common.gameplay.block_item.AmmoChestBlockItem;
 import com.human.common.gameplay.block_item.LeadChestBlockItem;
 import com.human.common.gameplay.block_item.SentryTurretBlockItem;
+import com.human.common.gameplay.item.HydroelectricGeneratorBlockItem;
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.block.CoreBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,13 +35,89 @@ public class HumanBlockItems {
 
     public static final BLibHolder<BlockItem> ASH_BLOCK = create("ash_block", CoreBlocks.ASH_BLOCK);
 
+    public static final BLibHolder<BlockItem> LATEX_BLOCK = create("latex_block", CoreBlocks.LATEX_BLOCK);
+
+    public static final BLibHolder<BlockItem> KELP_BLOCK = create("kelp_block", CoreBlocks.KELP_BLOCK);
+
+    /**
+     * ⚠ WITHOUT THIS THE TAP IS UNOBTAINABLE AND ITS RECIPE CRASHES DATAGEN. A Block with no BlockItem resolves
+     * {@code asItem()} to AIR, so {@code new ItemStack(block, 1)} becomes air with count 0 and the recipe codec rejects
+     * it: "Value must be within range [1;99]: 0; Item must not be minecraft:air".
+     */
+    public static final BLibHolder<BlockItem> LATEX_TAP = create("latex_tap", CoreBlocks.LATEX_TAP);
+
+    public static final BLibHolder<BlockItem> RUBBER_BLOCK = create("rubber_block", CoreBlocks.RUBBER_BLOCK);
+
     public static final BLibHolder<BlockItem> AUTUNITE_BLOCK = create("autunite_block", CoreBlocks.AUTUNITE_BLOCK);
 
     public static final BLibHolder<BlockItem> AUTUNITE_ORE = create("autunite_ore", CoreBlocks.AUTUNITE_ORE);
 
+    /**
+     * ⚠⚠ STACKS TO ONE, AND THAT IS A CORRECTNESS RULE NOT A FLAVOUR ONE. A store carries its charge on the item, and
+     * two stacks whose components differ only by a number are still two different stacks - but a player holding a full
+     * one and an empty one would expect them to merge, and any code path that DID merge them would silently destroy one
+     * battery's charge. One per stack removes the question. Same for the charging hub.
+     */
     public static final BLibHolder<BlockItem> BATTERY = create(
         "battery",
-        HumanBlocks.BATTERY
+        HumanBlocks.BATTERY,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final BLibHolder<BlockItem> CHARGING_HUB = create(
+        "charging_hub",
+        HumanBlocks.CHARGING_HUB,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final BLibHolder<BlockItem> MACHINE_BLOCK = create("machine_block", HumanBlocks.MACHINE_BLOCK);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_FURNACE = create("electric_furnace", HumanBlocks.ELECTRIC_FURNACE);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_SMOKER = create("electric_smoker", HumanBlocks.ELECTRIC_SMOKER);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_BLAST_FURNACE = create(
+        "electric_blast_furnace",
+        HumanBlocks.ELECTRIC_BLAST_FURNACE
+    );
+
+    public static final BLibHolder<BlockItem> ELECTRIC_INDUSTRIAL_FURNACE = create(
+        "electric_industrial_furnace",
+        HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE
+    );
+
+    public static final BLibHolder<BlockItem> ELECTRIC_GRINDER = create("electric_grinder", HumanBlocks.ELECTRIC_GRINDER);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_PRESS = create("electric_press", HumanBlocks.ELECTRIC_PRESS);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_HYDRATOR = create("electric_hydrator", HumanBlocks.ELECTRIC_HYDRATOR);
+
+    public static final BLibHolder<BlockItem> ELECTRIC_FREEZER = create("electric_freezer", HumanBlocks.ELECTRIC_FREEZER);
+
+    public static final BLibHolder<BlockItem> STEEL_FLUID_TANK = create("steel_fluid_tank", HumanBlocks.STEEL_FLUID_TANK);
+
+    public static final BLibHolder<BlockItem> FERROALUMINUM_FLUID_TANK = create(
+        "ferroaluminum_fluid_tank",
+        HumanBlocks.FERROALUMINUM_FLUID_TANK
+    );
+
+    public static final BLibHolder<BlockItem> ALUMINUM_FLUID_TANK = create("aluminum_fluid_tank", HumanBlocks.ALUMINUM_FLUID_TANK);
+
+    public static final BLibHolder<BlockItem> TITANIUM_FLUID_TANK = create("titanium_fluid_tank", HumanBlocks.TITANIUM_FLUID_TANK);
+
+    public static final BLibHolder<BlockItem> WY_FLUID_TANK = create("wy_fluid_tank", HumanBlocks.WY_FLUID_TANK);
+
+    public static final BLibHolder<BlockItem> USCM_FLUID_TANK = create("uscm_fluid_tank", HumanBlocks.USCM_FLUID_TANK);
+
+    public static final BLibHolder<BlockItem> FUSE_PANEL = create("fuse_panel", HumanBlocks.FUSE_PANEL);
+
+    public static final BLibHolder<BlockItem> FLUID_PIPE = create("fluid_pipe", HumanBlocks.FLUID_PIPE);
+
+    public static final BLibHolder<BlockItem> ITEM_PIPE = create("item_pipe", HumanBlocks.ITEM_PIPE);
+
+    public static final BLibHolder<BlockItem> ELECTRONICS_WORKSTATION = create(
+        "electronics_workstation",
+        HumanBlocks.ELECTRONICS_WORKSTATION
     );
 
     public static final BLibHolder<BlockItem> BAUXITE_ORE = create("bauxite_ore", CoreBlocks.BAUXITE_ORE);
@@ -48,6 +125,24 @@ public class HumanBlockItems {
     public static final BLibHolder<BlockItem> BLUEPRINT_BLOCK = create("blueprint_block", HumanBlocks.BLUEPRINT_BLOCK);
 
     public static final BLibHolder<BlockItem> CABLE = create("cable", HumanBlocks.CABLE);
+
+    public static final BLibHolder<BlockItem> CRYOCONDUIT = create("cryoconduit", HumanBlocks.CRYOCONDUIT);
+
+    public static final BLibHolder<BlockItem> CRYOTANK = create("cryotank", HumanBlocks.CRYOTANK);
+
+    public static final BLibHolder<BlockItem> CRYOTUBE_CONTROLLER = create("cryotube_controller", HumanBlocks.CRYOTUBE_CONTROLLER);
+
+    public static final BLibHolder<BlockItem> STEEL_CRYOTUBE_CONTROLLER = create(
+        "steel_cryotube_controller",
+        HumanBlocks.STEEL_CRYOTUBE_CONTROLLER
+    );
+
+    public static final BLibHolder<BlockItem> WY_CRYOTUBE_CONTROLLER = create("wy_cryotube_controller", HumanBlocks.WY_CRYOTUBE_CONTROLLER);
+
+    public static final BLibHolder<BlockItem> USCM_CRYOTUBE_CONTROLLER = create(
+        "uscm_cryotube_controller",
+        HumanBlocks.USCM_CRYOTUBE_CONTROLLER
+    );
 
     public static final BLibHolder<BlockItem> BRASS_BLOCK = create("brass_block", CoreBlocks.BRASS_BLOCK);
 
@@ -107,23 +202,32 @@ public class HumanBlockItems {
     // TODO: Change this to "silicon_block" with 0.2.0.
     public static final BLibHolder<BlockItem> SILICON_BLOCK = create("raw_silica_block", CoreBlocks.SILICON_BLOCK);
 
+    /**
+     * ⚠ Custom BlockItem: the hub - which is the block itself, and so the CABLE PORT - sits a full block above the
+     * surface clicked. See HydroelectricGeneratorBlockItem.
+     */
+    public static final BLibHolder<BlockItem> HYDROELECTRIC_GENERATOR = createWithSupplier(
+        "hydroelectric_generator",
+        HydroelectricGeneratorBlockItem::new
+    );
+
     public static final BLibHolder<BlockItem> SOLAR_PANEL = create(
         "solar_panel",
         HumanBlocks.SOLAR_PANEL
     );
 
-    public static final BLibHolder<BlockItem> THERMAL_GENERATOR = create(
-        "thermal_generator",
-        HumanBlocks.THERMAL_GENERATOR
+    public static final BLibHolder<BlockItem> THERMOELECTRIC_GENERATOR = create(
+        "thermoelectric_generator",
+        HumanBlocks.THERMOELECTRIC_GENERATOR
     );
 
     public static final BLibHolder<BlockItem> TRINITITE_BLOCK = create("trinitite_block", CoreBlocks.TRINITITE_BLOCK);
 
     public static final BLibHolder<BlockItem> URANIUM_BLOCK = create("uranium_block", CoreBlocks.URANIUM_BLOCK);
 
-    public static final BLibHolder<BlockItem> WIND_TURBINE = create(
-        "wind_turbine",
-        HumanBlocks.WIND_TURBINE
+    public static final BLibHolder<BlockItem> AEROKINETIC_GENERATOR = create(
+        "aerokinetic_generator",
+        HumanBlocks.AEROKINETIC_GENERATOR
     );
 
     public static final BLibHolder<BlockItem> ZINC_BLOCK = create("zinc_block", CoreBlocks.ZINC_BLOCK);

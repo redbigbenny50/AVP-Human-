@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_diode": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:diode"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/copper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/copper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/steel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/steel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:wiring_tool"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ingots/copper",
+      "has_diode",
+      "has_ingots/steel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:wiring_tool"
+    ]
+  }
+}

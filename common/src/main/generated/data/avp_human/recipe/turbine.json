@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "tag": "c:ingots/ferroaluminum"
+    },
+    "T": {
+      "tag": "c:ingots/titanium"
+    }
+  },
+  "pattern": [
+    "TFT",
+    "T T",
+    "TFT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:turbine"
+  }
+}

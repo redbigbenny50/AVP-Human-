@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:magma_block"
+  },
+  "result": {
+    "id": "minecraft:blackstone"
+  }
+}

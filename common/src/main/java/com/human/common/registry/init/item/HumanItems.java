@@ -7,18 +7,23 @@ import com.human.common.gameplay.item.ArmorCaseItem;
 import com.human.common.gameplay.item.DaggerItem;
 import com.human.common.gameplay.item.GeneReaderItem;
 import com.human.common.gameplay.item.SyringeItem;
+import com.human.common.gameplay.item.WiringToolItem;
 import com.human.common.gameplay.item.canister.CanisterItem;
 import com.human.common.gameplay.item.canister.MilkCanisterItem;
 import com.human.common.gameplay.item.canister.SolidCanisterItem;
+import com.human.common.gameplay.item.canister.UniversalCanisterItem;
 import com.human.common.gameplay.item.grenade.GrenadeItem;
 import com.human.common.registry.init.HumanDataComponents;
+import com.human.common.registry.init.HumanFluids;
 import com.human.common.registry.init.HumanTiers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
@@ -46,7 +51,18 @@ public class HumanItems {
 
     public static final BLibHolder<Item> BARREL = create("barrel");
 
-    public static final BLibHolder<Item> BATTERY_PACK = create("battery_pack");
+    /**
+     * [stated] Sep 29/30: the lithium battery pack - 100,000 FE, rechargeable. See
+     * {@link com.human.common.gameplay.item.power.BatteryItem}.
+     */
+    public static final BLibHolder<com.human.common.gameplay.item.power.BatteryItem> BATTERY_PACK = create(
+        "battery_pack",
+        () -> new com.human.common.gameplay.item.power.BatteryItem(
+            new Item.Properties(),
+            com.human.common.gameplay.item.power.BatteryItem.PACK_CAPACITY,
+            true
+        )
+    );
 
     public static final BLibHolder<Item> BLUEPRINT_F903WE_RIFLE = create("blueprint_f903we_rifle");
 
@@ -74,14 +90,42 @@ public class HumanItems {
 
     public static final BLibHolder<Item> BRASS_NUGGET = create("brass_nugget");
 
+    /**
+     * The universal canister - any fluid, from any mod, up to 8 buckets. Same id as the old empty canister, so every
+     * empty canister already in the world simply becomes this. The water, lava and latex canisters below are LEGACY and
+     * convert into this one in a player's inventory.
+     */
     public static final BLibHolder<Item> CANISTER = create(
         "canister",
-        () -> new CanisterItem(Fluids.EMPTY, new Item.Properties().stacksTo(16))
+        () -> new UniversalCanisterItem(new Item.Properties().stacksTo(16))
     );
 
     public static final BLibHolder<Item> CAPACITOR = create("capacitor");
 
     public static final BLibHolder<Item> CARBON_DUST = create("carbon_dust");
+
+    // Metal dusts. [stated] Sep 29: the grinder turns each raw ore into two, and one dust smelts to one ingot.
+    public static final BLibHolder<Item> IRON_DUST = create("iron_dust");
+
+    public static final BLibHolder<Item> GOLD_DUST = create("gold_dust");
+
+    public static final BLibHolder<Item> COPPER_DUST = create("copper_dust");
+
+    public static final BLibHolder<Item> TITANIUM_DUST = create("titanium_dust");
+
+    public static final BLibHolder<Item> ALUMINUM_DUST = create("aluminum_dust");
+
+    public static final BLibHolder<Item> FERROALUMINUM_DUST = create("ferroaluminum_dust");
+
+    public static final BLibHolder<Item> LEAD_DUST = create("lead_dust");
+
+    public static final BLibHolder<Item> ZINC_DUST = create("zinc_dust");
+
+    public static final BLibHolder<Item> BRASS_DUST = create("brass_dust");
+
+    public static final BLibHolder<Item> STEEL_DUST = create("steel_dust");
+
+    public static final BLibHolder<Item> MAGNETIC_DUST = create("magnetic_dust");
 
     public static final BLibHolder<Item> CASELESS_BULLET = create("caseless_bullet");
 
@@ -99,6 +143,15 @@ public class HumanItems {
     );
 
     public static final BLibHolder<Item> CPU = create("cpu");
+
+    // [stated] Oct 2: computer parts for the terminal and MUTHUR, made at the electronics workstation.
+    public static final BLibHolder<Item> RAM = create("ram");
+
+    public static final BLibHolder<Item> SSD = create("ssd");
+
+    public static final BLibHolder<Item> MOTHERBOARD = create("motherboard");
+
+    public static final BLibHolder<Item> POWER_SUPPLY = create("power_supply");
 
     public static final BLibHolder<Item> DIODE = create("diode");
 
@@ -161,9 +214,61 @@ public class HumanItems {
 
     public static final BLibHolder<Item> NEODYMIUM_MAGNET = create("neodymium_magnet");
 
-    public static final BLibHolder<Item> NUCLEAR_BATTERY = create("nuclear_battery");
+    /** [stated] Sep 29/30: 10x the pack, NOT rechargeable, consumed when drained. See BatteryItem. */
+    public static final BLibHolder<com.human.common.gameplay.item.power.BatteryItem> NUCLEAR_BATTERY = create(
+        "nuclear_battery",
+        () -> new com.human.common.gameplay.item.power.BatteryItem(
+            new Item.Properties(),
+            com.human.common.gameplay.item.power.BatteryItem.NUCLEAR_CAPACITY,
+            false
+        )
+    );
+
+    public static final BLibHolder<Item> LATEX_BUCKET = create(
+        "latex_bucket",
+        () -> new BucketItem(
+            HumanFluids.LATEX.get(),
+            new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)
+        )
+    );
+
+    /** [stated] Oct 1: slimeball + blue ice. The press turns it into cryofluid; it also goes into cryo gear. */
+    public static final BLibHolder<Item> CRYOGEL = create("cryogel", new Item.Properties());
+
+    public static final BLibHolder<Item> CRYOFLUID_BUCKET = create(
+        "cryofluid_bucket",
+        () -> new BucketItem(
+            HumanFluids.CRYOFLUID.get(),
+            new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)
+        )
+    );
+
+    public static final BLibHolder<Item> HONEY_BUCKET = create(
+        "honey_bucket",
+        () -> new BucketItem(
+            HumanFluids.HONEY.get(),
+            new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)
+        )
+    );
+
+    /**
+     * ⚠ MODELLED EXACTLY ON {@link #LAVA_CANISTER}, not on the latex BUCKET. A canister stacks to 1, leaves an empty
+     * {@link #CANISTER} behind when used in a recipe, and carries the capacity component - a bucket does none of that,
+     * so copying the bucket would have produced something that looks like a canister and behaves like a bucket.
+     */
+    public static final BLibHolder<Item> LATEX_CANISTER = create(
+        "latex_canister",
+        () -> new CanisterItem(
+            HumanFluids.LATEX.get(),
+            new Item.Properties().stacksTo(1).craftRemainder(CANISTER.get()).component(HumanDataComponents.CANISTER_CAPACITY.get(), 1)
+        )
+    );
+
+    public static final BLibHolder<Item> LATEX_SHEET = create("latex_sheet");
 
     public static final BLibHolder<Item> POLYMER = create("polymer");
+
+    public static final BLibHolder<Item> RUBBER_GLOBULE = create("rubber_globule");
 
     public static final BLibHolder<Item> POWDER_SNOW_CANISTER = create(
         "powder_snow_canister",
@@ -204,6 +309,164 @@ public class HumanItems {
 
     public static final BLibHolder<Item> SERVO = create("servo");
 
+    // Power-system components (Sep 24): the parts the tier-1 generators are built from.
+    public static final BLibHolder<Item> TURBINE = create("turbine");
+
+    public static final BLibHolder<Item> ELECTRIC_MOTOR = create("electric_motor");
+
+    public static final BLibHolder<Item> PHOTOVOLTAIC_ARRAY = create("photovoltaic_array");
+
+    public static final BLibHolder<Item> FAN = create("fan");
+
+    public static final BLibHolder<Item> HEAT_SINK = create("heat_sink");
+
+    public static final BLibHolder<Item> THERMAL_PLATE = create("thermal_plate");
+
+    public static final BLibHolder<Item> COPPER_COIL = create("copper_coil");
+
+    /** [stated] Sep 29 readme - inspects grids, switches machines on and off, opens and closes breakers. */
+    public static final BLibHolder<WiringToolItem> WIRING_TOOL = create(
+        "wiring_tool",
+        () -> new WiringToolItem(new Item.Properties().stacksTo(1))
+    );
+
+    // Battery upgrade cards. [stated] Sep 29: red redstone, grey armoured, green capacity, purple emergency, blue
+    // transfer, white alarm.
+    /** [stated] Sep 30: the teal card - a machine with it binds to a fuse panel and needs no wire. */
+    public static final BLibHolder<com.human.common.gameplay.item.power.HubChipItem> HUB_UPGRADE = create(
+        "hub_upgrade",
+        () -> new com.human.common.gameplay.item.power.HubChipItem(new Item.Properties().stacksTo(16))
+    );
+
+    public static final BLibHolder<Item> CAPACITY_UPGRADE = create(
+        "capacity_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.CAPACITY,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> TRANSFER_UPGRADE = create(
+        "transfer_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.TRANSFER,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> EMERGENCY_UPGRADE = create(
+        "emergency_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.EMERGENCY,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> REDSTONE_UPGRADE = create(
+        "redstone_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.REDSTONE,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> ALARM_UPGRADE = create(
+        "alarm_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.ALARM,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> ARMORED_UPGRADE = create(
+        "armored_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.BatteryUpgradeItem(
+            com.human.common.gameplay.power.upgrade.BatteryUpgrade.ARMORED,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    // [stated] Oct 2: machine cards (speed, efficiency) and the sentry's sideways cards. Rules and numbers:
+    // UpgradeCard.
+    public static final BLibHolder<Item> SPEED_UPGRADE = create(
+        "speed_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.SPEED,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> EFFICIENCY_UPGRADE = create(
+        "efficiency_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.EFFICIENCY,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> RANGE_UPGRADE = create(
+        "range_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.RANGE,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> WIDE_CONE_UPGRADE = create(
+        "wide_cone_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.WIDE_CONE,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    // [stated] Oct 2: the sentry's sensor lenses (one sensor slot) and its network card (MUTHUR link slot).
+    public static final BLibHolder<Item> MOTION_SENSOR = create("motion_sensor", () -> new Item(new Item.Properties().stacksTo(16)));
+
+    public static final BLibHolder<Item> EM_SENSOR = create("em_sensor", () -> new Item(new Item.Properties().stacksTo(16)));
+
+    public static final BLibHolder<Item> CAMERA_SENSOR = create("camera_sensor", () -> new Item(new Item.Properties().stacksTo(16)));
+
+    public static final BLibHolder<Item> NETWORK_CARD = create("network_card", () -> new Item(new Item.Properties().stacksTo(16)));
+
+    /** [stated] Oct 2: one Skin Kit item for every skin; the skin rides on it as a component. */
+    public static final BLibHolder<Item> SKIN_KIT = create(
+        "skin_kit",
+        () -> new com.human.common.gameplay.item.SkinKitItem(new Item.Properties().stacksTo(16))
+    );
+
+    public static final BLibHolder<Item> DEFENSE_UPGRADE = create(
+        "defense_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.DEFENSE,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> COOLING_UPGRADE = create(
+        "cooling_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.COOLING,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> CASELESS_AMMO_UPGRADE = create(
+        "caseless_ammo_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.CASELESS_AMMO,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
+    public static final BLibHolder<Item> ROCKET_AMMO_UPGRADE = create(
+        "rocket_ammo_upgrade",
+        () -> new com.human.common.gameplay.power.upgrade.UpgradeCardItem(
+            com.human.common.gameplay.power.upgrade.UpgradeCard.ROCKET_AMMO,
+            new Item.Properties().stacksTo(16)
+        )
+    );
+
     public static final BLibHolder<Item> SHOTGUN_SHELL = create("shotgun_shell");
 
     // TODO: Change this to "silicon" with 0.2.0.
@@ -230,6 +493,11 @@ public class HumanItems {
     );
 
     public static final BLibHolder<Item> STEEL_INGOT = create("steel_ingot");
+
+    /**
+     * [stated] Oct 3: composite - steel and plastic. 2 polymer and a steel ingot make one; 9 make a composite block.
+     */
+    public static final BLibHolder<Item> COMPOSITE_INGOT = create("composite_ingot");
 
     public static final BLibHolder<Item> STEEL_NUGGET = create("steel_nugget");
 
@@ -272,6 +540,12 @@ public class HumanItems {
     );
 
     public static final BLibHolder<Item> TITANIUM_INGOT = create("titanium_ingot");
+
+    /** [stated] Oct 1: a lead that holds any mob, to 16 blocks. */
+    public static final BLibHolder<Item> TITANIUM_CAPTURE_CORD = create(
+        "titanium_capture_cord",
+        () -> new com.human.common.gameplay.item.TitaniumCaptureCordItem(new Item.Properties())
+    );
 
     public static final BLibHolder<Item> TITANIUM_NUGGET = create("titanium_nugget");
 
@@ -316,6 +590,9 @@ public class HumanItems {
     public static final BLibHolder<Item> ZINC_INGOT = create("zinc_ingot");
 
     public static final BLibHolder<Item> ZINC_NUGGET = create("zinc_nugget");
+
+    /** [stated] Oct 3: the heat sink's recipe needs copper nuggets, and neither vanilla nor this mod had one. */
+    public static final BLibHolder<Item> COPPER_NUGGET = create("copper_nugget");
 
     public static BLibHolder<Item> create(String name) {
         return create(name, new Item.Properties());

@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "minecraft:clay"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "minecraft:clay_ball",
+        "count": 4
+      }
+    }
+  ],
+  "time": 200
+}

@@ -66,6 +66,11 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modImplementation("com.blib:blib-fabric-${minecraft_version}:${project.blib_version}")
 
+    // Team Reborn Energy - the de-facto FE/RF standard on Fabric (Tech Reborn, Modern Industrialization, Oritech).
+    // ⚠ NOT bundled: every tech mod that speaks energy already ships or requires it, and two copies on the classpath
+    // would be worse than none. 4.1.x is the 1.21.1 line - 5.x targets a later snapshot and will NOT load here.
+    modImplementation "teamreborn:energy:${project.team_reborn_energy_version}"
+
     // ⚠ BUNDLED, NOT JUST COMPILED AGAINST. `include` is what puts these inside the shipped jar; dropping it would
     // leave avp_human loading against classes only BLib happens to carry.
     implementation ("com.just:just-codec:${project.just_codec_version}"){
@@ -116,6 +121,12 @@ dependencies {
 
     // recipeViewer = 'rei' used to do this for you.
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+
+    // Ad Astra + Stellaris, compile-only, for the marine space-hazard sensors (AdAstraHazards / StellarisHazards).
+    // Referenced only inside inner classes that never load unless the mod is present; nothing is bundled. The NeoForge
+    // flavour is used in every module because all three compile against mojang mappings.
+    compileOnly files("${rootProject.projectDir}/libs/adastra-1.21.1-1.16.26-neoforge.jar")
+    compileOnly files("${rootProject.projectDir}/libs/stellaris-1.21-neoforge-1.4.25.jar")
     modCompileOnly "mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}"
 }
 

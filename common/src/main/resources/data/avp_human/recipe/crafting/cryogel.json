@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:slime_balls"
+    },
+    {
+      "item": "minecraft:blue_ice"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:cryogel"
+  }
+}

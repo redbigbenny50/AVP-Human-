@@ -1,0 +1,8 @@
+{
+  "name": "Weyland-Yutani",
+  "targets": [
+    "avp_human:sentry_turret"
+  ],
+  "texture": "avp_human:textures/block/sentry_turret_wy.png",
+  "colour": "#E8E8E0"
+}

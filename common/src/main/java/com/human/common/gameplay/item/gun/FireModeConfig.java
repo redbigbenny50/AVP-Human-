@@ -40,7 +40,28 @@ public record FireModeConfig(
      * describe how it should SOUND in their hands. A pulse rifle is a three-round-burst weapon; a smartgun is meant to
      * shred; Old Painless spins up and then empties. That is per-weapon character, so it lives on the weapon.
      */
-    int burstRounds
+    int burstRounds,
+
+    /**
+     * How many ticks the muzzle flash stays lit after a shot.
+     * <p>
+     * ⚠ THE FLASH IS A HIDDEN-STATE GATE IN THE RENDERER, NOT AN ANIMATION. Guns whose shoot clip also drives the
+     * gFlash bone have TWO drivers on one bone and the clip wins - see the note in GunData on the smartgun.
+     * </p>
+     */
+    int muzzleFlashDurationInTicks,
+
+    /**
+     * Blinks the muzzle flash on and off every N ticks while the gun is firing. Zero - the default - means a steady
+     * flash for the whole of {@link #muzzleFlashDurationInTicks}, which is right for anything that fires slower than
+     * that duration.
+     * <p>
+     * ⭐ THIS EXISTS FOR THE MACHINE GUNS. A weapon firing every tick re-lights the flash before it can expire, so a
+     * steady flash is simply ON FOREVER and reads as one long flame rather than hundreds of rounds. [stated] "can we
+     * have it continuously flash of and on when holding down the left mouse button for the smartgun."
+     * </p>
+     */
+    int muzzleFlashStrobeIntervalInTicks
 ) {
 
     public static Builder builder() {
@@ -95,6 +116,10 @@ public record FireModeConfig(
 
         private int burstRounds;
 
+        private int muzzleFlashDurationInTicks;
+
+        private int muzzleFlashStrobeIntervalInTicks;
+
         private Builder() {
             this.consumedAmmunitionPerShot = 1;
             this.cooldownInTicks = 0;
@@ -114,6 +139,9 @@ public record FireModeConfig(
             this.minimumDamageMultiplier = 0.55F;
             this.tracerFrequency = 4;
             this.burstRounds = 1;
+            // The value every gun used before this was configurable.
+            this.muzzleFlashDurationInTicks = 5;
+            this.muzzleFlashStrobeIntervalInTicks = 0;
         }
 
         public Builder withConsumedAmmunitionPerShot(int consumedAmmunitionPerShot) {
@@ -224,6 +252,16 @@ public record FireModeConfig(
             return this;
         }
 
+        public Builder withMuzzleFlashDurationInTicks(int muzzleFlashDurationInTicks) {
+            this.muzzleFlashDurationInTicks = muzzleFlashDurationInTicks;
+            return this;
+        }
+
+        public Builder withMuzzleFlashStrobeIntervalInTicks(int muzzleFlashStrobeIntervalInTicks) {
+            this.muzzleFlashStrobeIntervalInTicks = muzzleFlashStrobeIntervalInTicks;
+            return this;
+        }
+
         public Builder withTracerFrequency(int tracerFrequency) {
             this.tracerFrequency = tracerFrequency;
             return this;
@@ -253,7 +291,9 @@ public record FireModeConfig(
                 Math.clamp(damageFalloffStartFraction, 0.0F, 1.0F),
                 Math.clamp(minimumDamageMultiplier, 0.0F, 1.0F),
                 Math.max(1, tracerFrequency),
-                Math.max(1, burstRounds)
+                Math.max(1, burstRounds),
+                Math.max(1, muzzleFlashDurationInTicks),
+                Math.max(0, muzzleFlashStrobeIntervalInTicks)
             );
         }
     }

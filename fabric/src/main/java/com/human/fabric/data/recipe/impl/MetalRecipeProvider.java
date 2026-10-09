@@ -6,6 +6,7 @@ import com.blib.fabric.data.recipe.RecipeTemplates;
 import com.blib.fabric.data.recipe.builder.RecipeBuilder;
 import com.blib.fabric.data.recipe.util.RecipeUtil;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanSteelBlocks;
 import com.human.common.registry.init.block.HumanTitaniumBlocks;
@@ -108,6 +109,19 @@ public class MetalRecipeProvider {
             HumanCommonItemTags.INGOTS_STEEL,
             HumanSteelBlocks.STEEL_BLOCK.get()
         );
+
+        // [stated] Oct 3: composite - 2 polymer and a steel ingot make a composite ingot; 9 make the block (and back).
+        builder.shapeless()
+            .withCategory(RecipeCategory.MISC)
+            .requires(2, HumanItems.POLYMER)
+            .requires(1, HumanCommonItemTags.INGOTS_STEEL)
+            .into(1, HumanItems.COMPOSITE_INGOT);
+        RecipeUtil.createCompressedBlockRecipes3x3TagFriendlyWithDiscriminator(
+            builder,
+            HumanItems.COMPOSITE_INGOT.get(),
+            HumanCommonItemTags.INGOTS_COMPOSITE,
+            HumanCompositeBlocks.COMPOSITE_BLOCK.get()
+        );
         RecipeUtil.createCompressedBlockRecipes3x3TagFriendlyWithDiscriminator(
             builder,
             HumanItems.TITANIUM_INGOT.get(),
@@ -191,6 +205,10 @@ public class MetalRecipeProvider {
             .into(2, HumanSteelBlocks.STEEL_BUTTON);
         builder.shaped()
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.BUTTON_BLOCK.apply(HumanCommonItemTags.INGOTS_COMPOSITE))
+            .into(2, HumanCompositeBlocks.COMPOSITE_BUTTON);
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.BUTTON_BLOCK.apply(HumanCommonItemTags.INGOTS_TITANIUM))
             .into(2, HumanTitaniumBlocks.TITANIUM_BUTTON);
         builder.shaped()
@@ -201,6 +219,10 @@ public class MetalRecipeProvider {
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.DOOR_BLOCK_TAG_FRIENDLY.apply(HumanCommonItemTags.INGOTS_STEEL))
             .into(3, HumanSteelBlocks.STEEL_DOOR);
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.DOOR_BLOCK_TAG_FRIENDLY.apply(HumanCommonItemTags.INGOTS_COMPOSITE))
+            .into(3, HumanCompositeBlocks.COMPOSITE_DOOR);
         builder.shaped()
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.DOOR_BLOCK_TAG_FRIENDLY.apply(HumanCommonItemTags.INGOTS_TITANIUM))
@@ -216,6 +238,10 @@ public class MetalRecipeProvider {
             .into(2, HumanSteelBlocks.STEEL_TRAP_DOOR);
         builder.shaped()
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.TRAP_DOOR_BLOCK_TAG_FRIENDLY.apply(HumanCommonItemTags.INGOTS_COMPOSITE))
+            .into(2, HumanCompositeBlocks.COMPOSITE_TRAP_DOOR);
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.TRAP_DOOR_BLOCK_TAG_FRIENDLY.apply(HumanCommonItemTags.INGOTS_TITANIUM))
             .into(2, HumanTitaniumBlocks.TITANIUM_TRAP_DOOR);
 
@@ -227,6 +253,10 @@ public class MetalRecipeProvider {
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.PRESSURE_PLATE_BLOCK.apply(HumanCommonItemTags.INGOTS_STEEL))
             .into(1, HumanSteelBlocks.STEEL_PRESSURE_PLATE);
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.PRESSURE_PLATE_BLOCK.apply(HumanCommonItemTags.INGOTS_COMPOSITE))
+            .into(1, HumanCompositeBlocks.COMPOSITE_PRESSURE_PLATE);
         builder.shaped()
             .withCategory(RecipeCategory.BUILDING_BLOCKS)
             .apply(RecipeTemplates.PRESSURE_PLATE_BLOCK.apply(HumanCommonItemTags.INGOTS_TITANIUM))
@@ -247,11 +277,15 @@ public class MetalRecipeProvider {
         createStandardSlabRecipe(builder, HumanSteelBlocks.STEEL_BLOCK.get(), HumanSteelBlocks.STEEL_SLAB.get());
         createStandardStairRecipe(builder, HumanSteelBlocks.STEEL_BLOCK.get(), HumanSteelBlocks.STEEL_STAIRS.get());
 
+        createStandardSlabRecipe(builder, HumanCompositeBlocks.COMPOSITE_BLOCK.get(), HumanCompositeBlocks.COMPOSITE_SLAB.get());
+        createStandardStairRecipe(builder, HumanCompositeBlocks.COMPOSITE_BLOCK.get(), HumanCompositeBlocks.COMPOSITE_STAIRS.get());
+
         createStandardSlabRecipe(builder, HumanTitaniumBlocks.TITANIUM_BLOCK.get(), HumanTitaniumBlocks.TITANIUM_SLAB.get());
         createStandardStairRecipe(builder, HumanTitaniumBlocks.TITANIUM_BLOCK.get(), HumanTitaniumBlocks.TITANIUM_STAIRS.get());
 
         createFerroaluminumBlockVariantRecipes(builder);
         createSteelBlockVariantRecipes(builder);
+        createCompositeBlockVariantRecipes(builder);
         createTitaniumBlockVariantRecipes(builder);
 
         // Add variant slab and stair recipes
@@ -271,6 +305,12 @@ public class MetalRecipeProvider {
         nuggetToIngot(builder, HumanItems.TITANIUM_NUGGET.get(), HumanCommonItemTags.NUGGETS_TITANIUM, HumanItems.TITANIUM_INGOT.get());
         nuggetToIngot(builder, HumanItems.URANIUM_NUGGET.get(), HumanCommonItemTags.NUGGETS_URANIUM, HumanItems.URANIUM_INGOT.get());
         nuggetToIngot(builder, HumanItems.ZINC_NUGGET.get(), HumanCommonItemTags.NUGGETS_ZINC, HumanItems.ZINC_INGOT.get());
+        nuggetToIngot(
+            builder,
+            HumanItems.COPPER_NUGGET.get(),
+            HumanCommonItemTags.NUGGETS_COPPER,
+            net.minecraft.world.item.Items.COPPER_INGOT
+        );
 
         // Ingot to nugget recipes
         ingotToNugget(builder, HumanItems.ALUMINUM_INGOT.get(), HumanItems.ALUMINUM_NUGGET.get());
@@ -281,6 +321,7 @@ public class MetalRecipeProvider {
         ingotToNugget(builder, HumanItems.TITANIUM_INGOT.get(), HumanItems.TITANIUM_NUGGET.get());
         ingotToNugget(builder, HumanItems.URANIUM_INGOT.get(), HumanItems.URANIUM_NUGGET.get());
         ingotToNugget(builder, HumanItems.ZINC_INGOT.get(), HumanItems.ZINC_NUGGET.get());
+        ingotToNugget(builder, net.minecraft.world.item.Items.COPPER_INGOT, HumanItems.COPPER_NUGGET.get());
     }
 
     private static void createFerroaluminumBlockVariantRecipes(RecipeBuilder builder) {
@@ -335,6 +376,33 @@ public class MetalRecipeProvider {
 
         cutSteelBuilder.into(2, HumanSteelBlocks.CUT_STEEL_SLAB);
         cutSteelBuilder.into(1, HumanSteelBlocks.CUT_STEEL_STAIRS);
+    }
+
+    private static void createCompositeBlockVariantRecipes(RecipeBuilder builder) {
+        var compositeBaseBuilder = builder.stonecut(HumanCompositeBlocks.COMPOSITE_BLOCK.get())
+            .withCategory(RecipeCategory.BUILDING_BLOCKS);
+
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.CHISELED_COMPOSITE);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.CUT_COMPOSITE);
+        compositeBaseBuilder.into(8, HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.CUT_COMPOSITE_STAIRS);
+        compositeBaseBuilder.into(16, HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_COLUMN);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_GRATE);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_PLATING);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_SIDING);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_STANDING);
+        compositeBaseBuilder.into(4, HumanCompositeBlocks.COMPOSITE_TREAD);
+        compositeBaseBuilder.into(2, HumanCompositeBlocks.COMPOSITE_SLAB.get());
+        compositeBaseBuilder.into(1, HumanCompositeBlocks.COMPOSITE_STAIRS.get());
+
+        var cutCompositeBuilder = builder.stonecut(HumanCompositeBlocks.CUT_COMPOSITE)
+            .withCategory(RecipeCategory.BUILDING_BLOCKS);
+
+        cutCompositeBuilder.into(2, HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
+        cutCompositeBuilder.into(1, HumanCompositeBlocks.CUT_COMPOSITE_STAIRS);
     }
 
     private static void createTitaniumBlockVariantRecipes(RecipeBuilder builder) {
@@ -463,6 +531,50 @@ public class MetalRecipeProvider {
             HumanSteelBlocks.STEEL_GRATE,
             HumanSteelBlocks.STEEL_GRATE_SLAB,
             HumanSteelBlocks.STEEL_GRATE_STAIRS
+        );
+
+        // Composite variant slabs and stairs
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_SIDING,
+            HumanCompositeBlocks.COMPOSITE_SIDING_SLAB,
+            HumanCompositeBlocks.COMPOSITE_SIDING_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_STANDING,
+            HumanCompositeBlocks.COMPOSITE_STANDING_SLAB,
+            HumanCompositeBlocks.COMPOSITE_STANDING_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB,
+            HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_PLATING,
+            HumanCompositeBlocks.COMPOSITE_PLATING_SLAB,
+            HumanCompositeBlocks.COMPOSITE_PLATING_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_TREAD,
+            HumanCompositeBlocks.COMPOSITE_TREAD_SLAB,
+            HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS
+        );
+        addVariantSlabAndStairRecipes(
+            builder,
+            HumanCompositeBlocks.COMPOSITE_GRATE,
+            HumanCompositeBlocks.COMPOSITE_GRATE_SLAB,
+            HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS
         );
 
         // Titanium variant slabs and stairs

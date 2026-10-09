@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "avp_human:capacitor"
+    },
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "R": {
+      "item": "avp_human:ram"
+    },
+    "T": {
+      "item": "avp_human:transistor"
+    }
+  },
+  "pattern": [
+    "RRR",
+    "TIT",
+    "GCG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:ssd"
+  }
+}

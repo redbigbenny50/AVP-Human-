@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:dusts/iron"
+    },
+    {
+      "tag": "c:dusts/coal"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:steel_dust"
+  }
+}

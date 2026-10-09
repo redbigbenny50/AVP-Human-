@@ -45,6 +45,28 @@ public class HumanArmorItems {
 
     public static final BLibHolder<ArmorItem> MK50_BOOTS = create("mk50_boots", () -> new MK50ArmorItem(ArmorItem.Type.BOOTS));
 
+    /**
+     * [stated] Sep 30: the electrician colonist's work clothes - a hard hat and a hi-vis jacket, worn over his normal
+     * clothes. Leather's protection: they are work clothes, not armour.
+     */
+    public static final BLibHolder<ArmorItem> ELECTRICIAN_HARD_HAT = create(
+        "electrician_hard_hat",
+        () -> new ArmorItem(
+            net.minecraft.world.item.ArmorMaterials.LEATHER,
+            ArmorItem.Type.HELMET,
+            new net.minecraft.world.item.Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(5))
+        )
+    );
+
+    public static final BLibHolder<ArmorItem> ELECTRICIAN_JACKET = create(
+        "electrician_jacket",
+        () -> new ArmorItem(
+            net.minecraft.world.item.ArmorMaterials.LEATHER,
+            ArmorItem.Type.CHESTPLATE,
+            new net.minecraft.world.item.Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(5))
+        )
+    );
+
     public static final BLibHolder<ArmorItem> MK50_CHESTPLATE = create(
         "mk50_chestplate",
         () -> new MK50ArmorItem(ArmorItem.Type.CHESTPLATE)

@@ -59,6 +59,10 @@ public class PlaceWaterToBreakFallAction {
 
         }
 
+        // [stated] Oct 5: keep the marine told about the water each tick, so if this action is dropped without
+        // its finish callback the marine takes the water back itself (Marine.tick).
+        blackboard.getOrDefault(KEY_WATER_POS_OPTION, Option.none()).ifSome(marine::trackPlacedWater);
+
         return Action.Signal.CONTINUE;
     }
 
@@ -86,6 +90,7 @@ public class PlaceWaterToBreakFallAction {
             }
 
             marine.setItemInHand(HAND_TO_USE, ItemStack.EMPTY);
+            marine.clearPlacedWater();
         });
     }
 

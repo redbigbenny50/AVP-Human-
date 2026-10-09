@@ -12,6 +12,17 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.AUTUNITE_DUST);
         CreativeModeTabUtil.accept(output, HumanItems.ASH_BALL);
         CreativeModeTabUtil.accept(output, HumanItems.CARBON_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.IRON_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.GOLD_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.COPPER_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.TITANIUM_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.ALUMINUM_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.FERROALUMINUM_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.LEAD_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.ZINC_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.BRASS_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.STEEL_DUST);
+        CreativeModeTabUtil.accept(output, HumanItems.MAGNETIC_DUST);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_BAUXITE);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_BRASS);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_CRUDE_IRON);
@@ -19,6 +30,7 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.RAW_GALENA);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_MONAZITE);
         CreativeModeTabUtil.accept(output, HumanItems.SILICON);
+        CreativeModeTabUtil.accept(output, HumanItems.CRYOGEL);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_TITANIUM);
         CreativeModeTabUtil.accept(output, HumanItems.RAW_ZINC);
         CreativeModeTabUtil.accept(output, HumanItems.ALUMINUM_NUGGET);
@@ -29,6 +41,7 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.TITANIUM_NUGGET);
         CreativeModeTabUtil.accept(output, HumanItems.URANIUM_NUGGET);
         CreativeModeTabUtil.accept(output, HumanItems.ZINC_NUGGET);
+        CreativeModeTabUtil.accept(output, HumanItems.COPPER_NUGGET);
         // Refined materials
         CreativeModeTabUtil.accept(output, HumanItems.ALUMINUM_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.BRASS_INGOT);
@@ -37,6 +50,7 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.LITHIUM_DUST);
         CreativeModeTabUtil.accept(output, HumanItems.NEODYMIUM_MAGNET);
         CreativeModeTabUtil.accept(output, HumanItems.STEEL_INGOT);
+        CreativeModeTabUtil.accept(output, HumanItems.COMPOSITE_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.TITANIUM_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.URANIUM_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.ZINC_INGOT);
@@ -46,6 +60,10 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.BATTERY_PACK);
         CreativeModeTabUtil.accept(output, HumanItems.CAPACITOR);
         CreativeModeTabUtil.accept(output, HumanItems.CPU);
+        CreativeModeTabUtil.accept(output, HumanItems.RAM);
+        CreativeModeTabUtil.accept(output, HumanItems.SSD);
+        CreativeModeTabUtil.accept(output, HumanItems.MOTHERBOARD);
+        CreativeModeTabUtil.accept(output, HumanItems.POWER_SUPPLY);
         CreativeModeTabUtil.accept(output, HumanItems.DIODE);
         CreativeModeTabUtil.accept(output, HumanItems.INTEGRATED_CIRCUIT);
         CreativeModeTabUtil.accept(output, HumanItems.LED);

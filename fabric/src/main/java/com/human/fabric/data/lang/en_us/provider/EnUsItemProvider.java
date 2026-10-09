@@ -18,6 +18,27 @@ public class EnUsItemProvider {
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         // Combat Items
         addItem(builder, HumanItems.GRENADE, "Grenade");
+        addItem(builder, HumanItems.WIRING_TOOL, "Wiring Tool");
+        addItem(builder, HumanItems.CAPACITY_UPGRADE, "Capacity Upgrade");
+        addItem(builder, HumanItems.SPEED_UPGRADE, "Speed Upgrade");
+        addItem(builder, HumanItems.EFFICIENCY_UPGRADE, "Efficiency Upgrade");
+        addItem(builder, HumanItems.RANGE_UPGRADE, "Range Upgrade");
+        addItem(builder, HumanItems.WIDE_CONE_UPGRADE, "Wide Cone Upgrade");
+        addItem(builder, HumanItems.COOLING_UPGRADE, "Cooling Upgrade");
+        addItem(builder, HumanItems.DEFENSE_UPGRADE, "Defense Upgrade");
+        addItem(builder, HumanItems.SKIN_KIT, "Skin Kit");
+        addItem(builder, HumanItems.MOTION_SENSOR, "Motion Sensor Lens");
+        addItem(builder, HumanItems.EM_SENSOR, "EM Sensor Lens");
+        addItem(builder, HumanItems.CAMERA_SENSOR, "Camera Lens");
+        addItem(builder, HumanItems.NETWORK_CARD, "Network Card");
+        addItem(builder, HumanItems.CASELESS_AMMO_UPGRADE, "Caseless Ammo Upgrade");
+        addItem(builder, HumanItems.ROCKET_AMMO_UPGRADE, "Rocket Ammo Upgrade");
+        addItem(builder, HumanItems.HUB_UPGRADE, "Hub Chip");
+        addItem(builder, HumanItems.TRANSFER_UPGRADE, "Transfer Upgrade");
+        addItem(builder, HumanItems.EMERGENCY_UPGRADE, "Emergency Reserve Upgrade");
+        addItem(builder, HumanItems.REDSTONE_UPGRADE, "Redstone Control Upgrade");
+        addItem(builder, HumanItems.ALARM_UPGRADE, "Alarm Upgrade");
+        addItem(builder, HumanItems.ARMORED_UPGRADE, "Armored Casing Upgrade");
         addItem(builder, HumanItems.GRENADE_INCENDIARY, "Incendiary Grenade");
         addItem(builder, HumanItems.GRENADE_IRRADIATED, "Irradiated Grenade");
         addItem(builder, HumanItems.CASELESS_BULLET, "Caseless Bullet");
@@ -81,6 +102,13 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.NUCLEAR_BATTERY, "Nuclear Battery");
         addItem(builder, HumanItems.REDSTONE_CRYSTAL, "Redstone Crystal");
         addItem(builder, HumanItems.SERVO, "Servo");
+        addItem(builder, HumanItems.TURBINE, "Turbine");
+        addItem(builder, HumanItems.ELECTRIC_MOTOR, "Electric Motor");
+        addItem(builder, HumanItems.PHOTOVOLTAIC_ARRAY, "Photovoltaic Array");
+        addItem(builder, HumanItems.FAN, "Fan");
+        addItem(builder, HumanItems.HEAT_SINK, "Heat Sink");
+        addItem(builder, HumanItems.THERMAL_PLATE, "Thermal Plate");
+        addItem(builder, HumanItems.COPPER_COIL, "Copper Coil");
         addItem(builder, HumanItems.SPEAKER, "Speaker");
         addItem(builder, HumanItems.ALUMINUM_INGOT, "Aluminum Ingot");
         addItem(builder, HumanItems.AUTUNITE_DUST, "Autunite Dust");
@@ -101,8 +129,23 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.CAPACITOR, "Capacitor");
         addItem(builder, HumanItems.ASH_BALL, "Ash Ball");
         addItem(builder, HumanItems.CARBON_DUST, "Carbon Dust");
+        addItem(builder, HumanItems.IRON_DUST, "Iron Dust");
+        addItem(builder, HumanItems.GOLD_DUST, "Gold Dust");
+        addItem(builder, HumanItems.COPPER_DUST, "Copper Dust");
+        addItem(builder, HumanItems.TITANIUM_DUST, "Titanium Dust");
+        addItem(builder, HumanItems.ALUMINUM_DUST, "Aluminum Dust");
+        addItem(builder, HumanItems.FERROALUMINUM_DUST, "Ferroaluminum Dust");
+        addItem(builder, HumanItems.LEAD_DUST, "Lead Dust");
+        addItem(builder, HumanItems.ZINC_DUST, "Zinc Dust");
+        addItem(builder, HumanItems.BRASS_DUST, "Brass Dust");
+        addItem(builder, HumanItems.STEEL_DUST, "Steel Dust");
+        addItem(builder, HumanItems.MAGNETIC_DUST, "Magnetic Dust");
         addItem(builder, HumanItems.CORNBREAD, "Cornbread");
         addItem(builder, HumanItems.CPU, "CPU");
+        addItem(builder, HumanItems.RAM, "RAM");
+        addItem(builder, HumanItems.SSD, "SSD");
+        addItem(builder, HumanItems.MOTHERBOARD, "Motherboard");
+        addItem(builder, HumanItems.POWER_SUPPLY, "Power Supply");
         addItem(builder, HumanItems.DIODE, "Diode");
         addItem(builder, HumanItems.DOG_TAG, "Dog Tag");
         addItem(builder, HumanItems.FERROALUMINUM_INGOT, "Ferroaluminum Ingot");
@@ -114,7 +157,14 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.LITHIUM_DUST, "Lithium Dust");
         addItem(builder, HumanItems.MINIGUN_BARREL, "Minigun Barrel");
         addItem(builder, HumanItems.NEODYMIUM_MAGNET, "Neodymium Magnet");
+        addItem(builder, HumanItems.LATEX_BUCKET, "Latex Bucket");
+        addItem(builder, HumanItems.HONEY_BUCKET, "Honey Bucket");
+        addItem(builder, HumanItems.CRYOFLUID_BUCKET, "Cryofluid Bucket");
+        addItem(builder, HumanItems.CRYOGEL, "Cryogel");
+        addItem(builder, HumanItems.TITANIUM_CAPTURE_CORD, "Titanium Capture Cord");
+        addItem(builder, HumanItems.LATEX_SHEET, "Latex Sheet");
         addItem(builder, HumanItems.POLYMER, "Polymer");
+        addItem(builder, HumanItems.RUBBER_GLOBULE, "Rubber Globule");
         addItem(builder, HumanItems.RAW_BAUXITE, "Raw Bauxite");
         addItem(builder, HumanItems.RAW_BRASS, "Raw Brass");
         addItem(builder, HumanItems.RAW_CRUDE_IRON, "Raw Crude Iron");
@@ -131,6 +181,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.SMART_BARREL, "Smart Barrel");
         addItem(builder, HumanItems.SMART_RECEIVER, "Smart Receiver");
         addItem(builder, HumanItems.STEEL_INGOT, "Steel Ingot");
+        addItem(builder, HumanItems.COMPOSITE_INGOT, "Composite Ingot");
         addItem(builder, HumanItems.STOCK, "Stock");
         addItem(builder, HumanItems.TITANIUM_INGOT, "Titanium Ingot");
         addItem(builder, HumanItems.TRANSISTOR, "Transistor");
@@ -144,12 +195,14 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.TITANIUM_NUGGET, "Titanium Nugget");
         addItem(builder, HumanItems.URANIUM_NUGGET, "Uranium Nugget");
         addItem(builder, HumanItems.ZINC_NUGGET, "Zinc Nugget");
+        addItem(builder, HumanItems.COPPER_NUGGET, "Copper Nugget");
 
         // Tools & Utilities Items
         addItem(builder, HumanItems.ARMOR_CASE, "Armor Case");
         addItem(builder, HumanItems.CANISTER, "Canister");
         addItem(builder, HumanItems.GENE_READER, "Gene Reader");
         addItem(builder, HumanItems.WATER_CANISTER, "Water Canister");
+        addItem(builder, HumanItems.LATEX_CANISTER, "Latex Canister");
         addItem(builder, HumanItems.LAVA_CANISTER, "Lava Canister");
         addItem(builder, HumanItems.MILK_CANISTER, "Milk Canister");
         addItem(builder, HumanItems.POWDER_SNOW_CANISTER, "Powder Snow Canister");
@@ -169,6 +222,9 @@ public class EnUsItemProvider {
         // Spawn Egg Items
         addItem(builder, HumanSpawnEggItems.MARINE_DOG_SPAWN_EGG, "Marine Dog Spawn Egg");
         addItem(builder, HumanSpawnEggItems.MARINE_SPAWN_EGG, "Marine Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.COLONIST_SPAWN_EGG, "Colonist Spawn Egg");
+        addItem(builder, HumanArmorItems.ELECTRICIAN_HARD_HAT, "Electrician Hard Hat");
+        addItem(builder, HumanArmorItems.ELECTRICIAN_JACKET, "Electrician Jacket");
     };
 
     private static void addItem(

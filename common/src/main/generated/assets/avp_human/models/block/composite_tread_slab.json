@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "avp_human:block/composite_tread",
+    "side": "avp_human:block/composite_tread",
+    "top": "avp_human:block/composite_tread"
+  }
+}

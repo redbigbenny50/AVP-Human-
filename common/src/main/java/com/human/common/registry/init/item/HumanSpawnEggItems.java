@@ -18,6 +18,8 @@ public class HumanSpawnEggItems {
 
     public static final BLibHolder<SpawnEggItem> MARINE_DOG_SPAWN_EGG = create("marine_dog", HumanEntityTypes.MARINE_DOG);
 
+    public static final BLibHolder<SpawnEggItem> COLONIST_SPAWN_EGG = create("colonist", HumanEntityTypes.COLONIST);
+
     private static <E extends Mob> BLibHolder<SpawnEggItem> create(String path, BLibHolder<EntityType<E>> holder) {
         return REGISTRY.createHolder(
             path + "_spawn_egg",

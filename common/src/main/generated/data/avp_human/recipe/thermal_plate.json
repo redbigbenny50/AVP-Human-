@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "E": {
+      "item": "minecraft:terracotta"
+    },
+    "H": {
+      "item": "avp_human:heat_sink"
+    },
+    "S": {
+      "item": "avp_human:raw_silica_block"
+    },
+    "T": {
+      "item": "avp_human:titanium_block"
+    }
+  },
+  "pattern": [
+    " EC",
+    "TSH",
+    " EC"
+  ],
+  "result": {
+    "count": 6,
+    "id": "avp_human:thermal_plate"
+  }
+}

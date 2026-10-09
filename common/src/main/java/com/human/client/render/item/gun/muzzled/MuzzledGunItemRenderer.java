@@ -7,6 +7,7 @@ import com.blib.api.client.render.v1.item.pipeline.AzItemRendererPipelineContext
 import com.human.HumanResources;
 import com.human.client.effect.VoxelGunEffects;
 import com.human.client.input.GunZoomHandler;
+import com.human.common.gameplay.item.GunItem;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanGunItems;
 import net.minecraft.client.Minecraft;
@@ -101,6 +102,19 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
 
             context.bakedModel().getTopLevelBones().forEach(bone -> bone.setHidden(false));
 
+            // [stated] Oct 5: after zooming out of the sniper, giant flat-coloured boxes filled the view. They are the
+            // rig's own leftArm/rightArm placeholder cubes (children of playerArms). BLib hides them and draws the
+            // player's skin arm in their place - but only while an animation is going. Once the zoom or a reload had
+            // finished, nothing hid them and they drew raw beside the camera. They never draw their own cubes, so
+            // they are hidden here every frame; the skin arm still appears whenever an animation is going.
+            for (var armBoneName : RIG_ARM_BONES) {
+                var armBone = context.bakedModel().getBoneOrNull(armBoneName);
+
+                if (armBone != null) {
+                    armBone.setHidden(true);
+                }
+            }
+
             muzzleFlashBoneNames.forEach(muzzleFlashBoneName -> {
                 var maybeBone = context.bakedModel().getBoneOrNull(muzzleFlashBoneName);
 
@@ -132,6 +146,9 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
         };
     }
 
+    /** BLib's skin-arm bones (AzItemArmRenderUtil's names): stand-ins for the player's arm, never drawn as cubes. */
+    private static final List<String> RIG_ARM_BONES = List.of("leftArm", "rightArm");
+
     private static boolean shouldHideScopedGun(AzRendererPipelineContext<UUID, ItemStack> context) {
         return context instanceof AzItemRendererPipelineContext itemContext
             && isFirstPerson(itemContext.getTransformType())
@@ -142,7 +159,7 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
         var minecraft = Minecraft.getInstance();
         var item = itemStack.getItem();
 
-        return item == HumanGunItems.M42A3_SNIPER_RIFLE.get() && GunZoomHandler.isAimingSniper(minecraft);
+        return item == HumanGunItems.M42A3_SNIPER_RIFLE.get() && GunZoomHandler.isUsingSniper(minecraft);
     }
 
     private static boolean isFirstPerson(ItemDisplayContext transformType) {
@@ -152,7 +169,47 @@ public abstract class MuzzledGunItemRenderer extends AzItemRenderer {
 
     private static boolean shouldShowMuzzleFlash(ItemStack itemStack) {
         var muzzleFlashDuration = itemStack.getOrDefault(HumanDataComponents.MUZZLE_FLASH_DURATION_IN_TICKS.get(), 0);
-        return muzzleFlashDuration > 0 || VoxelGunEffects.hasLocalMuzzleFlash(itemStack);
+        var isLit = muzzleFlashDuration > 0 || VoxelGunEffects.hasLocalMuzzleFlash(itemStack);
+
+        return isLit && isInStrobeOnPhase(itemStack);
+    }
+
+    /**
+     * ⭐ THE BLINK FOR WEAPONS THAT FIRE FASTER THAN THEIR OWN FLASH LASTS.
+     * <p>
+     * A gun on a one-tick cooldown re-lights the flash every tick, so "lit until the duration expires" is simply LIT,
+     * permanently - hundreds of rounds rendered as one continuous flame. Chopping the lit state into alternating on/off
+     * windows is the only way to read as individual rounds, since the flash cannot be re-shown faster than the game
+     * ticks.
+     * </p>
+     * <p>
+     * ⚠ OFF BY DEFAULT. A gun that fires slower than its flash duration already shows one discrete flash per shot;
+     * strobing it would just make single shots flicker. Only the fire modes that opt in are chopped.
+     * </p>
+     * <p>
+     * ⚠ DRIVEN BY GAME TIME, NOT A FIELD ON THE RENDERER. One renderer instance serves every copy of that gun on
+     * screen, so any per-renderer counter would be shared state across unrelated guns - the same trap that had one
+     * firing minigun spinning every hotbar icon. Game time is the same for everyone and needs no state at all.
+     * </p>
+     */
+    private static boolean isInStrobeOnPhase(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof GunItem gunItem)) {
+            return true;
+        }
+
+        var strobeIntervalInTicks = gunItem.getGunConfig().getDefaultFireMode().muzzleFlashStrobeIntervalInTicks();
+
+        if (strobeIntervalInTicks <= 0) {
+            return true;
+        }
+
+        var level = Minecraft.getInstance().level;
+
+        if (level == null) {
+            return true;
+        }
+
+        return (level.getGameTime() / strobeIntervalInTicks) % 2L == 0L;
     }
 
     /**

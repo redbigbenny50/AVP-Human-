@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "avp_human:block/cut_composite",
+    "side": "avp_human:block/cut_composite",
+    "top": "avp_human:block/cut_composite"
+  }
+}

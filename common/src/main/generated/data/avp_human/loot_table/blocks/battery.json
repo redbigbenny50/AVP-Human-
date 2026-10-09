@@ -15,7 +15,10 @@
             {
               "function": "minecraft:copy_components",
               "include": [
-                "minecraft:custom_name"
+                "minecraft:custom_name",
+                "avp_human:stored_power",
+                "avp_human:power_ports",
+                "minecraft:container"
               ],
               "source": "block_entity"
             }

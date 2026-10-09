@@ -19,9 +19,6 @@ import java.util.function.Supplier;
 
 public class MarineGearDecoratorUtil {
 
-    /** Full reloads a marine is issued beyond the magazine already in the gun. */
-    private static final int SPARE_RELOADS = 2;
-
     private static final EquipmentSlot[] SLOTS = new EquipmentSlot[] {
         EquipmentSlot.HEAD,
         EquipmentSlot.CHEST,
@@ -104,10 +101,9 @@ public class MarineGearDecoratorUtil {
             return;
         }
 
-        var reloadAmount = Math.max(1, gunConfig.reloadAmount());
-        // Items per reload, exactly as GunReloading works it out: a drum is one item, loose rounds are many.
-        var itemsPerReload = (int) Math.ceil(gunConfig.maximumAmmunition() / (float) reloadAmount);
-        var spareItems = itemsPerReload * SPARE_RELOADS;
+        // Oct 5 - [stated] "give them 2 full stacks of ammo": the same rule as every resupply, so a marine never
+        // spawns with less than it is restocked to (MarineResupply.spareAmmunitionItems).
+        var spareItems = com.human.common.gameplay.entity.living.human.marine.MarineResupply.spareAmmunitionItems(gunConfig);
 
         if (spareItems <= 0) {
             return;

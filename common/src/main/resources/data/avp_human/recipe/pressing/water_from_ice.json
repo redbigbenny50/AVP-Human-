@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "item": "minecraft:ice"
+  },
+  "fluid": {
+    "fluid": "minecraft:water",
+    "amount": 1000
+  }
+}

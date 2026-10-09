@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_industrial_glass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:industrial_glass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/copper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/copper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ingots/zinc": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/zinc"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_silicon": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:silicon"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:photovoltaic_array"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_industrial_glass",
+      "has_silicon",
+      "has_ingots/zinc",
+      "has_ingots/copper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:photovoltaic_array"
+    ]
+  }
+}

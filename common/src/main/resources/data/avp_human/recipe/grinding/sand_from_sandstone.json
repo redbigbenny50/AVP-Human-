@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "minecraft:sandstone"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "minecraft:sand",
+        "count": 4
+      }
+    }
+  ],
+  "time": 200
+}

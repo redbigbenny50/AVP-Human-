@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "avp_human:block/composite_chain_fence"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "avp_human:copper_coil"
+    },
+    "P": {
+      "item": "avp_human:power_supply"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "pattern": [
+    "SCS",
+    "SCS",
+    "SPS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:fuse_panel"
+  }
+}

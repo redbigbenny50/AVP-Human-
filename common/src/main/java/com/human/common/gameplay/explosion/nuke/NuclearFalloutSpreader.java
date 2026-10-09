@@ -4,8 +4,10 @@ import com.blib.api.common.server.v1.ServerScheduler;
 import com.human.common.registry.key.HumanBiomeKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -103,10 +105,48 @@ public class NuclearFalloutSpreader {
         if (!converted.isEmpty()) {
             // One resend for the whole batch rather than one per chunk.
             level.getChunkSource().chunkMap.resendBiomesForChunks(converted);
+
+            resendFullChunks(converted);
         }
 
         if (index < chunks.size()) {
             scheduleNextCycle();
+        }
+    }
+
+    /**
+     * Sends the converted chunks in full, on top of the biome-only resync above.
+     * <p>
+     * ⚠⚠ {@code resendBiomesForChunks} is correct for vanilla — the client only needs to recolour — but it is a
+     * biome-only packet, and mods that build their own world representation do not necessarily listen for it.
+     * <b>Distant Horizons does not</b>: a nuked region rendered as a hole in the world with no bedrock, at every
+     * distance including standing inside it, and came back the moment DH was removed. The world data was never wrong;
+     * DH simply never learned the region had changed.
+     * <p>
+     * A full chunk packet is the one message every renderer reacts to. It is heavier than a biome resync, but this
+     * fires once per nuke over a handful of batched cycles rather than continuously, and the alternative is depending
+     * on another mod to add support on their own schedule.
+     * <p>
+     * ⚠ Only players actually tracking a chunk are sent it, so a distant nuke costs nothing for players elsewhere.
+     */
+    private void resendFullChunks(List<ChunkAccess> converted) {
+        var chunkMap = level.getChunkSource().chunkMap;
+
+        for (var chunk : converted) {
+            if (!(chunk instanceof LevelChunk levelChunk)) {
+                continue;
+            }
+
+            var packet = new ClientboundLevelChunkWithLightPacket(
+                levelChunk,
+                level.getLightEngine(),
+                null,
+                null
+            );
+
+            for (var player : chunkMap.getPlayers(chunk.getPos(), false)) {
+                player.connection.send(packet);
+            }
         }
     }
 

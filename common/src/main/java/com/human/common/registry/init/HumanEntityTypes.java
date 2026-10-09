@@ -74,6 +74,18 @@ public class HumanEntityTypes {
         }, MobCategory.CREATURE).sized(0.6F, 1.95F)
     );
 
+    /**
+     * [stated] Sep 30: the colonist belongs to avp_human; jobs come from any mod (see ColonistProfessions). Its looks
+     * are rolled in finalizeSpawn, as the dropship's colonist did.
+     */
+    public static final BLibHolder<EntityType<com.human.common.gameplay.entity.living.human.colonist.ColonistEntity>> COLONIST = create(
+        "colonist",
+        EntityType.Builder.<com.human.common.gameplay.entity.living.human.colonist.ColonistEntity>of(
+            com.human.common.gameplay.entity.living.human.colonist.ColonistEntity::new,
+            MobCategory.CREATURE
+        ).sized(0.6F, 1.95F).clientTrackingRange(10)
+    );
+
     public static final BLibHolder<EntityType<MushroomCloudEntity>> MUSHROOM_CLOUD = create(
         "mushroom_cloud",
         EntityType.Builder.<MushroomCloudEntity>of(MushroomCloudEntity::new, MobCategory.MISC)
@@ -117,6 +129,7 @@ public class HumanEntityTypes {
         TYPE_REGISTRY.registerAll();
         ATTRIBUTE_REGISTRY.register(MARINE_DOG, Wolf::createAttributes);
         ATTRIBUTE_REGISTRY.register(MARINE, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(COLONIST, com.human.common.gameplay.entity.living.human.colonist.ColonistEntity::createAttributes);
         ATTRIBUTE_REGISTRY.register(SENTRY_TURRET, SentryTurret::createSentryTurretAttributes);
     }
 }

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "C": {
+      "item": "avp_human:copper_coil"
+    },
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "M": {
+      "item": "avp_human:neodymium_magnet"
+    },
+    "P": {
+      "item": "avp_human:capacitor"
+    }
+  },
+  "pattern": [
+    "AFA",
+    "PMP",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:power_supply"
+  }
+}

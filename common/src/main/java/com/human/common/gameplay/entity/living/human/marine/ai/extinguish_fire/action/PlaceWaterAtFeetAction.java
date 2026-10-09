@@ -36,12 +36,36 @@ public class PlaceWaterAtFeetAction {
 
         if (currentWaterPosOption.isNone()) {
             var blockPos = getBestPosForWaterPlacement(marine);
-            currentWaterPosOption = Option.some(blockPos);
 
-            marine.level().setBlock(blockPos, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+            // ⚠ Oct 5 audit - POUR IT THE WAY A PLAYER DOES. This used to set a water block outright, which ignored
+            // every rule a real bucket obeys: the Nether's evaporation, and any mod dimension that refuses water. The
+            // vanilla bucket's own placement respects them - and when it refuses, the marine remembers that water does
+            // not work here (MarineBucketMemory) instead of trying again on every flame.
+            // ⚠ Review fix - a refusal only teaches anything when the spot was clear: pouring onto lava or into a block
+            // that cannot take water fails in every dimension, and must not mark this one waterless.
+            var spotWasClear = marine.level().getBlockState(blockPos).canBeReplaced()
+                && marine.level().getFluidState(blockPos).isEmpty();
+            var placed = ((net.minecraft.world.item.BucketItem) Items.WATER_BUCKET)
+                .emptyContents(null, marine.level(), blockPos, null);
+
+            if (!placed || !marine.level().getBlockState(blockPos).is(Blocks.WATER)) {
+                if (spotWasClear) {
+                    com.human.common.gameplay.entity.living.human.marine.MarineBucketMemory.markWaterless(marine.level());
+                }
+
+                return Action.Signal.ABORT;
+            }
+
+            currentWaterPosOption = Option.some(blockPos);
             blackboard.set(WATER_POS_OPTION, currentWaterPosOption);
             marine.setItemInHand(HAND_TO_USE, new ItemStack(Items.BUCKET));
+            // And if the water went down but the marine is still burning in two seconds, that is remembered too.
+            marine.noteBucketAttempt();
         }
+
+        // [stated] Oct 5: keep the marine told about the water each tick, so if this action is dropped without
+        // its finish callback the marine takes the water back itself (Marine.tick).
+        blackboard.getOrDefault(WATER_POS_OPTION, Option.none()).ifSome(marine::trackPlacedWater);
 
         return Action.Signal.CONTINUE;
     }
@@ -77,6 +101,7 @@ public class PlaceWaterAtFeetAction {
             }
 
             marine.setItemInHand(HAND_TO_USE, ItemStack.EMPTY);
+            marine.clearPlacedWater();
         });
     }
 

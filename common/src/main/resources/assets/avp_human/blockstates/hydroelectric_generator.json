@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,power_mode=off": {
+      "model": "avp_human:block/hydroelectric_generator"
+    },
+    "facing=north,power_mode=low": {
+      "model": "avp_human:block/hydroelectric_generator"
+    },
+    "facing=north,power_mode=med": {
+      "model": "avp_human:block/hydroelectric_generator"
+    },
+    "facing=north,power_mode=max": {
+      "model": "avp_human:block/hydroelectric_generator"
+    },
+    "facing=south,power_mode=off": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 180
+    },
+    "facing=south,power_mode=low": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 180
+    },
+    "facing=south,power_mode=med": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 180
+    },
+    "facing=south,power_mode=max": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 180
+    },
+    "facing=west,power_mode=off": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 270
+    },
+    "facing=west,power_mode=low": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 270
+    },
+    "facing=west,power_mode=med": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 270
+    },
+    "facing=west,power_mode=max": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 270
+    },
+    "facing=east,power_mode=off": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 90
+    },
+    "facing=east,power_mode=low": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 90
+    },
+    "facing=east,power_mode=med": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 90
+    },
+    "facing=east,power_mode=max": {
+      "model": "avp_human:block/hydroelectric_generator",
+      "y": 90
+    }
+  }
+}

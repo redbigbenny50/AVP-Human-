@@ -52,6 +52,7 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
         builder.add("death.attack.bullet", "%1$s was shot to death");
         builder.add("death.attack.radiation", "%1$s surrendered to radiation");
         builder.add("death.attack.razor_wire", "%1$s got tangled in razor wire");
+        builder.add("death.attack.cryofluid", "%1$s froze solid in cryofluid");
 
         // Entities
         EnUsEntityProvider.CONSUMER.accept(builder);
@@ -71,6 +72,7 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
 
         // Mob Effects
         builder.add(HumanMobEffects.getRadiationHolder().value(), "Radiation");
+        builder.add(HumanMobEffects.getFrozenSolidHolder().value(), "Frozen Solid");
 
         // Sounds
         EnUsSoundEventProvider.CONSUMER.accept(builder);
@@ -89,5 +91,9 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
         // Villagers
         builder.add("entity.minecraft.villager.commissary", "Commissary Villager");
         builder.add("entity.minecraft.villager.avp.commissary", "Commissary Villager");
+        // NeoForge names a modded profession with its namespace: entity.minecraft.villager.<namespace>.<path>.
+        // Fabric uses vanilla's path-only key above. Without this the NeoForge trade screen and Jade showed the raw
+        // key.
+        builder.add("entity.minecraft.villager.avp_human.commissary", "Commissary Villager");
     }
 }

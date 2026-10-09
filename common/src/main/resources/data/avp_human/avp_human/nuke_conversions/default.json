@@ -1,0 +1,24 @@
+{
+  "_comment": [
+    "What the nuke turns blocks into at the rim of its crater. Anything not listed becomes basalt.",
+    "from: a block id, a #tag, or a list of them. to: a block id, or a list of {block, weight} picked at random by weight.",
+    "An exact block beats a #tag. Tags are tried in file order. Blocks from mods that are not installed are skipped.",
+    "Add your own file in data/<your namespace>/avp_human/nuke_conversions/, or replace this one at the same path."
+  ],
+  "conversions": [
+    { "from": "#minecraft:dirt", "to": "minecraft:basalt" },
+    {
+      "from": ["#minecraft:sand", "minecraft:sandstone", "minecraft:red_sandstone"],
+      "to": [
+        { "block": "avp_human:trinitite_block", "weight": 66 },
+        { "block": "minecraft:magma_block", "weight": 34 }
+      ]
+    },
+    { "from": "minecraft:andesite", "to": "minecraft:gravel" },
+    { "from": "minecraft:deepslate", "to": "minecraft:cobbled_deepslate" },
+    { "from": "minecraft:diorite", "to": "minecraft:sand" },
+    { "from": "minecraft:granite", "to": "minecraft:red_sand" },
+    { "from": "minecraft:lava", "to": "minecraft:magma_block" },
+    { "from": "minecraft:stone", "to": "minecraft:cobblestone" }
+  ]
+}

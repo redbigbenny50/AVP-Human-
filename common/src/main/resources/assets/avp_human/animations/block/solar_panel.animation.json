@@ -1,5 +1,47 @@
 {
 	"format_version": "1.8.0",
-	"animations": {},
-	"azurelib_format_version": 2
+	"animations": {
+		"solarpanel.suntrack": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 5,
+			"bones": {
+				"gPanel": {
+					"rotation": {
+						"0": {
+							"vector": [0, 0, 0]
+						},
+						"5": {
+							"vector": [0, 0, 115]
+						}
+					}
+				}
+			}
+		},
+		"solarpanel.nightreset": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"gPanel": {
+					"rotation": {
+						"0": {
+							"vector": [0, 0, 115]
+						},
+						"1": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"solarpanel.holdreset": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"gPanel": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
 }

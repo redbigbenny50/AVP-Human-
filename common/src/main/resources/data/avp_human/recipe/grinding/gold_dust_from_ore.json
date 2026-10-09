@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "c:ores/gold"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:gold_dust",
+        "count": 2
+      }
+    }
+  ],
+  "time": 200
+}

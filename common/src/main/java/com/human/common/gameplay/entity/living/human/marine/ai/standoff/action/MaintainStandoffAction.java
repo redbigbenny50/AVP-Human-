@@ -93,6 +93,7 @@ public class MaintainStandoffAction {
         var strafeInput = (float) (awayDirection.x * cosYaw + awayDirection.z * sinYaw);
 
         moveControl.strafe(forwardInput, strafeInput, STANDOFF_SPEED_MODIFIER);
+        marine.markStandoff(); // the marine zeroes the strafe itself once this stops (Marine.tick)
 
         return true;
     }

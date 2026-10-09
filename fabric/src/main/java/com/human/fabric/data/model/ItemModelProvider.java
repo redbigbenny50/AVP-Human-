@@ -30,7 +30,43 @@ public class ItemModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators generators) {
+        generateStandardItem(generators, HumanItems.LATEX_BUCKET);
+        generateStandardItem(generators, HumanItems.HONEY_BUCKET);
+        generateStandardItem(generators, HumanItems.CRYOFLUID_BUCKET);
+        generateStandardItem(generators, HumanItems.CRYOGEL);
+        generateStandardItem(generators, HumanItems.TITANIUM_CAPTURE_CORD);
+        generateStandardItem(generators, HumanItems.HUB_UPGRADE);
+        generateStandardItem(generators, com.human.common.registry.init.item.HumanArmorItems.ELECTRICIAN_HARD_HAT);
+        generateStandardItem(generators, com.human.common.registry.init.item.HumanArmorItems.ELECTRICIAN_JACKET);
+        generateStandardItem(generators, HumanItems.LATEX_SHEET);
+        generateStandardItem(generators, HumanItems.RUBBER_GLOBULE);
         generateStandardItem(generators, HumanItems.GRENADE);
+        generateStandardItem(generators, HumanItems.TURBINE);
+        generateStandardItem(generators, HumanItems.ELECTRIC_MOTOR);
+        generateStandardItem(generators, HumanItems.PHOTOVOLTAIC_ARRAY);
+        generateStandardItem(generators, HumanItems.FAN);
+        generateStandardItem(generators, HumanItems.HEAT_SINK);
+        generateStandardItem(generators, HumanItems.THERMAL_PLATE);
+        generateStandardItem(generators, HumanItems.COPPER_COIL);
+        generateStandardItem(generators, HumanItems.WIRING_TOOL);
+        generateStandardItem(generators, HumanItems.CAPACITY_UPGRADE);
+        generateStandardItem(generators, HumanItems.SPEED_UPGRADE);
+        generateStandardItem(generators, HumanItems.EFFICIENCY_UPGRADE);
+        generateStandardItem(generators, HumanItems.RANGE_UPGRADE);
+        generateStandardItem(generators, HumanItems.WIDE_CONE_UPGRADE);
+        generateStandardItem(generators, HumanItems.COOLING_UPGRADE);
+        generateStandardItem(generators, HumanItems.DEFENSE_UPGRADE);
+        generateStandardItem(generators, HumanItems.MOTION_SENSOR);
+        generateStandardItem(generators, HumanItems.EM_SENSOR);
+        generateStandardItem(generators, HumanItems.CAMERA_SENSOR);
+        generateStandardItem(generators, HumanItems.NETWORK_CARD);
+        generateStandardItem(generators, HumanItems.CASELESS_AMMO_UPGRADE);
+        generateStandardItem(generators, HumanItems.ROCKET_AMMO_UPGRADE);
+        generateStandardItem(generators, HumanItems.TRANSFER_UPGRADE);
+        generateStandardItem(generators, HumanItems.EMERGENCY_UPGRADE);
+        generateStandardItem(generators, HumanItems.REDSTONE_UPGRADE);
+        generateStandardItem(generators, HumanItems.ALARM_UPGRADE);
+        generateStandardItem(generators, HumanItems.ARMORED_UPGRADE);
         generateStandardItem(generators, HumanItems.GRENADE_INCENDIARY);
         generateStandardItem(generators, HumanItems.GRENADE_IRRADIATED);
         generateStandardItem(generators, HumanItems.CASELESS_BULLET);
@@ -95,8 +131,10 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.BLUEPRINT_M4RA_BATTLE_RIFLE);
         generateStandardItem(generators, HumanItems.BLUEPRINT_ZX_76_SHOTGUN);
         generateStandardItem(generators, HumanItems.BRASS_INGOT);
-        generateStandardItem(generators, HumanItems.CANISTER);
+        // ⚠ HumanItems.CANISTER is NOT generated here any more: the universal canister needs a filled-model override,
+        // so its model is hand-written in resources (models/item/canister.json + canister_filled.json).
         generateStandardItem(generators, HumanItems.WATER_CANISTER);
+        generateStandardItem(generators, HumanItems.LATEX_CANISTER);
         generateStandardItem(generators, HumanItems.LAVA_CANISTER);
         generateStandardItem(generators, HumanItems.MILK_CANISTER);
         generateStandardItem(generators, HumanItems.POWDER_SNOW_CANISTER);
@@ -107,8 +145,23 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.SPEAKER);
         generateStandardItem(generators, HumanItems.ASH_BALL);
         generateStandardItem(generators, HumanItems.CARBON_DUST);
+        generateStandardItem(generators, HumanItems.IRON_DUST);
+        generateStandardItem(generators, HumanItems.GOLD_DUST);
+        generateStandardItem(generators, HumanItems.COPPER_DUST);
+        generateStandardItem(generators, HumanItems.TITANIUM_DUST);
+        generateStandardItem(generators, HumanItems.ALUMINUM_DUST);
+        generateStandardItem(generators, HumanItems.FERROALUMINUM_DUST);
+        generateStandardItem(generators, HumanItems.LEAD_DUST);
+        generateStandardItem(generators, HumanItems.ZINC_DUST);
+        generateStandardItem(generators, HumanItems.BRASS_DUST);
+        generateStandardItem(generators, HumanItems.STEEL_DUST);
+        generateStandardItem(generators, HumanItems.MAGNETIC_DUST);
         generateStandardItem(generators, HumanItems.CORNBREAD);
         generateStandardItem(generators, HumanItems.CPU);
+        generateStandardItem(generators, HumanItems.RAM);
+        generateStandardItem(generators, HumanItems.SSD);
+        generateStandardItem(generators, HumanItems.MOTHERBOARD);
+        generateStandardItem(generators, HumanItems.POWER_SUPPLY);
         generateStandardItem(generators, HumanItems.DIODE);
         generateStandardItem(generators, HumanItems.DOG_TAG);
         generateStandardItem(generators, HumanItems.FERROALUMINUM_INGOT);
@@ -139,6 +192,7 @@ public class ItemModelProvider extends FabricModelProvider {
         generateHandheldItem(generators, HumanItems.STEEL_AXE);
         generateHandheldItem(generators, HumanItems.STEEL_HOE);
         generateStandardItem(generators, HumanItems.STEEL_INGOT);
+        generateStandardItem(generators, HumanItems.COMPOSITE_INGOT);
         generateHandheldItem(generators, HumanItems.STEEL_PICKAXE);
         generateHandheldItem(generators, HumanItems.STEEL_SHOVEL);
         generateHandheldItem(generators, HumanItems.STEEL_SWORD);
@@ -161,12 +215,14 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.BRASS_NUGGET);
         generateStandardItem(generators, HumanItems.TITANIUM_NUGGET);
         generateStandardItem(generators, HumanItems.ZINC_NUGGET);
+        generateStandardItem(generators, HumanItems.COPPER_NUGGET);
         generateStandardItem(generators, HumanItems.LEAD_NUGGET);
         generateStandardItem(generators, HumanItems.URANIUM_NUGGET);
         generateStandardItem(generators, HumanItems.ALUMINUM_NUGGET);
 
         generateHandheldItem(generators, HumanFerroaluminumBlockItems.FERROALUMINUM_DOOR);
         generateHandheldItem(generators, HumanSteelBlockItems.STEEL_DOOR);
+        generateHandheldItem(generators, com.human.common.registry.init.item.block.HumanCompositeBlockItems.COMPOSITE_DOOR);
         generateHandheldItem(generators, HumanTitaniumBlockItems.TITANIUM_DOOR);
 
         HumanSpawnEggItems.REGISTRY.getAll()

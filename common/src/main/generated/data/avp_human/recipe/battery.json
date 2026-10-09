@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "L": {
+      "item": "avp_human:lithium_block"
+    },
+    "M": {
+      "item": "avp_human:neodymium_magnet"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "X": {
+      "item": "avp_human:machine_block"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "LML",
+    "AXA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:battery"
+  }
+}

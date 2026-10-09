@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:dead_brain_coral_block"
+  },
+  "result": {
+    "id": "minecraft:brain_coral_block"
+  }
+}

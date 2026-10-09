@@ -4,6 +4,7 @@ import com.blib.api.common.registry.v1.impl.BLibCommandRegistry;
 import com.human.Human;
 import com.human.common.gameplay.command.BulletTrajectoryDebugCommand;
 import com.human.common.gameplay.command.NukeCommand;
+import com.human.common.gameplay.command.PowerDiagCommand;
 import com.human.common.gameplay.command.SpawnPatrolCommand;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,6 +28,7 @@ public class HumanCommands {
                     LiteralArgumentBuilder.<CommandSourceStack>literal("debug")
                         .requires(commandSourceStack -> commandSourceStack.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(BulletTrajectoryDebugCommand.create())
+                        .then(PowerDiagCommand.create())
                 )
         );
     }

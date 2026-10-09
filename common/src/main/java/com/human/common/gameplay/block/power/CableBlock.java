@@ -21,7 +21,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class CableBlock extends Block {
+public class CableBlock extends Block implements net.minecraft.world.level.block.EntityBlock {
+
+    /**
+     * [stated] Sep 30: whether any arm meets a BLOCK (not another cable) - such a cable ends in his coloured flange
+     * there, drawn by {@link com.human.client.render.block.CableFlangeRenderer}. Only these cables get a block entity.
+     */
+    public static final BooleanProperty PORTED = BooleanProperty.create("ported");
+
+    /** Horizontal speed kept each tick while a player squeezes past - about 60 % of walking pace. */
+    private static final double SQUEEZE = 0.7D;
 
     private static final Direction[] VALUES = Direction.values();
 
@@ -146,6 +155,7 @@ public class CableBlock extends Block {
                 .setValue(WEST, false)
                 .setValue(UP, false)
                 .setValue(DOWN, false)
+                .setValue(PORTED, false)
         );
     }
 
@@ -154,14 +164,133 @@ public class CableBlock extends Block {
         var level = context.getLevel();
         var pos = context.getClickedPos();
 
-        var state = this.defaultBlockState();
+        // [stated] Oct 5: never into a sentry turret's space.
+        if (com.human.common.gameplay.entity.machine.SentryTurret.standsIn(level, pos)) {
+            return null;
+        }
+
+        return computeState(level, pos, this.defaultBlockState());
+    }
+
+    /**
+     * Each arm: toward our cables and power blocks as always, and - [stated] Sep 30 - toward another mod's energy block
+     * whose face is not switched Off. Then whether any arm meets a block.
+     */
+    private BlockState computeState(LevelAccessor level, BlockPos pos, BlockState state) {
+        var ported = false;
 
         for (var direction : VALUES) {
             var neighborPos = pos.relative(direction);
-            state = state.setValue(PROPERTY_BY_DIRECTION.get(direction), canConnectTo(level, neighborPos));
+
+            // A neighbour in an unloaded chunk keeps whatever the cable showed - looking would load that chunk.
+            if (!level.hasChunkAt(neighborPos)) {
+                if (state.getValue(PROPERTY_BY_DIRECTION.get(direction)) && state.getValue(PORTED)) {
+                    ported = true;
+                }
+
+                continue;
+            }
+
+            var arm = canConnectTo(level, neighborPos, direction) || foreignArm(level, pos, direction);
+
+            state = state.setValue(PROPERTY_BY_DIRECTION.get(direction), arm);
+
+            if (arm && !(level.getBlockState(neighborPos).getBlock() instanceof CableBlock)) {
+                ported = true;
+            }
         }
 
-        return state;
+        return state.setValue(PORTED, ported);
+    }
+
+    /** Another mod's energy block on this face, connected in its current mode. Only the server can know. */
+    private static boolean foreignArm(LevelAccessor level, BlockPos pos, Direction direction) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+
+        var target = pos.relative(direction);
+
+        if (
+            !serverLevel.isLoaded(target) || com.human.common.gameplay.power.grid.PowerGridExploreUtil.isConnectable(serverLevel, target)
+                || !com.human.common.gameplay.power.external.ExternalEnergy.mayHoldEnergy(serverLevel, target)
+        ) {
+            return false;
+        }
+
+        var port = com.human.common.gameplay.power.external.ExternalEnergy.Holder.get().open(serverLevel, target, direction.getOpposite());
+        var mode = com.human.common.gameplay.power.external.CablePortModes.get(serverLevel).get(pos, direction);
+
+        return com.human.common.gameplay.power.external.ExternalPortNodes.create(port, mode) != null;
+    }
+
+    /**
+     * Recomputes the arms and the flange colours - after a neighbour changed or a port mode was switched, neither of
+     * which always changes a neighbour's shape.
+     */
+    public static void refreshVisual(ServerLevel level, BlockPos pos) {
+        var state = level.getBlockState(pos);
+
+        if (!(state.getBlock() instanceof CableBlock cable)) {
+            return;
+        }
+
+        var updated = cable.computeState(level, pos, state);
+
+        if (updated != state) {
+            level.setBlock(pos, updated, Block.UPDATE_CLIENTS);
+        }
+
+        if (level.getBlockEntity(pos) instanceof com.human.common.gameplay.block.entity.power.CableBlockEntity flanges) {
+            for (var direction : VALUES) {
+                // Unloaded neighbour: keep the colour it has.
+                if (level.isLoaded(pos.relative(direction))) {
+                    flanges.setMode(
+                        direction,
+                        updated.getValue(PROPERTY_BY_DIRECTION.get(direction)) ? flangeColour(level, pos, direction) : 0
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * The colour of the flange where this cable meets a block. [stated] RED = power out of our system (a machine),
+     * GREEN = into it (a generator), YELLOW = both (a battery). Another mod's block follows the role its port mode
+     * gives it. A face meeting another cable has no flange.
+     */
+    private static byte flangeColour(ServerLevel level, BlockPos pos, Direction direction) {
+        var target = pos.relative(direction);
+
+        if (level.getBlockState(target).getBlock() instanceof CableBlock) {
+            return 0;
+        }
+
+        PowerNode node = level.getBlockEntity(target) instanceof PowerNode ours ? ours : null;
+
+        if (node == null) {
+            var port = com.human.common.gameplay.power.external.ExternalEnergy.Holder.get().open(level, target, direction.getOpposite());
+
+            node = com.human.common.gameplay.power.external.ExternalPortNodes.create(
+                port,
+                com.human.common.gameplay.power.external.CablePortModes.get(level).get(pos, direction)
+            );
+        }
+
+        return switch (node) {
+            case PowerNode.PowerStore store -> com.human.common.gameplay.block.entity.power.CableBlockEntity.BOTH;
+            case PowerNode.PowerProducer producer -> com.human.common.gameplay.block.entity.power.CableBlockEntity.IN;
+            case PowerNode.PowerConsumer consumer -> com.human.common.gameplay.block.entity.power.CableBlockEntity.OUT;
+            case null -> (byte) 0;
+        };
+    }
+
+    @Override
+    public @org.jetbrains.annotations.Nullable net.minecraft.world.level.block.entity.BlockEntity newBlockEntity(
+        @NotNull BlockPos pos,
+        @NotNull BlockState state
+    ) {
+        return state.getValue(PORTED) ? new com.human.common.gameplay.block.entity.power.CableBlockEntity(pos, state) : null;
     }
 
     @Override
@@ -173,12 +302,17 @@ public class CableBlock extends Block {
         @NotNull BlockPos pos,
         @NotNull BlockPos neighborPos
     ) {
-        return state.setValue(PROPERTY_BY_DIRECTION.get(direction), canConnectTo(level, neighborPos));
+        // ⚠ The server decides. A client cannot see another mod's energy block, so it keeps what the server sent.
+        if (level.isClientSide()) {
+            return state;
+        }
+
+        return computeState(level, pos, state);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN);
+        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, PORTED);
     }
 
     @Override
@@ -189,17 +323,6 @@ public class CableBlock extends Block {
         @NotNull CollisionContext ctx
     ) {
         // used for outline + ray hit.
-        return SHAPES_BY_MASK[maskFromState(state)];
-    }
-
-    @Override
-    public @NotNull VoxelShape getCollisionShape(
-        @NotNull BlockState state,
-        @NotNull BlockGetter level,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext ctx
-    ) {
-        // entities collide with the cable only.
         return SHAPES_BY_MASK[maskFromState(state)];
     }
 
@@ -237,7 +360,8 @@ public class CableBlock extends Block {
     ) {
         super.onPlace(state, level, blockPos, oldState, movedByPiston);
 
-        if (level.isClientSide) {
+        // ⚠ Only a real placement. The cable's own arm or flange state changing calls this too, and must not re-link.
+        if (level.isClientSide || oldState.is(state.getBlock())) {
             return;
         }
 
@@ -246,10 +370,70 @@ public class CableBlock extends Block {
         for (var direction : VALUES) {
             var neighbor = blockPos.relative(direction);
 
-            if (canConnectTo(level, neighbor)) {
+            if (canConnectTo(level, neighbor, direction)) {
                 manager.union(blockPos, neighbor);
             }
         }
+
+        // Other mods' energy blocks around the new cable.
+        manager.refreshCable(level, blockPos);
+        refreshVisual((ServerLevel) level, blockPos);
+    }
+
+    /** A block beside the cable changed - another mod's machine placed or broken: look at the faces again. */
+    @Override
+    protected void neighborChanged(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull Block neighborBlock,
+        @NotNull BlockPos neighborPos,
+        boolean movedByPiston
+    ) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        // Another cable changing never changes this cable's ports or flanges - its arms follow through updateShape.
+        if (!level.isClientSide && !(level.getBlockState(neighborPos).getBlock() instanceof CableBlock)) {
+            PowerSystem.get((ServerLevel) level).refreshCable(level, pos);
+            refreshVisual((ServerLevel) level, pos);
+        }
+    }
+
+    /**
+     * [stated] Sep 30: bare-hand right-click a cable that touches another mod's energy block opens its port screen,
+     * where each such face is set to auto, out, in, both or off. A cable touching nothing foreign does nothing.
+     */
+    @Override
+    protected @NotNull net.minecraft.world.InteractionResult useWithoutItem(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.player.Player player,
+        @NotNull net.minecraft.world.phys.BlockHitResult hitResult
+    ) {
+        if (level.isClientSide) {
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        }
+
+        var serverLevel = (ServerLevel) level;
+
+        if (com.human.common.gameplay.power.external.CablePortMenu.externalFaces(serverLevel, pos) == 0) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+
+        player.openMenu(
+            new net.minecraft.world.SimpleMenuProvider(
+                (containerId, inventory, menuPlayer) -> new com.human.common.gameplay.power.external.CablePortMenu(
+                    containerId,
+                    inventory,
+                    serverLevel,
+                    pos
+                ),
+                net.minecraft.network.chat.Component.translatable("gui.avp_human.cable_ports")
+            )
+        );
+
+        return net.minecraft.world.InteractionResult.CONSUME;
     }
 
     // TODO: Deduplicate this code.
@@ -262,19 +446,94 @@ public class CableBlock extends Block {
         boolean movedByPiston
     ) {
         if (!level.isClientSide && state.getBlock() != newState.getBlock()) {
-            PowerSystem.get((ServerLevel) level).splitGrid(level, pos);
+            // Queued, not rebuilt now: one explosion can remove hundreds of blocks in a single tick, and each
+            // immediate rebuild walked the whole network up to six times.
+            PowerSystem.get((ServerLevel) level).queueSplit(pos);
+            com.human.common.gameplay.power.external.CablePortModes.get((ServerLevel) level).clear(pos);
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
-    private boolean canConnectTo(LevelAccessor level, BlockPos neighbor) {
-        return canConnectTo(level, neighbor, level.getBlockState(neighbor));
+    /**
+     * @param direction from this cable toward the neighbour
+     */
+    // TODO: Use block tags here.
+    private boolean canConnectTo(LevelAccessor level, BlockPos neighbor, Direction direction) {
+        // Cable connects to other cables or valid machines.
+        if (level.getBlockState(neighbor).getBlock() instanceof CableBlock) {
+            return true;
+        }
+
+        var blockEntity = level.getBlockEntity(neighbor);
+
+        // ⚠ The neighbour's FACE decides, not merely that it is a power block. A machine takes power at its back only
+        // and a battery never at its front, and a closed breaker is closed to cables too - so the cable neither draws
+        // an arm to that face nor joins the grid through it.
+        if (blockEntity instanceof com.human.common.gameplay.block.entity.power.PowerNodeBlockEntity node) {
+            return node.isFaceConnectable(direction.getOpposite());
+        }
+
+        return blockEntity instanceof PowerNode;
     }
 
-    // TODO: Use block tags here.
-    private boolean canConnectTo(LevelAccessor level, BlockPos neighbor, BlockState neighborState) {
-        // Cable connects to other cables or valid machines.
-        return neighborState.getBlock() instanceof CableBlock || level.getBlockEntity(neighbor) instanceof PowerNode;
+    // ------------------------------------------------------------------------------------------------------------
+    // Players pass through, slowed
+    // ------------------------------------------------------------------------------------------------------------
+
+    /**
+     * [stated] Sep 30: "we want the player to be able to pass through the pipes and wires but you get slowed" - and
+     * also leashed animals the player is pulling, hired marines and pets
+     * ({@link com.human.common.gameplay.block.pipe.PipePassage}). They get no collision; everything else collides as
+     * before.
+     */
+    @Override
+    protected @NotNull VoxelShape getCollisionShape(
+        @NotNull BlockState state,
+        @NotNull BlockGetter level,
+        @NotNull BlockPos pos,
+        @NotNull CollisionContext context
+    ) {
+        if (
+            context instanceof net.minecraft.world.phys.shapes.EntityCollisionContext entityContext
+                && com.human.common.gameplay.block.pipe.PipePassage.passes(entityContext.getEntity())
+        ) {
+            return Shapes.empty();
+        }
+
+        return SHAPES_BY_MASK[maskFromState(state)];
+    }
+
+    /**
+     * Squeezing past: a player touching the pipe or cable itself - not merely its block space - loses some horizontal
+     * speed each tick, like pushing through berry bushes. Vertical movement is untouched, so jumping, falling and fall
+     * damage are exactly as normal (vanilla's "stuck in block" slow resets fall distance, which would let a fall be
+     * cancelled by dropping through a pipe). Flying and spectating players are not slowed.
+     */
+    @Override
+    protected void entityInside(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.Entity entity
+    ) {
+        super.entityInside(state, level, pos, entity);
+
+        if (
+            !com.human.common.gameplay.block.pipe.PipePassage.passes(entity)
+                || !com.human.common.gameplay.block.pipe.PipePassage.slowed(entity)
+        ) {
+            return;
+        }
+
+        var shape = SHAPES_BY_MASK[maskFromState(state)].move(pos.getX(), pos.getY(), pos.getZ());
+
+        if (!Shapes.joinIsNotEmpty(shape, Shapes.create(entity.getBoundingBox()), net.minecraft.world.phys.shapes.BooleanOp.AND)) {
+            return;
+        }
+
+        var motion = entity.getDeltaMovement();
+
+        entity.setDeltaMovement(motion.x * SQUEEZE, motion.y, motion.z * SQUEEZE);
     }
 }

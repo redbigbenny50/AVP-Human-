@@ -1,0 +1,13 @@
+{
+  "type": "avp_human:pressing",
+  "ingredient": {
+    "item": "minecraft:mud"
+  },
+  "result": {
+    "id": "minecraft:dirt"
+  },
+  "fluid": {
+    "fluid": "minecraft:water",
+    "amount": 250
+  }
+}

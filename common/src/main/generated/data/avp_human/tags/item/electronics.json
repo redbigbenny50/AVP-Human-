@@ -1,0 +1,27 @@
+{
+  "values": [
+    "avp_human:battery_pack",
+    "avp_human:capacitor",
+    "avp_human:cpu",
+    "avp_human:fan",
+    "avp_human:heat_sink",
+    "avp_human:copper_coil",
+    "avp_human:ram",
+    "avp_human:ssd",
+    "avp_human:motherboard",
+    "avp_human:power_supply",
+    "avp_human:diode",
+    "avp_human:integrated_circuit",
+    "avp_human:led",
+    "avp_human:led_display",
+    "avp_human:neodymium_magnet",
+    "avp_human:receiver",
+    "avp_human:regulator",
+    "avp_human:resistor",
+    "avp_human:servo",
+    "avp_human:smart_receiver",
+    "avp_human:transistor",
+    "avp_human:desk_terminal",
+    "avp_human:machine_block"
+  ]
+}

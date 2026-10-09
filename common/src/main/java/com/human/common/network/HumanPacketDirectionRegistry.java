@@ -31,16 +31,52 @@ public class HumanPacketDirectionRegistry {
         REGISTRY.registerPacketDirection(
             new PacketDirection.C2S<>(C2SMarineSentryFilterPayload.TYPE, C2SMarineSentryFilterPayload.CODEC)
         );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.C2S<>(
+                com.human.common.network.packet.C2SPipeFilterPayload.TYPE,
+                com.human.common.network.packet.C2SPipeFilterPayload.CODEC
+            )
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.C2S<>(
+                com.human.common.network.packet.C2SSentryViewPayload.TYPE,
+                com.human.common.network.packet.C2SSentryViewPayload.CODEC
+            )
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.C2S<>(
+                com.human.common.network.packet.C2SSentryControlPayload.TYPE,
+                com.human.common.network.packet.C2SSentryControlPayload.CODEC
+            )
+        );
 
         REGISTRY.registerPacketDirection(
             new PacketDirection.S2C<>(S2CBulletHitBlockPayload.TYPE, S2CBulletHitBlockPayload.CODEC)
         );
         REGISTRY.registerPacketDirection(new PacketDirection.S2C<>(S2CGunRecoilPayload.TYPE, S2CGunRecoilPayload.CODEC));
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.S2C<>(
+                com.human.common.network.packet.S2CFrozenSolidPayload.TYPE,
+                com.human.common.network.packet.S2CFrozenSolidPayload.CODEC
+            )
+        );
         REGISTRY.registerPacketDirection(new PacketDirection.S2C<>(S2CGunVoxelEffectPayload.TYPE, S2CGunVoxelEffectPayload.CODEC));
         REGISTRY.registerPacketDirection(new PacketDirection.S2C<>(S2CGunKillEffectPayload.TYPE, S2CGunKillEffectPayload.CODEC));
         REGISTRY.registerPacketDirection(new PacketDirection.S2C<>(S2CNukeEffectPayload.TYPE, S2CNukeEffectPayload.CODEC));
         REGISTRY.registerPacketDirection(
             new PacketDirection.S2C<>(S2CMarineSentryFilterPayload.TYPE, S2CMarineSentryFilterPayload.CODEC)
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.S2C<>(
+                com.human.common.network.packet.S2CSentryViewPayload.TYPE,
+                com.human.common.network.packet.S2CSentryViewPayload.CODEC
+            )
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.S2C<>(
+                com.human.common.network.packet.S2CSentryNetworkPayload.TYPE,
+                com.human.common.network.packet.S2CSentryNetworkPayload.CODEC
+            )
         );
     }
 }

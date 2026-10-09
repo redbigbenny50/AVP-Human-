@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_copper_coil": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:copper_coil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_fan": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:fan"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_heat_sink": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:heat_sink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_machine_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:machine_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_nuggets/aluminum": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:nuggets/aluminum"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:electric_freezer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_nuggets/aluminum",
+      "has_fan",
+      "has_copper_coil",
+      "has_heat_sink",
+      "has_machine_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:electric_freezer"
+    ]
+  }
+}

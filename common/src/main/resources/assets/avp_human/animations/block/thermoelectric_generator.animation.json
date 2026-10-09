@@ -1,0 +1,40 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"fan_spin": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"gFan": {
+					"rotation": {
+						"0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [0, -90, 0]
+						},
+						"0.5": {
+							"vector": [0, -180, 0]
+						},
+						"0.75": {
+							"vector": [0, -270, 0]
+						},
+						"1": {
+							"vector": [0, -360, 0]
+						}
+					}
+				}
+			}
+		},
+		"spinhold": {
+			"loop": true,
+			"bones": {
+				"gFan": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "M": {
+      "tag": "c:ingots/ferroaluminum"
+    }
+  },
+  "pattern": [
+    "MMM",
+    "MGM",
+    "MMM"
+  ],
+  "result": {
+    "count": 4,
+    "id": "avp_human:ferroaluminum_fluid_tank"
+  }
+}

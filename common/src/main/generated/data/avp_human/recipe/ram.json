@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "I": {
+      "item": "avp_human:integrated_circuit"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "S": {
+      "tag": "c:silicon"
+    },
+    "T": {
+      "item": "avp_human:transistor"
+    }
+  },
+  "pattern": [
+    "III",
+    "STS",
+    "GRG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:ram"
+  }
+}

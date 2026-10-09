@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:grindstone"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "N": {
+      "tag": "c:nuggets/aluminum"
+    },
+    "T": {
+      "tag": "c:ingots/titanium"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "NGN",
+    "NMN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electric_grinder"
+  }
+}

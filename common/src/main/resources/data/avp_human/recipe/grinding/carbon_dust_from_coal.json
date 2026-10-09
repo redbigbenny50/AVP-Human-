@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "tag": "minecraft:coals"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:carbon_dust",
+        "count": 4
+      }
+    }
+  ],
+  "time": 200
+}

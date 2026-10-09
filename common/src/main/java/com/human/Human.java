@@ -24,11 +24,13 @@ import com.human.common.registry.GeneBonusDataRegistry;
 import com.human.common.registry.init.HumanArmorMaterials;
 import com.human.common.registry.init.HumanBlockEntityTypes;
 import com.human.common.registry.init.HumanBlocks;
+import com.human.common.registry.init.HumanCauldronInteractions;
 import com.human.common.registry.init.HumanCommands;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.HumanDataSyncKeys;
 import com.human.common.registry.init.HumanEntitySpawns;
 import com.human.common.registry.init.HumanEntityTypes;
+import com.human.common.registry.init.HumanFluids;
 import com.human.common.registry.init.HumanFuels;
 import com.human.common.registry.init.HumanMenuTypes;
 import com.human.common.registry.init.HumanMobEffects;
@@ -99,6 +101,9 @@ public class Human {
         HumanEntityTypes.initialize();
 
         // Blocks
+        // ⚠ ORDER MATTERS: the latex liquid block's constructor takes the source fluid, so the fluids must exist
+        // before any block registry runs.
+        HumanFluids.initialize();
         CoreBlocks.initialize();
         HumanBlocks.initialize();
         HumanFerroaluminumBlocks.initialize();
@@ -107,6 +112,7 @@ public class Human {
         HumanPaddingBlocks.initialize();
         HumanPlasticBlocks.initialize();
         HumanSteelBlocks.initialize();
+        com.human.common.registry.init.block.HumanCompositeBlocks.initialize();
         HumanTitaniumBlocks.initialize();
 
         HumanBlockEntityTypes.initialize();
@@ -121,9 +127,10 @@ public class Human {
         HumanPaddingBlockItems.initialize();
         HumanPlasticBlockItems.initialize();
         HumanSpawnEggItems.initialize();
-        HumanSteelBlockItems.initialize();
-        HumanTitaniumBlockItems.initialize();
 
+        HumanSteelBlockItems.initialize();
+        com.human.common.registry.init.item.block.HumanCompositeBlockItems.initialize();
+        HumanTitaniumBlockItems.initialize();
         // Villagers
         HumanVillagerPoiTypes.initialize();
         HumanVillagerProfessions.initialize();
@@ -137,11 +144,11 @@ public class Human {
         HumanMobEffects.initialize();
 
         HumanArmorItems.initialize();
-
         HumanRecipes.initialize();
 
         HumanEntitySpawns.initialize();
         HumanFuels.initialize();
+        com.human.common.registry.init.HumanCompostables.initialize();
 
         HumanCreativeModeTabs.initialize();
 
@@ -162,9 +169,23 @@ public class Human {
         MOD.events().postLevelTick().register(Human::tickNukeAshPlacement);
         MOD.events().postLevelTick().register(Human::tickPowerSystem);
         MOD.events().postLevelTick().register(NuclearExplosionUtil::resumeUnfinishedExplosions);
+        MOD.events().postLevelTick().register(com.human.common.gameplay.freeze.FrozenSolid::tickLevel);
         MOD.events().onEntityTick().register(Human::applyFullArmorSetBonuses);
         MOD.events().onTagsUpdated().register(($1, $2) -> GeneBonusDataRegistry.rebuildLookupMappings());
+        // ⚠⚠ COMMON SETUP, NOT runInitialization. BLib's Fabric service DEFERS every registration -
+        // BLibFabricRegistryServiceImpl.register calls deferRegistration, and nothing is bound until the container
+        // runs them later. So a holder resolved anywhere inside runInitialization is unbound NO MATTER HOW LATE in
+        // that method it sits; moving this call after the item registries did not help and could not have:
+        // NullPointerException: Trying to access unbound value: ResourceKey[minecraft:item / avp_human:latex_bucket]
+        // onCommonSetup fires AFTER the deferred registrations have run (see BLibFabricModContainer), which is the
+        // first moment a CauldronInteraction map - keyed by the real Item INSTANCE - can be populated.
+        MOD.events().onCommonSetup().register(HumanCauldronInteractions::initialize);
+
         MOD.events().serverStarting().register(HumanCommissaryVillagerHouseInjector::inject);
+        // The power grids hold block entities, which hold their level: without this every world left in single-player
+        // stayed in memory for the rest of the session (PowerSystem's own note asked for exactly this, and nothing did
+        // it).
+        MOD.events().serverStopped().register(server -> com.human.common.gameplay.power.PowerSystem.clear());
         MOD.events().serverStarting().register(Human::injectVillagerGifts);
     }
 
@@ -229,7 +250,10 @@ public class Human {
 
     private static void tickPowerSystem(Level level) {
         if (!level.isClientSide) {
-            PowerSystem.get((ServerLevel) level).tick();
+            PowerSystem.get((ServerLevel) level).tick(level);
+            // [stated] Sep 30: the fluid pipe networks, after the power grid.
+            com.human.common.gameplay.fluid.pipe.FluidPipeSystem.get((ServerLevel) level).tick((ServerLevel) level);
+            com.human.common.gameplay.item.pipe.ItemPipeSystem.get((ServerLevel) level).tick((ServerLevel) level);
         }
     }
 }

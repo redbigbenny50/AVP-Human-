@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "avp_human:latex_block"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:latex_sheet"
+  }
+}

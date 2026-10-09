@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "item": "avp_human:heat_sink"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "S": {
+      "tag": "c:ingots/ferroaluminum"
+    },
+    "T": {
+      "item": "avp_human:desk_terminal"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "HTH",
+    "SMS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:cryotube_controller"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:pink_concrete_powder"
+  },
+  "result": {
+    "id": "minecraft:pink_concrete"
+  }
+}

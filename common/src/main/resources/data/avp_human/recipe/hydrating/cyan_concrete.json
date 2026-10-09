@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:cyan_concrete_powder"
+  },
+  "result": {
+    "id": "minecraft:cyan_concrete"
+  }
+}

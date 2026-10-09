@@ -1,0 +1,10 @@
+{
+  "type": "avp_human:freezing",
+  "fluid": {
+    "fluid": "avp_human:latex",
+    "amount": 1000
+  },
+  "result": {
+    "id": "avp_human:latex_block"
+  }
+}

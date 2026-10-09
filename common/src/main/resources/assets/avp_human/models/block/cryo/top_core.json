@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "0": "avp_human:block/cryo/top_core",
+    "particle": "avp_human:block/cryo/top_core"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        15.075,
+        0
+      ],
+      "to": [
+        16,
+        17.075,
+        16
+      ],
+      "name": "cube",
+      "faces": {
+        "north": {
+          "uv": [
+            4.0,
+            4.0,
+            8.0,
+            4.5
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            4.0,
+            4.5
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            12.0,
+            4.0,
+            16.0,
+            4.5
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            8.0,
+            4.0,
+            12.0,
+            4.5
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            8.0,
+            4.0,
+            4.0,
+            0.0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            12.0,
+            0.0,
+            8.0,
+            4.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

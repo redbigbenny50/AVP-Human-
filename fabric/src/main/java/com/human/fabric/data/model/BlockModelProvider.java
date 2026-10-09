@@ -5,6 +5,7 @@ import com.blib.fabric.data.model.generator.BarsGenerator;
 import com.human.common.gameplay.block.property.HumanBlockProperties;
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanIndustrialConcreteBlocks;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
@@ -248,6 +249,10 @@ public class BlockModelProvider extends FabricModelProvider {
             .stairs(HumanPlasticBlocks.TRAFFIC_HAZARD_PLASTIC_STAIRS.get())
             .wall(HumanPlasticBlocks.TRAFFIC_HAZARD_PLASTIC_WALL.get());
 
+        // [stated] Oct 3: the infinite power generator had no model at all - now a cube with its own texture on every
+        // side
+        // (block/infinite_power_generator). Its item model follows from this block model.
+        generators.createTrivialCube(com.human.common.registry.init.HumanBlocks.INFINITE_POWER_GENERATOR.get());
         generators.createTrivialCube(CoreBlocks.ALUMINUM_BLOCK.get());
         generators.createTrivialCube(CoreBlocks.TRINITITE_BLOCK.get());
         generators.createTrivialCube(CoreBlocks.AUTUNITE_BLOCK.get());
@@ -431,6 +436,46 @@ public class BlockModelProvider extends FabricModelProvider {
         generators.family(HumanSteelBlocks.STEEL_GRATE.get())
             .slab(HumanSteelBlocks.STEEL_GRATE_SLAB.get())
             .stairs(HumanSteelBlocks.STEEL_GRATE_STAIRS.get());
+
+        // [stated] Oct 3: composite - the steel family's models, on composite's own textures.
+        generators.createTrivialCube(HumanCompositeBlocks.CHISELED_COMPOSITE.get());
+        generators.family(HumanCompositeBlocks.CUT_COMPOSITE.get())
+            .slab(HumanCompositeBlocks.CUT_COMPOSITE_SLAB.get())
+            .stairs(HumanCompositeBlocks.CUT_COMPOSITE_STAIRS.get());
+        BarsGenerator.generate(generators, HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE.get());
+        generators.createRotatedPillarWithHorizontalVariant(
+            HumanCompositeBlocks.COMPOSITE_COLUMN.get(),
+            TexturedModel.COLUMN_ALT,
+            TexturedModel.COLUMN_HORIZONTAL_ALT
+        );
+        generators.family(HumanCompositeBlocks.COMPOSITE_BLOCK.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_STAIRS.get())
+            .pressurePlate(HumanCompositeBlocks.COMPOSITE_PRESSURE_PLATE.get())
+            .button(HumanCompositeBlocks.COMPOSITE_BUTTON.get())
+            .door(HumanCompositeBlocks.COMPOSITE_DOOR.get())
+            .trapdoor(HumanCompositeBlocks.COMPOSITE_TRAP_DOOR.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_SIDING.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_SIDING_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_SIDING_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_STANDING.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_STANDING_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_STANDING_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_PLATING.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_PLATING_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_PLATING_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_TREAD.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_TREAD_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS.get());
+        generators.family(HumanCompositeBlocks.COMPOSITE_GRATE.get())
+            .slab(HumanCompositeBlocks.COMPOSITE_GRATE_SLAB.get())
+            .stairs(HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS.get());
 
         generators.family(HumanTitaniumBlocks.TITANIUM_GRATE.get())
             .slab(HumanTitaniumBlocks.TITANIUM_GRATE_SLAB.get())

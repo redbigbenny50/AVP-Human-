@@ -6,12 +6,12 @@ import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.ItemCooldownUser;
 import com.human.common.gameplay.item.gun.FireModeConfig;
 import com.human.common.gameplay.item.gun.GunConfig;
+import com.human.common.gameplay.item.gun.GunHeat;
 import com.human.common.gameplay.item.gun.attack.GunAttackConfig;
 import com.human.common.gameplay.item.gun.pipeline.step.GunShootStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckCooldownStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckReloadingStep;
 import com.human.common.gameplay.item.gun.pipeline.step.impl.CheckShootDelayStep;
-import com.human.common.gameplay.item.old_painless.OldPainlessHeat;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.registry.init.item.HumanGunItems;
 import com.just.core.functional.option.Option;
@@ -67,7 +67,9 @@ public record GunShootContext(
     }
 
     public GunShootResult shoot() {
-        if (gunItem == HumanGunItems.OLD_PAINLESS.get() && OldPainlessHeat.isOverheated(itemStack)) {
+        // ⚠ NO LONGER AN OLD PAINLESS SPECIAL CASE. Any gun carrying a heat profile is locked out while overheated;
+        // a gun without one has no heat state and this is a null check that always passes.
+        if (gunConfig.heatProfile() != null && GunHeat.isOverheated(itemStack)) {
             return GunShootResult.COOLDOWN;
         }
 
@@ -101,7 +103,7 @@ public record GunShootContext(
 
         applyOldPainlessMovementPenalty();
 
-        applyOldPainlessHeat();
+        applyGunHeat();
 
         updateItemStackDamage();
 
@@ -140,9 +142,11 @@ public record GunShootContext(
         shooter.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 4, 1, true, false, false));
     }
 
-    private void applyOldPainlessHeat() {
-        if (gunItem == HumanGunItems.OLD_PAINLESS.get()) {
-            OldPainlessHeat.addShotHeat(shooter, itemStack);
+    private void applyGunHeat() {
+        var heatProfile = gunConfig.heatProfile();
+
+        if (heatProfile != null) {
+            GunHeat.addShotHeat(shooter, itemStack, gunItem, heatProfile);
         }
     }
 

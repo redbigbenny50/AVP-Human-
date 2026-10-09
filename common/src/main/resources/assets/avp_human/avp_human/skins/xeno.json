@@ -1,0 +1,8 @@
+{
+  "name": "Xeno",
+  "targets": [
+    "avp_human:sentry_turret"
+  ],
+  "texture": "avp_human:textures/block/sentry_turret_xeno.png",
+  "colour": "#2D5A32"
+}

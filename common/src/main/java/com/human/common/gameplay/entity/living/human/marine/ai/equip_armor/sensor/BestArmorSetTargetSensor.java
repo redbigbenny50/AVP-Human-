@@ -31,11 +31,38 @@ public class BestArmorSetTargetSensor {
             return getFullSetFireResistantArmor(worldState);
         }
 
-        if (
-            worldState.getOrDefault(GOAPSensors.IS_UNDERWATER.key(), false)
-                && !worldState.getOrDefault(GOAPSensors.HAS_WATER_BREATHING.key(), false)
-        ) {
-            return worldState.getOrDefault(EquipArmorSensors.PRESSURE_SUIT_ARMOR_SET_TARGET.key(), ArmorSetTarget.EMPTY);
+        // Two reasons to dress for a dive: the marine is itself under the water without water breathing, or the leader
+        // it mirrors has committed to staying under (see HumanWaterMovement). His ruling: "if the player stays
+        // underwater too long or has an effect letting them breathe underwater the marines will put on the pressure
+        // suit or mk50 if they have them."
+        var isUnderwaterUnaided = worldState.getOrDefault(GOAPSensors.IS_UNDERWATER.key(), false)
+            && !worldState.getOrDefault(GOAPSensors.HAS_WATER_BREATHING.key(), false);
+        var isLeaderStayingUnderwater = worldState.getOrDefault(HumanGOAPSensors.IS_LEADER_STAYING_UNDERWATER.key(), false);
+
+        // Space, per the Sep 21 rulings: "pressure suit is bare bones gives air, mk50 is environmental protection and
+        // air but its slower." Extreme heat or cold is MK50 or nothing (the pressure suit does not help, so it is
+        // not offered). Airless alone is the same choice as a dive - the lighter suit first, an MK50 already worn kept.
+        var isInExtremeTemperature = worldState.getOrDefault(HumanGOAPSensors.IS_IN_EXTREME_HEAT.key(), false)
+            || worldState.getOrDefault(HumanGOAPSensors.IS_IN_EXTREME_COLD.key(), false);
+
+        if (isInExtremeTemperature) {
+            var mk50 = worldState.getOrDefault(EquipArmorSensors.MK50_ARMOR_SET_TARGET.key(), ArmorSetTarget.EMPTY);
+
+            if (!mk50.isEmpty()) {
+                return mk50;
+            }
+        }
+
+        var isInAirlessEnvironment = worldState.getOrDefault(HumanGOAPSensors.IS_IN_AIRLESS_ENVIRONMENT.key(), false);
+
+        if (isUnderwaterUnaided || isLeaderStayingUnderwater || isInAirlessEnvironment) {
+            var diveSuit = getDiveSuit(worldState);
+
+            // No suit at all: fall through to the normal choice rather than returning an empty target, which would
+            // otherwise stop the marine wearing its ordinary armor for as long as it is in the water or the vacuum.
+            if (!diveSuit.isEmpty()) {
+                return diveSuit;
+            }
         }
 
         // TODO: Select "best" armor pieces (depending on defense, enchantments, etc.)
@@ -60,6 +87,23 @@ public class BestArmorSetTargetSensor {
             bootsOption.<ItemTarget>map(ArmorStrategyResult::itemTarget)
                 .unwrapOr(ItemTarget.None.INSTANCE)
         );
+    }
+
+    /**
+     * The pressure suit is the bare-bones air supply and the MK50 is full environmental protection at the cost of
+     * speed, so the pressure suit is the default dive dress. An MK50 that is ALREADY WORN is kept - it breathes just as
+     * well, and swapping a full set underwater for no gain is exactly the kind of fidgeting a diver does not do.
+     */
+    private static ArmorSetTarget getDiveSuit(ReadableWorldState worldState) {
+        var mk50 = worldState.getOrDefault(EquipArmorSensors.MK50_ARMOR_SET_TARGET.key(), ArmorSetTarget.EMPTY);
+
+        if (!mk50.isEmpty() && mk50.allMatch(ItemTarget.Location.EQUIPPED)) {
+            return mk50;
+        }
+
+        var pressureSuit = worldState.getOrDefault(EquipArmorSensors.PRESSURE_SUIT_ARMOR_SET_TARGET.key(), ArmorSetTarget.EMPTY);
+
+        return pressureSuit.isEmpty() ? mk50 : pressureSuit;
     }
 
     private static ArmorSetTarget getFullSetFireResistantArmor(ReadableWorldState worldState) {

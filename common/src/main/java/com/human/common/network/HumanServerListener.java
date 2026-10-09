@@ -100,7 +100,35 @@ public class HumanServerListener {
      * The open container IS the authorisation: a player who is not looking at that marine has no container to name it
      * with. Also re-checks leadership, so someone else's open screen cannot be used to retask their marines.
      */
+    /**
+     * Oct 8 - a pipe end's edited filter. The open pipe-end screen is the authorisation: the filter goes to that
+     * screen's end, and only while the player is still in reach.
+     */
+    public static void handlePipeFilterPayload(
+        com.human.common.network.packet.C2SPipeFilterPayload payload,
+        Player player
+    ) {
+        if (
+            player.containerMenu instanceof com.human.common.gameplay.block.pipe.PipeEndMenu pipeMenu
+                && pipeMenu.stillValid(player)
+        ) {
+            pipeMenu.applyFilter(payload.filter());
+        }
+    }
+
     public static void handleMarineSentryFilterPayload(C2SMarineSentryFilterPayload payload, Player player) {
+        // [stated] Oct 2: the sentry turret's Targeting button opens the same page, so the same packet applies to
+        // whichever turret's screen is open - the open container is the authorisation here too, plus ownership.
+        if (player.containerMenu instanceof com.human.common.gameplay.menu.sentry.SentryTurretMenu turretMenu) {
+            var turret = turretMenu.getTurret();
+
+            if (turret != null && turret.isAlive() && turretMenu.stillValid(player) && turret.canConfigure(player)) {
+                turret.setTargetFilter(payload.filter().copy());
+            }
+
+            return;
+        }
+
         if (!(player.containerMenu instanceof MarineInventoryMenu marineInventoryMenu)) {
             return;
         }
@@ -112,6 +140,87 @@ public class HumanServerListener {
         }
 
         marine.setSentryFilter(payload.filter());
+    }
+
+    /** Sends a player the turrets on the network they may see - for the desk terminal's list. */
+    public static void sendSentryNetwork(net.minecraft.server.level.ServerPlayer player) {
+        var rows = new java.util.ArrayList<com.human.common.network.packet.S2CSentryNetworkPayload.Turret>();
+
+        for (var entry : com.human.common.gameplay.entity.machine.SentryNetwork.get(player.server).visibleTo(player.getUUID())) {
+            rows.add(
+                new com.human.common.network.packet.S2CSentryNetworkPayload.Turret(
+                    entry.turret(),
+                    entry.name(),
+                    entry.dimension(),
+                    entry.pos().asLong(),
+                    entry.camera()
+                )
+            );
+        }
+
+        com.human.Human.MOD.networking().sendToClient(player, new com.human.common.network.packet.S2CSentryNetworkPayload(rows));
+    }
+
+    /**
+     * [stated] Oct 2: look through a turret's camera. Honoured only from an open desk terminal or that turret's own
+     * screen - the open container is the authorisation - and only for a turret the player owns, which the turret checks
+     * along with its lens, card, power and range.
+     */
+    public static void handleSentryViewPayload(com.human.common.network.packet.C2SSentryViewPayload payload, Player player) {
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) || !player.containerMenu.stillValid(player)) {
+            return;
+        }
+
+        var fromTerminal = player.containerMenu instanceof com.human.common.gameplay.menu.terminal.DeskTerminalMenu;
+        var fromTurret = player.containerMenu instanceof com.human.common.gameplay.menu.sentry.SentryTurretMenu turretMenu
+            && turretMenu.getTurret() != null && turretMenu.getTurret().getUUID().equals(payload.turret());
+
+        if (!fromTerminal && !fromTurret) {
+            return;
+        }
+
+        if (
+            !(serverPlayer.serverLevel()
+                .getEntity(payload.turret()) instanceof com.human.common.gameplay.entity.machine.SentryTurret turret)
+        ) {
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.avp_human.sentry.camera.too_far"), true);
+            return;
+        }
+
+        var refusal = turret.cameraRefusal(serverPlayer);
+
+        if (refusal != null) {
+            player.displayClientMessage(refusal, true);
+            return;
+        }
+
+        serverPlayer.closeContainer();
+        turret.startControl(serverPlayer);
+    }
+
+    /** The controls of the turret this player is looking through - their own session only. */
+    public static void handleSentryControlPayload(com.human.common.network.packet.C2SSentryControlPayload payload, Player player) {
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)) {
+            return;
+        }
+
+        var turret = com.human.common.gameplay.entity.machine.SentryTurret.controlledBy(serverPlayer);
+
+        if (turret == null) {
+            return;
+        }
+
+        if (payload.exit()) {
+            turret.stopControl();
+            return;
+        }
+
+        // A NaN or infinite angle from a broken client must not reach the turret's rotation.
+        if (!Float.isFinite(payload.yaw()) || !Float.isFinite(payload.pitch())) {
+            return;
+        }
+
+        turret.applyControl(payload.yaw(), payload.pitch(), payload.trigger());
     }
 
     private HumanServerListener() {

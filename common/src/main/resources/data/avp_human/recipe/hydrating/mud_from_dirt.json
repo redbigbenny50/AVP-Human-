@@ -1,0 +1,9 @@
+{
+  "type": "avp_human:hydrating",
+  "ingredient": {
+    "item": "minecraft:dirt"
+  },
+  "result": {
+    "id": "minecraft:mud"
+  }
+}

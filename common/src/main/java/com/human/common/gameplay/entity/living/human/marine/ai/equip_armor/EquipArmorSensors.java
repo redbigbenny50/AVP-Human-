@@ -26,6 +26,15 @@ import net.minecraft.world.item.ArmorItem;
 
 public class EquipArmorSensors {
 
+    /**
+     * ⭐ Oct 6 - performance. Looking for the best armour LYING IN THE WORLD scores every nearby item entity against
+     * every strategy, and it ran on every re-plan. Items on the ground do not appear and vanish tick to tick, so these
+     * four hold their answer for {@value #WORLD_ITEM_REFRESH_TICKS} ticks ({@code Sensors.every}, just-goap's own hold,
+     * honoured while {@code blibGoapSensingOptimizations} is on - the same mechanism the carrier's host count uses). A
+     * held item that is picked up meanwhile is harmless: the pick-up action aborts on a removed item entity.
+     */
+    public static final int WORLD_ITEM_REFRESH_TICKS = 10;
+
     private static final ArmorSet MK50_ARMOR_SET = new ArmorSet(
         HumanArmorItems.MK50_HELMET,
         HumanArmorItems.MK50_CHESTPLATE,
@@ -76,10 +85,13 @@ public class EquipArmorSensors {
                 .build()::sense
         );
 
-    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_HELMET_IN_WORLD = Sensors.lazyCompose(
-        StateKey.sensed("best_helmet_in_world"),
-        ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.HELMET), ArmorStrategyResult::new)
-            .build()::sense
+    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_HELMET_IN_WORLD = Sensors.every(
+        WORLD_ITEM_REFRESH_TICKS,
+        Sensors.lazyCompose(
+            StateKey.sensed("best_helmet_in_world"),
+            ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.HELMET), ArmorStrategyResult::new)
+                .build()::sense
+        )
     );
 
     public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<? extends ItemTarget>>> BEST_HELMET = Sensors.lazyCompose(
@@ -106,12 +118,14 @@ public class EquipArmorSensors {
                 .build()::sense
         );
 
-    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_CHESTPLATE_IN_WORLD = Sensors
-        .lazyCompose(
+    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_CHESTPLATE_IN_WORLD = Sensors.every(
+        WORLD_ITEM_REFRESH_TICKS,
+        Sensors.lazyCompose(
             StateKey.sensed("best_chestplate_in_world"),
             ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.CHESTPLATE), ArmorStrategyResult::new)
                 .build()::sense
-        );
+        )
+    );
 
     public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<? extends ItemTarget>>> BEST_CHESTPLATE = Sensors.lazyCompose(
         StateKey.sensed("best_chestplate"),
@@ -136,12 +150,14 @@ public class EquipArmorSensors {
                 .build()::sense
         );
 
-    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_LEGGINGS_IN_WORLD = Sensors
-        .lazyCompose(
+    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_LEGGINGS_IN_WORLD = Sensors.every(
+        WORLD_ITEM_REFRESH_TICKS,
+        Sensors.lazyCompose(
             StateKey.sensed("best_leggings_in_world"),
             ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.LEGGINGS), ArmorStrategyResult::new)
                 .build()::sense
-        );
+        )
+    );
 
     public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<? extends ItemTarget>>> BEST_LEGGINGS = Sensors.lazyCompose(
         StateKey.sensed("best_leggings"),
@@ -166,10 +182,13 @@ public class EquipArmorSensors {
                 .build()::sense
         );
 
-    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_BOOTS_IN_WORLD = Sensors.lazyCompose(
-        StateKey.sensed("best_boots_in_world"),
-        ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.BOOTS), ArmorStrategyResult::new)
-            .build()::sense
+    public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<ItemTarget.World>>> BEST_BOOTS_IN_WORLD = Sensors.every(
+        WORLD_ITEM_REFRESH_TICKS,
+        Sensors.lazyCompose(
+            StateKey.sensed("best_boots_in_world"),
+            ItemInWorldSensor.builder(() -> ArmorStrategySet.INSTANCE.getForType(ArmorItem.Type.BOOTS), ArmorStrategyResult::new)
+                .build()::sense
+        )
     );
 
     public static final Sensor.Mono<Marine, Option<ArmorStrategyResult<? extends ItemTarget>>> BEST_BOOTS = Sensors.lazyCompose(

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "R": {
+      "item": "avp_human:rubber_globule"
+    },
+    "T": {
+      "tag": "c:ingots/titanium"
+    }
+  },
+  "pattern": [
+    "TRT",
+    "RGR",
+    "TRT"
+  ],
+  "result": {
+    "count": 16,
+    "id": "avp_human:cryoconduit"
+  }
+}

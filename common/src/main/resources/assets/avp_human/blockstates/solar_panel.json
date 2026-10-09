@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "power_mode=off": { "model": "avp_human:block/solar_panel" },
+    "power_mode=low": { "model": "avp_human:block/solar_panel" },
+    "power_mode=med": { "model": "avp_human:block/solar_panel" },
+    "power_mode=max": { "model": "avp_human:block/solar_panel" }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "avp_human:block/cryoconduit_core"
+      }
+    },
+    {
+      "when": {
+        "north": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side"
+      }
+    },
+    {
+      "when": {
+        "south": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "east": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "west": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "conduit|endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_side",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "north": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange"
+      }
+    },
+    {
+      "when": {
+        "south": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "east": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "west": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "endpoint"
+      },
+      "apply": {
+        "model": "avp_human:block/cryoconduit_flange",
+        "x": 90
+      }
+    }
+  ]
+}

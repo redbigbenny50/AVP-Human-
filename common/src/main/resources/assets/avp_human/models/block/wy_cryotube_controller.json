@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "avp_human:block/cryotube_controller_wy_side",
+    "north": "avp_human:block/cryotube_controller_wy_front",
+    "south": "avp_human:block/cryotube_controller_wy_back",
+    "east": "avp_human:block/cryotube_controller_wy_side",
+    "west": "avp_human:block/cryotube_controller_wy_side",
+    "up": "avp_human:block/cryotube_controller_wy_top",
+    "down": "avp_human:block/cryotube_controller_wy_bottom"
+  }
+}

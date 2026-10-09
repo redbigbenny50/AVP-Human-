@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "key": {
+    "T": {
+      "item": "avp_human:titanium_ingot"
+    },
+    "C": {
+      "item": "avp_human:copper_coil"
+    }
+  },
+  "pattern": [
+    "T T",
+    " C ",
+    " T "
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:titanium_capture_cord"
+  }
+}

@@ -2,6 +2,7 @@ package com.human.common.gameplay.item.old_painless;
 
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.gun.GunData;
+import com.human.common.gameplay.item.gun.GunHeat;
 import com.human.common.registry.init.HumanDataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -73,8 +74,8 @@ public class OldPainlessItem extends GunItem {
      * <p>
      * ⚠ OVERHEAT SPINS DOWN AND STAYS DOWN. Resetting to STOPPED (rather than merely skipping the loop) is what makes
      * the barrels visibly seize and then wind up again from cold when the lockout expires - the "locks up" he asked
-     * for. {@code OldPainlessHeat.isOverheated} is the same flag the heat layer renders from, so the visual and the
-     * lockout can never disagree.
+     * for. {@code GunHeat.isOverheated} is the same flag the heat layer renders from, so the visual and the lockout can
+     * never disagree.
      * </p>
      */
     /**
@@ -104,7 +105,7 @@ public class OldPainlessItem extends GunItem {
     private void tickSpin(ItemStack itemStack, int tickProgress) {
         var phase = itemStack.getOrDefault(HumanDataComponents.OLD_PAINLESS_SPIN_PHASE.get(), SPIN_PHASE_STOPPED);
 
-        if (OldPainlessHeat.isOverheated(itemStack)) {
+        if (GunHeat.isOverheated(itemStack)) {
             if (phase != SPIN_PHASE_STOPPED) {
                 stopSpin(itemStack);
             }
@@ -146,15 +147,12 @@ public class OldPainlessItem extends GunItem {
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean selected) {
+        // ⚠ COOLING AND SMOKE ARE NO LONGER TICKED HERE - GunItem.inventoryTick does both for any gun with a heat
+        // profile, and this call is what reaches it. Ticking them again below would DOUBLE THE PASSIVE COOLING and
+        // silently halve this gun's time to overheat.
         super.inventoryTick(itemStack, level, entity, slotId, selected);
-        if (!level.isClientSide) {
-            OldPainlessHeat.cool(itemStack);
 
-            // ⭐ Smoke only for the gun actually in hand; a hot Old Painless in the pack still cools, it just does
-            // not smoke through the holder's chest.
-            if (selected) {
-                OldPainlessHeat.tickSmoke(entity, itemStack);
-            }
+        if (!level.isClientSide) {
             tickSpinDownTimeout(itemStack, entity);
             tickSpinDownCoast(itemStack);
         }

@@ -11,5 +11,6 @@ public class DamageTypeBootstrapper {
         registry.register(HumanDamageTypeKeys.FLAMETHROW, new DamageType("flamethrow", 0.1F));
         registry.register(HumanDamageTypeKeys.RAZOR_WIRE, new DamageType("razor_wire", 0.1F));
         registry.register(HumanDamageTypeKeys.RADIATION, new DamageType("radiation", 0.1F));
+        registry.register(HumanDamageTypeKeys.CRYOFLUID, new DamageType("cryofluid", 0.0F));
     }
 }

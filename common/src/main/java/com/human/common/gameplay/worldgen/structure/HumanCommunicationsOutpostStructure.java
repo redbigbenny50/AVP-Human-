@@ -54,4 +54,17 @@ public class HumanCommunicationsOutpostStructure extends JigsawBackedStructure {
     public @NotNull StructureType<?> type() {
         return HumanStructureTypes.COMMUNICATIONS_OUTPOST.get();
     }
+
+    /**
+     * [stated] Oct 5: no structure of ours that is not meant to be flooded may generate in water - the whole site must
+     * be dry (StructureUtil.isSiteDry samples a 3x3 grid across it). The marine camp and mobile lab already had this.
+     */
+    @Override
+    protected @NotNull Optional<GenerationStub> findGenerationPoint(@NotNull GenerationContext generationContext) {
+        if (!com.human.common.gameplay.worldgen.structure.util.StructureUtil.isSiteDry(generationContext)) {
+            return Optional.empty();
+        }
+
+        return super.findGenerationPoint(generationContext);
+    }
 }

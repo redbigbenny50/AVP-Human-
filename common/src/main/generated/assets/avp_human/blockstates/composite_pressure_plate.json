@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "avp_human:block/composite_pressure_plate"
+    },
+    "powered=true": {
+      "model": "avp_human:block/composite_pressure_plate_down"
+    }
+  }
+}

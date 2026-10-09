@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_emerald": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:emerald"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_gold_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:gold_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_integrated_circuit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:integrated_circuit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_rocket": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:rocket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_silicon": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:silicon"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:rocket_ammo_upgrade"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gold_nugget",
+      "has_rocket",
+      "has_silicon",
+      "has_integrated_circuit",
+      "has_emerald"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:rocket_ammo_upgrade"
+    ]
+  }
+}

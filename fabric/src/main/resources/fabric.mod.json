@@ -1,48 +1,49 @@
 {
-	"schemaVersion": 1,
-	"id": "avp_human",
-	"version": "${mod_version}",
-	"name": "${mod_name}",
-	"description": "${mod_description}",
-	"accessWidener": "avp_human.accesswidener",
-	"authors": [],
-	"contact": {
-		"homepage": "https://www.curseforge.com/minecraft/mc-mods/avp",
-		"sources": "https://github.com/AliensVsPredator/AliensVsPredator"
-	},
-	"license": "${mod_license}",
-	"icon": "${mod_icon}",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.human.fabric.HumanFabric"
-		],
-		"client": [
-			"com.human.fabric.client.HumanFabricClient"
-		],
-		"fabric-datagen": [
-			"com.human.fabric.data.HumanDataGenerator"
-		],
-		"rei_client": [],
-		"jei_mod_plugin": []
-	},
-	"mixins": [
-		"${mod_id}.mixins.json",
-		"${mod_id}.fabric.mixins.json"
-	],
-	"breaks": {
-		"gigeresque": "<${gigeresque_version}"
-	},
-	"depends": {
-		"fabricloader": ">=${fabric_loader_version}",
-		"minecraft": "~${minecraft_version}",
-		"java": ">=${java_version}",
-		"fabric-api": "*",
-		"blib": "~${blib_version}"
-	},
-	"suggests": {
-		"avp_alien": "~${avp_alien_version}",
-		"avp_predator": "~${avp_predator_version}",
-		"gigeresque": "~${gigeresque_version}"
-	}
+  "schemaVersion": 1,
+  "id": "avp_human",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "accessWidener": "avp_human.accesswidener",
+  "authors": [],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/avp",
+    "sources": "https://github.com/AliensVsPredator/AliensVsPredator"
+  },
+  "license": "${mod_license}",
+  "icon": "${mod_icon}",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.human.fabric.HumanFabric"
+    ],
+    "client": [
+      "com.human.fabric.client.HumanFabricClient"
+    ],
+    "fabric-datagen": [
+      "com.human.fabric.data.HumanDataGenerator"
+    ],
+    "rei_client": [],
+    "jei_mod_plugin": []
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
+  ],
+  "breaks": {
+    "gigeresque": "<${gigeresque_version}"
+  },
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=${java_version}",
+    "fabric-api": "*",
+    "blib": "~${blib_version}",
+    "team_reborn_energy": ">=4.1.0"
+  },
+  "suggests": {
+    "avp_alien": "~${avp_alien_version}",
+    "avp_predator": "~${avp_predator_version}",
+    "gigeresque": "~${gigeresque_version}"
+  }
 }

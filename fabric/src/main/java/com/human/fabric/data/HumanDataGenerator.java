@@ -16,6 +16,7 @@ import com.human.fabric.data.tag.HumanBlockTagProvider;
 import com.human.fabric.data.tag.HumanDamageTypeTagProvider;
 import com.human.fabric.data.tag.HumanEnchantmentTagProvider;
 import com.human.fabric.data.tag.HumanEntityTypeTagProvider;
+import com.human.fabric.data.tag.HumanFluidTagProvider;
 import com.human.fabric.data.tag.HumanItemTagProvider;
 import com.human.fabric.data.tag.HumanPoiTagProvider;
 import com.human.fabric.data.worldgen.HumanBiomeProvider;
@@ -61,6 +62,7 @@ public class HumanDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(HumanEntityTypeTagProvider::new);
         pack.addProvider(HumanItemTagProvider::new);
         pack.addProvider(HumanPoiTagProvider::new);
+        pack.addProvider(HumanFluidTagProvider::new);
 
         // Loot providers
         pack.addProvider(BlockLootTableProvider::new);

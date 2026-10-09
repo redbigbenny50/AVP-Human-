@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "N": {
+      "tag": "c:nuggets/aluminum"
+    }
+  },
+  "pattern": [
+    "NBN",
+    "NDN",
+    "NMN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electric_hydrator"
+  }
+}

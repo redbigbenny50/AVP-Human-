@@ -1,3 +1,7 @@
 {
-  "values": {}
+  "values": {
+    "avp_human:kelp_block": {
+      "chance": 1.0
+    }
+  }
 }

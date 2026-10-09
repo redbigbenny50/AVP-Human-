@@ -2,6 +2,7 @@ package com.human.common.registry.init.creative_mode_tab.initializer;
 
 import com.human.common.registry.init.HumanBlocks;
 import com.human.common.registry.init.block.CoreBlocks;
+import com.human.common.registry.init.block.HumanCompositeBlocks;
 import com.human.common.registry.init.block.HumanFerroaluminumBlocks;
 import com.human.common.registry.init.block.HumanIndustrialGlassBlocks;
 import com.human.common.registry.init.block.HumanSteelBlocks;
@@ -120,6 +121,41 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.STEEL_TREAD_SLAB);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.STEEL_TREAD_STAIRS);
 
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_BLOCK);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CHISELED_COMPOSITE);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CUT_COMPOSITE);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CUT_COMPOSITE_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_BUTTON);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_COLUMN);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_DOOR);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_GRATE);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_GRATE_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_GRATE_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_PLATING);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_PLATING_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_PLATING_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_PRESSURE_PLATE);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_SIDING);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_SIDING_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_SIDING_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_STANDING);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_STANDING_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_STANDING_STAIRS);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_TRAP_DOOR);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_TREAD);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_TREAD_SLAB);
+        CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS);
+
         // Titanium
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.TITANIUM_BLOCK);
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.TITANIUM_CHAIN_FENCE);
@@ -168,14 +204,12 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.LEAD_CHEST);
         CreativeModeTabUtil.accept(output, HumanBlocks.RAZOR_WIRE);
         CreativeModeTabUtil.accept(output, HumanBlocks.BLUEPRINT_BLOCK);
-        CreativeModeTabUtil.accept(output, HumanBlocks.CABLE);
         CreativeModeTabUtil.accept(output, HumanBlocks.REDSTONE_GENERATOR);
         CreativeModeTabUtil.accept(output, HumanBlocks.INDUSTRIAL_FURNACE);
-        CreativeModeTabUtil.accept(output, HumanBlocks.BATTERY);
         CreativeModeTabUtil.accept(output, HumanBlocks.INFINITE_POWER_GENERATOR);
-        CreativeModeTabUtil.accept(output, HumanBlocks.SOLAR_PANEL);
-        CreativeModeTabUtil.accept(output, HumanBlocks.THERMAL_GENERATOR);
-        CreativeModeTabUtil.accept(output, HumanBlocks.WIND_TURBINE);
+        CreativeModeTabUtil.accept(output, CoreBlocks.LATEX_BLOCK);
+        CreativeModeTabUtil.accept(output, CoreBlocks.KELP_BLOCK);
+        CreativeModeTabUtil.accept(output, CoreBlocks.RUBBER_BLOCK);
         CreativeModeTabUtil.accept(output, HumanBlocks.DESK_TERMINAL_BLOCK);
         CreativeModeTabUtil.accept(output, HumanBlocks.RESONATOR_BLOCK);
     };
