@@ -36,6 +36,49 @@ public class CryofluidLiquidBlock extends LiquidBlock {
         }
     }
 
+    @Override
+    protected void onPlace(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull BlockState oldState,
+        boolean movedByPiston
+    ) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        freezeNeighbours(level, pos);
+    }
+
+    @Override
+    protected void neighborChanged(
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.level.block.Block neighborBlock,
+        @NotNull BlockPos neighborPos,
+        boolean movedByPiston
+    ) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        freezeNeighbours(level, pos);
+    }
+
+    /**
+     * [stated] Oct 20 - cryofluid freezes the nether resin it touches into netherrack, in its own shape (as powder snow
+     * does). Only on placing and on a neighbour changing - never every tick.
+     */
+    private static void freezeNeighbours(Level level, BlockPos pos) {
+        if (!(level instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
+            return;
+        }
+
+        for (var direction : net.minecraft.core.Direction.values()) {
+            var side = pos.relative(direction);
+
+            if (serverLevel.isLoaded(side)) {
+                com.human.compatibility.avp_alien.HumanResinConversion.freeze(serverLevel, side, serverLevel.getBlockState(side));
+            }
+        }
+    }
+
     /**
      * ⚠ {@code entityInside} runs once for EVERY block the entity overlaps, so a player standing in fluid two blocks
      * deep would be frozen twice a tick. Only one block counts: the one at the feet, or, when the feet are out of it,

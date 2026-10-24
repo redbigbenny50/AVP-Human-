@@ -13,6 +13,12 @@
     },
     {
       "item": "avp_human:receiver"
+    },
+    {
+      "item": "avp_human:stock"
+    },
+    {
+      "item": "avp_human:aluminum_tank"
     }
   ],
   "result": {

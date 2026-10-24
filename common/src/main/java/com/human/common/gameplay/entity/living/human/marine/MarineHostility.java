@@ -45,6 +45,12 @@ public class MarineHostility {
             return false;
         }
 
+        // [stated] Oct 13 - factions at war are enemies on sight, no engagement needed. Every pair is NEUTRAL until the
+        // faction system says otherwise, so today this changes nothing.
+        if (com.human.common.gameplay.entity.living.human.soldier.HumanFactionRelations.areHostile(livingSource, livingTarget)) {
+            return true;
+        }
+
         return hasEngaged(livingSource, targetSide)
             || hasEngaged(livingTarget, sourceSide)
             || leaderHasEngaged(livingSource, targetSide)

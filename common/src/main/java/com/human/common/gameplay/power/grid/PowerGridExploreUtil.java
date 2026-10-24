@@ -77,11 +77,23 @@ public class PowerGridExploreUtil {
             return false;
         }
 
+        var to = from.relative(direction);
+
+        // Oct 22 - two power blocks that join each other directly (solar panels side by side) are connected whatever
+        // their cable faces say - see PowerNodeBlockEntity.joinsNeighbour. Both must agree.
+        if (
+            level.isLoaded(to)
+                && level.getBlockEntity(from) instanceof PowerNodeBlockEntity fromNode
+                && level.getBlockEntity(to) instanceof PowerNodeBlockEntity toNode
+                && fromNode.joinsNeighbour(direction, toNode)
+                && toNode.joinsNeighbour(direction.getOpposite(), fromNode)
+        ) {
+            return true;
+        }
+
         if (level.getBlockEntity(from) instanceof PowerNodeBlockEntity node && !node.isFaceConnectable(direction)) {
             return false;
         }
-
-        var to = from.relative(direction);
 
         if (!level.isLoaded(to)) {
             return false;

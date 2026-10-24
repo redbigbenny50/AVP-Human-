@@ -20,6 +20,25 @@ public class HumanSpawnEggItems {
 
     public static final BLibHolder<SpawnEggItem> COLONIST_SPAWN_EGG = create("colonist", HumanEntityTypes.COLONIST);
 
+    // [stated] Oct 13 - one egg per soldier type (art supplied; the spec ops eggs recoloured from his commando/elite).
+    public static final BLibHolder<SpawnEggItem> TACTICAL_MARINE_SPAWN_EGG = create("tactical_marine", HumanEntityTypes.TACTICAL_MARINE);
+
+    public static final BLibHolder<SpawnEggItem> WY_COMMANDO_SPAWN_EGG = create("wy_commando", HumanEntityTypes.WY_COMMANDO);
+
+    public static final BLibHolder<SpawnEggItem> WY_ELITE_SPAWN_EGG = create("wy_elite", HumanEntityTypes.WY_ELITE);
+
+    public static final BLibHolder<SpawnEggItem> WY_SPEC_OPS_COMMANDO_SPAWN_EGG = create(
+        "wy_spec_ops_commando",
+        HumanEntityTypes.WY_SPEC_OPS_COMMANDO
+    );
+
+    public static final BLibHolder<SpawnEggItem> WY_SPEC_OPS_ELITE_SPAWN_EGG = create(
+        "wy_spec_ops_elite",
+        HumanEntityTypes.WY_SPEC_OPS_ELITE
+    );
+
+    public static final BLibHolder<SpawnEggItem> WY_APE_TROOPER_SPAWN_EGG = create("wy_ape_trooper", HumanEntityTypes.WY_APE_TROOPER);
+
     private static <E extends Mob> BLibHolder<SpawnEggItem> create(String path, BLibHolder<EntityType<E>> holder) {
         return REGISTRY.createHolder(
             path + "_spawn_egg",

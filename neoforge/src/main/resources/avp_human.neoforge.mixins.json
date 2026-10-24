@@ -4,7 +4,7 @@
   "package": "com.human.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
-  "client": [],
+  "client": ["client.MixinClientHooks_OversizedRenders", "client.MixinOversizedRenderers_RenderBox"],
   "server": [],
   "injectors": {
     "defaultRequire": 1

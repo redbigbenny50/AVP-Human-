@@ -162,9 +162,16 @@ public class HumanBlockItems {
         HumanBlocks.INDUSTRIAL_FURNACE
     );
 
-    public static final BLibHolder<BlockItem> INFINITE_POWER_GENERATOR = create(
+    /**
+     * [stated] Oct 20 - shown as the "Creative Generator" (renamed so nobody takes it for a real one); the id stays
+     * infinite_power_generator so placed ones keep working. Creative-only tooltip, epic (magenta) name.
+     */
+    public static final BLibHolder<BlockItem> INFINITE_POWER_GENERATOR = REGISTRY.createHolder(
         "infinite_power_generator",
-        HumanBlocks.INFINITE_POWER_GENERATOR
+        () -> new com.human.common.gameplay.block.creative.CreativeBlockItem(
+            HumanBlocks.INFINITE_POWER_GENERATOR.get(),
+            new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)
+        )
     );
 
     public static final BLibHolder<BlockItem> LEAD_BLOCK = create("lead_block", CoreBlocks.LEAD_BLOCK);

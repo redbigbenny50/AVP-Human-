@@ -124,6 +124,12 @@ public class CryotubeControllerBlock extends PowerNodeEntityBlock<CryotubeContro
         @NotNull InteractionHand hand,
         @NotNull BlockHitResult hitResult
     ) {
+        // Oct 10 - the wiring tool always reaches its own logic (readout, fuse binding, toggles) - see
+        // PowerNodeEntityBlock#useItemOn.
+        if (isWiringTool(stack)) {
+            return net.minecraft.world.ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+
         if (!player.isShiftKeyDown() && level.getBlockEntity(pos) instanceof CryotubeControllerBlockEntity controller) {
             var result = FluidContainerInteractions.useItem(stack, level, pos, player, hand, controller);
 

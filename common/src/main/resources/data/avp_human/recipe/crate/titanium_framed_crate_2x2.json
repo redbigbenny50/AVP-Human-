@@ -1,0 +1,24 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/titanium"
+    },
+    "B": {
+      "tag": "c:storage_blocks/titanium"
+    },
+    "#": {
+      "item": "avp_human:titanium_framed_crate_1x1"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "I#I",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:titanium_framed_crate_2x2"
+  }
+}

@@ -11,5 +11,11 @@ public class SpawnEggsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanSpawnEggItems.MARINE_DOG_SPAWN_EGG);
         CreativeModeTabUtil.accept(output, HumanSpawnEggItems.COLONIST_SPAWN_EGG);
         CreativeModeTabUtil.accept(output, HumanSpawnEggItems.MARINE_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.TACTICAL_MARINE_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.WY_COMMANDO_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.WY_ELITE_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.WY_SPEC_OPS_COMMANDO_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.WY_SPEC_OPS_ELITE_SPAWN_EGG);
+        CreativeModeTabUtil.accept(output, HumanSpawnEggItems.WY_APE_TROOPER_SPAWN_EGG);
     };
 }

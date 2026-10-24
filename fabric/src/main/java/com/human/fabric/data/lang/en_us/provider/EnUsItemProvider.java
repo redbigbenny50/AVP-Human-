@@ -44,6 +44,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.CASELESS_BULLET, "Caseless Bullet");
         addItem(builder, HumanGunItems.F903WE_RIFLE, "F903WE Rifle");
         addItem(builder, HumanGunItems.FLAMETHROWER_SEVASTOPOL, "Flamethrower (Sevastopol)");
+        addItem(builder, HumanGunItems.CHEM_THROWER, "Chem Thrower");
         addItem(builder, HumanItems.FUEL_TANK, "Fuel Tank");
         addItem(builder, HumanItems.DRUM_CARTRIDGE, "Drum Cartridge");
         addItem(builder, HumanItems.DRUM_CANNISTER, "Drum Cannister");
@@ -116,6 +117,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.BATTERY_PACK, "Battery Pack");
         addItem(builder, HumanItems.BLUEPRINT_F903WE_RIFLE, "F903WE Rifle Blueprint");
         addItem(builder, HumanItems.BLUEPRINT_FLAMETHROWER_SEVASTOPOL, "Flamethrower (Sevastopol) Blueprint");
+        addItem(builder, HumanItems.BLUEPRINT_CHEM_THROWER, "Chem Thrower Blueprint");
         addItem(builder, HumanItems.BLUEPRINT_M37_12_SHOTGUN, "M37-12 Shotgun Blueprint");
         addItem(builder, HumanItems.BLUEPRINT_M41A_PULSE_RIFLE, "M41A Pulse Rifle Blueprint");
         addItem(builder, HumanItems.BLUEPRINT_M42A3_SNIPER_RIFLE, "M42A3 Sniper Rifle Blueprint");
@@ -192,6 +194,7 @@ public class EnUsItemProvider {
         addItem(builder, HumanItems.FERROALUMINUM_NUGGET, "Ferroaluminum Nugget");
         addItem(builder, HumanItems.LEAD_NUGGET, "Lead Nugget");
         addItem(builder, HumanItems.STEEL_NUGGET, "Steel Nugget");
+        addItem(builder, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET, "Composite Nugget");
         addItem(builder, HumanItems.TITANIUM_NUGGET, "Titanium Nugget");
         addItem(builder, HumanItems.URANIUM_NUGGET, "Uranium Nugget");
         addItem(builder, HumanItems.ZINC_NUGGET, "Zinc Nugget");
@@ -222,6 +225,12 @@ public class EnUsItemProvider {
         // Spawn Egg Items
         addItem(builder, HumanSpawnEggItems.MARINE_DOG_SPAWN_EGG, "Marine Dog Spawn Egg");
         addItem(builder, HumanSpawnEggItems.MARINE_SPAWN_EGG, "Marine Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.TACTICAL_MARINE_SPAWN_EGG, "Tactical Marine Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.WY_COMMANDO_SPAWN_EGG, "W-Y Commando Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.WY_ELITE_SPAWN_EGG, "W-Y Elite Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.WY_SPEC_OPS_COMMANDO_SPAWN_EGG, "W-Y Spec Ops Commando Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.WY_SPEC_OPS_ELITE_SPAWN_EGG, "W-Y Spec Ops Elite Spawn Egg");
+        addItem(builder, HumanSpawnEggItems.WY_APE_TROOPER_SPAWN_EGG, "W-Y APE Trooper Spawn Egg");
         addItem(builder, HumanSpawnEggItems.COLONIST_SPAWN_EGG, "Colonist Spawn Egg");
         addItem(builder, HumanArmorItems.ELECTRICIAN_HARD_HAT, "Electrician Hard Hat");
         addItem(builder, HumanArmorItems.ELECTRICIAN_JACKET, "Electrician Jacket");

@@ -22,6 +22,7 @@ public class HumanFabric implements ModInitializer {
         // [stated] Sep 30: fluid pipes reach other mods' fluid blocks.
         com.human.fabric.fluid.FabricPipeFluidAccess.install();
         com.human.fabric.fluid.FabricPipeItemAccess.install();
+        com.human.fabric.quarry.FabricQuarryProtection.install();
         com.human.fabric.fluid.FabricFluidConnections.install();
 
         Human.initialize();
@@ -30,6 +31,8 @@ public class HumanFabric implements ModInitializer {
         com.human.fabric.fluid.FabricCanisterFluidStorage.register();
         // [stated] Sep 30: the battery pack and nuclear battery as Team Reborn Energy items.
         com.human.fabric.power.FabricBatteryEnergy.register();
+        // Storage crates as item storage, for hoppers and other mods.
+        com.human.fabric.storage.FabricCrateItemStorage.register();
         // Fluid endpoints as blocks: the placed canister and all six tanks. Each face's rule comes from the endpoint.
         net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlockEntity(
             com.human.fabric.fluid.FabricFluidEndpointStorage::forSide,
@@ -53,7 +56,26 @@ public class HumanFabric implements ModInitializer {
                 : null,
             com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_PRESS.get(),
             com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_HYDRATOR.get(),
-            com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_FREEZER.get()
+            com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_FREEZER.get(),
+            // [stated] Oct 17 - the vaporizer takes liquid in through the front of its bottom block.
+            com.human.common.registry.init.HumanVaporizer.VAPORIZER_BLOCK_ENTITY.get(),
+            // [stated] Oct 17 - the distributor takes liquid in through its TOP.
+            com.human.common.registry.init.HumanDistributor.DISTRIBUTOR_BLOCK_ENTITY.get(),
+            // ⚠ Oct 21 quality pass - the Creative Fluid Tank was never registered, so pipes (ours, which ask through
+            // this same API, and every other mod's) could not see it at all: it could neither feed nor void a line.
+            com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK_BLOCK_ENTITY.get()
+        );
+        // Oct 15 - the quarry terminal's LIQUID port: the top of its back-row counter-clockwise block (no block entity
+        // there), resolved to the terminal's tank.
+        net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.registerForBlocks(
+            (level, pos, state, blockEntity, side) -> {
+                var port = com.human.common.gameplay.quarry.QuarryTerminalBlock.liquidPort(level, pos, state, side);
+
+                return port == null ? null : com.human.fabric.fluid.FabricFluidEndpointStorage.forSide(port, side);
+            },
+            com.human.common.registry.init.HumanQuarry.QUARRY_TERMINAL.get(),
+            com.human.common.registry.init.HumanQuarry.WY_QUARRY_TERMINAL.get(),
+            com.human.common.registry.init.HumanQuarry.USCM_QUARRY_TERMINAL.get()
         );
 
         // Shift + left-click with a canister places it as a block. SUCCESS on the client cancels the mining and still
@@ -96,5 +118,8 @@ public class HumanFabric implements ModInitializer {
 
         // End-game loot
         LootTableModifiers.END_GAME_LOOT_TABLE_MODIFIER.apply(key, builder);
+
+        // [stated] Oct 19 - spiders and cave spiders: a 20% cobweb.
+        LootTableModifiers.SPIDER_COBWEB_LOOT_TABLE_MODIFIER.apply(key, builder);
     }
 }

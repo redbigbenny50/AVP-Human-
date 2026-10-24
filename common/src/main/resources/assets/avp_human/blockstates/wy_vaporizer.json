@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "facing=north,state=off": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=north,state=on": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=north,state=working": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=east,state=off": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=east,state=on": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=east,state=working": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=south,state=off": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=south,state=on": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=south,state=working": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=west,state=off": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=west,state=on": {
+      "model": "avp_human:block/vaporizer"
+    },
+    "facing=west,state=working": {
+      "model": "avp_human:block/vaporizer"
+    }
+  }
+}

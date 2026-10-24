@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "avp_human:block/uscm_striped_wall"
+    },
+    "axis=z": {
+      "model": "avp_human:block/uscm_striped_wall",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "avp_human:block/uscm_striped_wall",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

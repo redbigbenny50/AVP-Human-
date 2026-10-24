@@ -1,0 +1,32 @@
+{
+  "textures": {
+    "glass": "avp_human:block/wy_window_l",
+    "particle": "avp_human:block/wy_window_single"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#glass",
+          "cullface": "west"
+        }
+      }
+    }
+  ]
+}

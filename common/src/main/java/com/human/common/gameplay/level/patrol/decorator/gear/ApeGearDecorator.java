@@ -39,7 +39,9 @@ public class ApeGearDecorator implements MarineDecorator {
     }
 
     public void applyExtras(Marine marine) {
-        TacticalMarineGearDecorator.INSTANCE.applyExtras(marine);
+        // [stated] Oct 13 kit clean-up: the grenade only - no longer the tactical marine's 128 torches and water
+        // bucket.
+        MarineGearDecorator.INSTANCE.applyExtras(marine);
 
         for (var i = 0; i < 2; i++) {
             var healingPotion = PotionContents.createItemStack(Items.POTION, Potions.FIRE_RESISTANCE);

@@ -36,13 +36,35 @@ public class AdsSightCalibrationScreen extends Screen {
         var centerY = this.height / 2;
         graphics.fill(centerX - 1, centerY - 18, centerX + 1, centerY + 19, 0xFFFFD600);
         graphics.fill(centerX - 18, centerY - 1, centerX + 19, centerY + 1, 0xFFFFD600);
-        graphics.drawCenteredString(this.font, "DRAG LEFT / RIGHT UNTIL THE SIGHT SITS ON THE YELLOW MARKER", centerX, 16, 0xFFFFFFFF);
-        graphics.drawCenteredString(this.font, "ENTER: save    R: reset    ESC: cancel", centerX, 28, 0xFFB0B0B0);
+        // ⚠ Oct 23 - wrapped to the screen: the first line is 324 px, wider than the whole screen at a large GUI scale.
+        // Each line starts below whatever the line above it took.
+        var textWidth = this.width - 20;
+        var y = 16;
+        y += 3 + com.human.client.screen.widget.GuiText.LINE_HEIGHT * com.human.client.screen.widget.GuiText.drawCenteredWrapped(
+            graphics,
+            this.font,
+            Component.literal("DRAG LEFT / RIGHT UNTIL THE SIGHT SITS ON THE YELLOW MARKER"),
+            centerX,
+            y,
+            textWidth,
+            4,
+            0xFFFFFFFF
+        );
+        y += 3 + com.human.client.screen.widget.GuiText.LINE_HEIGHT * com.human.client.screen.widget.GuiText.drawCenteredWrapped(
+            graphics,
+            this.font,
+            Component.literal("ENTER: save    R: reset    ESC: cancel"),
+            centerX,
+            y,
+            textWidth,
+            2,
+            0xFFB0B0B0
+        );
         graphics.drawCenteredString(
             this.font,
             String.format(java.util.Locale.ROOT, "Offset: %+.3f", AdsSightCalibration.horizontalOffset(item)),
             centerX,
-            40,
+            y,
             0xFFFFFFFF
         );
     }

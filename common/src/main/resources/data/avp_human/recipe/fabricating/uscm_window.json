@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:ingots/steel"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:industrial_glass"
+      },
+      "count": 6
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:uscm_window"
+  }
+}

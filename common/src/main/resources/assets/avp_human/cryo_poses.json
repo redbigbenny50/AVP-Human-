@@ -1,0 +1,36 @@
+{
+  "avp_alien:queen": "molt.loop.prae",
+  "avp_alien:nether_queen": "molt.loop.prae",
+  "avp_alien:aberrant_queen": "molt.loop.prae",
+  "avp_alien:irradiated_queen": "molt.loop.prae",
+  "avp_alien:chestburster": {
+    "center": "root"
+  },
+  "avp_alien:aberrant_chestburster": {
+    "center": "root"
+  },
+  "avp_alien:nether_chestburster": {
+    "center": "root"
+  },
+  "avp_alien:royal_chestburster": {
+    "clip": "molt.loop.royal",
+    "center": "root"
+  },
+  "avp_alien:royal_aberrant_chestburster": {
+    "clip": "molt.loop.royal",
+    "center": "root"
+  },
+  "avp_alien:royal_nether_chestburster": {
+    "clip": "molt.loop.royal",
+    "center": "root"
+  },
+  "avp_alien:predalien_chestburster": {
+    "center": "root"
+  },
+  "avp_alien:aberrant_predalien_chestburster": {
+    "center": "root"
+  },
+  "avp_alien:nether_predalien_chestburster": {
+    "center": "root"
+  }
+}

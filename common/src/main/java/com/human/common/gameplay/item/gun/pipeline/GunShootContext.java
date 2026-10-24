@@ -168,6 +168,11 @@ public record GunShootContext(
     private void playPrimaryShootSoundEffects() {
         var primaryShootSoundFrequencyInTicks = fireModeConfig.primaryShootSoundFrequencyInTicks();
 
+        // A gun with no shot sound (the chem thrower, whose spray sound runs on each client as start / loop / stop).
+        if (fireModeConfig.primaryShootSoundEvent() == null) {
+            return;
+        }
+
         if (primaryShootSoundFrequencyInTicks <= 0 || tickProgress % primaryShootSoundFrequencyInTicks == 0) {
             shooter.level()
                 .playSound(null, shooter.blockPosition(), fireModeConfig.primaryShootSoundEvent().get(), shooter.getSoundSource());

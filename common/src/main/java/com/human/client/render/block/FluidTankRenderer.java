@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * entity instead, and this draws them. A block with no pipe returns at once - the first line of {@link #render} - so
  * the other blocks of a big tank cost next to nothing. Pass 3 draws the tank's fluid from here too.
  */
-public class FluidTankRenderer implements BlockEntityRenderer<FluidTankBlockEntity> {
+public class FluidTankRenderer implements BlockEntityRenderer<FluidTankBlockEntity>, com.human.client.render.OversizedRender<FluidTankBlockEntity> {
 
     /** How far the valve sits off the face, so it never z-fights the wall. */
     private static final float LIFT = 0.002F;
@@ -57,9 +57,31 @@ public class FluidTankRenderer implements BlockEntityRenderer<FluidTankBlockEnti
                 continue;
             }
 
-            // In = green, out = red. The top is always in and the bottom always out; sides follow their setting.
-            var in = face == Direction.UP || face != Direction.DOWN && !tank.isOutput(face);
-            var sprite = atlas.apply(HumanResources.location("block/" + edition + "_fluid_tank_valve_" + (in ? "in" : "out")));
+            // In = green, out = red. The top is always in and the bottom always out. Oct 18: a SIDE is both ways and
+            // the attached pipe's flange decides - the flange already shows the direction in colour, so the valve only
+            // marks the port with the existing art: EXTRACT = out, anything else = in (the look an untouched side
+            // always had), OFF = no port, no valve. [stated] no new art: "the pipes already make colored flanges".
+            String valve;
+
+            if (face == Direction.UP) {
+                valve = "in";
+            } else if (face == Direction.DOWN) {
+                valve = "out";
+            } else {
+                var setting = tank.getLevel()
+                    .getBlockEntity(tank.getBlockPos().relative(face)) instanceof com.human.common.gameplay.block.pipe.PipeBlockEntity pipe
+                        ? pipe.getOverride(face.getOpposite())
+                        : com.human.common.gameplay.block.pipe.PipeBlockEntity.AUTO;
+                var mode = com.human.common.gameplay.block.pipe.PipeBlockEntity.effective(setting, true, true);
+
+                if (mode == 0) {
+                    continue;
+                }
+
+                valve = mode == com.human.common.gameplay.block.pipe.PipeBlockEntity.OUT ? "out" : "in";
+            }
+
+            var sprite = atlas.apply(HumanResources.location("block/" + edition + "_fluid_tank_valve_" + valve));
             var light = LevelRenderer.getLightColor(tank.getLevel(), tank.getBlockPos().relative(face));
 
             quad(consumer, pose, face, sprite, light);
@@ -383,5 +405,16 @@ public class FluidTankRenderer implements BlockEntityRenderer<FluidTankBlockEnti
                 .setLight(light)
                 .setNormal(pose, face.getStepX(), face.getStepY(), face.getStepZ());
         }
+    }
+
+    /** The controller is in the bottom corner of a tank up to 5 x 5 x 32. */
+    @Override
+    public net.minecraft.world.phys.AABB renderBox(@NotNull FluidTankBlockEntity tank) {
+        // Only the controller draws; the tank's other blocks keep their own one-block box.
+        if (!tank.isController()) {
+            return new net.minecraft.world.phys.AABB(tank.getBlockPos());
+        }
+
+        return new net.minecraft.world.phys.AABB(tank.getBlockPos()).inflate(6.0D, 1.0D, 6.0D).expandTowards(0.0D, 33.0D, 0.0D);
     }
 }

@@ -37,6 +37,9 @@ public class BlocksCreativeModeTabInitializer {
         // Unnatural blocks (Metals, machines, etc.)
         // Aluminum
         CreativeModeTabUtil.accept(output, CoreBlocks.ALUMINUM_BLOCK);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_BARS);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER);
 
         // Brass
         CreativeModeTabUtil.accept(output, CoreBlocks.BRASS_BLOCK);
@@ -51,6 +54,9 @@ public class BlocksCreativeModeTabInitializer {
         // Ferroaluminum
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.FERROALUMINUM_BLOCK);
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.FERROALUMINUM_CHAIN_FENCE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_BARS);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER);
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.CHISELED_FERROALUMINUM);
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.CUT_FERROALUMINUM);
         CreativeModeTabUtil.accept(output, HumanFerroaluminumBlocks.CUT_FERROALUMINUM_STAIRS);
@@ -88,6 +94,8 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.STEEL_BLOCK);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.STEEL_BARS);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.STEEL_CHAIN_FENCE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.CHISELED_STEEL);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.CUT_STEEL);
         CreativeModeTabUtil.accept(output, HumanSteelBlocks.CUT_STEEL_STAIRS);
@@ -123,6 +131,14 @@ public class BlocksCreativeModeTabInitializer {
 
         CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_BLOCK);
         CreativeModeTabUtil.accept(output, HumanCompositeBlocks.COMPOSITE_CHAIN_FENCE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_BARS);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER);
+        // [stated] Oct 23 - the metal signs, each metal's sign then its hanging sign.
+        for (var set : com.human.common.registry.init.HumanSigns.all()) {
+            CreativeModeTabUtil.accept(output, set.signItem());
+            CreativeModeTabUtil.accept(output, set.hangingSignItem());
+        }
         CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CHISELED_COMPOSITE);
         CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CUT_COMPOSITE);
         CreativeModeTabUtil.accept(output, HumanCompositeBlocks.CUT_COMPOSITE_STAIRS);
@@ -159,6 +175,9 @@ public class BlocksCreativeModeTabInitializer {
         // Titanium
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.TITANIUM_BLOCK);
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.TITANIUM_CHAIN_FENCE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_BARS);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER);
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.CHISELED_TITANIUM);
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.CUT_TITANIUM);
         CreativeModeTabUtil.accept(output, HumanTitaniumBlocks.CUT_TITANIUM_STAIRS);

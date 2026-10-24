@@ -1,0 +1,72 @@
+{
+  "values": [
+    {
+      "id": "avp_alien:nether_drone",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_warrior",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_runner",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_prowler",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_spitter",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_boiler",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_burster",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_carrier",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_chrysalis",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_crusher",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_praetorian",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_ravager",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_razor_claw",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_harbinger",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_predalien",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_queen",
+      "required": false
+    },
+    {
+      "id": "avp_alien:nether_empress",
+      "required": false
+    }
+  ]
+}

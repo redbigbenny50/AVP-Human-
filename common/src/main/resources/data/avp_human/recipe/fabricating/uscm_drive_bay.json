@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:drive_bay"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:green_dye"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:yellow_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:uscm_drive_bay"
+  }
+}

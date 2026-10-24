@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/aluminum"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:wy_wall_port_row"
+  }
+}

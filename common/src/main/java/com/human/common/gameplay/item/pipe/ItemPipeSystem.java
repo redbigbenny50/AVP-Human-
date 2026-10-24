@@ -22,9 +22,11 @@ import java.util.WeakHashMap;
  * feeding it into the blocks accepting it.
  * <h2>THE RULES</h2>
  * <ul>
- * <li>RATE: every {@value #INTERVAL} ticks each pulling end moves up to {@value #ITEMS_PER_PULL} items - 32 a second,
- * level with both Mekanism's advanced transporter (16 every half second) and Oritech's item pipe (8 every 5 ticks)
- * ([stated] "comparable to the other mods").</li>
+ * <li>RATE: every {@value #INTERVAL} ticks each pulling end moves up to {@value #ITEMS_PER_PULL} items - a full stack,
+ * 256 a second. [stated] Oct 16: "if the pipes cant keep up with a quarry at full speed we need to allow the pipes to
+ * transfer more" - a quarry with 4 speed cards digs 64 blocks a second (more with Fortune), and the old 8 a pull (32 a
+ * second, level with Mekanism's advanced transporter and Oritech's pipe) let its storage fill. Same single move per end
+ * per round, just a bigger handful, so the network does no more work.</li>
  * <li>RED ends give, GREEN ends take, YELLOW ends do both - by the block's face (storage: top and sides in, bottom out;
  * our machines: their own ports) or as the player set the end with the flange click.</li>
  * <li>[stated] no back and forth: yellow gives only to green and takes only from red.</li>
@@ -38,7 +40,7 @@ public final class ItemPipeSystem {
 
     public static final int INTERVAL = 5;
 
-    public static final int ITEMS_PER_PULL = 8;
+    public static final int ITEMS_PER_PULL = 64;
 
     private static final int REBUILD_INTERVAL = 10;
 
@@ -69,7 +71,10 @@ public final class ItemPipeSystem {
 
     private boolean dirty = true;
 
-    private long lastRebuild = Long.MIN_VALUE;
+    // Oct 14 FIX - was Long.MIN_VALUE: "now - Long.MIN_VALUE" OVERFLOWS to a huge negative number, so the time check
+    // never passed. Half of it leaves room to subtract any real game time.
+    // This one meant NO item network ever formed: no flanges, nothing moved, anywhere.
+    private long lastRebuild = Long.MIN_VALUE / 2;
 
     private ItemPipeSystem() {}
 
@@ -77,6 +82,32 @@ public final class ItemPipeSystem {
         synchronized (SYSTEMS) {
             return SYSTEMS.computeIfAbsent(level, key -> new ItemPipeSystem());
         }
+    }
+
+    /** Oct 13 - one block attached to a pipe network: where it is, and the pipe face that points at it. */
+    public record Attached(
+        BlockPos target,
+        net.minecraft.core.Direction face
+    ) {}
+
+    /**
+     * Oct 13 - every block attached to the live network {@code pipe} belongs to, for the fabricator's connected
+     * storage. A map lookup and a copy of the network's own end list - no walk. Empty when the pipe is in no network.
+     */
+    public List<Attached> attachedTo(BlockPos pipe) {
+        var network = pipeIndex.get(pipe);
+
+        if (network == null) {
+            return List.of();
+        }
+
+        var attached = new ArrayList<Attached>(network.ends.size());
+
+        for (var end : network.ends) {
+            attached.add(new Attached(end.target(), end.face()));
+        }
+
+        return attached;
     }
 
     public void registerPortPipe(BlockPos pos) {
@@ -308,6 +339,188 @@ public final class ItemPipeSystem {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Wiring-tool readout
+    // ------------------------------------------------------------------------------------------------------------
+
+    /**
+     * [stated] Oct 14: "build in that pipe detection with the wiring tool so it tells us whats not working or being
+     * seen". Read-only: every end is worked out with the network's OWN port() and mode(), and sources are only peeked
+     * at - an item port has no test insert, so a receiving end's free space is not checked.
+     *
+     * @param level the level
+     * @param pipe  the clicked pipe
+     * @return the lines to show the player
+     */
+    public List<net.minecraft.network.chat.Component> diagnose(ServerLevel level, BlockPos pipe) {
+        var lines = new ArrayList<net.minecraft.network.chat.Component>();
+        var network = pipeIndex.get(pipe);
+
+        if (network == null) {
+            lines.add(com.human.common.gameplay.block.pipe.PipeDiagnostics.header("Item pipe: not in a network"));
+            lines.add(
+                dirty
+                    ? com.human.common.gameplay.block.pipe.PipeDiagnostics.note(
+                        "The networks are about to be rebuilt - click again in a moment."
+                    )
+                    : com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                        "No pipe in this run touches a block it can move items in or out of, so there is nothing to move between."
+                    )
+            );
+            return lines;
+        }
+
+        var count = network.ends.size();
+        lines.add(
+            com.human.common.gameplay.block.pipe.PipeDiagnostics.header(
+                "Item network: " + network.pipes.size() + (network.pipes.size() == 1 ? " pipe, " : " pipes, ") + count
+                    + (count == 1 ? " end" : " ends")
+            )
+        );
+
+        var ports = new PipeItemAccess.Port[count];
+        var modes = new byte[count];
+        var names = new String[count];
+
+        for (var index = 0; index < count; index++) {
+            var end = network.ends.get(index);
+            ports[index] = end.port(level);
+            modes[index] = end.mode(level, ports[index]);
+            var entity = level.isLoaded(end.pipe()) && level.getBlockEntity(end.pipe()) instanceof ItemPipeBlockEntity pipeEntity
+                ? pipeEntity
+                : null;
+            var setting = entity == null ? PipeBlockEntity.AUTO : entity.getOverride(end.face());
+            names[index] = level.isLoaded(end.target())
+                ? com.human.common.gameplay.block.pipe.PipeDiagnostics.where(level, end.target(), end.face())
+                : "unloaded block";
+
+            if (index >= com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) {
+                continue;
+            }
+
+            var detail = new ArrayList<String>();
+
+            if (!level.isLoaded(end.target())) {
+                detail.add("that chunk is not loaded");
+            } else if (modes[index] == 0) {
+                if (!ports[index].present()) {
+                    detail.add("this face does not take or give items");
+                } else if (setting == PipeBlockEntity.OFF) {
+                    detail.add("set to Off");
+                } else {
+                    detail.add("this face can neither take nor give items");
+                }
+            }
+
+            if (modes[index] == PipeBlockEntity.OUT || modes[index] == PipeBlockEntity.BOTH) {
+                var offer = ports[index].peek(64, stack -> true);
+                detail.add(offer == null || offer.stack().isEmpty() ? "empty" : "has " + offer.stack().getHoverName().getString());
+            }
+
+            detail.add(
+                com.human.common.gameplay.block.pipe.PipeDiagnostics.filterNote(entity == null ? null : entity.getFilter(end.face()))
+            );
+            lines.add(
+                com.human.common.gameplay.block.pipe.PipeDiagnostics.endLine(
+                    names[index],
+                    setting,
+                    modes[index],
+                    com.human.common.gameplay.block.pipe.PipeDiagnostics.join(detail)
+                )
+            );
+        }
+
+        if (count > com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) {
+            lines.add(
+                com.human.common.gameplay.block.pipe.PipeDiagnostics.note(
+                    " ...and " + (count - com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) + " more ends"
+                )
+            );
+        }
+
+        lines.add(itemVerdict(level, network.ends, ports, modes, names));
+        return lines;
+    }
+
+    /**
+     * A dry run of one transfer: the first source with an item its filter lets out, to a sink whose filter lets it in.
+     */
+    private static net.minecraft.network.chat.Component itemVerdict(
+        ServerLevel level,
+        List<End> ends,
+        PipeItemAccess.Port[] ports,
+        byte[] modes,
+        String[] names
+    ) {
+        var anySource = false;
+        var anySink = false;
+
+        for (var mode : modes) {
+            anySource |= mode == PipeBlockEntity.OUT || mode == PipeBlockEntity.BOTH;
+            anySink |= mode == PipeBlockEntity.IN || mode == PipeBlockEntity.BOTH;
+        }
+
+        if (!anySource) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                "Nothing moves: no end is extracting. Set the end at the block holding the items to Extract."
+            );
+        }
+
+        if (!anySink) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                "Nothing moves: no end is taking items in. Set the end at the receiving block to Input."
+            );
+        }
+
+        var anyItems = false;
+        String blocked = null;
+
+        for (var s = 0; s < ports.length; s++) {
+            if (modes[s] != PipeBlockEntity.OUT && modes[s] != PipeBlockEntity.BOTH) {
+                continue;
+            }
+
+            var source = ends.get(s);
+
+            if (ports[s].peek(64, stack -> true) == null) {
+                continue;
+            }
+
+            anyItems = true;
+            var offer = ports[s].peek(64, stack -> source.allows(level, stack));
+
+            if (offer == null || offer.stack().isEmpty()) {
+                blocked = "the filter at " + names[s] + " does not let any of its items out";
+                continue;
+            }
+
+            var item = offer.stack().getHoverName().getString();
+
+            for (var d = 0; d < ports.length; d++) {
+                if (d == s || modes[d] != PipeBlockEntity.IN && modes[d] != PipeBlockEntity.BOTH) {
+                    continue;
+                }
+
+                if (!ends.get(d).allows(level, offer.stack())) {
+                    blocked = "the filter at " + names[d] + " does not let " + item + " in";
+                    continue;
+                }
+
+                return com.human.common.gameplay.block.pipe.PipeDiagnostics.ok(
+                    "Working: " + item + " can move from " + names[s] + " to " + names[d] + " (if it has room)."
+                );
+            }
+        }
+
+        if (!anyItems) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem("Nothing moves: every extracting end is empty.");
+        }
+
+        return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+            "Nothing moves: " + (blocked == null ? "no receiving end besides the source itself." : blocked + ".")
+        );
+    }
+
     private static final class Network {
 
         /** Oct 8 - the longest an idle source sleeps, in transfer rounds (4 rounds = 20 ticks = 1 second). */
@@ -336,12 +549,36 @@ public final class ItemPipeSystem {
         /** Oct 8 - which tick of each interval this network works on; from its first pipe, so it survives rebuilds. */
         private final int phase;
 
+        private final PipeItemAccess.Port[] portsBuffer;
+
+        private final byte[] modesBuffer;
+
+        private final PipeFilter[] filtersBuffer;
+
+        private final boolean[] machinesBuffer;
+
+        private final byte[] prioritiesBuffer;
+
+        private final int[] sinkBuffer;
+
+        private static final byte IN_MODE = PipeBlockEntity.IN;
+
+        private static final byte BOTH_MODE = PipeBlockEntity.BOTH;
+
         Network(List<End> ends, List<BlockPos> pipes) {
             this.ends = ends;
             this.pipes = pipes;
             this.phase = pipes.isEmpty() ? 0 : Math.floorMod(pipes.get(0).hashCode(), MODE_REFRESH_INTERVAL);
             this.sleepRounds = new int[ends.size()];
             this.sleepLength = new int[ends.size()];
+            // Oct 13 hardening - one set of working arrays per network, reused every round (its ends are fixed until
+            // it is rebuilt), instead of six new ones per network per round.
+            this.portsBuffer = new PipeItemAccess.Port[ends.size()];
+            this.modesBuffer = new byte[ends.size()];
+            this.filtersBuffer = new PipeFilter[ends.size()];
+            this.machinesBuffer = new boolean[ends.size()];
+            this.prioritiesBuffer = new byte[ends.size()];
+            this.sinkBuffer = new int[ends.size()];
         }
 
         /**
@@ -376,11 +613,11 @@ public final class ItemPipeSystem {
                 return;
             }
 
-            var ports = new PipeItemAccess.Port[count];
-            var modes = new byte[count];
-            var filters = new PipeFilter[count];
-            var machines = new boolean[count];
-            var priorities = new byte[count];
+            var ports = portsBuffer;
+            var modes = modesBuffer;
+            var filters = filtersBuffer;
+            var machines = machinesBuffer;
+            var priorities = prioritiesBuffer;
 
             for (var index = 0; index < count; index++) {
                 var end = ends.get(index);
@@ -397,10 +634,14 @@ public final class ItemPipeSystem {
                     : filters[index].resolvePriority(machines[index]);
             }
 
+            // Oct 14 audit: since the Oct 13 buffers, this makes lastModes the SAME array as modesBuffer, not a copy.
+            // That is safe only because allSourcesAsleep() reads it BEFORE the next round overwrites it - keep that
+            // order.
             lastModes = modes;
 
             var start = Math.floorMod(turn++, count);
-            var sinks = sinkOrder(count, start, modes, machines, priorities);
+            var sinks = sinkBuffer;
+            var sinkCount = sinkOrder(count, start, modes, machines, priorities);
 
             // Red ends pull first, then yellow - a yellow block gives only what green blocks want.
             for (var pass = 0; pass < 2; pass++) {
@@ -416,7 +657,7 @@ public final class ItemPipeSystem {
                         continue;
                     }
 
-                    var moved = offerFrom(s, ports, modes, filters, machines, priorities, sinks);
+                    var moved = offerFrom(s, ports, modes, filters, machines, priorities, sinks, sinkCount);
 
                     if (moved) {
                         sleepLength[s] = 0;
@@ -457,31 +698,40 @@ public final class ItemPipeSystem {
             return true;
         }
 
-        /** @return the accepting ends, best first: priority, then machines before storage, then the round's turn */
-        private static int[] sinkOrder(int count, int start, byte[] modes, boolean[] machines, byte[] priorities) {
-            var order = new ArrayList<Integer>(count);
+        /**
+         * Oct 13 hardening - the accepting ends, best first, written into this network's own buffer (no list, no
+         * boxing, every round): priority, then machines before storage, then the round's turn. An insertion sort keeps
+         * ends of the same priority and kind in turn order, exactly as the stable list sort did.
+         *
+         * @return how many sinks were written
+         */
+        private int sinkOrder(int count, int start, byte[] modes, boolean[] machines, byte[] priorities) {
+            var written = 0;
 
             for (var offset = 0; offset < count; offset++) {
                 var d = (start + offset) % count;
 
-                if (modes[d] == PipeBlockEntity.IN || modes[d] == PipeBlockEntity.BOTH) {
-                    order.add(d);
+                if (modes[d] != IN_MODE && modes[d] != BOTH_MODE) {
+                    continue;
                 }
+
+                var at = written;
+
+                while (at > 0 && ranksBelow(sinkBuffer[at - 1], d, machines, priorities)) {
+                    sinkBuffer[at] = sinkBuffer[at - 1];
+                    at--;
+                }
+
+                sinkBuffer[at] = d;
+                written++;
             }
 
-            // Stable: ends of the same priority and kind keep the rotating turn order.
-            order.sort((a, b) -> {
-                var byPriority = Byte.compare(priorities[b], priorities[a]);
-                return byPriority != 0 ? byPriority : Boolean.compare(machines[b], machines[a]);
-            });
+            return written;
+        }
 
-            var result = new int[order.size()];
-
-            for (var index = 0; index < result.length; index++) {
-                result[index] = order.get(index);
-            }
-
-            return result;
+        /** Whether end {@code a} belongs after end {@code b}: lower priority, or the same priority but storage. */
+        private static boolean ranksBelow(int a, int b, boolean[] machines, byte[] priorities) {
+            return priorities[a] < priorities[b] || priorities[a] == priorities[b] && !machines[a] && machines[b];
         }
 
         /** @return whether anything moved out of source s */
@@ -492,7 +742,8 @@ public final class ItemPipeSystem {
             PipeFilter[] filters,
             boolean[] machines,
             byte[] priorities,
-            int[] sinks
+            int[] sinks,
+            int sinkCount
         ) {
             var source = ports[s];
             var sourceYellow = modes[s] == PipeBlockEntity.BOTH;
@@ -508,7 +759,9 @@ public final class ItemPipeSystem {
             var remaining = offer.stack().getCount();
             var moved = false;
 
-            for (var d : sinks) {
+            for (var k = 0; k < sinkCount; k++) {
+                var d = sinks[k];
+
                 if (remaining <= 0) {
                     break;
                 }
@@ -540,9 +793,32 @@ public final class ItemPipeSystem {
                 var inserted = ports[d].insert(offer.stack().copyWithCount(remaining));
 
                 if (inserted > 0) {
-                    offer.take(inserted);
-                    remaining -= inserted;
-                    moved = true;
+                    // Oct 13 hardening: the destination already holds these, so the source MUST give as many. If a
+                    // misbehaving inventory gives fewer than its own dry run promised, the difference is taken straight
+                    // back out of the destination - otherwise it would be duplicated.
+                    var taken = offer.take(inserted);
+
+                    if (taken < inserted) {
+                        var undone = ports[d].retract(offer.stack(), inserted - taken);
+
+                        if (taken + undone < inserted) {
+                            com.human.Human.LOGGER.warn(
+                                "Item pipe: a source gave {} of {} {} it promised; {} could not be taken back",
+                                taken,
+                                inserted,
+                                offer.stack().getItem(),
+                                inserted - taken - undone
+                            );
+                        }
+                    }
+
+                    remaining -= Math.max(0, taken);
+                    moved |= taken > 0;
+
+                    // A source not giving what it says gets no more offers this round.
+                    if (taken < inserted) {
+                        break;
+                    }
                 }
             }
 

@@ -82,6 +82,12 @@ public class ChargingHubBlock extends PowerNodeEntityBlock<ChargingHubBlockEntit
         @NotNull net.minecraft.world.InteractionHand hand,
         @NotNull net.minecraft.world.phys.BlockHitResult hitResult
     ) {
+        // Oct 10 - the wiring tool always reaches its own logic (readout, fuse binding, toggles) - see
+        // PowerNodeEntityBlock#useItemOn.
+        if (isWiringTool(stack)) {
+            return net.minecraft.world.ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+
         if (!(level.getBlockEntity(pos) instanceof ChargingHubBlockEntity battery)) {
             return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }

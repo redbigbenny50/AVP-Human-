@@ -142,4 +142,14 @@ public class SolarPanelBlockEntity extends PowerNodeBlockEntity implements Power
     public boolean canConnectOn(Direction direction) {
         return direction == Direction.DOWN;
     }
+
+    /**
+     * [stated] Oct 22 - an array of panels needs ONE cable, not a cable under every panel: a panel joins the panels
+     * touching its four sides directly. Cables still connect on the bottom only, so a cable run into a panel's side
+     * does nothing, as before.
+     */
+    @Override
+    public boolean joinsNeighbour(Direction direction, com.human.common.gameplay.block.entity.power.PowerNodeBlockEntity neighbour) {
+        return direction.getAxis().isHorizontal() && neighbour instanceof SolarPanelBlockEntity;
+    }
 }

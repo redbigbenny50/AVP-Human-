@@ -46,6 +46,28 @@ public class HumanServerListener {
     }
 
     /**
+     * [stated] Oct 18 - the vapor picked on the chem thrower's wheel: the insert. Range-checked; the tank, an empty gun
+     * and no reload in progress are all re-checked by insert().
+     */
+    public static void handleChemReloadPayload(com.human.common.network.packet.C2SChemReloadPayload payload, Player serverPlayer) {
+        var kind = com.human.common.gameplay.vapor.VaporKind.byOrdinal(payload.vapor());
+
+        if (kind == null) {
+            return;
+        }
+
+        var gun = serverPlayer.getMainHandItem();
+
+        if (!com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(gun)) {
+            gun = serverPlayer.getOffhandItem();
+        }
+
+        if (com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(gun)) {
+            com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.insert(serverPlayer, gun, kind);
+        }
+    }
+
+    /**
      * Resolves a strike from the off-hand dagger.
      * <p>
      * ⚠ EVERY PRECONDITION IS RE-CHECKED HERE. The packet names a target and nothing else, so a client cannot use it to

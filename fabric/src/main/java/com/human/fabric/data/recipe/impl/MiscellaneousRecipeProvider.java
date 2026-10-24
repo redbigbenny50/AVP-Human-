@@ -16,6 +16,22 @@ import net.minecraft.world.level.block.Blocks;
 public class MiscellaneousRecipeProvider {
 
     public static void provide(RecipeBuilder builder) {
+        // [stated] Oct 19 - "Cobweb in a crafting table gives you 1 string. You can craft a cob web using 8 string
+        // around a slime ball".
+        builder.shapeless()
+            .withCategory(RecipeCategory.MISC)
+            .requires(1, Items.COBWEB)
+            .into(1, Items.STRING);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('S', Items.STRING)
+            .define('B', Items.SLIME_BALL)
+            .pattern("SSS")
+            .pattern("SBS")
+            .pattern("SSS")
+            .into(1, Items.COBWEB);
+
         builder.shaped()
             .withCategory(RecipeCategory.MISC)
             .define('A', HumanCommonItemTags.INGOTS_ALUMINUM)

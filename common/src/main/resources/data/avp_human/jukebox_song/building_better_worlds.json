@@ -1,0 +1,8 @@
+{
+  "comparator_output": 12,
+  "description": {
+    "translate": "jukebox_song.avp_human.building_better_worlds"
+  },
+  "length_in_seconds": 155.0,
+  "sound_event": "avp_human:jukebox_sounds.building_better_worlds"
+}

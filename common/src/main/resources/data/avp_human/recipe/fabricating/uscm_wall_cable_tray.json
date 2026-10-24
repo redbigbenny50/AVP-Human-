@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/steel"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:green_dye"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:copper_ingot"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:uscm_wall_cable_tray"
+  }
+}

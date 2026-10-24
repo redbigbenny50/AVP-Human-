@@ -4,6 +4,7 @@ import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.registry.init.HumanEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -17,6 +18,11 @@ import java.util.List;
 public class MarineSpawner {
 
     public static List<Marine> spawn(Level level, Player player, BlockPos.MutableBlockPos startPos) {
+        return spawn(level, player, startPos, HumanEntityTypes.MARINE.get());
+    }
+
+    /** [stated] Oct 13 - a patrol of one soldier type (the W-Y units and the tactical marine have their own). */
+    public static List<Marine> spawn(Level level, Player player, BlockPos.MutableBlockPos startPos, EntityType<Marine> type) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return List.of();
         }
@@ -28,7 +34,7 @@ public class MarineSpawner {
         for (var i = 0; i < spawnCount; ++i) {
             startPos.setY(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, startPos).getY());
 
-            var spawnedMarineOrNull = spawnMarine(serverLevel, startPos);
+            var spawnedMarineOrNull = spawnMarine(serverLevel, startPos, type);
 
             if (spawnedMarineOrNull != null) {
                 spawnedMarines.add(spawnedMarineOrNull);
@@ -41,8 +47,8 @@ public class MarineSpawner {
         return Collections.unmodifiableList(spawnedMarines);
     }
 
-    private static @Nullable Marine spawnMarine(ServerLevel level, BlockPos pos) {
-        var marine = HumanEntityTypes.MARINE.get().create(level);
+    private static @Nullable Marine spawnMarine(ServerLevel level, BlockPos pos, EntityType<Marine> type) {
+        var marine = type.create(level);
 
         if (marine != null) {
             marine.setPos(pos.getX(), pos.getY(), pos.getZ());

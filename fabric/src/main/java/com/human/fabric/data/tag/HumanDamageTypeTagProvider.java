@@ -26,9 +26,14 @@ public class HumanDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 HumanDamageTypeKeys.FLAMETHROW
             );
 
+        // [stated] Oct 18 - vapor "ignores armour": the mist reaches the whole body. Armour and toughness only;
+        // protection enchantments and Resistance still count.
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_ARMOR)
             .add(
-                HumanDamageTypeKeys.RADIATION
+                HumanDamageTypeKeys.RADIATION,
+                HumanDamageTypeKeys.CRYO_VAPOR,
+                HumanDamageTypeKeys.INFERNIUM_VAPOR,
+                HumanDamageTypeKeys.ACID_VAPOR
             );
 
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_ENCHANTMENTS)
@@ -54,7 +59,8 @@ public class HumanDamageTypeTagProvider extends FabricTagProvider<DamageType> {
 
         getOrCreateTagBuilder(DamageTypeTags.IS_FIRE)
             .add(
-                HumanDamageTypeKeys.FLAMETHROW
+                HumanDamageTypeKeys.FLAMETHROW,
+                HumanDamageTypeKeys.INFERNIUM_VAPOR
             );
 
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
@@ -62,7 +68,10 @@ public class HumanDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 HumanDamageTypeKeys.BULLET,
                 HumanDamageTypeKeys.FLAMETHROW,
                 HumanDamageTypeKeys.RADIATION,
-                HumanDamageTypeKeys.RAZOR_WIRE
+                HumanDamageTypeKeys.RAZOR_WIRE,
+                HumanDamageTypeKeys.CRYO_VAPOR,
+                HumanDamageTypeKeys.INFERNIUM_VAPOR,
+                HumanDamageTypeKeys.ACID_VAPOR
             );
 
         // All missing damage types here were excluded on purpose. Yes, including lava. Lava melts machinery.

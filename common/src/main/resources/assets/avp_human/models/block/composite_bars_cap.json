@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/iron_bars_cap",
+  "textures": {
+    "bars": "avp_human:block/composite_bars",
+    "particle": "avp_human:block/composite_bars"
+  }
+}

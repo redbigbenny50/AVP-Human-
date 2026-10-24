@@ -31,6 +31,40 @@ public abstract class PowerNodeEntityBlock<T extends PowerNodeBlockEntity & Powe
      * the player clicked is the one that changes, which is the only unambiguous meaning of "this port".
      * </p>
      */
+    /**
+     * Oct 10 - THE WIRING TOOL GETS THROUGH. [reported] "the terminal wont connect to the fuse panel no matter what
+     * they do with the wiring tool". Minecraft runs a block's own right-click (useWithoutItem) BEFORE the held item's
+     * useOn, and stops there if the block consumes the click. The desk terminal consumes it to open its screen, so with
+     * the tool in hand the click opened (or tried to open) the terminal and the tool never saw it: binding to a fuse
+     * panel was impossible. Sneaking skips the block but sends the tool down its breaker-toggle branch instead of
+     * binding. The same swallow applied to every power block with a screen - machines (which bind with a hub chip), the
+     * resonator, the charging hub, the cryotube controller, batteries and the fuse panel itself.
+     * <p>
+     * Holding the wiring tool now returns SKIP_DEFAULT_BLOCK_INTERACTION, which tells vanilla to skip the block's own
+     * click and go straight to the tool. Blocks with their own item handling ask {@link #isWiringTool} first.
+     */
+    @Override
+    protected @NotNull net.minecraft.world.ItemInteractionResult useItemOn(
+        @NotNull net.minecraft.world.item.ItemStack stack,
+        @NotNull BlockState state,
+        @NotNull Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.player.Player player,
+        @NotNull net.minecraft.world.InteractionHand hand,
+        @NotNull net.minecraft.world.phys.BlockHitResult hitResult
+    ) {
+        if (isWiringTool(stack)) {
+            return net.minecraft.world.ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    /** Oct 10 - {@return whether this is the wiring tool, whose clicks must always reach the tool} */
+    protected static boolean isWiringTool(net.minecraft.world.item.ItemStack stack) {
+        return stack.getItem() instanceof com.human.common.gameplay.item.WiringToolItem;
+    }
+
     @Override
     protected @NotNull net.minecraft.world.InteractionResult useWithoutItem(
         @NotNull BlockState state,

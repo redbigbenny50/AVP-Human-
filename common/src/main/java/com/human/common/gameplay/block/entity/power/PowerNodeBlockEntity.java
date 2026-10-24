@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PowerNodeBlockEntity extends BlockEntity {
+public abstract class PowerNodeBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
 
     private boolean hasInitialized = false;
 
@@ -75,6 +75,16 @@ public abstract class PowerNodeBlockEntity extends BlockEntity {
      * Whether power can cross this face right now: the face can carry power at all AND its breaker is open. This is the
      * one question every connection path asks - the grid walk, placement and the cable's own arms.
      */
+    /**
+     * [stated] Oct 22 - "panels should connect because you shouldnt need to make a grid of power cables for a whole
+     * array." Whether this block joins the power block {@code neighbour} touching it on {@code direction} DIRECTLY,
+     * block to block, even through a face that takes no cable. Both blocks must agree. Off by default; the solar panel
+     * turns it on for other solar panels beside it, so one cable under any panel of an array collects the whole array.
+     */
+    public boolean joinsNeighbour(Direction direction, PowerNodeBlockEntity neighbour) {
+        return false;
+    }
+
     public boolean isFaceConnectable(Direction direction) {
         return direction != null && canConnectOn(direction) && ports.isOpen(direction);
     }
@@ -229,6 +239,19 @@ public abstract class PowerNodeBlockEntity extends BlockEntity {
         }
 
         super.setRemoved();
+    }
+
+    /**
+     * [stated] Oct 21 - built into or landed from a ship: the breakers turn with a rotated landing. The grid itself
+     * needs nothing - this block entity is new at its new position and links on its first tick, as on any load.
+     * Subclasses that store OTHER positions put them right too (and call this).
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (move.rotated()) {
+            ports.rotate(move);
+            setChanged();
+        }
     }
 
     public void setHasInitialized(boolean hasInitialized) {

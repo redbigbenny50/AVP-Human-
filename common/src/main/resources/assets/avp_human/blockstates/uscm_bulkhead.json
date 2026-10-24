@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/uscm_bulkhead"
+    }
+  }
+}

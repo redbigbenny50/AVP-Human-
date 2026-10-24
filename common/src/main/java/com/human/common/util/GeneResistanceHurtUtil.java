@@ -26,11 +26,24 @@ public class GeneResistanceHurtUtil {
             }
         }
 
+        // [stated] Oct 19 - the vapors are acid too: acidium and nether acidium vapor.
+        if (damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.ACID_VAPOR)) {
+            return applyGeneResistanceToDamage(geneContainer, Genes.ACID_RESISTANCE, damage);
+        }
+
         if (damageSource.is(DamageTypeTags.IS_FIRE)) {
             return applyGeneResistanceToDamage(geneContainer, Genes.FIRE_RESISTANCE, damage);
         }
 
-        if (damageSource.is(DamageTypes.FREEZE)) {
+        // [stated] Oct 19 - "the fire resistance and ice resistance genes reduce the effects right": cold resistance
+        // only ever matched vanilla's own FREEZE damage, so cryofluid and cryo vapor (and every other mod's freezing,
+        // which is_freezing covers) went straight through it. Fire was already fine: infernium vapor is in is_fire.
+        if (
+            damageSource.is(DamageTypes.FREEZE)
+                || damageSource.is(DamageTypeTags.IS_FREEZING)
+                || damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.CRYOFLUID)
+                || damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.CRYO_VAPOR)
+        ) {
             return applyGeneResistanceToDamage(geneContainer, Genes.COLD_RESISTANCE, damage);
         }
 

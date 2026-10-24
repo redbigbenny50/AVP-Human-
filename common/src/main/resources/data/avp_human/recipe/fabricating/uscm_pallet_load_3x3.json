@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:uscm_pallet_load_2x2"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:composite_block"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:storage_blocks/steel"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 3
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:uscm_pallet_load_3x3"
+  }
+}

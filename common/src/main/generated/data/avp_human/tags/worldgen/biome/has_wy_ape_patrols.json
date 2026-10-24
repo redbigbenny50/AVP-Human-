@@ -1,10 +1,8 @@
 {
   "values": [
     {
-      "id": "#minecraft:is_taiga",
+      "id": "#minecraft:is_badlands",
       "required": false
-    },
-    "minecraft:birch_forest",
-    "minecraft:old_growth_birch_forest"
+    }
   ]
 }

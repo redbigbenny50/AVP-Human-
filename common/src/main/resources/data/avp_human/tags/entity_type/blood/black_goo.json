@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "gigeresque:popper",
+      "required": false
+    },
+    {
+      "id": "gigeresque:hammerpede",
+      "required": false
+    },
+    {
+      "id": "gigeresque:stalker",
+      "required": false
+    }
+  ]
+}

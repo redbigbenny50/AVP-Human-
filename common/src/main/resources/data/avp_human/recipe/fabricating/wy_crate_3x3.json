@@ -1,0 +1,39 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:wy_crate_2x2"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:storage_blocks/ferroaluminum"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:hazard_plastic"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:integrated_circuit"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_crate_3x3"
+  }
+}

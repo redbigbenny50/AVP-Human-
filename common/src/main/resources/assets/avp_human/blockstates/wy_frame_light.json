@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "avp_human:block/wy_frame_light"
+    },
+    "axis=z": {
+      "model": "avp_human:block/wy_frame_light",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "avp_human:block/wy_frame_light",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

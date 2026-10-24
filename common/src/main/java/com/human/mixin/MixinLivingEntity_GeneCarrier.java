@@ -66,6 +66,17 @@ public abstract class MixinLivingEntity_GeneCarrier extends Entity implements Ge
         }
     }
 
+    /**
+     * [stated] Oct 19 - a mob whose cold resistance gene is at 100% never freezes: no frost meter from powder snow or
+     * anything else that uses vanilla's freezing.
+     */
+    @Inject(method = "canFreeze", at = @At("HEAD"), cancellable = true)
+    private void avp_human$fullColdResistanceNeverFreezes(CallbackInfoReturnable<Boolean> cir) {
+        if (com.human.common.util.GeneImmunity.coldImmune((LivingEntity) (Object) this)) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @ModifyVariable(
         method = "hurt",
         at = @At(value = "HEAD"),

@@ -322,6 +322,203 @@ public class MetalRecipeProvider {
         ingotToNugget(builder, HumanItems.URANIUM_INGOT.get(), HumanItems.URANIUM_NUGGET.get());
         ingotToNugget(builder, HumanItems.ZINC_INGOT.get(), HumanItems.ZINC_NUGGET.get());
         ingotToNugget(builder, net.minecraft.world.item.Items.COPPER_INGOT, HumanItems.COPPER_NUGGET.get());
+
+        metalFixtures(builder);
+        metalSigns(builder);
+    }
+
+    /**
+     * [stated] Oct 23 - metal signs, on vanilla's patterns with ingots for planks: six ingots over a stick make three
+     * signs; two of the metal's own chains over six ingots make six hanging signs.
+     */
+    private static void metalSigns(RecipeBuilder builder) {
+        signRecipes(
+            builder,
+            com.human.common.registry.init.HumanSigns.STEEL,
+            HumanCommonItemTags.INGOTS_STEEL,
+            com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN
+        );
+        signRecipes(
+            builder,
+            com.human.common.registry.init.HumanSigns.TITANIUM,
+            HumanCommonItemTags.INGOTS_TITANIUM,
+            com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN
+        );
+        signRecipes(
+            builder,
+            com.human.common.registry.init.HumanSigns.FERROALUMINUM,
+            HumanCommonItemTags.INGOTS_FERROALUMINUM,
+            com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN
+        );
+        signRecipes(
+            builder,
+            com.human.common.registry.init.HumanSigns.ALUMINUM,
+            HumanCommonItemTags.INGOTS_ALUMINUM,
+            com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN
+        );
+        signRecipes(
+            builder,
+            com.human.common.registry.init.HumanSigns.COMPOSITE,
+            HumanCommonItemTags.INGOTS_COMPOSITE,
+            com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN
+        );
+    }
+
+    private static void signRecipes(
+        RecipeBuilder builder,
+        com.human.common.registry.init.HumanSigns.SignSet set,
+        TagKey<Item> ingots,
+        com.blib.api.common.registry.v1.BLibHolder<net.minecraft.world.level.block.Block> chain
+    ) {
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', ingots)
+            .define('S', net.minecraft.world.item.Items.STICK)
+            .pattern("III")
+            .pattern("III")
+            .pattern(" S ")
+            .into(3, set.signItem());
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('C', chain.get())
+            .define('I', ingots)
+            .pattern("C C")
+            .pattern("III")
+            .pattern("III")
+            .into(6, set.hangingSignItem());
+    }
+
+    /**
+     * [stated] Oct 21 - bars, chains and ladders for the five metals, and the composite nugget. Bars: six ingots -> 16,
+     * like iron bars (no clash: the chain fences are stonecut from blocks). Chain: nugget, ingot, nugget, like vanilla.
+     * Ladder: an H of seven ingots -> 8.
+     */
+    private static void metalFixtures(RecipeBuilder builder) {
+        TagKey<Item> COMPOSITE_NUGGETS = TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "nuggets/composite")
+        );
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('N', HumanCommonItemTags.NUGGETS_STEEL)
+            .define('I', HumanCommonItemTags.INGOTS_STEEL)
+            .pattern("N")
+            .pattern("I")
+            .pattern("N")
+            .into(1, com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', HumanCommonItemTags.INGOTS_STEEL)
+            .pattern("I I")
+            .pattern("III")
+            .pattern("I I")
+            .into(8, com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.BARS_BLOCK.apply(HumanCommonItemTags.INGOTS_TITANIUM))
+            .into(16, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_BARS);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('N', HumanCommonItemTags.NUGGETS_TITANIUM)
+            .define('I', HumanCommonItemTags.INGOTS_TITANIUM)
+            .pattern("N")
+            .pattern("I")
+            .pattern("N")
+            .into(1, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', HumanCommonItemTags.INGOTS_TITANIUM)
+            .pattern("I I")
+            .pattern("III")
+            .pattern("I I")
+            .into(8, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.BARS_BLOCK.apply(HumanCommonItemTags.INGOTS_FERROALUMINUM))
+            .into(16, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_BARS);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('N', HumanCommonItemTags.NUGGETS_FERROALUMINUM)
+            .define('I', HumanCommonItemTags.INGOTS_FERROALUMINUM)
+            .pattern("N")
+            .pattern("I")
+            .pattern("N")
+            .into(1, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', HumanCommonItemTags.INGOTS_FERROALUMINUM)
+            .pattern("I I")
+            .pattern("III")
+            .pattern("I I")
+            .into(8, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.BARS_BLOCK.apply(HumanCommonItemTags.INGOTS_ALUMINUM))
+            .into(16, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_BARS);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('N', HumanCommonItemTags.NUGGETS_ALUMINUM)
+            .define('I', HumanCommonItemTags.INGOTS_ALUMINUM)
+            .pattern("N")
+            .pattern("I")
+            .pattern("N")
+            .into(1, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', HumanCommonItemTags.INGOTS_ALUMINUM)
+            .pattern("I I")
+            .pattern("III")
+            .pattern("I I")
+            .into(8, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .apply(RecipeTemplates.BARS_BLOCK.apply(HumanCommonItemTags.INGOTS_COMPOSITE))
+            .into(16, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_BARS);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('N', COMPOSITE_NUGGETS)
+            .define('I', HumanCommonItemTags.INGOTS_COMPOSITE)
+            .pattern("N")
+            .pattern("I")
+            .pattern("N")
+            .into(1, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN);
+
+        builder.shaped()
+            .withCategory(RecipeCategory.DECORATIONS)
+            .define('I', HumanCommonItemTags.INGOTS_COMPOSITE)
+            .pattern("I I")
+            .pattern("III")
+            .pattern("I I")
+            .into(8, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER);
+
+        // ⚠ Oct 22 - NOT nuggetToIngot: that names the recipe after its output, and "avp_human:composite_ingot" is
+        // already the recipe that MAKES composite ingots - datagen stopped with "Duplicate recipe". Same 3x3 of
+        // nuggets,
+        // under its own name.
+        builder.shaped()
+            .withCategory(RecipeCategory.BUILDING_BLOCKS)
+            .withCustomName(name -> name + "_from_nuggets")
+            .define('A', com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET.get())
+            .define('B', com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET.get())
+            .pattern("BBB")
+            .pattern("BAB")
+            .pattern("BBB")
+            .into(1, HumanItems.COMPOSITE_INGOT.get());
+        ingotToNugget(builder, HumanItems.COMPOSITE_INGOT.get(), com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET.get());
     }
 
     private static void createFerroaluminumBlockVariantRecipes(RecipeBuilder builder) {

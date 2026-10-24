@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/crate/ferroaluminum_framed_crate_3x3"
+    },
+    "facing=south": {
+      "model": "avp_human:block/crate/ferroaluminum_framed_crate_3x3"
+    },
+    "facing=east": {
+      "model": "avp_human:block/crate/ferroaluminum_framed_crate_3x3"
+    },
+    "facing=west": {
+      "model": "avp_human:block/crate/ferroaluminum_framed_crate_3x3"
+    }
+  }
+}

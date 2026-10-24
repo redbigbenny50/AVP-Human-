@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/titanium"
+    },
+    "X": {
+      "item": "minecraft:redstone_block"
+    },
+    "B": {
+      "tag": "c:storage_blocks/titanium"
+    },
+    "#": {
+      "item": "avp_human:titanium_tech_case_2x2"
+    }
+  },
+  "pattern": [
+    "BXB",
+    "I#I",
+    "BIB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:titanium_tech_case_3x3"
+  }
+}

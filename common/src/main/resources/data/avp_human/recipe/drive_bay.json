@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "H": {
+      "item": "avp_human:heat_sink"
+    },
+    "C": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "AFA",
+    "SHS",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:drive_bay"
+  }
+}

@@ -33,6 +33,7 @@ public class MixinPlayerRenderer_AdjustArmPoseForGun {
         // </p>
         var isHeavyWeapon = gunItem.getGunConfig() == GunData.OLD_PAINLESS
             || gunItem.getGunConfig() == GunData.FLAMETHROWER_SEVASTOPOL
+            || gunItem.getGunConfig() == GunData.CHEM_THROWER
             || gunItem.getGunConfig() == GunData.M56_SMARTGUN;
 
         if (isHeavyWeapon) {

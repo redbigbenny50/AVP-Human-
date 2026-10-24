@@ -47,6 +47,16 @@ public class ItemPipeBlock extends PipeBlock {
     }
 
     @Override
+    protected java.util.List<net.minecraft.network.chat.Component> diagnose(ServerLevel level, BlockPos pos) {
+        return ItemPipeSystem.get(level).diagnose(level, pos);
+    }
+
+    @Override
+    protected String cargo() {
+        return "items";
+    }
+
+    @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }

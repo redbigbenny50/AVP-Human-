@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:steel_fluid_tank"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:green_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:uscm_fluid_tank"
+  }
+}

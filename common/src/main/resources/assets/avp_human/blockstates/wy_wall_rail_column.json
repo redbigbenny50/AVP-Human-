@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "avp_human:block/wy_wall_rail_column"
+    },
+    "axis=z": {
+      "model": "avp_human:block/wy_wall_rail_column",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "avp_human:block/wy_wall_rail_column",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

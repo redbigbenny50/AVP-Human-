@@ -44,6 +44,13 @@ public class HumanKeybindingRegistry {
             if (player != null) {
                 var itemStack = player.getMainHandItem();
 
+                // [stated] Oct 18 - the chem thrower asks which vapor when more than one kind is carried, and plays
+                // the reload the SERVER picks (remove/purge/insert depends on what is on the gun), so no local guess.
+                if (com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(itemStack)) {
+                    com.human.client.gun.ChemThrowerClient.onReloadKey(player, itemStack);
+                    return;
+                }
+
                 if (itemStack.getItem() instanceof GunItem) {
                     GunAnimationEvents.trigger(itemStack, GunAnimationEvents.RELOAD);
                 }

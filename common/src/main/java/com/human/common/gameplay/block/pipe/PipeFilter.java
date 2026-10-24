@@ -317,6 +317,22 @@ public final class PipeFilter {
                         // A line naming something no longer registered (a removed mod) is kept but matches nothing.
                         BuiltInRegistries.ITEM.getOptional(id).ifPresent(item -> (plain ? plainItems : items).add(item));
                         BuiltInRegistries.FLUID.getOptional(id).ifPresent(fluids::add);
+
+                        // Oct 14 FIX - a BUCKET line also matches the fluid in it. Fluid pipes used to list items by
+                        // mistake (PipeEndScreen), so worlds hold lines like avp_human:cryofluid_bucket on fluid pipes
+                        // that never matched anything; this makes them work as meant, with no rebuilding by hand.
+                        // Through each fluid's own getBucket() - the bucket's fluid field is private in vanilla.
+                        BuiltInRegistries.ITEM.getOptional(id).ifPresent(item -> {
+                            if (item == net.minecraft.world.item.Items.BUCKET || item == net.minecraft.world.item.Items.AIR) {
+                                return;
+                            }
+
+                            for (var fluid : BuiltInRegistries.FLUID) {
+                                if (fluid.getBucket() == item && fluid.isSource(fluid.defaultFluidState())) {
+                                    fluids.add(fluid);
+                                }
+                            }
+                        });
                     }
                     case TAG -> {
                         var id = ResourceLocation.tryParse(entry.id());

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "avp_human:block/wy_wall_light_slot"
+    },
+    "axis=z": {
+      "model": "avp_human:block/wy_wall_light_slot",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "avp_human:block/wy_wall_light_slot",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

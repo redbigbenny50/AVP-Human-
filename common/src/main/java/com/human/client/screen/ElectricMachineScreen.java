@@ -94,11 +94,12 @@ public class ElectricMachineScreen extends AbstractContainerScreen<ElectricMachi
     private final ResourceLocation texture;
 
     /** [stated] Oct 2: priority, filter, redstone and the press outputs - side buttons with pop-up sub-menus. */
-    private com.human.client.screen.widget.MachineSideControls controls;
+    /** Protected so a machine's own screen (the distributor) can respect an open pop-up before handling its clicks. */
+    protected com.human.client.screen.widget.MachineSideControls controls;
 
     public ElectricMachineScreen(ElectricMachineMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.texture = HumanResources.location("textures/gui/container/" + menu.getKind().id() + ".png");
+        this.texture = HumanResources.location("textures/gui/container/" + menu.getKind().guiTexture() + ".png");
         this.imageWidth = 176;
         this.imageHeight = 166;
         this.inventoryLabelY = this.imageHeight - 94;
@@ -309,7 +310,8 @@ public class ElectricMachineScreen extends AbstractContainerScreen<ElectricMachi
                 var content = menu.getFluid();
                 var capacity = String.format(java.util.Locale.ROOT, "%,d", tank.capacity());
 
-                graphics.renderComponentTooltip(
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
                     font,
                     content.isEmpty()
                         ? List.of(
@@ -332,7 +334,8 @@ public class ElectricMachineScreen extends AbstractContainerScreen<ElectricMachi
         }
 
         if (hoveredSlot != null && menu.isFillSlot(hoveredSlot) && !hoveredSlot.hasItem()) {
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable("gui.avp_human.machine.fill"),
@@ -345,7 +348,8 @@ public class ElectricMachineScreen extends AbstractContainerScreen<ElectricMachi
         }
 
         if (hoveredSlot != null && menu.isUpgradeSlot(hoveredSlot) && !hoveredSlot.hasItem()) {
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable("gui.avp_human.machine.upgrade"),
@@ -368,7 +372,8 @@ public class ElectricMachineScreen extends AbstractContainerScreen<ElectricMachi
                 default -> "gui.avp_human.machine.status.no_power";
             };
 
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable(status),

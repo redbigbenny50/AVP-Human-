@@ -3,6 +3,9 @@
     "avp_human:bullet",
     "avp_human:flamethrow",
     "avp_human:radiation",
-    "avp_human:razor_wire"
+    "avp_human:razor_wire",
+    "avp_human:cryo_vapor",
+    "avp_human:infernium_vapor",
+    "avp_human:acid_vapor"
   ]
 }

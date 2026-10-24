@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/steel"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:barrel"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:green_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:uscm_weapon_locker"
+  }
+}

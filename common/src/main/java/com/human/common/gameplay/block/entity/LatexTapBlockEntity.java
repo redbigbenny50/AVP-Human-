@@ -35,19 +35,42 @@ public class LatexTapBlockEntity extends BlockEntity {
 
     private int dripTimer;
 
+    /**
+     * ⚠ Oct 23 - the cauldron below is looked for once a second, not every tick. A tester's /blib perf report put one
+     * latex tap at 221 us a tick, the heaviest avp block entity in the world, for a job that changes only when a player
+     * places or breaks a cauldron. The drip timer still counts every tick while a cauldron was there at the last look.
+     */
+    private static final int CAULDRON_CHECK_INTERVAL_TICKS = 20;
+
+    private int cauldronCheckCooldown;
+
+    private boolean hasCauldron;
+
     public LatexTapBlockEntity(BlockPos pos, BlockState state) {
         super(HumanBlockEntityTypes.LATEX_TAP.get(), pos, state);
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        var cauldron = findCauldron(level, pos);
+        if (--cauldronCheckCooldown <= 0) {
+            cauldronCheckCooldown = CAULDRON_CHECK_INTERVAL_TICKS;
+            hasCauldron = findCauldron(level, pos) != null;
+        }
 
         // No cauldron: hold the timer rather than spend it. The player loses nothing by fitting the pot later.
-        if (cauldron == null) {
+        if (!hasCauldron) {
             return;
         }
 
         if (++dripTimer < TICKS_PER_DRIP) {
+            return;
+        }
+
+        // Looked up again at the moment of filling, never trusted from the last check: in the second since, the
+        // cauldron may have been broken or swapped, and fill() must only ever touch a cauldron.
+        var cauldron = findCauldron(level, pos);
+        if (cauldron == null) {
+            hasCauldron = false;
+            dripTimer = TICKS_PER_DRIP - 1; // fills the moment a cauldron is back, as the old per-tick check did
             return;
         }
 

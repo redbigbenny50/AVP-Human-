@@ -51,7 +51,9 @@ public class WYCGearDecorator implements MarineDecorator {
     public void applyExclusives(Marine marine) {}
 
     public void applyExtras(Marine marine) {
-        ApeGearDecorator.INSTANCE.applyExtras(marine);
+        // [stated] Oct 13 kit clean-up: the grenade, not the APE's extras - no torches or water bucket, and fire
+        // resistance stays with the APE (it goes with the flamethrower). The elite and both spec ops build on this.
+        MarineGearDecorator.INSTANCE.applyExtras(marine);
 
         MarineGearDecoratorUtil.giveItem(marine, Items.TOTEM_OF_UNDYING);
         MarineGearDecoratorUtil.giveItem(marine, Items.GOLDEN_APPLE, 4);

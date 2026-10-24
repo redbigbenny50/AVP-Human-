@@ -113,6 +113,21 @@ public abstract class MixinItemInHandRenderer_AdjustHandRenderingForGun {
             poseStack.translate(0.020F * side, -0.012F, 0.0F);
         } else if (item == HumanGunItems.M37_12_SHOTGUN.get()) {
             poseStack.translate(AdsSightCalibration.horizontalOffset(item) * side, -0.010F, 0.0F);
+        } else if (com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(item)) {
+            poseStack.translate(CHEM_ADS_SIDEWAYS * side, CHEM_ADS_DOWN, CHEM_ADS_FORWARD);
         }
     }
+
+    /**
+     * [stated] Oct 19 - aiming the chem thrower, the camera ended up inside it and saw through the tank: "it needs to
+     * move down and more center when aiming down sights you should be looking over the tank not just next to the gun".
+     * On top of the shared aim offset: further toward the middle of the screen (so the tank sits under the crosshair),
+     * lower (so the eye looks over the tank's top), and further forward (so the camera is no longer inside the model).
+     * ⚠ First guesses, to be tuned in game - each is one number, in blocks.
+     */
+    private static final float CHEM_ADS_SIDEWAYS = -0.10F;
+
+    private static final float CHEM_ADS_DOWN = -0.16F;
+
+    private static final float CHEM_ADS_FORWARD = -0.18F;
 }

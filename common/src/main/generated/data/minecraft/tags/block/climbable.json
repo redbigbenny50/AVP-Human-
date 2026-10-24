@@ -1,5 +1,10 @@
 {
   "values": [
+    "avp_human:steel_ladder",
+    "avp_human:titanium_ladder",
+    "avp_human:ferroaluminum_ladder",
+    "avp_human:aluminum_ladder",
+    "avp_human:composite_ladder",
     "avp_human:ferroaluminum_chain_fence",
     "avp_human:steel_chain_fence",
     "avp_human:composite_chain_fence",

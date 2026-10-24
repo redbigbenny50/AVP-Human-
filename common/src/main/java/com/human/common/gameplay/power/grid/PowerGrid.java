@@ -44,6 +44,12 @@ import java.util.Set;
  * remaining power is split PROPORTIONALLY to what each asked for. So a cryotube keeps its occupant alive while the
  * lights dim, and two identical machines brown out together rather than one running and one dying by map iteration
  * order.
+ * <p>
+ * Oct 13 audit: a machine built on PowerConsumerBlockEntity runs on its FULL request or not at all, so a proportional
+ * share in a shortage was always refused and "brown out together" meant every such machine OFF. A second pass now gives
+ * what the split left to the consumers that got nothing, starting from a turn that rotates each tick - the same
+ * fairness (nobody favoured by iteration order), with machines taking turns instead of all stopping.
+ * </p>
  */
 public class PowerGrid {
 
@@ -204,7 +210,7 @@ public class PowerGrid {
         }
 
         // STEP 4 - deliver, and count what was really taken.
-        var delivered = distribute(demand, budget, totalDemand);
+        var delivered = distribute(demand, budget, totalDemand, shortageTurn++);
 
         // STEP 5 - pay for exactly what was delivered.
         //
@@ -222,12 +228,14 @@ public class PowerGrid {
         }
 
         // Generation nobody wanted tops up storage - and is extracted from the producers as the stores accept it.
-        var storedBefore = totalStored();
+        // Oct 13 audit: the before/after store totals exist only for the diagnostics log, so they are measured only
+        // when it is on (they walked every store on the grid every tick).
+        var diagnostics = PowerDiagnostics.isEnabled();
+        var storedBefore = diagnostics ? totalStored() : 0L;
 
         chargeStores(unusedSupply);
 
-        // ⚠ Guarded so a disabled log costs one boolean read: nothing below is evaluated when it is off.
-        if (PowerDiagnostics.isEnabled()) {
+        if (diagnostics) {
             report(totalSupply, delivered, fromStores, totalStored() - storedBefore);
         }
     }
@@ -296,6 +304,9 @@ public class PowerGrid {
         return diagnosticLevel == null ? "?" : diagnosticLevel.dimension().location().toString();
     }
 
+    /** Oct 13 audit - rotates the shortage pass's first consumer every tick (see distribute). */
+    private int shortageTurn;
+
     /**
      * Hands out {@code budget} across the consumers: priority bands in order, proportional inside a band.
      *
@@ -304,7 +315,8 @@ public class PowerGrid {
     private static long distribute(
         List<Offer<PowerNode.PowerConsumer>> demand,
         long budget,
-        long totalDemand
+        long totalDemand,
+        int turn
     ) {
         var delivered = 0L;
         var remaining = budget;
@@ -342,6 +354,14 @@ public class PowerGrid {
             ordered.sort(Comparator.comparingInt(entry -> entry.node().getPowerPriority()));
         }
 
+        // Oct 13 audit - FIX, shortage = blackout. The base consumer (every machine on PowerConsumerBlockEntity) takes
+        // its FULL request or nothing, and the proportional split below always offers less than the request in a
+        // shortage - so every one refused and the band went dark even when some could run (two machines wanting 200 on
+        // 399 supply: neither ran). Shares also round down, so a budget smaller than the consumer count gave everyone
+        // zero. A second pass now hands what the split left to the band's consumers that got NOTHING - each its full
+        // request while it fits - starting from a turn that rotates every tick, so a lasting shortage is shared out in
+        // turns. A consumer that took part power in the first pass is never offered twice.
+        var accepted = new long[ordered.size()];
         var index = 0;
 
         while (index < ordered.size() && remaining > 0L) {
@@ -367,10 +387,30 @@ public class PowerGrid {
                     continue;
                 }
 
-                var accepted = Math.max(0L, Math.min(share, offer.node().receivePower(share)));
+                var took = Math.max(0L, Math.min(share, offer.node().receivePower(share)));
 
-                delivered += accepted;
-                remaining -= accepted;
+                accepted[entry] = took;
+                delivered += took;
+                remaining -= took;
+            }
+
+            // Second pass: what the split left, to this band's consumers that got nothing, in rotating turn.
+            var bandSize = bandEnd - index;
+
+            for (var step = 0; step < bandSize && remaining > 0L; step++) {
+                var entry = index + Math.floorMod(turn + step, bandSize);
+
+                if (accepted[entry] > 0L) {
+                    continue;
+                }
+
+                var offer = ordered.get(entry);
+                var give = Math.min(remaining, offer.amount());
+                var took = Math.max(0L, Math.min(give, offer.node().receivePower(give)));
+
+                accepted[entry] = took;
+                delivered += took;
+                remaining -= took;
             }
 
             index = bandEnd;

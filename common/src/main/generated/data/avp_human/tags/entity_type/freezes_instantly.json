@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "avp_alien:ovomorph",
+      "required": false
+    },
+    {
+      "id": "avp_alien:aberrant_ovomorph",
+      "required": false
+    },
+    {
+      "id": "avp_alien:royal_ovomorph",
+      "required": false
+    },
+    {
+      "id": "avp_alien:royal_aberrant_ovomorph",
+      "required": false
+    }
+  ]
+}

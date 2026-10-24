@@ -83,6 +83,16 @@ public final class ElectricianProfession implements ColonistProfession {
         sell(offers, 14, HumanItems.RAM, 1);
         sell(offers, 20, HumanItems.MOTHERBOARD, 1);
         sell(offers, 32, HumanItems.SSD, 1);
+        // [stated] Oct 13: the W-Y faction license - every W-Y fabricator print - for 32 diamonds.
+        offers.add(
+            new MerchantOffer(
+                new ItemCost(Items.DIAMOND, 32),
+                new ItemStack(com.human.common.registry.init.HumanFabrication.WY_FACTION_LICENSE.get()),
+                MAX_USES,
+                30,
+                0.0F
+            )
+        );
 
         // BUYS - raw materials...
         buy(offers, () -> Items.REDSTONE, 24, 1);

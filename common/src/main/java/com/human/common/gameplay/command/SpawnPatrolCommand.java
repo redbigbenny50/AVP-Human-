@@ -18,7 +18,12 @@ import net.minecraft.network.chat.Component;
 public class SpawnPatrolCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> create() {
+        // Oct 14 FIX - [stated] "you can use commands to summon patrols without op". This command is registered TWICE
+        // (top-level /patrol and /avp_human patrol, see HumanCommands) and neither parent checked permission, so any
+        // player could spawn patrols. The check lives HERE so every place it is attached is covered. Level 2 =
+        // operators, and singleplayer only with cheats on - the same as vanilla /summon.
         return Commands.literal("patrol")
+            .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(
                 Commands.literal("spawn")
                     .then(

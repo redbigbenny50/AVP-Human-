@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * colour so {@link com.human.client.render.block.CableFlangeRenderer} can draw it: [stated] green = power into our
  * system, red = out of it, yellow = both. Plain cable-to-cable runs have no block entity at all.
  */
-public class CableBlockEntity extends BlockEntity {
+public class CableBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
 
     public static final byte IN = 1;
 
@@ -29,6 +29,21 @@ public class CableBlockEntity extends BlockEntity {
 
     public CableBlockEntity(BlockPos pos, BlockState state) {
         super(HumanBlockEntityTypes.CABLE.get(), pos, state);
+    }
+
+    /** [stated] Oct 21 - landed from a ship rotated: each flange's mode turns to the face it now points at. */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (!move.rotated()) {
+            return;
+        }
+
+        move.rotateFaces(modes);
+        setChanged();
+
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     public byte getMode(Direction face) {

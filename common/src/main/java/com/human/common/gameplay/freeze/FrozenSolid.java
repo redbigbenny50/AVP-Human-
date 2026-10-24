@@ -64,6 +64,21 @@ public final class FrozenSolid {
      * mods, by name. {@return whether it is frozen solid now}
      */
     public static boolean tryFreeze(LivingEntity target) {
+        return freeze(target, false);
+    }
+
+    /**
+     * [stated] Oct 19 - the yautja freeze grenade "instantly freeze[s] anything regardless of hp amount" ("the grenades
+     * from predator badlands instantly froze things"). As {@link #tryFreeze} with the health rule dropped: any mob that
+     * can be frozen solid at all is, at once. Still never a player and never anything cold-immune, and the strain rules
+     * still apply (a nether egg shatters; a nether adult freezes or bursts, 50/50). avp_predator calls this by name.
+     * {@return whether it is frozen solid now}
+     */
+    public static boolean forceFreeze(LivingEntity target) {
+        return freeze(target, true);
+    }
+
+    private static boolean freeze(LivingEntity target, boolean anyHealth) {
         if (target.level().isClientSide || !target.isAlive()) {
             return false;
         }
@@ -72,20 +87,175 @@ public final class FrozenSolid {
             return true;
         }
 
-        if (!canFreezeSolid(target)) {
+        // [stated] Oct 19 - "nether ovomorphs flat out die when blasted with cryo". Not for a strain immune to cold.
+        if (target.getType().is(HumanEntityTypeTags.SHATTERS_FROM_COLD)) {
+            if (!isImmune(target)) {
+                target.kill();
+            }
+
+            return false;
+        }
+
+        var allowed = anyHealth ? !(target instanceof Player) && !isImmune(target) : canFreezeSolid(target);
+
+        if (!allowed) {
+            return false;
+        }
+
+        // [stated] Oct 19 - nether adults at 10 %: "either freeze or explode its a 50 50 chance".
+        if (target.getType().is(HumanEntityTypeTags.FREEZE_OR_EXPLODE) && target.getRandom().nextBoolean()) {
+            coldBurst(target);
             return false;
         }
 
         target.addEffect(new MobEffectInstance(HumanMobEffects.getFrozenSolidHolder(), FROZEN_TICKS, 0, false, false, true));
         track(target);
 
+        // [stated] Oct 19 - "play this when enemies freeze solid". Once, at the moment it freezes: an already-frozen
+        // mob returned above, so a cryo stream held on it does not replay it. Not for a specimen pulled out of a
+        // cryotank (freezeOutOfCryo) - that one was frozen already. A slight pitch spread so a group frozen at once
+        // does not sound like one sample stacked.
+        target.level()
+            .playSound(
+                null,
+                target.getX(),
+                target.getY(),
+                target.getZ(),
+                com.human.common.registry.init.HumanSoundEvents.FREEZE_SOLID.get(),
+                target.getSoundSource(),
+                1.0F,
+                0.9F + target.getRandom().nextFloat() * 0.2F
+            );
+
         return true;
     }
 
     /** {@return whether the rule lets this mob be frozen solid right now} */
+    /**
+     * [stated] Oct 19 - a specimen pulled out of a cryotank on a lead, cord or chain comes out FROZEN SOLID with a
+     * fresh thaw timer, whatever its health: it has just left cryo. Not the Ender Dragon or the Wither (they never go
+     * in a tank anyway). Server side.
+     */
+    public static void freezeOutOfCryo(LivingEntity target) {
+        if (target.level().isClientSide || !target.isAlive() || target instanceof Player) {
+            return;
+        }
+
+        if (target.getType().is(HumanEntityTypeTags.FREEZE_SOLID_IMMUNE)) {
+            return;
+        }
+
+        target.addEffect(new MobEffectInstance(HumanMobEffects.getFrozenSolidHolder(), FROZEN_TICKS, 0, false, false, true));
+        track(target);
+    }
+
+    /**
+     * A real attack on a frozen mob breaks it free of the ice; small damage does not. [stated] Oct 19: "when an enemy
+     * that is frozen is hit or takes damage not just minor but an actual attack or heavy fall they can unfreeze".
+     */
+    public static final float BREAK_ATTACK_DAMAGE = 2.0F;
+
+    /** A fall dealing this much (a drop of about seven blocks) breaks the ice too - always. */
+    public static final float BREAK_FALL_DAMAGE = 4.0F;
+
+    /** [stated] Oct 19 - an attack on a frozen mob "has a good chance to break free lets say 70% chance". */
+    public static final float BREAK_ATTACK_CHANCE = 0.70F;
+
+    /**
+     * Called after a frozen mob has actually taken damage (MixinLivingEntity_FrozenAttacker). If the hit counts, the
+     * mob thaws on the spot - the same as the effect running out, so a lead it was only on because it was frozen still
+     * lets go - and the ice-break sound plays. Server side.
+     * <ul>
+     * <li>Counts: a hit from a mob or player (melee, or anything it fired or threw) or an explosion, of at least
+     * {@link #BREAK_ATTACK_DAMAGE} - a {@link #BREAK_ATTACK_CHANCE} chance each time; a fall of at least
+     * {@link #BREAK_FALL_DAMAGE} - always.</li>
+     * <li>Never: cold of any kind (the cryofluid and cryo vapor that froze it, vanilla freezing) - otherwise the cryo
+     * stream that keeps it frozen would break it out; the acid and infernium vapor clouds (gas, though credited to the
+     * shooter); damage over time with no attacker (poison, wither, radiation, acid, drowning, cactus...); a mob the hit
+     * killed.</li>
+     * </ul>
+     */
+    public static void onHurt(LivingEntity target, net.minecraft.world.damagesource.DamageSource source, float amount) {
+        if (target.level().isClientSide || !target.isAlive() || !isFrozen(target) || !breaksIce(source, amount)) {
+            return;
+        }
+
+        // A heavy fall always shatters it; an attack only usually does.
+        if (!source.is(net.minecraft.tags.DamageTypeTags.IS_FALL) && target.getRandom().nextFloat() >= BREAK_ATTACK_CHANCE) {
+            return;
+        }
+
+        target.removeEffect(HumanMobEffects.getFrozenSolidHolder());
+        target.setTicksFrozen(0);
+        target.level()
+            .playSound(
+                null,
+                target.getX(),
+                target.getY(),
+                target.getZ(),
+                com.human.common.registry.init.HumanSoundEvents.FROZEN_BREAK.get(),
+                target.getSoundSource(),
+                1.0F,
+                0.9F + target.getRandom().nextFloat() * 0.2F
+            );
+    }
+
+    /** A held mob's thaw timer is topped back up only once it has run down by this much (5 s). */
+    private static final int KEEP_FROZEN_MARGIN_TICKS = 100;
+
+    /**
+     * Keeps an already-frozen mob frozen while cold keeps reaching it (the distributor fog, a chem thrower stream,
+     * standing in cryofluid): its thaw timer is put back to full - but only once it has run down by
+     * {@value #KEEP_FROZEN_MARGIN_TICKS} ticks. ⚡ Re-adding the effect every call would send every watching client an
+     * effect-update packet for every frozen mob, every tick it stands in cryofluid; this sends one every five seconds.
+     */
+    public static void keepFrozen(LivingEntity target) {
+        var current = target.getEffect(HumanMobEffects.getFrozenSolidHolder());
+
+        if (current != null && current.getDuration() > FROZEN_TICKS - KEEP_FROZEN_MARGIN_TICKS) {
+            return;
+        }
+
+        target.addEffect(new MobEffectInstance(HumanMobEffects.getFrozenSolidHolder(), FROZEN_TICKS, 0, false, false, true));
+        track(target);
+    }
+
+    /** Cold of any kind: cryofluid, cryo vapor, and anything in vanilla's is_freezing (powder snow, freeze blasts). */
+    public static boolean isColdDamage(net.minecraft.world.damagesource.DamageSource source) {
+        return source.is(com.human.common.registry.key.HumanDamageTypeKeys.CRYOFLUID)
+            || source.is(com.human.common.registry.key.HumanDamageTypeKeys.CRYO_VAPOR)
+            || source.is(net.minecraft.tags.DamageTypeTags.IS_FREEZING);
+    }
+
+    private static boolean breaksIce(net.minecraft.world.damagesource.DamageSource source, float amount) {
+        if (
+            isColdDamage(source)
+                // Gas, not a blow: a vapor cloud is credited to whoever fired it, but standing in it is not being hit.
+                || source.is(com.human.common.registry.key.HumanDamageTypeKeys.ACID_VAPOR)
+                || source.is(com.human.common.registry.key.HumanDamageTypeKeys.INFERNIUM_VAPOR)
+        ) {
+            return false;
+        }
+
+        if (source.is(net.minecraft.tags.DamageTypeTags.IS_FALL)) {
+            return amount >= BREAK_FALL_DAMAGE;
+        }
+
+        var isAttack = source.getEntity() != null
+            || source.getDirectEntity() != null
+            || source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION);
+
+        return isAttack && amount >= BREAK_ATTACK_DAMAGE;
+    }
+
     public static boolean canFreezeSolid(LivingEntity target) {
         if (target instanceof Player || isImmune(target)) {
             return false;
+        }
+
+        // [stated] Oct 19 - eggs freeze at any health: "ovomorphs are instantly frozen they dont open".
+        if (target.getType().is(HumanEntityTypeTags.FREEZES_INSTANTLY)) {
+            return true;
         }
 
         return !isHostile(target) || target.getHealth() <= target.getMaxHealth() * HEALTH_FRACTION;
@@ -96,6 +266,61 @@ public final class FrozenSolid {
      * marines: [stated] "marines are hostile and should follow the 10%". A marine is a PathfinderMob, not an Enemy, so
      * it has to be named here; without it any freeze would turn a full-health marine into a statue.
      */
+    /**
+     * Whether cryo touching this does its whole job at once (freeze an egg solid, or kill a nether egg) instead of
+     * damaging it first. Callers check this BEFORE dealing cryo damage: avp_alien eggs open when they are hurt, so a
+     * damaged egg would hatch before it froze.
+     */
+    public static boolean reactsOnContact(LivingEntity target) {
+        var type = target.getType();
+
+        return (type.is(HumanEntityTypeTags.FREEZES_INSTANTLY) || type.is(HumanEntityTypeTags.SHATTERS_FROM_COLD))
+            && !isImmune(target);
+    }
+
+    /** A creeper's blast power, at drone size (avp_alien's drone is 0.8 x 1.98). */
+    private static final float BURST_BASE_POWER = 3.0F;
+
+    private static final float DRONE_SIZE = 0.8F * 1.98F;
+
+    /** Even an empress's blast stops here. */
+    private static final float BURST_MAX_POWER = 8.0F;
+
+    private static final double LIMB_HORIZONTAL_VELOCITY = 0.18;
+
+    private static final double LIMB_VERTICAL_VELOCITY = 0.14;
+
+    /**
+     * [stated] Oct 19 - the nether "explode" half of the 50/50: "explosion wont break blocks but would cause damage and
+     * it grows with the size of the mob with a drone being basic creeper then scales up from there. and if possible
+     * have its limbs blow off". Power is a creeper's at drone size and grows with the square root of the mob's side-on
+     * area (so a mob twice as big each way blasts twice as hard), capped at {@value #BURST_MAX_POWER}. Breaks no blocks
+     * ({@code ExplosionInteraction.NONE}). Its limbs are blown off first - the same BLib call and launch speeds
+     * avp_alien's boiler uses - then it dies, dropping what it would.
+     */
+    private static void coldBurst(LivingEntity target) {
+        var level = target.level();
+        var random = target.getRandom();
+        var size = target.getBbWidth() * target.getBbHeight();
+        var power = Math.min(BURST_MAX_POWER, BURST_BASE_POWER * (float) Math.max(1.0, Math.sqrt(size / DRONE_SIZE)));
+        var centre = target.position().add(0.0, target.getBbHeight() * 0.5, 0.0);
+
+        for (var definition : com.blib.api.common.dismemberment.v1.LimbDismemberer.getRemainingDefinitions(target)) {
+            var angle = random.nextDouble() * Math.TAU;
+            var horizontal = LIMB_HORIZONTAL_VELOCITY * (0.65 + random.nextDouble() * 0.7);
+            var vertical = LIMB_VERTICAL_VELOCITY * (0.65 + random.nextDouble() * 0.7);
+            var velocity = new net.minecraft.world.phys.Vec3(Math.cos(angle) * horizontal, vertical, Math.sin(angle) * horizontal);
+
+            com.blib.api.common.dismemberment.v1.LimbDismemberer.detach(target, definition.id(), limb -> {
+                limb.moveTo(centre, target.getYRot(), target.getXRot());
+                limb.launch(velocity);
+            });
+        }
+
+        level.explode(target, centre.x, centre.y, centre.z, power, net.minecraft.world.level.Level.ExplosionInteraction.NONE);
+        target.kill();
+    }
+
     public static boolean isHostile(LivingEntity target) {
         return target instanceof Enemy || target instanceof com.human.common.gameplay.entity.living.human.marine.Marine;
     }

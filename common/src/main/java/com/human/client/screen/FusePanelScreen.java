@@ -241,7 +241,15 @@ public class FusePanelScreen extends AbstractContainerScreen<FusePanelMenu> {
             var name = icon.isEmpty() ? Component.translatable("gui.avp_human.fuse_panel.unknown") : icon.getHoverName();
 
             graphics.drawString(font, font.plainSubstrByWidth(name.getString(), LIST_W - 36), x + 20, y + 1, 0xFFFFFF, true);
-            graphics.drawString(font, pos.getX() + ", " + pos.getY() + ", " + pos.getZ(), x + 20, y + 10, 0xC0C0C0, false);
+            // ⚠ Oct 23 - cut at the same width as the name above it: far-out coordinates ran past the row.
+            graphics.drawString(
+                font,
+                com.human.client.screen.widget.GuiText.fit(font, pos.getX() + ", " + pos.getY() + ", " + pos.getZ(), LIST_W - 36),
+                x + 20,
+                y + 10,
+                0xC0C0C0,
+                false
+            );
 
             // Unbind: a small red cross at the row's end.
             var bx = x + LIST_W - UNBIND_W - 2;
@@ -368,7 +376,8 @@ public class FusePanelScreen extends AbstractContainerScreen<FusePanelMenu> {
         if (inArea(mouseX, mouseY, PRIORITY_X, PRIORITY_Y, 16, 16)) {
             var priority = menu.getPriority();
 
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable("gui.avp_human.machine.priority." + priority.id()),
@@ -388,7 +397,13 @@ public class FusePanelScreen extends AbstractContainerScreen<FusePanelMenu> {
             var by = topPos + LIST_Y + visible * 18 + 4;
 
             if (mouseX >= bx && mouseX < bx + UNBIND_W && mouseY >= by && mouseY < by + UNBIND_W) {
-                graphics.renderTooltip(font, Component.translatable("gui.avp_human.fuse_panel.unbind"), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
+                    font,
+                    Component.translatable("gui.avp_human.fuse_panel.unbind"),
+                    mouseX,
+                    mouseY
+                );
                 return;
             }
 
@@ -399,7 +414,13 @@ public class FusePanelScreen extends AbstractContainerScreen<FusePanelMenu> {
                 mouseX >= leftPos + LIST_X && mouseX < leftPos + LIST_X + LIST_W && mouseY >= y && mouseY < y + 18
                     && pos.distSqr(menu.getPanelPos()) > (double) FusePanelBlockEntity.RANGE * FusePanelBlockEntity.RANGE
             ) {
-                graphics.renderTooltip(font, Component.translatable("gui.avp_human.fuse_panel.out_of_range"), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
+                    font,
+                    Component.translatable("gui.avp_human.fuse_panel.out_of_range"),
+                    mouseX,
+                    mouseY
+                );
                 return;
             }
         }

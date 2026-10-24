@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "avp_alien:nether_ovomorph",
+      "required": false
+    },
+    {
+      "id": "avp_alien:royal_nether_ovomorph",
+      "required": false
+    }
+  ]
+}

@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class FabricPipeItemAccess implements PipeItemAccess {
 
+    /** Oct 13 hardening - most entries one look reads, so a huge modded storage cannot stall a pipe round. */
+    private static final int MAX_VIEWS = 512;
+
     private FabricPipeItemAccess() {}
 
     public static void install() {
@@ -32,6 +35,14 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
         }
 
         return new Port() {
+
+            /** Oct 13 - every non-empty view, for the fabricator's storage view. Reading moves nothing. */
+            @Override
+            public void listContents(java.util.function.ObjIntConsumer<ItemStack> sink) {
+                for (var view : storage.nonEmptyViews()) {
+                    sink.accept(view.getResource().toStack(), (int) Math.min(Integer.MAX_VALUE, view.getAmount()));
+                }
+            }
 
             @Override
             public boolean present() {
@@ -59,7 +70,14 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
                 net.fabricmc.fabric.api.transfer.v1.item.ItemVariant chosen = null;
                 var chosenDamage = -1;
 
+                // Oct 13 hardening: one look reads at most MAX_VIEWS entries of a huge modded storage.
+                var looked = 0;
+
                 for (var view : storage.nonEmptyViews()) {
+                    if (++looked > MAX_VIEWS) {
+                        break;
+                    }
+
                     var candidate = view.getResource();
                     var stack = candidate.toStack();
 
@@ -100,10 +118,11 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
                             }
 
                             @Override
-                            public void take(int count) {
+                            public int take(int count) {
                                 try (var move = Transaction.openOuter()) {
-                                    storage.extract(variant, count, move);
+                                    var took = storage.extract(variant, count, move);
                                     move.commit();
+                                    return (int) Math.min(Integer.MAX_VALUE, took);
                                 }
                             }
                         };
@@ -111,7 +130,13 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
                 }
 
                 // The chosen copy could not be taken out (a locked slot, say): offer the first one that can, as before.
+                var scanned = 0;
+
                 for (var view : storage.nonEmptyViews()) {
+                    if (++scanned > MAX_VIEWS) {
+                        break;
+                    }
+
                     var variant = view.getResource();
 
                     if (!allowed.test(variant.toStack())) {
@@ -135,10 +160,11 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
                             }
 
                             @Override
-                            public void take(int count) {
+                            public int take(int count) {
                                 try (var move = Transaction.openOuter()) {
-                                    storage.extract(variant, count, move);
+                                    var took = storage.extract(variant, count, move);
                                     move.commit();
+                                    return (int) Math.min(Integer.MAX_VALUE, took);
                                 }
                             }
                         };
@@ -146,6 +172,20 @@ public final class FabricPipeItemAccess implements PipeItemAccess {
                 }
 
                 return null;
+            }
+
+            /** Oct 13 hardening - takes back what the pipe just put in, when its source gave less than promised. */
+            @Override
+            public int retract(ItemStack like, int count) {
+                if (like.isEmpty() || count <= 0 || Transaction.isOpen()) {
+                    return 0;
+                }
+
+                try (var move = Transaction.openOuter()) {
+                    var took = storage.extract(ItemVariant.of(like), count, move);
+                    move.commit();
+                    return (int) Math.min(Integer.MAX_VALUE, took);
+                }
             }
 
             @Override

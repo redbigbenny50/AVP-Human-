@@ -441,5 +441,104 @@
       }
     ],
     "subtitle": "subtitles.entity.marine.radio_chatter"
+  },
+  "entity.generic.freeze_solid": {
+    "sounds": [
+      {
+        "name": "avp_human:entity/freeze_solid",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.entity.generic.freeze_solid"
+  },
+  "entity.generic.frozen_break": {
+    "sounds": [
+      {
+        "name": "avp_human:entity/frozen_break",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.entity.generic.frozen_break"
+  },
+  "block.quarry.drill_bit": {
+    "sounds": [
+      {
+        "name": "avp_human:block/quarry/drill_bit",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.quarry.drill_bit"
+  },
+  "block.quarry.drill_head": {
+    "sounds": [
+      {
+        "name": "avp_human:block/quarry/drill_head",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.quarry.drill_head"
+  },
+  "block.machine.vaporizer": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/vaporizer_working",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.machine.vaporizer"
+  },
+  "item.weapon.chem_thrower.start": {
+    "sounds": [
+      {
+        "name": "avp_human:item/weapon/chem_thrower/start",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.item.weapon.chem_thrower.start"
+  },
+  "item.weapon.chem_thrower.loop": {
+    "sounds": [
+      {
+        "name": "avp_human:item/weapon/chem_thrower/loop",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.item.weapon.chem_thrower.loop"
+  },
+  "item.weapon.chem_thrower.stop": {
+    "sounds": [
+      {
+        "name": "avp_human:item/weapon/chem_thrower/stop",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.item.weapon.chem_thrower.stop"
+  },
+  "block.machine.distributor": {
+    "sounds": [
+      {
+        "name": "avp_human:block/machine/distributor_working",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.block.machine.distributor"
+  },
+  "block.quarry.arms_move": {
+    "sounds": [
+      {
+        "name": "avp_human:block/quarry/arms_move",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.quarry.arms_move"
+  },
+  "jukebox_sounds.building_better_worlds": {
+    "sounds": [
+      {
+        "name": "avp_human:jukebox_sounds/building_better_worlds",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.jukebox_sounds.building_better_worlds"
   }
 }

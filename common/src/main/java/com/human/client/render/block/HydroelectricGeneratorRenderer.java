@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
  * {@code gPanelRight} are separate bones in the model, so this is a visibility flip per side, decided from the two
  * neighbours along the axle.
  */
-public class HydroelectricGeneratorRenderer extends AzBlockEntityRenderer<HydroelectricGeneratorBlockEntity> {
+public class HydroelectricGeneratorRenderer extends AzBlockEntityRenderer<HydroelectricGeneratorBlockEntity> implements com.human.client.render.OversizedRender<HydroelectricGeneratorBlockEntity> {
 
     public static final String NAME = "hydroelectric_generator";
 
@@ -261,5 +261,11 @@ public class HydroelectricGeneratorRenderer extends AzBlockEntityRenderer<Hydroe
         var turns = ticks * speed / TICKS_PER_TURN;
 
         return (float) (spin * turns * 2.0 * Math.PI % (2.0 * Math.PI));
+    }
+
+    /** The wheel's blades reach about two blocks past the centre cube. */
+    @Override
+    public net.minecraft.world.phys.AABB renderBox(HydroelectricGeneratorBlockEntity wheel) {
+        return new net.minecraft.world.phys.AABB(wheel.getBlockPos()).inflate(3.0D);
     }
 }

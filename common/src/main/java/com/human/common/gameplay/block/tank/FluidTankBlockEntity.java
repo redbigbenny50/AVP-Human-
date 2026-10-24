@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  * default to input for convenience and can each be switched to output with the wiring tool; that switch is per block
  * and per face, and it survives re-forming because it lives here, not in the controller.
  */
-public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
+public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint, com.human.common.gameplay.ship.ShipMoveAware {
 
     private static final String NBT_OFFSET = "controllerOffset";
 
@@ -42,8 +42,6 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
     private static final String NBT_FLUID = "fluid";
 
     private static final String NBT_AMOUNT = "amount";
-
-    private static final String NBT_OUTPUTS = "sideOutputs";
 
     private static final String NBT_PIPES = "pipes";
 
@@ -60,9 +58,6 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
     private FluidContent content = FluidContent.EMPTY;
 
     private int lastSignal = -1;
-
-    /** Bit per horizontal direction (2D data value): set = that face is an OUTPUT. Clear = input, the default. */
-    private byte sideOutputs;
 
     /**
      * Bit per direction (3D data value): a pipe is attached to that face, so a VALVE is drawn there. Recomputed only
@@ -166,24 +161,6 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
     // Ports
     // ------------------------------------------------------------------------------------------------------------
 
-    public boolean isOutput(Direction side) {
-        return side.getAxis().isHorizontal() && (sideOutputs & (1 << side.get2DDataValue())) != 0;
-    }
-
-    /** Switches one side face between input and output. @return true if it is now an output */
-    public boolean toggleSide(Direction side) {
-        if (!side.getAxis().isHorizontal()) {
-            return false;
-        }
-
-        sideOutputs ^= (byte) (1 << side.get2DDataValue());
-        setChanged();
-        // The valve on this face changes colour.
-        sync();
-
-        return isOutput(side);
-    }
-
     public boolean hasPipe(Direction side) {
         return (pipes & (1 << side.get3DDataValue())) != 0;
     }
@@ -197,6 +174,34 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
      * Re-checks which faces have a pipe attached. A face counts when the block beside it carries fluid towards it and
      * is not another tank block. Called on placement and when a neighbour changes; syncs only if something changed.
      */
+    /**
+     * [stated] Oct 21 - moved with a ship. Its controller moved with it (the whole tank goes), so the offset still
+     * points at it - unless the batch was turned, when the offset turns too.
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (move.rotated() && !controllerOffset.equals(BlockPos.ZERO)) {
+            controllerOffset = move.rotateOffset(controllerOffset);
+            setChanged();
+        }
+    }
+
+    /**
+     * After the whole batch: a turned tank no longer has its controller on the corner the layout expects, so the
+     * controller re-forms it (fluid shared out by volume, nothing spilled - every block of it is still there). Every
+     * tank block re-checks its valves against its new neighbours.
+     */
+    @Override
+    public void afterShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (move.rotated() && isController()) {
+            FluidTankFormation.onPlaced(move.level(), worldPosition, getBlockState().getBlock());
+        }
+
+        if (level != null && level.getBlockEntity(worldPosition) == this) {
+            refreshPipes();
+        }
+    }
+
     public void refreshPipes() {
         if (level == null || level.isClientSide) {
             return;
@@ -223,22 +228,24 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
         }
     }
 
+    /**
+     * Oct 18 - SIDES ARE BOTH WAYS; THE PIPE'S FLANGE DECIDES. [stated] "attaching a pipe to a side doesnt
+     * automatically make it a port the player has to make it one lets change that to when a fluid pipe is placed
+     * against the side of a fluid tank it automatically makes it a port thats both and the player changes the flange to
+     * determine if its an in or out or both". A side used to be strictly input (default) or output (after a
+     * right-click), and the pipe system narrows a pipe end's setting by what the face allows - so a flange set to
+     * EXTRACT on an input side, or INPUT on an output side, did nothing at all. Now every side allows both, and the
+     * flange alone picks: AUTO and BOTH = both, INPUT = in, EXTRACT = out, OFF = nothing (PipeBlockEntity.effective).
+     * The top stays in-only and the bottom out-only.
+     */
     @Override
     public boolean canFill(@Nullable Direction side) {
-        if (side == null || side == Direction.UP) {
-            return true;
-        }
-
-        return side != Direction.DOWN && !isOutput(side);
+        return side != Direction.DOWN;
     }
 
     @Override
     public boolean canDrain(@Nullable Direction side) {
-        if (side == null || side == Direction.DOWN) {
-            return true;
-        }
-
-        return side != Direction.UP && isOutput(side);
+        return side != Direction.UP;
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -358,7 +365,6 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
         super.saveAdditional(tag, registries);
 
         tag.putIntArray(NBT_OFFSET, new int[] { controllerOffset.getX(), controllerOffset.getY(), controllerOffset.getZ() });
-        tag.putByte(NBT_OUTPUTS, sideOutputs);
         tag.putByte(NBT_PIPES, pipes);
 
         if (width > 0) {
@@ -384,7 +390,6 @@ public class FluidTankBlockEntity extends BlockEntity implements FluidEndpoint {
         var offset = tag.getIntArray(NBT_OFFSET);
 
         controllerOffset = offset.length == 3 ? new BlockPos(offset[0], offset[1], offset[2]) : BlockPos.ZERO;
-        sideOutputs = tag.getByte(NBT_OUTPUTS);
         pipes = tag.getByte(NBT_PIPES);
         width = Math.max(0, Math.min(FluidTankRules.MAX_WIDTH, tag.getInt(NBT_WIDTH)));
         height = Math.max(0, Math.min(FluidTankRules.MAX_HEIGHT, tag.getInt(NBT_HEIGHT)));

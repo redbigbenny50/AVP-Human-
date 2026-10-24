@@ -39,8 +39,8 @@ public class WYSOCGearDecorator implements MarineDecorator {
         MarineGearDecoratorUtil.giveItem(marine, Items.ENCHANTED_GOLDEN_APPLE, 4);
         MarineGearDecoratorUtil.giveItem(marine, Items.TOTEM_OF_UNDYING, 2);
 
-        var healingPotion = PotionContents.createItemStack(Items.SPLASH_POTION, Potions.INVISIBILITY);
-        MarineGearDecoratorUtil.giveItem(marine, healingPotion);
+        var invisibilityPotion = PotionContents.createItemStack(Items.SPLASH_POTION, Potions.INVISIBILITY);
+        MarineGearDecoratorUtil.giveItem(marine, invisibilityPotion);
     }
 
     public void applyPrimaryWeapon(Marine marine) {

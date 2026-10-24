@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "avp_human:aluminum_tank"
+    },
+    "C": {
+      "item": "avp_human:copper_coil"
+    },
+    "F": {
+      "item": "avp_human:fan"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "N": {
+      "tag": "c:nuggets/aluminum"
+    },
+    "U": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "pattern": [
+    "NFN",
+    "CUA",
+    "NMN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:electric_distributor"
+  }
+}

@@ -27,5 +27,9 @@ public class HumanGlobalLootModifierProvider extends GlobalLootModifierProvider 
         add(EndGameLootModifier.NAME, new EndGameLootModifier());
         add(BastionTreasureLootModifier.NAME, new BastionTreasureLootModifier());
         add(NetherBridgeLootModifier.NAME, new NetherBridgeLootModifier());
+        add(
+            com.human.neoforge.data.loot.modifier.SpiderCobwebLootModifier.NAME,
+            new com.human.neoforge.data.loot.modifier.SpiderCobwebLootModifier()
+        );
     }
 }

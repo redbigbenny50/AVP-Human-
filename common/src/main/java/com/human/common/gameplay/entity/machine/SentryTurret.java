@@ -141,6 +141,15 @@ public class SentryTurret extends Mob implements TraceableEntity, net.minecraft.
 
     private static final String BASE_YAW_KEY = "BaseYaw";
 
+    /**
+     * Oct 16 - which animation clip clients should play (idle / unpowered / firing); see SentryTurretAnimDispatcher.
+     */
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Byte> DATA_ANIM =
+        net.minecraft.network.syncher.SynchedEntityData.defineId(
+            SentryTurret.class,
+            net.minecraft.network.syncher.EntityDataSerializers.BYTE
+        );
+
     /** [stated] Oct 2: the skin in the skin slot, synced so every client draws it - empty for the USCM default. */
     private static final net.minecraft.network.syncher.EntityDataAccessor<String> DATA_SKIN =
         net.minecraft.network.syncher.SynchedEntityData.defineId(
@@ -321,6 +330,10 @@ public class SentryTurret extends Mob implements TraceableEntity, net.minecraft.
     @Override
     public void tick() {
         super.tick();
+
+        if (level().isClientSide) {
+            animDispatcher.applyOnClient();
+        }
 
         if (!level().isClientSide) {
             tickPower();
@@ -560,6 +573,17 @@ public class SentryTurret extends Mob implements TraceableEntity, net.minecraft.
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        // Oct 14 FIX - [stated] Sep 30: "select the panel, right-click the turret" binds it to a fuse panel. The
+        // binding
+        // lives in WiringToolItem.interactLivingEntity, but vanilla's Player.interactOn asks the ENTITY first and only
+        // reaches the held item if the entity did not consume the click (verified in the 1.21.1 bytecode). This method
+        // always consumed it - it opened the screen - so the tool never got a turn and no turret could ever be bound.
+        // A wiring tool always passes the click on: with a panel selected it connects the turret, with nothing selected
+        // it selects the turret for connecting device-first ([stated] Oct 14). The screen opens from any other item.
+        if (player.getItemInHand(hand).getItem() instanceof com.human.common.gameplay.item.WiringToolItem) {
+            return InteractionResult.PASS;
+        }
+
         if (level().isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -722,6 +746,18 @@ public class SentryTurret extends Mob implements TraceableEntity, net.minecraft.
     protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_SKIN, "");
+        builder.define(DATA_ANIM, SentryTurretAnimDispatcher.IDLE);
+    }
+
+    /** Server: which clip clients should play. Only sent when it changes. */
+    void setAnimState(byte state) {
+        if (!level().isClientSide && entityData.get(DATA_ANIM) != state) {
+            entityData.set(DATA_ANIM, state);
+        }
+    }
+
+    byte getAnimState() {
+        return entityData.get(DATA_ANIM);
     }
 
     /** The skin to draw, or null for the default. */

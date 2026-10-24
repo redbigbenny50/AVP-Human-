@@ -29,6 +29,26 @@ public final class HumanPredatorNet {
         return Compatibility.isNetted(entity);
     }
 
+    /**
+     * The CLIENT's view: whether avp_predator has told this game the entity is netted. ⚠ Client only - the class it
+     * reads is never loaded on a dedicated server. Used so a netted mob's net pose wins over the frozen-solid pose
+     * hold.
+     */
+    public static boolean isNettedOnClient(Entity entity) {
+        return AVPPredator.MOD.isLoaded() && ClientCompatibility.isNetted(entity);
+    }
+
+    private static final class ClientCompatibility {
+
+        private static boolean isNetted(Entity entity) {
+            return com.predator.client.net.ClientNetState.isNetted(entity.getId());
+        }
+
+        private ClientCompatibility() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     /** Frees a netted or captured creature. A no-op without avp_predator, or for a creature that is not netted. */
     public static void release(LivingEntity livingEntity) {
         if (!AVPPredator.MOD.isLoaded()) {

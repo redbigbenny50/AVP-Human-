@@ -83,13 +83,13 @@ public class PipeFlangeRenderer<T extends PipeBlockEntity> implements BlockEntit
         }
     }
 
-    /** The flange box for one face, in pixels - centred on the pipe (x 5-11, y 6-12 across its run). */
+    /** The flange box for one face, in pixels - centred on the pipe (x 5-11, y 5-11 across its run; centred Oct 18). */
     private static void flange(VertexConsumer consumer, PoseStack.Pose pose, Direction face, TextureAtlasSprite sprite, int light) {
         float[] box = switch (face) {
-            case NORTH -> new float[] { 4, 5, 0, 12, 13, 1 };
-            case SOUTH -> new float[] { 4, 5, 15, 12, 13, 16 };
-            case WEST -> new float[] { 0, 5, 4, 1, 13, 12 };
-            case EAST -> new float[] { 15, 5, 4, 16, 13, 12 };
+            case NORTH -> new float[] { 4, 4, 0, 12, 12, 1 };
+            case SOUTH -> new float[] { 4, 4, 15, 12, 12, 16 };
+            case WEST -> new float[] { 0, 4, 4, 1, 12, 12 };
+            case EAST -> new float[] { 15, 4, 4, 16, 12, 12 };
             case UP -> new float[] { 4, 15, 4, 12, 16, 12 };
             case DOWN -> new float[] { 4, 0, 4, 12, 1, 12 };
         };

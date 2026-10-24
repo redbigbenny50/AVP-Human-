@@ -149,16 +149,37 @@ public class GunRecipeProvider {
             .pattern("ABA")
             .pattern("AAA")
             .into(1, HumanItems.FUEL_TANK);
+
+        // [stated] Oct 18 - a second way to the fuel tank: an empty aluminum tank and one magma cream. The ring recipe
+        // above stays. ⚠ A second recipe for the same item needs its own id, or datagen refuses the duplicate.
+        builder.shapeless()
+            .withCategory(RecipeCategory.COMBAT)
+            .withCustomName(name -> name + "_from_aluminum_tank")
+            .requires(1, com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK)
+            .requires(1, Items.MAGMA_CREAM)
+            .into(1, HumanItems.FUEL_TANK);
+
+        // [stated] Oct 17 - the empty aluminum tank: the fuel tank's ring of aluminum nuggets with nothing inside it.
+        builder.shaped()
+            .withCategory(RecipeCategory.COMBAT)
+            .define('A', HumanCommonItemTags.NUGGETS_ALUMINUM)
+            .pattern("AAA")
+            .pattern("A A")
+            .pattern("AAA")
+            .into(1, com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK);
     }
 
     private static void createGunRecipes(RecipeBuilder builder) {
         createGenericGunRecipe(builder, HumanItems.BLUEPRINT_F903WE_RIFLE, HumanGunItems.F903WE_RIFLE.get(), true);
-        createGenericGunRecipe(
+        // [stated] Oct 18 - the flamethrower now takes a stock and an empty aluminum tank as well.
+        createTankGunRecipe(
             builder,
             HumanItems.BLUEPRINT_FLAMETHROWER_SEVASTOPOL,
             HumanGunItems.FLAMETHROWER_SEVASTOPOL.get(),
-            false
+            true
         );
+        // [stated] Oct 18 - the chem thrower: the flamethrower's recipe without the stock.
+        createTankGunRecipe(builder, HumanItems.BLUEPRINT_CHEM_THROWER, HumanGunItems.CHEM_THROWER.get(), false);
         createGenericGunRecipe(builder, HumanItems.BLUEPRINT_M37_12_SHOTGUN, HumanGunItems.M37_12_SHOTGUN.get(), true);
         createGenericGunRecipe(builder, HumanItems.BLUEPRINT_ZX_76_SHOTGUN, HumanGunItems.ZX_76_SHOTGUN.get(), true);
         createGenericGunRecipe(
@@ -304,6 +325,27 @@ public class GunRecipeProvider {
             shapeless.requires(1, HumanItems.STOCK);
         }
 
+        shapeless.into(createItemStackNoAzureLibID(result));
+    }
+
+    /**
+     * [stated] Oct 18 - the tank-fed guns (flamethrower, chem thrower): the usual blueprint, barrel, grip and receiver
+     * (and stock, where the gun has one), plus an empty aluminum tank - the vaporizer's empty tank, the same nugget
+     * ring the fuel tank is made from.
+     */
+    private static void createTankGunRecipe(RecipeBuilder builder, Supplier<Item> blueprintItem, Item result, boolean hasStock) {
+        var shapeless = builder.shapeless()
+            .withCategory(RecipeCategory.COMBAT)
+            .requires(1, blueprintItem)
+            .requires(1, HumanItems.BARREL)
+            .requires(1, HumanItems.GRIP)
+            .requires(1, HumanItems.RECEIVER);
+
+        if (hasStock) {
+            shapeless.requires(1, HumanItems.STOCK);
+        }
+
+        shapeless.requires(1, com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK);
         shapeless.into(createItemStackNoAzureLibID(result));
     }
 

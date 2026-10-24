@@ -21,12 +21,22 @@ public class EnUsSoundEventProvider {
         addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_PRESS, "Press stamps");
         addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_HYDRATOR, "Hydrator sprays");
         addSound(builder, HumanSoundEvents.MACHINE_ELECTRIC_FREEZER, "Freezer hums");
+        addSound(builder, HumanSoundEvents.MACHINE_VAPORIZER, "Vaporizer vents steam");
+        addSound(builder, HumanSoundEvents.MACHINE_DISTRIBUTOR, "Distributor pumps vapor");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_MK50, "MK50 armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_PRESSURE, "Pressure armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_STEEL, "Steel armor clanks");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_TACTICAL, "Tactical armor rustles");
         addSound(builder, HumanSoundEvents.ITEM_ARMOR_EQUIP_TITANIUM, "Titanium armor clanks");
         addSound(builder, HumanSoundEvents.MARINE_RADIO_CHATTER, "Marine radio chatter");
+        addSound(builder, HumanSoundEvents.FREEZE_SOLID, "Something freezes solid");
+        addSound(builder, HumanSoundEvents.FROZEN_BREAK, "Ice shatters");
+        addSound(builder, HumanSoundEvents.QUARRY_DRILL, "Quarry drill grinds");
+        addSound(builder, HumanSoundEvents.QUARRY_DRILL_HEAD, "Quarry drill head runs");
+        addSound(builder, HumanSoundEvents.QUARRY_ARMS, "Quarry arms whir");
+        addSound(builder, HumanSoundEvents.WEAPON_CHEM_THROWER_START, "Chem thrower sprays");
+        addSound(builder, HumanSoundEvents.WEAPON_CHEM_THROWER_LOOP, "Chem thrower sprays");
+        addSound(builder, HumanSoundEvents.WEAPON_CHEM_THROWER_STOP, "Chem thrower stops");
 
         // ⚠ ALL FOUR SMART HUD CUES NEED SUBTITLES, NOT JUST FLAVOUR. The lock tone grants accuracy and armour
         // penetration, so a player without sound loses a MECHANIC if it is unsubtitled, not just some atmosphere.

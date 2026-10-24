@@ -1,0 +1,7 @@
+{
+  "processors": [
+    {
+      "processor_type": "avp_human:mining_camp_edge_trees"
+    }
+  ]
+}

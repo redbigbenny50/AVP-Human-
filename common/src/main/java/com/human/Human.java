@@ -131,6 +131,28 @@ public class Human {
         HumanSteelBlockItems.initialize();
         com.human.common.registry.init.item.block.HumanCompositeBlockItems.initialize();
         HumanTitaniumBlockItems.initialize();
+        // Storage crates and containers: blocks, items, block entity, menu, item component, tab, packets.
+        com.human.common.registry.init.HumanCrates.initialize();
+        com.human.common.registry.init.HumanFabrication.initialize();
+        // Quarry: the terminal (three editions) and the frame block.
+        com.human.common.registry.init.HumanQuarry.initialize();
+        // [stated] Oct 17 - the chem line: the xeno acids (fluids, liquid blocks, buckets) and the gas tanks. Fluids
+        // first inside it; the vaporizer after it (its logic names the tanks).
+        com.human.common.registry.init.HumanChemicals.initialize();
+        com.human.common.registry.init.HumanVaporizer.initialize();
+        // [stated] Oct 17 - the distributor (fog machine). After the vaporizer: it reads the same liquid-to-vapor
+        // table.
+        com.human.common.registry.init.HumanDistributor.initialize();
+        // [stated] Sep 28 - the USCM base building set (50 blocks, their items, the locker block entity).
+        com.human.common.registry.init.block.HumanUscmBlocks.initialize();
+        // [stated] Oct 20 - the W-Y building set (51 blocks, their items, the W-Y locker block entity).
+        com.human.common.registry.init.block.HumanWyBlocks.initialize();
+        // [stated] Oct 20 - the creative test blocks (battery, fluid tank).
+        com.human.common.registry.init.HumanCreativeBlocks.initialize();
+        com.human.common.registry.init.HumanMetalFixtures.initialize();
+        // [stated] Oct 23 - metal signs and hanging signs for the five chain metals.
+        com.human.common.registry.init.HumanSigns.initialize();
+        com.human.common.registry.init.HumanParticles.initialize();
         // Villagers
         HumanVillagerPoiTypes.initialize();
         HumanVillagerProfessions.initialize();
@@ -181,12 +203,12 @@ public class Human {
         // first moment a CauldronInteraction map - keyed by the real Item INSTANCE - can be populated.
         MOD.events().onCommonSetup().register(HumanCauldronInteractions::initialize);
 
-        MOD.events().serverStarting().register(HumanCommissaryVillagerHouseInjector::inject);
+        MOD.events().onServerStarting().register(HumanCommissaryVillagerHouseInjector::inject);
         // The power grids hold block entities, which hold their level: without this every world left in single-player
         // stayed in memory for the rest of the session (PowerSystem's own note asked for exactly this, and nothing did
         // it).
-        MOD.events().serverStopped().register(server -> com.human.common.gameplay.power.PowerSystem.clear());
-        MOD.events().serverStarting().register(Human::injectVillagerGifts);
+        MOD.events().onServerStopped().register(server -> com.human.common.gameplay.power.PowerSystem.clear());
+        MOD.events().onServerStarting().register(Human::injectVillagerGifts);
     }
 
     private static void applyFullArmorSetBonuses(Entity entity) {

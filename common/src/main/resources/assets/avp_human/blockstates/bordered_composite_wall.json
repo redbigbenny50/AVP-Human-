@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "flipped=false": {
+      "model": "avp_human:block/bordered_composite_wall"
+    },
+    "flipped=true": {
+      "model": "avp_human:block/bordered_composite_wall",
+      "x": 180
+    }
+  }
+}

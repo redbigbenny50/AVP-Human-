@@ -30,6 +30,13 @@ fabricApi {
 // truth. Carried over from AVP-Alien verbatim; it is also what lets the duplicatesStrategy net below stay a net
 // rather than the cure.
 tasks.named('runDatagen') {
+    // Oct 16 - a stale datagen cache or an older-looking target file could leave generated files (the lang) frozen
+    // while the build still says BUILD SUCCESSFUL. Clear the cache first, and always overwrite on the copy below.
+    doFirst {
+        delete file("${rootProject.projectDir}/common/src/main/generated/.cache")
+        delete file("${project.projectDir}/src/main/generated/.cache")
+    }
+
     doLast {
         def generatedDir = new File(project.projectDir, 'src/main/generated')
         def targetDir = new File(rootProject.projectDir, 'common/src/main/generated')
@@ -39,7 +46,9 @@ tasks.named('runDatagen') {
         if (generatedDir.exists()) {
             targetDir.mkdirs()
 
-            ant.copy(todir: targetDir) {
+            // overwrite: true - the default only copies when the new file looks NEWER than the old one, so a target
+            // with a later timestamp (a merge, an unzip) silently kept the old text.
+            ant.copy(todir: targetDir, overwrite: true) {
                 fileset(dir: generatedDir)
             }
 

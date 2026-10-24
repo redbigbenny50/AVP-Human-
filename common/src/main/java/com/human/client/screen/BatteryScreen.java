@@ -180,7 +180,13 @@ public class BatteryScreen extends AbstractContainerScreen<BatteryMenu> {
 
         // A capacity upgrade the battery is too full to give back: say why the slot will not let go.
         if (hoveredSlot != null && hoveredSlot.hasItem() && menu.isLockedCapacitySlot(hoveredSlot)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.battery.capacity_locked"), mouseX, mouseY + 20);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.battery.capacity_locked"),
+                mouseX,
+                mouseY + 20
+            );
         }
     }
 

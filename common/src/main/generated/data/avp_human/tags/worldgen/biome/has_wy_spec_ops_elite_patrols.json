@@ -1,11 +1,9 @@
 {
   "values": [
-    {
-      "id": "#minecraft:is_taiga",
-      "required": false
-    },
-    "minecraft:birch_forest",
-    "minecraft:old_growth_birch_forest",
-    "minecraft:dark_forest"
+    "minecraft:windswept_hills",
+    "minecraft:windswept_gravelly_hills",
+    "minecraft:windswept_forest",
+    "minecraft:stony_peaks",
+    "minecraft:jagged_peaks"
   ]
 }

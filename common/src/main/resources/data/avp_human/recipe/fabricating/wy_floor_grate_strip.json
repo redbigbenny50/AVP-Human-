@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/aluminum"
+      },
+      "count": 2
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:wy_floor_grate_strip"
+  }
+}

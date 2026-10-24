@@ -69,6 +69,13 @@ public final class GrinderDecrafting {
             return null;
         }
 
+        // Anything still holding something - a full crate, bay or fabricator, a filled shulker box or bundle, a tank
+        // with fluid - would lose its contents if decrafted, so the grinder never takes one. Empty ones decraft as
+        // normal.
+        if (com.human.common.gameplay.storage.ContentsRules.holdsContents(stack)) {
+            return null;
+        }
+
         var plans = CACHE.computeIfAbsent(level.getRecipeManager(), manager -> new HashMap<>());
 
         return plans.computeIfAbsent(stack.getItem(), item -> Optional.ofNullable(build(level, item, new HashSet<>()))).orElse(null);

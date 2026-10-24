@@ -13,6 +13,9 @@ public class HumanSoundEvents {
 
     public static final BLibHolder<SoundEvent> ITEM_ARMOR_EQUIP_APE = create("item.armor.equip_ape");
 
+    /** [stated] Oct 23 - the Weyland-Yutani music disc: "Building Better Worlds" by Rotch Gwylt. */
+    public static final BLibHolder<SoundEvent> JUKEBOX_SOUNDS_BUILDING_BETTER_WORLDS = create("jukebox_sounds.building_better_worlds");
+
     public static final BLibHolder<SoundEvent> ITEM_ARMOR_EQUIP_MK50 = create("item.armor.equip_mk50");
 
     public static final BLibHolder<SoundEvent> ITEM_ARMOR_EQUIP_PRESSURE = create("item.armor.equip_pressure");
@@ -142,10 +145,48 @@ public class HumanSoundEvents {
     public static final BLibHolder<SoundEvent> MACHINE_ELECTRIC_FREEZER = create("block.machine.electric_freezer");
 
     /**
+     * [stated] Oct 19 - "steam sound for the vaporizor while its working". One steam release, about four seconds from
+     * hiss to silence; looped as the working sound, it vents every few seconds while the vaporizer runs.
+     */
+    public static final BLibHolder<SoundEvent> MACHINE_VAPORIZER = create("block.machine.vaporizer");
+
+    /**
+     * [stated] Oct 19 - the distributor "working sending out the vapor". One full cycle of the recording's machine -
+     * the steam, the screech, the short lull - cut from one quiet point to the next, so it repeats like the machine
+     * itself.
+     */
+    public static final BLibHolder<SoundEvent> MACHINE_DISTRIBUTOR = create("block.machine.distributor");
+
+    /**
      * Oct 5 - squad callouts: a marine that is hit keys its radio, and squadmates answer. Eight scrambled radio clips,
      * cut from the chatter loops he supplied and distorted past the point of being words.
      */
     public static final BLibHolder<SoundEvent> MARINE_RADIO_CHATTER = create("entity.marine.radio_chatter");
+
+    /** [stated] Oct 19 - "play this when enemies freeze solid". Played by FrozenSolid the moment a mob freezes. */
+    public static final BLibHolder<SoundEvent> FREEZE_SOLID = create("entity.generic.freeze_solid");
+
+    /** [stated] Oct 19 - a frozen mob broken out of the ice by a real attack or a heavy fall. FrozenSolid.onHurt. */
+    public static final BLibHolder<SoundEvent> FROZEN_BREAK = create("entity.generic.frozen_break");
+
+    /** [stated] Oct 19 - the quarry drill bit: a seamless loop played at the bit (client QuarryDrillSound). */
+    public static final BLibHolder<SoundEvent> QUARRY_DRILL = create("block.quarry.drill_bit");
+
+    /** [stated] Oct 19 - the quarry's drill head at the surface while it runs: a seamless loop at the head. */
+    public static final BLibHolder<SoundEvent> QUARRY_DRILL_HEAD = create("block.quarry.drill_head");
+
+    /** [stated] Oct 19 - the quarry's gantry arms moving the head between chunks: a servo loop. */
+    public static final BLibHolder<SoundEvent> QUARRY_ARMS = create("block.quarry.arms_move");
+
+    /**
+     * [stated] Oct 19 - the chem thrower's spray, cut from one steam-leak recording into three: a fade-in when the
+     * trigger goes down, a seamless loop while it is held, a fade-out when it is let go. Client ChemThrowerSound.
+     */
+    public static final BLibHolder<SoundEvent> WEAPON_CHEM_THROWER_START = create("item.weapon.chem_thrower.start");
+
+    public static final BLibHolder<SoundEvent> WEAPON_CHEM_THROWER_LOOP = create("item.weapon.chem_thrower.loop");
+
+    public static final BLibHolder<SoundEvent> WEAPON_CHEM_THROWER_STOP = create("item.weapon.chem_thrower.stop");
 
     private static BLibHolder<SoundEvent> create(String path) {
         return REGISTRY.createHolder(path, () -> SoundEvent.createVariableRangeEvent(HumanResources.location(path)));

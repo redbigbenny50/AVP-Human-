@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_aluminum_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:aluminum_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_barrel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:barrel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_blueprint_chem_thrower": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:blueprint_chem_thrower"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_grip": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:grip"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_receiver": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:receiver"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:chem_thrower"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_blueprint_chem_thrower",
+      "has_barrel",
+      "has_grip",
+      "has_receiver",
+      "has_aluminum_tank"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:chem_thrower"
+    ]
+  }
+}

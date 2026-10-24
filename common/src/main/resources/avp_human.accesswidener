@@ -17,3 +17,5 @@ accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEnt
 accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity litDuration I
 accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity getBurnDuration (Lnet/minecraft/world/item/ItemStack;)I
 accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity burn (Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/world/item/crafting/RecipeHolder;Lnet/minecraft/core/NonNullList;I)Z
+
+accessible class net/minecraft/client/particle/ParticleEngine$SpriteParticleRegistration

@@ -108,7 +108,7 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
             new SimpleContainer(kind.layout().slotCount()),
             new SimpleContainer(ElectricMachineBlockEntity.FILTER_SIZE),
             new SimpleContainer(ElectricMachineBlockEntity.UPGRADE_SLOTS),
-            new SimpleContainerData(ElectricMachineBlockEntity.DATA_COUNT),
+            new SimpleContainerData(ElectricMachineBlockEntity.DATA_COUNT + kind.extraDataCount()),
             null
         );
     }
@@ -148,7 +148,7 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
 
         checkContainerSize(machine, machineSlots);
         checkContainerSize(filter, ElectricMachineBlockEntity.FILTER_SIZE);
-        checkContainerDataCount(data, ElectricMachineBlockEntity.DATA_COUNT);
+        checkContainerDataCount(data, ElectricMachineBlockEntity.DATA_COUNT + kind.extraDataCount());
 
         this.kind = kind;
         this.machine = machine;
@@ -161,7 +161,12 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
         // Positions come from the machine's layout - measured from each machine's GUI art.
         var layout = kind.layout();
 
-        addSlot(new Slot(machine, ElectricMachineBlockEntity.SLOT_INPUT, layout.inputX(), layout.inputY()));
+        // [stated] Oct 17 - the distributor's slot takes only a filled vapor tank, one at a time (tanks never stack).
+        addSlot(
+            kind == ElectricMachineKind.DISTRIBUTOR
+                ? new VaporTankSlot(machine, ElectricMachineBlockEntity.SLOT_INPUT, layout.inputX(), layout.inputY())
+                : new Slot(machine, ElectricMachineBlockEntity.SLOT_INPUT, layout.inputX(), layout.inputY())
+        );
 
         for (var output = 0; output < layout.outputs().length; output++) {
             addSlot(
@@ -215,6 +220,11 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
 
     public ElectricMachineKind getKind() {
         return kind;
+    }
+
+    /** A machine's own synced value (see {@link ElectricMachineKind#extraDataCount()}); 0 when out of range. */
+    public int getExtraData(int index) {
+        return index >= 0 && index < kind.extraDataCount() ? data.get(ElectricMachineBlockEntity.DATA_COUNT + index) : 0;
     }
 
     public float getProgress() {
@@ -362,6 +372,11 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
                 blockEntity.cycleRedstoneMode();
             }
 
+            return true;
+        }
+
+        // A machine's own buttons (the distributor's modes). The block entity range-checks its own ids.
+        if (blockEntity != null && blockEntity.handleMenuButton(player, id)) {
             return true;
         }
 
@@ -518,6 +533,24 @@ public class ElectricMachineMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
             return MachineFluidItems.isFillable(stack);
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+    }
+
+    /** The distributor's tank slot: a filled vapor tank, and only one - the empty aluminum tank is refused. */
+    private static class VaporTankSlot extends Slot {
+
+        VaporTankSlot(Container container, int slot, int x, int y) {
+            super(container, slot, x, y);
+        }
+
+        @Override
+        public boolean mayPlace(@NotNull ItemStack stack) {
+            return com.human.common.gameplay.vapor.VaporKind.fromTank(stack) != null;
         }
 
         @Override

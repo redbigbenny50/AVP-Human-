@@ -310,7 +310,8 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
                 case DATA_REDSTONE -> redstoneMode.ordinal();
                 case DATA_PORTS_ITEMS -> com.human.common.gameplay.machine.MachinePorts.pack(itemPorts);
                 case DATA_PORTS_FLUIDS -> com.human.common.gameplay.machine.MachinePorts.pack(fluidPorts);
-                default -> 0;
+                // A machine's own values follow the shared ones (the distributor's chamber, mode...).
+                default -> index >= DATA_COUNT ? extraData(index - DATA_COUNT) : 0;
             };
         }
 
@@ -321,7 +322,7 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
 
         @Override
         public int getCount() {
-            return DATA_COUNT;
+            return DATA_COUNT + kind.extraDataCount();
         }
     };
 
@@ -346,14 +347,30 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
         return kind;
     }
 
+    /**
+     * A machine's own menu value number {@code index} (0-based, after the shared ones) - for a kind whose
+     * {@link ElectricMachineKind#extraDataCount()} is above 0. Server side only.
+     */
+    protected int extraData(int index) {
+        return 0;
+    }
+
+    /**
+     * A menu button the shared menu does not know - a machine's own control (the distributor's mode buttons). Server
+     * side. @return whether the id was this machine's
+     */
+    public boolean handleMenuButton(Player player, int id) {
+        return false;
+    }
+
     // ------------------------------------------------------------------------------------------------------------
     // Power
     // ------------------------------------------------------------------------------------------------------------
 
-    /** [stated] Sep 29: "all machines get power from the back". */
+    /** [stated] Sep 29: "all machines get power from the back" - the vaporizer from its underside (Oct 17). */
     @Override
     public boolean canConnectOn(Direction direction) {
-        return direction == facing().getOpposite();
+        return direction == kind.powerSide(facing());
     }
 
     @Override
@@ -386,6 +403,10 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
         super.serverTick(level, blockPos, blockState);
 
         updateState(level, blockPos, blockState);
+
+        if (kind.syncsFluidToClients()) {
+            syncFluidToClients(level, blockPos, getBlockState());
+        }
     }
 
     @Override
@@ -529,6 +550,56 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
         return Math.max(0, tank.capacity() - fluid.amount());
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Telling nearby clients what is in the tank - the vaporizer only (its model shows the liquid)
+    // ------------------------------------------------------------------------------------------------------------
+
+    private static final String NBT_CLIENT_SYNC = "clientFluidSync";
+
+    /** How often, at most, a changed tank is sent to the clients watching: twice a second. */
+    private static final int CLIENT_FLUID_SYNC_TICKS = 10;
+
+    private boolean clientFluidDirty;
+
+    private void markFluidForClients() {
+        if (kind.syncsFluidToClients()) {
+            clientFluidDirty = true;
+        }
+    }
+
+    /** Server side, from the tick: at most twice a second, and only when the tank actually changed. */
+    private void syncFluidToClients(Level level, BlockPos blockPos, BlockState blockState) {
+        if (clientFluidDirty && level.getGameTime() % CLIENT_FLUID_SYNC_TICKS == 0) {
+            clientFluidDirty = false;
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_CLIENTS);
+        }
+    }
+
+    /**
+     * What a client is sent about this machine: nothing for most, the tank alone for the vaporizer - marked, so
+     * {@link #loadAdditional} reads only that and never clears the client copy's other state.
+     */
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
+        var tag = super.getUpdateTag(registries);
+
+        if (kind.syncsFluidToClients()) {
+            tag.putBoolean(NBT_CLIENT_SYNC, true);
+
+            if (!fluid.isEmpty()) {
+                tag.putString(NBT_FLUID, BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString());
+                tag.putInt(NBT_FLUID_AMOUNT, fluid.amount());
+            }
+        }
+
+        return tag;
+    }
+
+    @Override
+    public @Nullable net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> getUpdatePacket() {
+        return kind.syncsFluidToClients() ? net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this) : null;
+    }
+
     /**
      * Puts fluid in, clamped to the tank. The machine's own production and intake - pipes go through {@link #insert}.
      */
@@ -537,6 +608,7 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
 
         if (moved > 0) {
             fluid = FluidContent.of(added, fluid.amount() + moved);
+            markFluidForClients();
             setChanged();
         }
     }
@@ -545,6 +617,7 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
     public void removeFluid(int amount) {
         if (amount > 0 && !fluid.isEmpty()) {
             fluid = fluid.withAmount(fluid.amount() - amount);
+            markFluidForClients();
             setChanged();
         }
     }
@@ -702,6 +775,7 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
     @Override
     public void setContentSilently(FluidContent content) {
         fluid = content;
+        markFluidForClients();
     }
 
     @Override
@@ -1010,6 +1084,16 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
                 com.human.common.gameplay.machine.MachinePorts.Mode.OUT;
         }
 
+        if (faces.inRight) {
+            itemPorts[com.human.common.gameplay.machine.MachinePorts.Face.RIGHT.ordinal()] =
+                com.human.common.gameplay.machine.MachinePorts.Mode.IN;
+        }
+
+        if (faces.outLeft) {
+            itemPorts[com.human.common.gameplay.machine.MachinePorts.Face.LEFT.ordinal()] =
+                com.human.common.gameplay.machine.MachinePorts.Mode.OUT;
+        }
+
         var tank = kind.tank();
 
         if (tank != null) {
@@ -1017,8 +1101,7 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
                 fluidPorts[com.human.common.gameplay.machine.MachinePorts.Face.BOTTOM.ordinal()] =
                     com.human.common.gameplay.machine.MachinePorts.Mode.OUT;
             } else {
-                fluidPorts[com.human.common.gameplay.machine.MachinePorts.Face.LEFT.ordinal()] =
-                    com.human.common.gameplay.machine.MachinePorts.Mode.IN;
+                fluidPorts[kind.fluidInFace().ordinal()] = com.human.common.gameplay.machine.MachinePorts.Mode.IN;
             }
         }
     }
@@ -1138,6 +1221,15 @@ public class ElectricMachineBlockEntity extends PowerConsumerBlockEntity impleme
 
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        // A client update carrying only the tank (vaporizer): read the tank, touch nothing else.
+        if (tag.getBoolean(NBT_CLIENT_SYNC)) {
+            var syncedId = net.minecraft.resources.ResourceLocation.tryParse(tag.getString(NBT_FLUID));
+            var synced = syncedId == null ? Fluids.EMPTY : BuiltInRegistries.FLUID.get(syncedId);
+
+            fluid = FluidContent.of(synced, Math.min(tag.getInt(NBT_FLUID_AMOUNT), getCapacity()));
+            return;
+        }
+
         super.loadAdditional(tag, registries);
         items.clear();
         ContainerHelper.loadAllItems(tag, items, registries);

@@ -1,5 +1,8 @@
 {
   "values": [
-    "avp_human:radiation"
+    "avp_human:radiation",
+    "avp_human:cryo_vapor",
+    "avp_human:infernium_vapor",
+    "avp_human:acid_vapor"
   ]
 }

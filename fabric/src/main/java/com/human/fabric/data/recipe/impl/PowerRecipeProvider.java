@@ -494,6 +494,36 @@ public class PowerRecipeProvider {
             .pattern("NMN")
             .into(1, com.human.common.registry.init.HumanBlocks.ELECTRIC_HYDRATOR);
 
+        // [stated] Oct 17 - the vaporizer: the hydrator's frame, a bucket on top for the intake and a furnace in the
+        // middle for the heat. Its W-Y and USCM editions come from the fabricator (recipe/fabricating).
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('N', HumanCommonItemTags.NUGGETS_ALUMINUM)
+            .define('B', net.minecraft.world.item.Items.BUCKET)
+            .define('F', net.minecraft.world.item.Items.FURNACE)
+            .define('M', com.human.common.registry.init.HumanBlocks.MACHINE_BLOCK)
+            .pattern("NBN")
+            .pattern("NFN")
+            .pattern("NMN")
+            .into(1, com.human.common.registry.init.HumanVaporizer.VAPORIZER_ITEM);
+
+        // [stated] Oct 18 - the distributor: a machine block, a fan, a furnace and an empty (aluminum) tank, the rest
+        // filled in the tier-1 way - aluminum nuggets round the sides, the machine block at the bottom. The fan sits on
+        // top (it blows the fog out), the furnace in the middle (it turns liquid to vapor) with the tank beside it
+        // (its chamber) and a copper coil on the other side to power the heater.
+        builder.shaped()
+            .withCategory(RecipeCategory.MISC)
+            .define('N', HumanCommonItemTags.NUGGETS_ALUMINUM)
+            .define('F', com.human.common.registry.init.item.HumanItems.FAN)
+            .define('C', com.human.common.registry.init.item.HumanItems.COPPER_COIL)
+            .define('U', net.minecraft.world.item.Items.FURNACE)
+            .define('A', com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK)
+            .define('M', com.human.common.registry.init.HumanBlocks.MACHINE_BLOCK)
+            .pattern("NFN")
+            .pattern("CUA")
+            .pattern("NMN")
+            .into(1, com.human.common.registry.init.HumanDistributor.DISTRIBUTOR_ITEM);
+
         // Freezer: a fan on top, copper coil / heat sink / copper coil across the centre.
         builder.shaped()
             .withCategory(RecipeCategory.MISC)

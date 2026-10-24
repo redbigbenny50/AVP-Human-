@@ -39,6 +39,12 @@ public class GunReloading {
             return;
         }
 
+        // The chem thrower takes five different tanks and remembers its vapor: its own reload.
+        if (com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(gunItem)) {
+            com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.reload(player, itemStack);
+            return;
+        }
+
         var gunConfig = gunItem.getGunConfig();
         var maximumAmmunition = gunConfig.maximumAmmunition();
 

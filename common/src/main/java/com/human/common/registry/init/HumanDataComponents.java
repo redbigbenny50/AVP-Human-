@@ -40,6 +40,21 @@ public class HumanDataComponents {
         builder -> builder.persistent(net.minecraft.core.GlobalPos.CODEC).networkSynchronized(net.minecraft.core.GlobalPos.STREAM_CODEC)
     );
 
+    /**
+     * [stated] Oct 14: the DEVICE a wiring tool has selected (device first, then the panel) - dimension and position of
+     * a block device. Synced, like the panel, so the tooltip can show it.
+     */
+    public static final BLibHolder<DataComponentType<net.minecraft.core.GlobalPos>> SELECTED_FUSE_DEVICE = create(
+        "selected_fuse_device",
+        builder -> builder.persistent(net.minecraft.core.GlobalPos.CODEC).networkSynchronized(net.minecraft.core.GlobalPos.STREAM_CODEC)
+    );
+
+    /** [stated] Oct 14: the sentry turret a wiring tool has selected (device first, then the panel) - by its UUID. */
+    public static final BLibHolder<DataComponentType<java.util.UUID>> SELECTED_FUSE_SENTRY = create(
+        "selected_fuse_sentry",
+        builder -> builder.persistent(net.minecraft.core.UUIDUtil.CODEC).networkSynchronized(net.minecraft.core.UUIDUtil.STREAM_CODEC)
+    );
+
     /** [stated] Oct 2: a Skin Kit's skin - the id of a skin defined in a resource pack. */
     public static final BLibHolder<DataComponentType<net.minecraft.resources.ResourceLocation>> SENTRY_SKIN = create(
         "sentry_skin",
@@ -141,6 +156,33 @@ public class HumanDataComponents {
         "gun_overheated",
         builder -> builder.persistent(Codec.BOOL)
             .networkSynchronized(ByteBufCodecs.BOOL)
+            .cacheEncoding()
+    );
+
+    /** The chem thrower's loaded vapor, by {@code VaporKind} id. Absent until the gun is first loaded. */
+    public static final BLibHolder<DataComponentType<String>> CHEM_VAPOR = create(
+        "chem_vapor",
+        builder -> builder.persistent(Codec.STRING)
+            .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+            .cacheEncoding()
+    );
+
+    /**
+     * The vapor the chem thrower showed BEFORE its last reload ("" for an empty gun) - the renderer keeps that tank's
+     * skin on through the remove (and purge) part of the reload, then switches to the new one for the insert.
+     */
+    public static final BLibHolder<DataComponentType<String>> CHEM_PREVIOUS_VAPOR = create(
+        "chem_previous_vapor",
+        builder -> builder.persistent(Codec.STRING)
+            .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+            .cacheEncoding()
+    );
+
+    /** Game time the chem thrower's last reload began - the tank skin swaps on the clips' timing from here. */
+    public static final BLibHolder<DataComponentType<Long>> CHEM_RELOAD_TICK = create(
+        "chem_reload_tick",
+        builder -> builder.persistent(Codec.LONG)
+            .networkSynchronized(ByteBufCodecs.VAR_LONG)
             .cacheEncoding()
     );
 

@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/steel"
+    },
+    "X": {
+      "item": "minecraft:redstone_block"
+    },
+    "B": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "#": {
+      "item": "avp_human:steel_tech_case_2x2"
+    }
+  },
+  "pattern": [
+    "BXB",
+    "I#I",
+    "BIB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:steel_tech_case_3x3"
+  }
+}

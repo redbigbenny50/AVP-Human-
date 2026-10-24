@@ -30,11 +30,22 @@ public class CombatCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.SHOTGUN_SHELL);
         CreativeModeTabUtil.accept(output, HumanItems.ROCKET);
         CreativeModeTabUtil.accept(output, HumanItems.FUEL_TANK);
+        // [stated] Oct 17 - the gas tanks, next to the fuel tank. The acid ones need avp_alien.
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.CRYO_TANK);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.INFERNIUM_TANK);
+
+        if (com.human.common.gameplay.acid.AcidAvailability.available()) {
+            CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.ACIDIUM_TANK);
+            CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.NETHER_ACIDIUM_TANK);
+            CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanChemicals.IRRADIUM_TANK);
+        }
         CreativeModeTabUtil.accept(output, HumanItems.DRUM_CARTRIDGE);
         CreativeModeTabUtil.accept(output, HumanItems.DRUM_CANNISTER);
 
         CreativeModeTabUtil.accept(output, HumanGunItems.F903WE_RIFLE);
         CreativeModeTabUtil.accept(output, HumanGunItems.FLAMETHROWER_SEVASTOPOL);
+        CreativeModeTabUtil.accept(output, HumanGunItems.CHEM_THROWER);
         CreativeModeTabUtil.accept(output, HumanGunItems.M37_12_SHOTGUN);
         CreativeModeTabUtil.accept(output, HumanGunItems.M41A_PULSE_RIFLE);
         CreativeModeTabUtil.accept(output, HumanGunItems.M42A3_SNIPER_RIFLE);

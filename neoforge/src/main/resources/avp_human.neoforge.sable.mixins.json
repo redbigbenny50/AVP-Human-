@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.human.neoforge.mixin.sable",
+  "plugin": "com.human.neoforge.compat.sable.SableMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["MixinSubLevelAssemblyHelper_ShipMove"],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

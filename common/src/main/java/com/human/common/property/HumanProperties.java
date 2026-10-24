@@ -39,21 +39,6 @@ public class HumanProperties {
 
         }
 
-        public static class Resonator {
-
-            private static final BLibPropertyKey.Parent RESONATOR = BLOCKS.child("resonator");
-
-            public static final HumanProperty<Integer> REPLACE_RADIUS_IN_BLOCKS = new HumanProperty<>(
-                RESONATOR.leaf("replace_radius", BLibPropertySerializers.INT),
-                25
-            );
-
-            public static final HumanProperty<Long> REPLACE_FREQUENCY_IN_TICKS = new HumanProperty<>(
-                RESONATOR.leaf("replace_ticks", BLibPropertySerializers.LONG),
-                600L
-            );
-        }
-
         public static class SentryTurret {
 
             private static final BLibPropertyKey.Parent SENTRY_TURRET = BLOCKS.child("sentry_turret");

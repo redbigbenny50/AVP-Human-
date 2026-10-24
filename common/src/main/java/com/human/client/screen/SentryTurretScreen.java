@@ -470,7 +470,8 @@ public class SentryTurretScreen extends AbstractContainerScreen<SentryTurretMenu
         renderTooltip(graphics, mouseX, mouseY);
 
         if (hovering(mouseX, mouseY, POWER_X - 1, BAR_Y - 1, BAR_W + 2, BAR_H + 2)) {
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable("gui.avp_human.sentry.charge"),
@@ -482,12 +483,18 @@ public class SentryTurretScreen extends AbstractContainerScreen<SentryTurretMenu
                 mouseY
             );
         } else if (hovering(mouseX, mouseY, HEAT_X - 1, BAR_Y - 1, BAR_W + 2, BAR_H + 2)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.sentry.heat"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.sentry.heat"),
+                mouseX,
+                mouseY
+            );
         } else if (hoveredSlot != null && !hoveredSlot.hasItem()) {
             var key = slotKey(SentryTurretMenu.loadoutIndex(hoveredSlot), hoveredSlot.index);
 
             if (key != null) {
-                graphics.renderTooltip(font, Component.translatable(key), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(graphics, font, Component.translatable(key), mouseX, mouseY);
             }
         }
     }
@@ -606,7 +613,9 @@ public class SentryTurretScreen extends AbstractContainerScreen<SentryTurretMenu
             line = Component.translatable("gui.avp_human.sentry.no_bullets");
             colour = 0xFFE05050;
         } else {
-            line = Component.translatable("tooltip.avp_human.sentry.overheated");
+            // ⚠ Oct 23 - its own shorter line: the item tooltip's "Overheated - cooling down" is 135 px in this 114 px
+            // display.
+            line = Component.translatable("gui.avp_human.sentry.overheated");
             colour = 0xFFE08A2B;
         }
 

@@ -158,14 +158,35 @@ public abstract class MixinLivingEntity_RadiationDamage extends Entity implement
 
         // ABSORB foreign doses. Anything that hands out the radiation effect directly - a grenade's gas cloud, a
         // command, another mod - is treated as contamination to at least that level, so every path feeds the one
-        // counter instead of fighting it. Self-applied readouts absorb to no more than they already are.
+        // counter instead of fighting it.
+        //
+        // ⚠ Oct 15 FIX - ONLY FOREIGN doses. Our own readout (applied below, AMBIENT) used to be absorbed too. Then the
+        // counter could never decay past a level boundary: it decayed to 3599, the readout still said Radiation II, so
+        // it was pushed straight back to 3601 - and the readout was refreshed before it could lapse. Radiation never
+        // wore off, so the damage (and its hurt-shake) went on forever, on every mob that had ever been in fallout.
+        // Our readout is ambient; foreign doses (the grenade cloud, commands, potions) are not.
+        //
+        // ⚠ Oct 18 FIX - "i contracted radiation sickness with the anti radiation suit on ... i get it, then it
+        // immediately goes away, and then comes back again over and over" (tester). Foreign doses were absorbed WITHOUT
+        // asking whether the entity can be irradiated at all, so a full radiation suit stopped the counter CLIMBING
+        // from
+        // fallout but not a dose handed straight to it - irradiated acid re-applies one every half second, so the
+        // suited
+        // player was pushed to Radiation I, decayed off, and was pushed back again, forever. The suit now keeps foreign
+        // doses out exactly as it keeps fallout out: the dose is removed instead of absorbed. Covers every source that
+        // hands the effect out directly (irradiated acid, irradium vapor, the grenade cloud, avp_alien's irradiated
+        // xenomorphs, commands, other mods) in this one place.
         var existing = self.getEffect(HumanMobEffects.getRadiationHolder());
 
-        if (existing != null) {
-            avp_human$radiationExposure = Math.max(
-                avp_human$radiationExposure,
-                Math.min(RadiationLevel.MAX_EXPOSURE, existing.getAmplifier() * RadiationLevel.UNITS_PER_LEVEL + 1)
-            );
+        if (existing != null && !existing.isAmbient()) {
+            if (HumanPredicates.canBeIrradiated(self)) {
+                avp_human$radiationExposure = Math.max(
+                    avp_human$radiationExposure,
+                    Math.min(RadiationLevel.MAX_EXPOSURE, existing.getAmplifier() * RadiationLevel.UNITS_PER_LEVEL + 1)
+                );
+            } else {
+                self.removeEffect(HumanMobEffects.getRadiationHolder());
+            }
         }
 
         var radiationLevel = RadiationLevel.byExposure(avp_human$radiationExposure);

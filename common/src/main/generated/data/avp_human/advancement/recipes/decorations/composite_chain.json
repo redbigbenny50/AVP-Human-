@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingots/composite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/composite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_nuggets/composite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:nuggets/composite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "avp_human:composite_chain"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_nuggets/composite",
+      "has_ingots/composite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "avp_human:composite_chain"
+    ]
+  }
+}

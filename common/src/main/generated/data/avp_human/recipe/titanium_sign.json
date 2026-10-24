@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/titanium"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "III",
+    "III",
+    " S "
+  ],
+  "result": {
+    "count": 3,
+    "id": "avp_human:titanium_sign"
+  }
+}

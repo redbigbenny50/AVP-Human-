@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:ingots/steel"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:uscm_steel_panel_wall"
+  }
+}

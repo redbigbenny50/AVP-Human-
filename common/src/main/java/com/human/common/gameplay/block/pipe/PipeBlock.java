@@ -49,7 +49,10 @@ import java.util.Map;
  * BEHIND it (west / north / down), so a change re-numbers the run through ordinary neighbour updates, and the model
  * draws every joiner without any renderer: a fitting on its pipe arms, a straight pipe at 4 on its forward face.
  */
-public abstract class PipeBlock extends BaseEntityBlock {
+public abstract class PipeBlock extends BaseEntityBlock implements net.minecraft.world.level.block.SimpleWaterloggedBlock {
+
+    public static final net.minecraft.world.level.block.state.properties.BooleanProperty WATERLOGGED =
+        net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
     public static final int FITTING = 5;
 
@@ -88,17 +91,22 @@ public abstract class PipeBlock extends BaseEntityBlock {
         }
     }
 
-    private static final VoxelShape CORE = Block.box(5, 6, 5, 11, 12, 11);
+    /**
+     * Oct 18 - CENTRED. [stated] "its supposed to" sit centre: the fluid and item pipes ran y 6-12, a pixel above the
+     * block's centre (the cables and cryoconduit were already centred), so a machine port centred on its face never met
+     * the flange evenly. Now y 5-11, centred like x, with the up and down arms 5 long each like the side arms.
+     */
+    private static final VoxelShape CORE = Block.box(5, 5, 5, 11, 11, 11);
 
     private static final Map<Direction, VoxelShape> ARMS = new EnumMap<>(Direction.class);
 
     static {
-        ARMS.put(Direction.NORTH, Block.box(5, 6, 0, 11, 12, 5));
-        ARMS.put(Direction.SOUTH, Block.box(5, 6, 11, 11, 12, 16));
-        ARMS.put(Direction.WEST, Block.box(0, 6, 5, 5, 12, 11));
-        ARMS.put(Direction.EAST, Block.box(11, 6, 5, 16, 12, 11));
-        ARMS.put(Direction.UP, Block.box(5, 12, 5, 11, 16, 11));
-        ARMS.put(Direction.DOWN, Block.box(5, 0, 5, 11, 6, 11));
+        ARMS.put(Direction.NORTH, Block.box(5, 5, 0, 11, 11, 5));
+        ARMS.put(Direction.SOUTH, Block.box(5, 5, 11, 11, 11, 16));
+        ARMS.put(Direction.WEST, Block.box(0, 5, 5, 5, 11, 11));
+        ARMS.put(Direction.EAST, Block.box(11, 5, 5, 16, 11, 11));
+        ARMS.put(Direction.UP, Block.box(5, 11, 5, 11, 16, 11));
+        ARMS.put(Direction.DOWN, Block.box(5, 0, 5, 11, 5, 11));
     }
 
     /**
@@ -137,7 +145,7 @@ public abstract class PipeBlock extends BaseEntityBlock {
     protected PipeBlock(Properties properties) {
         super(properties);
 
-        var state = stateDefinition.any().setValue(RUN, 0);
+        var state = stateDefinition.any().setValue(RUN, 0).setValue(WATERLOGGED, false);
 
         for (var property : SIDES.values()) {
             state = state.setValue(property, Side.NONE);
@@ -148,8 +156,22 @@ public abstract class PipeBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(RUN);
+        builder.add(RUN, WATERLOGGED);
         SIDES.values().forEach(builder::add);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Water - Oct 17 FIX: [stated] "pipes both and cables pop when water touches them and they cant be placed in
+    // water or waterlogged". A thin block that is not a liquid container is one water washes away, and one placed into
+    // water is washed away the moment the water next moves. Now it is WATERLOGGABLE like a vanilla fence or chain: it
+    // can be placed in water, sits in it, and water flowing into it fills it instead of breaking it.
+    // ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected @NotNull net.minecraft.world.level.material.FluidState getFluidState(@NotNull BlockState state) {
+        return state.getValue(WATERLOGGED)
+            ? net.minecraft.world.level.material.Fluids.WATER.getSource(false)
+            : super.getFluidState(state);
     }
 
     public static Side side(BlockState state, Direction face) {
@@ -180,6 +202,65 @@ public abstract class PipeBlock extends BaseEntityBlock {
     /** Tell this pipe's network something changed here. */
     protected abstract void invalidate(ServerLevel level, BlockPos pos);
 
+    /**
+     * [stated] Oct 14 - the wiring-tool readout for this pipe's network: its ends, what each is set to and actually
+     * does, and why nothing moves. Read-only.
+     */
+    protected abstract java.util.List<net.minecraft.network.chat.Component> diagnose(ServerLevel level, BlockPos pos);
+
+    /** @return what this pipe carries, for the readout - "fluid" or "items" */
+    protected abstract String cargo();
+
+    /**
+     * [stated] Oct 14: "build in that pipe detection with the wiring tool so it tells us whats not working or being
+     * seen". Called by WiringToolItem.useOn - with the wiring tool in hand no block sees the click any more
+     * (MixinBlockStateBase_WiringToolFirst), so the readout is printed from the tool's side.
+     */
+    public void printWiringReadout(ServerLevel level, BlockPos pos, BlockState state, Player player) {
+        var lines = new java.util.ArrayList<>(diagnose(level, pos));
+        // The verdict stays last: the "not connected" faces go just before it.
+        var verdict = lines.isEmpty() ? null : lines.remove(lines.size() - 1);
+        lines.addAll(unconnectedFaces(level, pos, state));
+
+        if (verdict != null) {
+            lines.add(verdict);
+        }
+
+        lines.forEach(player::sendSystemMessage);
+    }
+
+    /**
+     * The "being seen" half: faces of THIS pipe that touch a machine or container (a block with a block entity) but are
+     * not connected - so a player sees at once that the pipe does not count that block. Plain blocks are skipped.
+     */
+    private java.util.List<net.minecraft.network.chat.Component> unconnectedFaces(ServerLevel level, BlockPos pos, BlockState state) {
+        var lines = new java.util.ArrayList<net.minecraft.network.chat.Component>();
+
+        for (var direction : net.minecraft.core.Direction.values()) {
+            if (side(state, direction) != Side.NONE) {
+                continue;
+            }
+
+            var neighbour = pos.relative(direction);
+
+            if (
+                !level.isLoaded(neighbour) || level.getBlockEntity(neighbour) == null
+                    || level.getBlockState(neighbour).getBlock() instanceof PipeBlock
+            ) {
+                continue;
+            }
+
+            lines.add(
+                PipeDiagnostics.problem(
+                    " x " + PipeDiagnostics.where(level, neighbour, direction) + " touches this pipe but is NOT connected - "
+                        + "that face does not take or give " + cargo() + "."
+                )
+            );
+        }
+
+        return lines;
+    }
+
     // ------------------------------------------------------------------------------------------------------------
     // Connections
     // ------------------------------------------------------------------------------------------------------------
@@ -193,7 +274,10 @@ public abstract class PipeBlock extends BaseEntityBlock {
             return null;
         }
 
-        return compute(context.getLevel(), context.getClickedPos(), defaultBlockState());
+        // Placed into water, it is placed waterlogged.
+        var water = context.getLevel().getFluidState(pos).getType() == net.minecraft.world.level.material.Fluids.WATER;
+
+        return compute(context.getLevel(), context.getClickedPos(), defaultBlockState().setValue(WATERLOGGED, water));
     }
 
     @Override
@@ -205,6 +289,15 @@ public abstract class PipeBlock extends BaseEntityBlock {
         @NotNull BlockPos pos,
         @NotNull BlockPos neighborPos
     ) {
+        // Waterlogged: keep the water in it flowing, as vanilla waterloggable blocks do.
+        if (state.getValue(WATERLOGGED)) {
+            level.scheduleTick(
+                pos,
+                net.minecraft.world.level.material.Fluids.WATER,
+                net.minecraft.world.level.material.Fluids.WATER.getTickDelay(level)
+            );
+        }
+
         // ⚠ The server decides. A client may not see another mod's block the way the server does, so it keeps what
         // the server sent rather than guessing.
         if (level.isClientSide()) {

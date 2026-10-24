@@ -29,6 +29,21 @@ public class HumanREIClient implements REIClientPlugin {
         );
     }
 
+    /**
+     * [stated] Oct 17: without avp_alien, everything made from xeno blood - the acid tanks, buckets and fluids - is
+     * hidden, so nobody looks up an item they could never make. Matched by id, items and fluids alike.
+     */
+    @Override
+    public void registerEntries(me.shedaniel.rei.api.client.registry.entry.EntryRegistry registry) {
+        if (com.human.common.gameplay.acid.AcidAvailability.available()) {
+            return;
+        }
+
+        var locked = com.human.common.gameplay.acid.AcidAvailability.lockedIds();
+
+        registry.removeEntryIf(stack -> locked.contains(stack.getIdentifier()));
+    }
+
     @Override
     public void registerScreens(ScreenRegistry registry) {
         registry.registerClickArea(

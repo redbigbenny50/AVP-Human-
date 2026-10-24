@@ -23,7 +23,7 @@ public class EnUsBlockProvider {
     private static final HashSet<Block> TOUCHED_ENTRIES = new HashSet<>();
 
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
-        addBlock(builder, HumanBlocks.BLUEPRINT_BLOCK, "Blueprint Block");
+        addBlock(builder, HumanBlocks.BLUEPRINT_BLOCK, "Blueprint Table");
         addBlock(builder, HumanBlocks.CABLE, "Cable");
         addBlock(builder, HumanBlocks.CRYOCONDUIT, "Cryoconduit");
         addBlock(builder, HumanBlocks.CRYOTANK, "Cryotank");
@@ -290,6 +290,34 @@ public class EnUsBlockProvider {
         addBlock(builder, HumanBlocks.RAZOR_WIRE, "Razor Wire");
         addBlock(builder, CoreBlocks.SILICA_GRAVEL, "Silica Gravel");
         addBlock(builder, HumanSteelBlocks.STEEL_BARS, "Steel Bars");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN, "Steel Chain");
+        // [stated] Oct 23 - metal signs.
+        // Only the standing and ceiling-hanging signs are named: vanilla's wall and wall-hanging sign blocks answer
+        // with
+        // their item's (the standing sign's) translation key, so naming them too is a duplicate key and datagen fails.
+        addBlock(builder, com.human.common.registry.init.HumanSigns.STEEL.sign(), "Steel Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.STEEL.hangingSign(), "Steel Hanging Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.TITANIUM.sign(), "Titanium Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.TITANIUM.hangingSign(), "Titanium Hanging Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.FERROALUMINUM.sign(), "Ferroaluminum Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.FERROALUMINUM.hangingSign(), "Ferroaluminum Hanging Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.ALUMINUM.sign(), "Aluminum Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.ALUMINUM.hangingSign(), "Aluminum Hanging Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.COMPOSITE.sign(), "Composite Sign");
+        addBlock(builder, com.human.common.registry.init.HumanSigns.COMPOSITE.hangingSign(), "Composite Hanging Sign");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER, "Steel Ladder");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_BARS, "Titanium Bars");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN, "Titanium Chain");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER, "Titanium Ladder");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_BARS, "Ferroaluminum Bars");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN, "Ferroaluminum Chain");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER, "Ferroaluminum Ladder");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_BARS, "Aluminum Bars");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN, "Aluminum Chain");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER, "Aluminum Ladder");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_BARS, "Composite Bars");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN, "Composite Chain");
+        addBlock(builder, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER, "Composite Ladder");
         addBlock(builder, HumanSteelBlocks.STEEL_BLOCK, "Block of Steel");
         addBlock(builder, HumanSteelBlocks.STEEL_BUTTON, "Steel Button");
         addBlock(builder, HumanSteelBlocks.STEEL_CHAIN_FENCE, "Steel Chain Fence");
@@ -344,7 +372,10 @@ public class EnUsBlockProvider {
         addBlock(builder, HumanBlocks.TITANIUM_FLUID_TANK, "Titanium Fluid Tank");
         addBlock(builder, HumanBlocks.WY_FLUID_TANK, "Weyland-Yutani Fluid Tank");
         addBlock(builder, HumanBlocks.USCM_FLUID_TANK, "USCM Fluid Tank");
-        addBlock(builder, HumanBlocks.INFINITE_POWER_GENERATOR, "Infinite Power Generator");
+        // [stated] Oct 20 - renamed so nobody takes it for a real generator (id unchanged).
+        addBlock(builder, HumanBlocks.INFINITE_POWER_GENERATOR, "Creative Generator");
+        addBlock(builder, com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_BATTERY, "Creative Battery");
+        addBlock(builder, com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK, "Creative Fluid Tank");
         addBlock(builder, CoreBlocks.LATEX_BLOCK, "Latex Block");
         addBlock(builder, CoreBlocks.KELP_BLOCK, "Kelp Block");
         addBlock(builder, CoreBlocks.LATEX_CAULDRON, "Latex Cauldron");
@@ -411,6 +442,10 @@ public class EnUsBlockProvider {
         addBlock(builder, HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_STAIRS, "Composite Fastened Siding Stairs");
         addBlock(builder, HumanTitaniumBlocks.TITANIUM_FASTENED_SIDING_SLAB, "Titanium Fastened Siding Slab");
         addBlock(builder, HumanTitaniumBlocks.TITANIUM_FASTENED_SIDING_STAIRS, "Titanium Fastened Siding Stairs");
+        // [stated] Sep 28 - the USCM base set; names live beside the blocks in HumanUscmBlocks.
+        com.human.common.registry.init.block.HumanUscmBlocks.ENGLISH_NAMES.forEach((block, name) -> addBlock(builder, block, name));
+        // [stated] Oct 20 - the W-Y building set; names live beside the blocks in HumanWyBlocks.
+        com.human.common.registry.init.block.HumanWyBlocks.ENGLISH_NAMES.forEach((block, name) -> addBlock(builder, block, name));
     };
 
     private static void addBlock(

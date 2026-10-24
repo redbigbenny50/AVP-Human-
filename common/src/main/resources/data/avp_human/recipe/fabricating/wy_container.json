@@ -1,0 +1,39 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:wy_crate_3x3"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:storage_blocks/ferroaluminum"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:motherboard"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:orange_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_container"
+  }
+}

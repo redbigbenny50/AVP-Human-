@@ -1,0 +1,38 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": [
+        {
+          "item": "avp_human:cryotube_controller"
+        },
+        {
+          "item": "avp_human:steel_cryotube_controller"
+        }
+      ],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:hazard_plastic"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:yellow_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_cryotube_controller"
+  }
+}

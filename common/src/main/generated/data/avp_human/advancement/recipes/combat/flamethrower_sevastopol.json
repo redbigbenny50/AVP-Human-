@@ -1,6 +1,16 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_aluminum_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:aluminum_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_barrel": {
       "conditions": {
         "items": [
@@ -41,6 +51,16 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_stock": {
+      "conditions": {
+        "items": [
+          {
+            "items": "avp_human:stock"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "avp_human:flamethrower_sevastopol"
@@ -54,7 +74,9 @@
       "has_blueprint_flamethrower_sevastopol",
       "has_barrel",
       "has_grip",
-      "has_receiver"
+      "has_receiver",
+      "has_stock",
+      "has_aluminum_tank"
     ]
   ],
   "rewards": {

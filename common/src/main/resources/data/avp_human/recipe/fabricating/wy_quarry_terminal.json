@@ -1,0 +1,39 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "avp_human:quarry_terminal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 8
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:hazard_plastic"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:motherboard"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:yellow_dye"
+      },
+      "count": 2
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_quarry_terminal"
+  }
+}

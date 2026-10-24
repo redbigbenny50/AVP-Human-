@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "D": {
+      "item": "avp_human:desk_terminal"
+    },
+    "F": {
+      "tag": "c:storage_blocks/ferroaluminum"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "C": {
+      "item": "minecraft:crafter"
+    }
+  },
+  "pattern": [
+    "SDS",
+    "FMF",
+    "GCG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:fabricator"
+  }
+}

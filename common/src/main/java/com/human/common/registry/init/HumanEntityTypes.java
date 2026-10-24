@@ -37,6 +37,22 @@ public class HumanEntityTypes {
             .updateInterval(10)
     );
 
+    /**
+     * The chem thrower's lingering cloud - the end of the blast, 3.5 s. Updated every 2 ticks: a fed cloud follows the
+     * aim. Not summonable by players' spawn eggs; never saved.
+     */
+    public static final BLibHolder<EntityType<com.human.common.gameplay.entity.projectile.ChemCloud>> CHEM_CLOUD = create(
+        "chem_cloud",
+        EntityType.Builder.<com.human.common.gameplay.entity.projectile.ChemCloud>of(
+            com.human.common.gameplay.entity.projectile.ChemCloud::new,
+            MobCategory.MISC
+        )
+            .sized(0.5F, 0.5F)
+            .noSave()
+            .clientTrackingRange(8)
+            .updateInterval(2)
+    );
+
     public static final BLibHolder<EntityType<ThrownGrenade>> GRENADE_THROWN = create(
         "grenade_thrown",
         EntityType.Builder.<ThrownGrenade>of(ThrownGrenade::new, MobCategory.MISC)
@@ -52,9 +68,27 @@ public class HumanEntityTypes {
             .clientTrackingRange(10)
     );
 
-    public static final BLibHolder<EntityType<Marine>> MARINE = create(
-        "marine",
-        EntityType.Builder.<Marine>of((entityType, level) -> {
+    public static final BLibHolder<EntityType<Marine>> MARINE = create("marine", soldier());
+
+    /*
+     * [stated] Oct 13 - the soldiers split out of the marine, each with its own spawn egg (SoldierProfiles holds what
+     * each one is). Same class, same size, same looks roll as the marine.
+     */
+    public static final BLibHolder<EntityType<Marine>> TACTICAL_MARINE = create("tactical_marine", soldier());
+
+    public static final BLibHolder<EntityType<Marine>> WY_COMMANDO = create("wy_commando", soldier());
+
+    public static final BLibHolder<EntityType<Marine>> WY_ELITE = create("wy_elite", soldier());
+
+    public static final BLibHolder<EntityType<Marine>> WY_SPEC_OPS_COMMANDO = create("wy_spec_ops_commando", soldier());
+
+    public static final BLibHolder<EntityType<Marine>> WY_SPEC_OPS_ELITE = create("wy_spec_ops_elite", soldier());
+
+    public static final BLibHolder<EntityType<Marine>> WY_APE_TROOPER = create("wy_ape_trooper", soldier());
+
+    /** One soldier type's builder: the marine's factory, rolling sex, beard, hair, eyes and skin exactly as before. */
+    private static EntityType.Builder<Marine> soldier() {
+        return EntityType.Builder.<Marine>of((entityType, level) -> {
             var entity = new Marine(entityType, level);
 
             var random = entity.getRandom();
@@ -71,8 +105,8 @@ public class HumanEntityTypes {
             entity.skinColor.set(SkinColorGenerator.random(random));
 
             return entity;
-        }, MobCategory.CREATURE).sized(0.6F, 1.95F)
-    );
+        }, MobCategory.CREATURE).sized(0.6F, 1.95F);
+    }
 
     /**
      * [stated] Sep 30: the colonist belongs to avp_human; jobs come from any mod (see ColonistProfessions). Its looks
@@ -129,6 +163,12 @@ public class HumanEntityTypes {
         TYPE_REGISTRY.registerAll();
         ATTRIBUTE_REGISTRY.register(MARINE_DOG, Wolf::createAttributes);
         ATTRIBUTE_REGISTRY.register(MARINE, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(TACTICAL_MARINE, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(WY_COMMANDO, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(WY_ELITE, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(WY_SPEC_OPS_COMMANDO, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(WY_SPEC_OPS_ELITE, Marine::createMarineAttributes);
+        ATTRIBUTE_REGISTRY.register(WY_APE_TROOPER, Marine::createMarineAttributes);
         ATTRIBUTE_REGISTRY.register(COLONIST, com.human.common.gameplay.entity.living.human.colonist.ColonistEntity::createAttributes);
         ATTRIBUTE_REGISTRY.register(SENTRY_TURRET, SentryTurret::createSentryTurretAttributes);
     }

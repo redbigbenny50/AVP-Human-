@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "avp_human:block/wy_equipment_rack",
+    "side": "avp_human:block/wy_wall",
+    "top": "avp_human:block/wy_ceiling_panel"
+  }
+}

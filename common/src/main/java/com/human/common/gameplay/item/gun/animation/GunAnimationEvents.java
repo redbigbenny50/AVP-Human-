@@ -17,6 +17,12 @@ public final class GunAnimationEvents {
 
     public static final int OLD_PAINLESS_SPIN_UP = 5;
 
+    /** The chem thrower's tank coming off and its vapor purged: remove, then purge. The gun is empty after. */
+    public static final int CHEM_UNLOAD = 6;
+
+    /** The chem thrower's new tank going on: insert. */
+    public static final int CHEM_INSERT = 7;
+
     public static void trigger(ItemStack itemStack, int animationType) {
         var animationId = itemStack.getOrDefault(HumanDataComponents.GUN_ANIMATION_ID.get(), 0);
 

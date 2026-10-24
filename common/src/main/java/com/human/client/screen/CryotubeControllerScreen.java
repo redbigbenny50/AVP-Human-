@@ -298,6 +298,19 @@ public class CryotubeControllerScreen extends AbstractContainerScreen<CryotubeCo
         }
     }
 
+    /**
+     * The hover beep's pitch. Oct 14 - player report: "too high pitched with the beep". The sound plays at its own
+     * pitch everywhere else (1.0); the recording itself is high, so the hover is played below it. Minecraft clamps
+     * pitch to 0.5-2.0. One number to change if it wants tuning again.
+     */
+    private static final float HOVER_PITCH = 0.75F;
+
+    private void playHover() {
+        if (minecraft != null) {
+            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(HumanSoundEvents.TERMINAL_MOUSEOVER.get(), HOVER_PITCH, 0.8F));
+        }
+    }
+
     private void ui(SoundEvent sound) {
         if (minecraft != null) {
             minecraft.getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F, 0.8F));
@@ -384,7 +397,7 @@ public class CryotubeControllerScreen extends AbstractContainerScreen<CryotubeCo
         var now = hitTarget(mouseX, mouseY);
 
         if (now != null && !now.equals(hovered)) {
-            ui(HumanSoundEvents.TERMINAL_MOUSEOVER.get());
+            playHover();
         }
 
         hovered = now;
@@ -1004,7 +1017,10 @@ public class CryotubeControllerScreen extends AbstractContainerScreen<CryotubeCo
         }
     }
 
-    /** [stated] Oct 2: the icon is the mob's own model, shrunk in code to fit its frame - see {@link IconFit}. */
+    /**
+     * [stated] Oct 2: the icon is the mob's own model, shrunk in code to fit its frame - see
+     * {@link com.human.client.render.cryo.IconFit}.
+     */
     private void entity(GuiGraphics g, LivingEntity mob, int x0, int y0, int x1, int y1, int mouseX, int mouseY) {
         com.human.client.render.cryo.IconFit.draw(
             g,

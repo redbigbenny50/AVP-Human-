@@ -37,12 +37,30 @@ public interface PipeItemAccess {
         ItemStack stack();
 
         /** Removes {@code count} of the offered stack from the source. */
-        void take(int count);
+        /**
+         * Takes {@code count} of the offered stack out for real.
+         *
+         * @return how many really came out - Oct 13 hardening: a caller that already put items somewhere must check it,
+         *         or a misbehaving inventory that gives less than its own dry run promised would duplicate the
+         *         difference
+         */
+        int take(int count);
     }
 
     interface Port {
 
         boolean present();
+
+        /**
+         * Oct 13 hardening - removes up to {@code count} items matching {@code like} (same item and components) again,
+         * to undo an insert whose source then gave less than promised. Ignores face rules: it only ever takes back what
+         * the pipe itself just put in.
+         *
+         * @return how many were removed
+         */
+        default int retract(ItemStack like, int count) {
+            return 0;
+        }
 
         /** The pipe may put items in on this face. */
         boolean canInsert();
@@ -71,6 +89,12 @@ public interface PipeItemAccess {
         default boolean isMachine() {
             return false;
         }
+
+        /**
+         * Oct 13 - everything this inventory holds, each item with its count, for the fabricator's network storage view
+         * and its material planning. Read only; nothing moves. An inventory that cannot be listed lists nothing.
+         */
+        default void listContents(java.util.function.ObjIntConsumer<ItemStack> sink) {}
     }
 
     /** Another mod's inventory that is not a vanilla-style container, or null. */
@@ -92,6 +116,43 @@ public interface PipeItemAccess {
         // Most pipe faces are air - no lookup at all for those.
         if (state.isAir()) {
             return NONE;
+        }
+
+        // Storage crates answer for EVERY one of their blocks with one shared inventory and one identity, so a pipe
+        // network sees a 3x3 or a container as a single storage. Checked before vanilla containers on purpose: a
+        // crate holds 64 of anything per slot, which the vanilla container path would cap at one unstackable.
+        // Oct 13 - the fabricator: pipes push materials into its storage and pull finished prints from its output.
+        if (
+            state.getBlock() instanceof com.human.common.gameplay.fabrication.FabricatorBlock
+                && level.getBlockEntity(
+                    com.human.common.gameplay.fabrication.FabricatorBlock.corePos(pos, state)
+                ) instanceof com.human.common.gameplay.fabrication.FabricatorBlockEntity fabricator
+        ) {
+            return fabricator.pipePort();
+        }
+
+        // Oct 15 - the quarry terminal: its ITEM port is the TOP of its back-row clockwise block ([stated] Oct 13: item
+        // port top left, facing the screen). It gives mined items from the internal slots and takes frame blocks in.
+        // Every other face of the terminal is no item port at all.
+        if (state.getBlock() instanceof com.human.common.gameplay.quarry.QuarryTerminalBlock) {
+            if (
+                side == Direction.UP && state.getValue(
+                    com.human.common.gameplay.quarry.QuarryTerminalBlock.PART
+                ) == com.human.common.gameplay.quarry.QuarryTerminalPart.BACK_CW
+                    && level.getBlockEntity(
+                        com.human.common.gameplay.quarry.QuarryTerminalBlock.brainPos(pos, state)
+                    ) instanceof com.human.common.gameplay.quarry.QuarryTerminalBlockEntity terminal
+            ) {
+                return terminal.pipePort();
+            }
+
+            return NONE;
+        }
+
+        if (level.getBlockEntity(pos) instanceof com.human.common.gameplay.storage.CrateBlockEntity crate) {
+            var port = crate.pipePort(side);
+
+            return port != null ? port : NONE;
         }
 
         var container = containerAt(level, pos);
@@ -185,10 +246,23 @@ public interface PipeItemAccess {
 
         private final boolean machine;
 
+        /** Oct 17 - a vaporizer face with no item port at all: not a port, so a pipe does not even connect to it. */
+        private final boolean noPort;
+
         ContainerPort(Container container, Direction side, Object storage, @Nullable Object blockEntity) {
             this.container = container;
             this.side = side;
             this.storage = storage;
+
+            // Oct 17 - the vaporizer's two blocks answer through VaporizerPortContainer, which only gives the TOP
+            // block's ports ([stated] items in at the top, out of the left and right of the top block). It is still
+            // our machine, with dedicated ports, whichever of its blocks the pipe touches.
+            var vaporizer = container instanceof com.human.common.gameplay.vaporizer.VaporizerPortContainer port ? port : null;
+
+            if (vaporizer != null) {
+                blockEntity = vaporizer.machine();
+            }
+
             // Oct 8: storage is anything built on the vanilla storage base (chests, barrels, shulker boxes, hoppers,
             // dispensers - and most modded chests, which extend it); every other inventory is a machine.
             this.machine = blockEntity != null
@@ -199,7 +273,7 @@ public interface PipeItemAccess {
                 // Oct 8 - FIX: a face set to BOTH lists the input slot first and the outputs after it, and this used
                 // to judge the face by its FIRST slot only - so a Both face could take in but never give out. Judge by
                 // all of the face's slots.
-                var slots = machine.getSlotsForFace(side);
+                var slots = vaporizer != null ? vaporizer.getSlotsForFace(side) : machine.getSlotsForFace(side);
                 var input = false;
                 var output = false;
 
@@ -213,15 +287,17 @@ public interface PipeItemAccess {
 
                 this.canInsert = input;
                 this.canExtract = output;
+                this.noPort = vaporizer != null && slots.length == 0;
             } else {
                 this.canInsert = defaultIn(side);
                 this.canExtract = defaultOut(side);
+                this.noPort = false;
             }
         }
 
         @Override
         public boolean present() {
-            return container.getContainerSize() > 0;
+            return !noPort && container.getContainerSize() > 0;
         }
 
         @Override
@@ -284,9 +360,10 @@ public interface PipeItemAccess {
                     }
 
                     @Override
-                    public void take(int amount) {
-                        container.removeItem(slot, amount);
+                    public int take(int amount) {
+                        var removed = container.removeItem(slot, amount);
                         container.setChanged();
+                        return removed.getCount();
                     }
                 };
             }
@@ -295,11 +372,40 @@ public interface PipeItemAccess {
         }
 
         @Override
+        public int retract(ItemStack like, int count) {
+            var removed = 0;
+
+            for (var slot = 0; slot < container.getContainerSize() && removed < count; slot++) {
+                if (ItemStack.isSameItemSameComponents(container.getItem(slot), like)) {
+                    removed += container.removeItem(slot, count - removed).getCount();
+                }
+            }
+
+            if (removed > 0) {
+                container.setChanged();
+            }
+
+            return removed;
+        }
+
+        @Override
         public int insert(ItemStack stack) {
             var before = stack.getCount();
             var remainder = HopperBlockEntity.addItem(null, container, stack.copy(), side);
 
             return before - remainder.getCount();
+        }
+
+        /** Oct 13 - every slot, for the fabricator's view. Reading moves nothing. */
+        @Override
+        public void listContents(java.util.function.ObjIntConsumer<ItemStack> sink) {
+            for (int slot = 0; slot < container.getContainerSize(); slot++) {
+                var stack = container.getItem(slot);
+
+                if (!stack.isEmpty()) {
+                    sink.accept(stack, stack.getCount());
+                }
+            }
         }
 
         @Override

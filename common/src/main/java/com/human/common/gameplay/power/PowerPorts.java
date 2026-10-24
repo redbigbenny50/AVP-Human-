@@ -48,6 +48,22 @@ public final class PowerPorts {
         return true;
     }
 
+    /**
+     * [stated] Oct 21 - turned with a ship that landed rotated (see ShipMove): each face's breaker moves to the face it
+     * now points at.
+     */
+    public void rotate(com.human.common.gameplay.ship.ShipMove move) {
+        if (!move.rotated()) {
+            return;
+        }
+
+        var copy = closed.clone();
+
+        for (var face : Direction.values()) {
+            closed[move.rotate(face).ordinal()] = copy[face.ordinal()];
+        }
+    }
+
     public boolean toggle(Direction direction) {
         return setClosed(direction, !isClosed(direction));
     }

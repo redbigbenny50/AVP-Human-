@@ -48,7 +48,12 @@ public class TacticalMarinePatrolSpawnHandle {
     }
 
     private void spawn(Level level, Player player, BlockPos.MutableBlockPos mutableBlockPos) {
-        var spawnedMarines = MarineSpawner.spawn(level, player, mutableBlockPos);
+        var spawnedMarines = MarineSpawner.spawn(
+            level,
+            player,
+            mutableBlockPos,
+            com.human.common.registry.init.HumanEntityTypes.TACTICAL_MARINE.get()
+        );
 
         MarineSquadLeadershipDecorator.INSTANCE.decorate(level, spawnedMarines);
 

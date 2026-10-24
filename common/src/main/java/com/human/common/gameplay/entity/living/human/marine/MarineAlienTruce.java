@@ -90,6 +90,12 @@ public final class MarineAlienTruce {
      * @param marine the marine
      */
     public static void tick(Marine marine) {
+        // [stated] Oct 13 - "its actually ok if the yautja truce doesnt apply to the WY units": W-Y soldiers never
+        // join it, so they skip the contact search altogether.
+        if (!takesPart(marine)) {
+            return;
+        }
+
         var now = marine.level().getGameTime();
         var target = marine.getTarget();
         var contact = target != null && isHostileXeno(target);
@@ -123,6 +129,10 @@ public final class MarineAlienTruce {
      * @param marine the marine
      */
     public static boolean isActive(Marine marine) {
+        if (!takesPart(marine)) {
+            return false;
+        }
+
         var now = marine.level().getGameTime();
 
         return now < marine.alienTruceUntil() || now < MarineSquads.alienContactUntil(marine);
@@ -151,9 +161,18 @@ public final class MarineAlienTruce {
             && isMarine(mob.getTarget()));
     }
 
+    /**
+     * A USCM soldier (the marine or the tactical marine) or a marine dog: a yautja going after one of these is not
+     * honouring the truce. Oct 13: this matched ids starting with "marine", which missed the tactical marine; W-Y
+     * soldiers are outside the truce by ruling, so a yautja hunting one does not break it.
+     */
     private static boolean isMarine(Entity entity) {
-        var key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+        return (entity instanceof Marine soldier && takesPart(soldier))
+            || entity instanceof com.human.common.gameplay.entity.living.dog.MarineDog;
+    }
 
-        return "avp_human".equals(key.getNamespace()) && key.getPath().startsWith("marine");
+    /** USCM soldiers take part in the truce; Weyland-Yutani soldiers do not ([stated] Oct 13). */
+    private static boolean takesPart(Marine marine) {
+        return marine.faction() == com.human.common.gameplay.fabrication.Faction.USCM;
     }
 }

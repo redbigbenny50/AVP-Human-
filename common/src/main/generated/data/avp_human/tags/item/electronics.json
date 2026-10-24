@@ -19,6 +19,8 @@
     "avp_human:regulator",
     "avp_human:resistor",
     "avp_human:servo",
+    "avp_human:speaker",
+    "avp_human:resonator",
     "avp_human:smart_receiver",
     "avp_human:transistor",
     "avp_human:desk_terminal",

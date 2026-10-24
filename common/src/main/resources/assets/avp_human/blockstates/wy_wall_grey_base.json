@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "flipped=false": {
+      "model": "avp_human:block/wy_wall_grey_base"
+    },
+    "flipped=true": {
+      "model": "avp_human:block/wy_wall_grey_base",
+      "x": 180
+    }
+  }
+}

@@ -41,6 +41,16 @@ public final class MachineClientHooks {
         if (machine.clientSound instanceof MachineWorkingSound sound && sound.isStopped()) {
             machine.clientSound = null;
         }
+
+        // [stated] Oct 17: the vaporizer animates its geo model rather than a texture strip.
+        if (machine.getKind() == com.human.common.gameplay.machine.ElectricMachineKind.VAPORIZER) {
+            VaporizerClientHooks.tick(machine, working);
+        }
+
+        // [stated] Oct 17: the distributor's fog - placeholder particles in the vapor's colour.
+        if (machine instanceof com.human.common.gameplay.distributor.DistributorBlockEntity distributor) {
+            DistributorClientHooks.tick(distributor, working);
+        }
     }
 
     private static void startSound(ElectricMachineBlockEntity machine) {

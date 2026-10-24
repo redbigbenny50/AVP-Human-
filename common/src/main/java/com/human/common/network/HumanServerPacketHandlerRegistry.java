@@ -49,6 +49,27 @@ public class HumanServerPacketHandlerRegistry {
         );
         REGISTRY.registerPacketHandler(
             new NetworkHandler.FromClient<>(
+                com.human.common.network.packet.C2SChemReloadPayload.TYPE,
+                com.human.common.network.packet.C2SChemReloadPayload.CODEC,
+                HumanServerListener::handleChemReloadPayload
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                com.human.common.network.packet.S2CChemBlastPayload.TYPE,
+                com.human.common.network.packet.S2CChemBlastPayload.CODEC,
+                (payload, player) -> com.human.client.gun.ChemThrowerClient.onBlast(payload)
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromServer<>(
+                com.human.common.network.packet.S2COpenChemWheelPayload.TYPE,
+                com.human.common.network.packet.S2COpenChemWheelPayload.CODEC,
+                (payload, player) -> com.human.client.gun.ChemThrowerClient.onOpenWheel()
+            )
+        );
+        REGISTRY.registerPacketHandler(
+            new NetworkHandler.FromClient<>(
                 C2SPlayerToggleCrawlPayload.TYPE,
                 C2SPlayerToggleCrawlPayload.CODEC,
                 HumanServerListener::handlePlayerToggleCrawlPayload

@@ -38,6 +38,19 @@ public class HumanFabricClient implements ClientModInitializer {
             )
         );
 
+        // [stated] Oct 17 - the three xeno acids, the same way. Their textures are already their own colour.
+        for (var kind : com.human.common.gameplay.acid.AcidKind.values()) {
+            FluidRenderHandlerRegistry.INSTANCE.register(
+                com.human.common.registry.init.HumanChemicals.acid(kind),
+                com.human.common.registry.init.HumanChemicals.flowingAcid(kind),
+                new SimpleFluidRenderHandler(
+                    ResourceLocation.fromNamespaceAndPath(Human.MOD_ID, "block/" + kind.id() + "_still"),
+                    ResourceLocation.fromNamespaceAndPath(Human.MOD_ID, "block/" + kind.id() + "_flow"),
+                    0xFFFFFFFF
+                )
+            );
+        }
+
         // Cryofluid, the same way.
         FluidRenderHandlerRegistry.INSTANCE.register(
             HumanFluids.CRYOFLUID.get(),

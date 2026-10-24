@@ -14,7 +14,9 @@ public abstract class GunItemAnimator extends AzItemAnimator {
     private int previousAnimationId = Integer.MIN_VALUE;
 
     /** The game time idle was last restarted (see restartIdleIfStopped). */
-    private long lastIdleKick = Long.MIN_VALUE;
+    // Oct 14 FIX - was Long.MIN_VALUE: "now - Long.MIN_VALUE" OVERFLOWS to a huge negative number, so the time check
+    // never passed. Half of it leaves room to subtract any real game time.
+    private long lastIdleKick = Long.MIN_VALUE / 2;
 
     /** At most twice a second while the track sits stopped. */
     private static final long IDLE_KICK_INTERVAL_TICKS = 10L;
@@ -47,7 +49,9 @@ public abstract class GunItemAnimator extends AzItemAnimator {
 
         var now = minecraft.level.getGameTime();
 
-        if (stopped && now - lastIdleKick >= IDLE_KICK_INTERVAL_TICKS) {
+        // Oct 14 audit: this animator outlives a world, but game time is per world - a world whose clock is BEHIND the
+        // last kick (a newer world, opened after an older one) would wait until it caught up, possibly hours.
+        if (stopped && (now - lastIdleKick >= IDLE_KICK_INTERVAL_TICKS || now < lastIdleKick)) {
             lastIdleKick = now;
             dispatcher.idle(minecraft.player, itemStack);
         }

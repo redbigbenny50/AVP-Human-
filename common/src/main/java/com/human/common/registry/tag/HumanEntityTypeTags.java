@@ -9,6 +9,12 @@ public class HumanEntityTypeTags {
 
     public static final TagKey<EntityType<?>> HATED_BY_MARINES = create("hated_by_marines");
 
+    /** [stated] Oct 13 - every soldier type (the marine and the types split out of it). Datapackable. */
+    public static final TagKey<EntityType<?>> SOLDIERS = create("soldiers");
+
+    /** [stated] Oct 14 - mobs the capture cord refuses, like avp_alien's capture_chain_blacklist. Datapackable. */
+    public static final TagKey<EntityType<?>> CAPTURE_CORD_BLACKLIST = create("capture_cord_blacklist");
+
     /**
      * Oct 5 - creatures marines never hunt on sight even though the generic hostile rule would catch them (see
      * MarineHuntRules). Ships with the yautja; a datapack adds any third-party mob a pack wants left alone. It does not
@@ -26,6 +32,23 @@ public class HumanEntityTypeTags {
      * elder guardian yes". Datapackable.
      */
     public static final TagKey<EntityType<?>> FREEZE_SOLID_IMMUNE = create("freeze_solid_immune");
+
+    /**
+     * [stated] Oct 19 - freeze solid the moment ANY cryo touches them, whatever their health, and take no cryo damage.
+     * avp_alien's normal, aberrant and royal ovomorphs ("ovomorphs are instantly frozen they dont open and no hugger
+     * comes out"). Datapackable.
+     */
+    public static final TagKey<EntityType<?>> FREEZES_INSTANTLY = create("freezes_instantly");
+
+    /** [stated] Oct 19 - die outright the moment cryo touches them: avp_alien's nether ovomorphs. Datapackable. */
+    public static final TagKey<EntityType<?>> SHATTERS_FROM_COLD = create("shatters_from_cold");
+
+    /**
+     * [stated] Oct 19 - at the freeze-solid point (10 % health) these either freeze or EXPLODE, 50/50: avp_alien's
+     * nether adults. The blast breaks no blocks, grows with the mob's size from a creeper's at drone size, and blows
+     * its limbs off. Datapackable.
+     */
+    public static final TagKey<EntityType<?>> FREEZE_OR_EXPLODE = create("freeze_or_explode");
 
     /**
      * Mobs a cryotank refuses. Datapackable: add any boss or special mob a pack does not want kept on ice. Ships with

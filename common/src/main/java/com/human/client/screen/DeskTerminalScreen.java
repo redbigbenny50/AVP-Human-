@@ -37,6 +37,15 @@ public class DeskTerminalScreen extends AbstractContainerScreen<DeskTerminalMenu
 
     private static final int ROWS = 9;
 
+    /** Where the coordinates column starts; the name column is cut to fit in front of it. */
+    private static final int COORDS_X = LIST_X + 92;
+
+    /** The space left of each column, less a 4 px gap - [stated] Oct 18 "no overlapping text". */
+    private static final int NAME_WIDTH = COORDS_X - LIST_X - 4;
+
+    /** Room for the "CAM" tag at the right of a row. */
+    private static final int CAM_WIDTH = 22;
+
     /** The list as last sent. It can arrive either side of the screen opening, so it is kept here. */
     private static List<S2CSentryNetworkPayload.Turret> turrets = List.of();
 
@@ -77,10 +86,24 @@ public class DeskTerminalScreen extends AbstractContainerScreen<DeskTerminalMenu
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, 8, 6, MINT, false);
+        // ⚠ Oct 23 - [stated] the empty-network line "goes off screen": it is 302 px in a 220 px panel. Every line here
+        // is now held inside the frame - the sentence WRAPS (same font, same size), the title and the player-named
+        // turret names are cut at the frame.
+        var inner = imageWidth - 2 * LIST_X;
+        graphics.drawString(font, com.human.client.screen.widget.GuiText.fit(font, title, inner), 8, 6, MINT, false);
 
         if (turrets.isEmpty()) {
-            graphics.drawString(font, Component.translatable("gui.avp_human.terminal.empty"), LIST_X, LIST_Y + 2, DIM, false);
+            com.human.client.screen.widget.GuiText.drawWrapped(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.terminal.empty"),
+                LIST_X,
+                LIST_Y + 2,
+                inner,
+                ROWS,
+                DIM,
+                false
+            );
         }
 
         for (int row = 0; row < ROWS && scroll + row < turrets.size(); row++) {
@@ -88,14 +111,32 @@ public class DeskTerminalScreen extends AbstractContainerScreen<DeskTerminalMenu
             var ry = LIST_Y + row * ROW_H + 3;
             var pos = BlockPos.of(turret.pos());
 
-            graphics.drawString(font, turret.name(), LIST_X, ry, turret.camera() ? MINT : DIM, false);
-            graphics.drawString(font, pos.getX() + " " + pos.getY() + " " + pos.getZ(), LIST_X + 92, ry, DIM, false);
+            graphics.drawString(
+                font,
+                com.human.client.screen.widget.GuiText.fit(font, turret.name(), NAME_WIDTH),
+                LIST_X,
+                ry,
+                turret.camera() ? MINT : DIM,
+                false
+            );
+            graphics.drawString(
+                font,
+                com.human.client.screen.widget.GuiText.fit(
+                    font,
+                    pos.getX() + " " + pos.getY() + " " + pos.getZ(),
+                    imageWidth - LIST_X - CAM_WIDTH - 4 - COORDS_X
+                ),
+                COORDS_X,
+                ry,
+                DIM,
+                false
+            );
 
             if (turret.camera()) {
                 graphics.drawString(
                     font,
                     Component.translatable("gui.avp_human.terminal.camera"),
-                    imageWidth - LIST_X - 22,
+                    imageWidth - LIST_X - CAM_WIDTH,
                     ry,
                     MINT,
                     false
@@ -103,7 +144,18 @@ public class DeskTerminalScreen extends AbstractContainerScreen<DeskTerminalMenu
             }
         }
 
-        graphics.drawString(font, Component.translatable("gui.avp_human.terminal.hint"), LIST_X, imageHeight - 14, DIM, false);
+        graphics.drawString(
+            font,
+            com.human.client.screen.widget.GuiText.fit(
+                font,
+                Component.translatable("gui.avp_human.terminal.hint"),
+                imageWidth - 2 * LIST_X
+            ),
+            LIST_X,
+            imageHeight - 14,
+            DIM,
+            false
+        );
     }
 
     @Override

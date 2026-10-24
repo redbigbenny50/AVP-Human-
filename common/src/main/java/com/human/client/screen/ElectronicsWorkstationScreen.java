@@ -33,16 +33,17 @@ import java.util.Map;
  * All three scrollbars also follow the mouse wheel over their area. The parts list is planned here on the client from
  * the synced storage, by the same code the server crafts with ({@link ElectronicsCrafting}), so it shows exactly what a
  * craft will use.
+ * <p>
+ * [stated] Oct 16: coloured like the blueprint table - "both are work stations". The vanilla frame and the player's
+ * inventory stay grey; everything above them is the MUTHUR green screen, drawn here over the texture in the blueprint
+ * table's own colours and slot-well bevel (sampled from its texture). Parts rows show icon and amount only (the full
+ * name was cut off in the 72 px window; hovering still names it), short rows turn amber, and the status line sits under
+ * the parts window, beside the result. Every text at full size, no shadow. Slot positions and crafting are unchanged.
+ * </p>
  */
 public class ElectronicsWorkstationScreen extends AbstractContainerScreen<ElectronicsWorkstationMenu> {
 
     private static final ResourceLocation TEXTURE = HumanResources.location("textures/gui/container/electronics_workstation.png");
-
-    private static final ResourceLocation SCROLLER = ResourceLocation.withDefaultNamespace("container/stonecutter/scroller");
-
-    private static final ResourceLocation SCROLLER_DISABLED = ResourceLocation.withDefaultNamespace(
-        "container/stonecutter/scroller_disabled"
-    );
 
     /** A scroll area: its bar's x and y, the bar's height, and the rows it shows. */
     private record Bar(
@@ -71,14 +72,36 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
 
     private static final int PARTS_ROWS = 4;
 
-    private static final Bar PARTS_BAR = new Bar(157, 18, 70);
+    // One pixel left of where it was, so it sits inside the green screen's edge.
+    private static final Bar PARTS_BAR = new Bar(156, 18, 70);
 
-    private static final int STATUS_X = 80;
+    // Under the parts window, beside the result slot: room for the longest message at full size.
+    private static final int STATUS_X = 34;
 
-    private static final int STATUS_Y = 92;
+    private static final int STATUS_Y = 94;
 
     // Storage: its bar in the ninth column.
     private static final Bar STORAGE_BAR = new Bar(153, 114, 34);
+
+    // The blueprint table's screen colours.
+    private static final int SCREEN = 0xFF09180F;
+
+    private static final int WELL = 0xFF0F2618;
+
+    private static final int EDGE = 0xFF1A4429;
+
+    private static final int MINT = 0xFF6EF68D;
+
+    private static final int MID = 0xFF33974F;
+
+    private static final int DIM = 0xFF23573A;
+
+    private static final int WARN = 0xFFF0BE5A;
+
+    private static final int WARN_ROW = 0xFF463414;
+
+    /** Where the green screen ends: above the inventory label. */
+    private static final int SCREEN_BOTTOM = 151;
 
     private int craftRow;
 
@@ -115,7 +138,9 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        super.renderLabels(graphics, mouseX, mouseY);
+        // The title on the green screen; the inventory label stays vanilla grey on the grey frame.
+        graphics.drawString(font, title.getString().toUpperCase(java.util.Locale.ROOT), 9, 8, MINT, false);
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
         graphics.drawString(
             font,
             Component.translatable(
@@ -124,9 +149,9 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
                 menu.getScrollRow() + ElectronicsWorkstationMenu.VISIBLE_ROWS,
                 ElectronicsWorkstationMenu.ROWS
             ),
-            8,
+            9,
             104,
-            0x404040,
+            MINT,
             false
         );
 
@@ -138,6 +163,25 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+
+        // The green screen over the top of the texture, mint-edged like the blueprint table's.
+        graphics.fill(leftPos + 7, topPos + 5, leftPos + imageWidth - 7, topPos + SCREEN_BOTTOM, MINT);
+        graphics.fill(leftPos + 8, topPos + 6, leftPos + imageWidth - 8, topPos + SCREEN_BOTTOM - 1, SCREEN);
+
+        // Wells: the nine make cells, the result, the parts window and the storage rows on screen.
+        for (var cell = 0; cell < CRAFT_COLUMNS * CRAFT_ROWS; cell++) {
+            well(graphics, CRAFT_X + cell % CRAFT_COLUMNS * 18, CRAFT_Y + cell / CRAFT_COLUMNS * 18, 16, 16);
+        }
+
+        well(graphics, ElectronicsWorkstationMenu.RESULT_X, ElectronicsWorkstationMenu.RESULT_Y, 16, 16);
+        well(graphics, PARTS_X, PARTS_Y, PARTS_W + 1, PARTS_ROWS * 18 - 1);
+
+        for (var row = 0; row < ElectronicsWorkstationMenu.VISIBLE_ROWS; row++) {
+            for (var column = 0; column < ElectronicsWorkstationMenu.COLUMNS; column++) {
+                well(graphics, ElectronicsWorkstationMenu.STORAGE_X + column * 18, ElectronicsWorkstationMenu.STORAGE_Y + row * 18, 16, 16);
+            }
+        }
+
         refreshPlan();
         renderCraftables(graphics, mouseX, mouseY);
         renderParts(graphics);
@@ -146,10 +190,26 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
         renderBar(graphics, STORAGE_BAR, menu.getScrollRow(), ElectronicsWorkstationMenu.maxScrollRow());
     }
 
+    /** A green scroll bar in a well, the handle mint (dim when there is nothing to scroll), same travel as before. */
     private void renderBar(GuiGraphics graphics, Bar bar, int row, int maxRow) {
         var knob = maxRow > 0 ? (int) ((bar.height() - 15) * (row / (float) maxRow)) : 0;
+        var x = leftPos + bar.x();
+        var y = topPos + bar.y();
 
-        graphics.blitSprite(maxRow > 0 ? SCROLLER : SCROLLER_DISABLED, leftPos + bar.x(), topPos + bar.y() + knob, 12, 15);
+        graphics.fill(x, y, x + 12, y + bar.height(), EDGE);
+        graphics.fill(x + 1, y + 1, x + 12, y + bar.height(), MINT);
+        graphics.fill(x + 1, y + 1, x + 11, y + bar.height() - 1, WELL);
+        graphics.fill(x + 2, y + 1 + knob, x + 10, y + knob + 14, maxRow > 0 ? MINT : DIM);
+    }
+
+    /** The blueprint table's slot well: dark edge top and left, mint bottom and right, dark green inside. */
+    private void well(GuiGraphics graphics, int x, int y, int width, int height) {
+        var left = leftPos + x;
+        var top = topPos + y;
+
+        graphics.fill(left - 1, top - 1, left + width + 1, top + height + 1, EDGE);
+        graphics.fill(left, top, left + width + 1, top + height + 1, MINT);
+        graphics.fill(left, top, left + width, top + height, WELL);
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -174,9 +234,9 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
             var y = topPos + CRAFT_Y + cell / CRAFT_COLUMNS * 18;
 
             if (index == menu.getSelected()) {
-                // The pick: a green frame inside the slot.
-                graphics.fill(x - 1, y - 1, x + 17, y + 17, 0xFF3FAF3F);
-                graphics.fill(x, y, x + 16, y + 16, 0xFF8B8B8B);
+                // The pick: a mint frame round the well.
+                graphics.fill(x - 1, y - 1, x + 17, y + 17, MINT);
+                graphics.fill(x, y, x + 16, y + 16, DIM);
             }
 
             graphics.renderItem(craftables.get(index).result(minecraft.level), x, y);
@@ -265,19 +325,13 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
             var missing = part.missing() > 0;
 
             if (missing) {
-                graphics.fill(x - 1, y - 1, x + PARTS_W, y + 17, 0x40D03030);
+                graphics.fill(x, y, x + PARTS_W, y + 17, WARN_ROW);
             }
 
-            graphics.renderItem(stack, x, y);
+            graphics.renderItem(stack, x + 2, y);
 
-            var text = part.count() + " " + stack.getHoverName().getString();
-            var fitted = font.plainSubstrByWidth(text, PARTS_W - 20);
-
-            if (fitted.length() < text.length()) {
-                fitted = font.plainSubstrByWidth(text, PARTS_W - 26) + "..";
-            }
-
-            graphics.drawString(font, fitted, x + 18, y + 4, missing ? 0xFFFF5555 : 0xFFFFFFFF, true);
+            // Icon and amount only - the name is on hover (it never fitted the window).
+            graphics.drawString(font, "x" + part.count(), x + 21, y + 4, missing ? WARN : MINT, false);
         }
     }
 
@@ -292,18 +346,18 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
 
     private Status status() {
         if (menu.getSelectedCraftable() == null) {
-            return new Status(Component.translatable("gui.avp_human.workstation.pick"), 0x404040);
+            return new Status(Component.translatable("gui.avp_human.workstation.pick"), MID);
         }
 
         if (plan == null || !plan.missing().isEmpty()) {
-            return new Status(Component.translatable("gui.avp_human.workstation.missing"), 0xB02020);
+            return new Status(Component.translatable("gui.avp_human.workstation.missing"), WARN);
         }
 
         if (!plan.fits()) {
-            return new Status(Component.translatable("gui.avp_human.workstation.full"), 0xB02020);
+            return new Status(Component.translatable("gui.avp_human.workstation.full"), WARN);
         }
 
-        return new Status(Component.translatable("gui.avp_human.workstation.ready"), 0x207020);
+        return new Status(Component.translatable("gui.avp_human.workstation.ready"), MINT);
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -431,7 +485,7 @@ public class ElectronicsWorkstationScreen extends AbstractContainerScreen<Electr
                     );
                 }
 
-                graphics.renderComponentTooltip(font, lines, mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(graphics, font, lines, mouseX, mouseY);
                 return;
             }
         }

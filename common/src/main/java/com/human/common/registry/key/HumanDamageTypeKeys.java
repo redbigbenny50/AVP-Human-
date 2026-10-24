@@ -18,6 +18,16 @@ public class HumanDamageTypeKeys {
     /** [stated] Oct 1: standing in cryofluid without a full environmental suit. */
     public static final ResourceKey<DamageType> CRYOFLUID = create("cryofluid");
 
+    /**
+     * [stated] Oct 18 - the vapors (chem thrower blast, its lingering cloud, the distributor's fog) "ignore armour":
+     * the mist reaches the whole body. All three are in minecraft:bypasses_armor; the liquids keep their own types.
+     */
+    public static final ResourceKey<DamageType> CRYO_VAPOR = create("cryo_vapor");
+
+    public static final ResourceKey<DamageType> INFERNIUM_VAPOR = create("infernium_vapor");
+
+    public static final ResourceKey<DamageType> ACID_VAPOR = create("acid_vapor");
+
     private static ResourceKey<DamageType> create(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, HumanResources.location(id));
     }

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/crate/light_blue_hardshell_container"
+    },
+    "facing=south": {
+      "model": "avp_human:block/crate/light_blue_hardshell_container"
+    },
+    "facing=east": {
+      "model": "avp_human:block/crate/light_blue_hardshell_container"
+    },
+    "facing=west": {
+      "model": "avp_human:block/crate/light_blue_hardshell_container"
+    }
+  }
+}

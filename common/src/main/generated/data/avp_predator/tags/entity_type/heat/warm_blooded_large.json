@@ -1,5 +1,11 @@
 {
   "values": [
-    "avp_human:marine"
+    "avp_human:marine",
+    "avp_human:tactical_marine",
+    "avp_human:wy_commando",
+    "avp_human:wy_elite",
+    "avp_human:wy_spec_ops_commando",
+    "avp_human:wy_spec_ops_elite",
+    "avp_human:wy_ape_trooper"
   ]
 }

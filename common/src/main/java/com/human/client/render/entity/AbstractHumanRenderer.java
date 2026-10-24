@@ -41,7 +41,18 @@ public abstract class AbstractHumanRenderer<T extends AbstractHuman> extends AzE
     }
 
     protected static <T extends AbstractHuman> AzEntityRendererConfig.Builder<T> createConfig() {
-        return AzEntityRendererConfig.<T>builder(AbstractHumanRenderer::getModel, AbstractHumanRenderer::getTexture)
+        return createConfig(AbstractHumanRenderer::getModel, AbstractHumanRenderer::getTexture);
+    }
+
+    /**
+     * The same human rendering - armour, hair, eyes, skin, beard, held items, the swimming tilt - on another model and
+     * base texture. [stated] Oct 13: the Weyland-Yutani soldiers wear the weyland_yutani_employee body.
+     */
+    protected static <T extends AbstractHuman> AzEntityRendererConfig.Builder<T> createConfig(
+        java.util.function.Function<T, ResourceLocation> model,
+        java.util.function.Function<T, ResourceLocation> texture
+    ) {
+        return AzEntityRendererConfig.<T>builder(model, texture)
             // The human model renderer adds vanilla's swimming body tilt; everything else is BLib's default.
             .setModelRenderer(
                 (pipeline, layerRenderer) -> new HumanEntityModelRenderer<>(

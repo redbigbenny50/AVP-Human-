@@ -3,7 +3,6 @@ package com.human.client.render.block;
 import com.human.HumanResources;
 import com.human.common.gameplay.block.entity.machine.ElectricMachineBlockEntity;
 import com.human.common.gameplay.block.power.machine.ElectricMachineBlock;
-import com.human.common.gameplay.machine.ElectricMachineKind;
 import com.human.common.gameplay.machine.MachineState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,7 +17,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -43,8 +41,13 @@ public class ElectricMachineRenderer implements BlockEntityRenderer<ElectricMach
 
     private static final ResourceLocation LED = HumanResources.location("textures/block/machine_led_glow.png");
 
-    private static final Map<ElectricMachineKind, ResourceLocation> STRIPS =
-        new EnumMap<>(ElectricMachineKind.class);
+    /**
+     * Each machine block's working strip, {@code textures/machine/<block id>_working.png}, looked up once. ⚠ Keyed by
+     * the BLOCK, not the kind: [stated] Oct 18 the distributor has W-Y and USCM editions - one kind, three skins - so
+     * each edition needs its own strip. For every single-edition machine the block id IS the kind id, so their strips
+     * are unchanged.
+     */
+    private static final Map<net.minecraft.world.level.block.Block, ResourceLocation> STRIPS = new java.util.HashMap<>();
 
     public ElectricMachineRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -106,8 +109,10 @@ public class ElectricMachineRenderer implements BlockEntityRenderer<ElectricMach
     ) {
         var animation = machine.getKind().animation();
         var strip = STRIPS.computeIfAbsent(
-            machine.getKind(),
-            kind -> HumanResources.location("textures/machine/" + kind.id() + "_working.png")
+            machine.getBlockState().getBlock(),
+            block -> HumanResources.location(
+                "textures/machine/" + net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).getPath() + "_working.png"
+            )
         );
 
         // Ticks since THIS machine started, into its own cycle. Before the client has seen it start (a frame drawn in

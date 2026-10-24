@@ -27,6 +27,27 @@ public class CablePortModes extends SavedData {
         return level.getDataStorage().computeIfAbsent(new SavedData.Factory<>(CablePortModes::new, CablePortModes::load, null), NAME);
     }
 
+    /** Three bits a face, face i at bit i*3 - see {@link #get}. */
+    public static final int BITS_PER_FACE = 3;
+
+    /** [stated] Oct 21 - a cable's modes as stored, so a ship move can carry them (see ShipMoves). 0 = all default. */
+    public int packed(BlockPos cable) {
+        return modes.getOrDefault(cable.asLong(), 0);
+    }
+
+    /** Writes a cable's modes as stored (0 = all default). */
+    public void putPacked(BlockPos cable, int packed) {
+        if (packed == 0) {
+            if (modes.remove(cable.asLong()) != null) {
+                setDirty();
+            }
+            return;
+        }
+
+        modes.put(cable.asLong(), packed);
+        setDirty();
+    }
+
     public PortMode get(BlockPos cable, Direction face) {
         var packed = modes.getOrDefault(cable.asLong(), 0);
 

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "avp_human:block/drive_bay",
+    "west": "avp_human:block/machine_block_west",
+    "east": "avp_human:block/machine_block_east",
+    "south": "avp_human:block/machine_block_south",
+    "up": "avp_human:block/machine_block_up",
+    "down": "avp_human:block/machine_block_down",
+    "particle": "avp_human:block/machine_block_east"
+  }
+}

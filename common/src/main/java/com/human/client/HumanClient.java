@@ -86,6 +86,10 @@ public class HumanClient {
     public static final BLibClientMod MOD = BLibClientMod.createFor(Human.MOD);
 
     public static void initialize() {
+        // The wiring tool shows a resonator's sphere through this hook (see ResonatorSphereHook).
+        com.human.common.gameplay.block.resonator.ResonatorSphereHook.show =
+            com.human.client.render.ResonatorSphereDisplay::show;
+
         MOD.initialize(HumanClient::runInitialization);
     }
 
@@ -93,10 +97,136 @@ public class HumanClient {
         registerArmorRenderers();
         registerBlockEntityRenderers();
         registerBlockRenderLayers();
+        // [stated] Oct 18 - the vapor puff (Gasworks-style gas), for the chem thrower, its cloud and the distributor.
+        MOD.registries()
+            .registerParticleProviderFactory(
+                com.human.common.registry.init.HumanParticles.VAPOR,
+                com.human.client.particle.VaporParticle.Provider::new
+            );
         registerEntityRenderers();
         registerItemColors();
         registerItemRenderers();
         registerMenuScreens();
+        HumanCratesClient.initialize();
+        HumanQuarryClient.initialize();
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanFabrication.BLUEPRINT_TABLE,
+                com.human.client.screen.BlueprintTableScreen::new
+            );
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanFabrication.DRIVE_BAY_MENU,
+                com.human.client.screen.DriveBayScreen::new
+            );
+        // [stated] Oct 23 - the metal signs, drawn by vanilla's own sign renderers under our two block entity types.
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanSigns.SIGN_BLOCK_ENTITY,
+                net.minecraft.client.renderer.blockentity.SignRenderer::new
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanSigns.HANGING_SIGN_BLOCK_ENTITY,
+                net.minecraft.client.renderer.blockentity.HangingSignRenderer::new
+            );
+        // ⚠ The sign texture sheet's lookup tables are filled once, from WoodType.values(), the first time vanilla's
+        // Sheets class loads. Our sign types register during mod setup, which is normally earlier - but if anything
+        // touched Sheets first, ours would have no texture and the renderer would fail on them. Filled in here if
+        // missing; a no-op when they are already there.
+        for (var set : com.human.common.registry.init.HumanSigns.all()) {
+            var woodType = set.woodType();
+            net.minecraft.client.renderer.Sheets.SIGN_MATERIALS.putIfAbsent(
+                woodType,
+                new net.minecraft.client.resources.model.Material(
+                    net.minecraft.client.renderer.Sheets.SIGN_SHEET,
+                    net.minecraft.resources.ResourceLocation.withDefaultNamespace("entity/signs/" + woodType.name())
+                )
+            );
+            net.minecraft.client.renderer.Sheets.HANGING_SIGN_MATERIALS.putIfAbsent(
+                woodType,
+                new net.minecraft.client.resources.model.Material(
+                    net.minecraft.client.renderer.Sheets.SIGN_SHEET,
+                    net.minecraft.resources.ResourceLocation.withDefaultNamespace("entity/signs/hanging/" + woodType.name())
+                )
+            );
+        }
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanFabrication.DRIVE_BAY_BLOCK_ENTITY,
+                com.human.client.render.block.DriveBayRenderer::new
+            );
+        // [stated] Oct 20 - the Creative Fluid Tank's window shows the fluid it is set to.
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK_BLOCK_ENTITY,
+                com.human.client.render.block.CreativeFluidTankRenderer::new
+            );
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanFabrication.FABRICATOR_MENU,
+                com.human.client.screen.FabricatorScreen::new
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanFabrication.FABRICATOR_BLOCK_ENTITY,
+                context -> new com.human.client.render.block.FabricatorRenderer()
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanFabrication.FABRICATOR_ITEM,
+                name -> () -> new com.human.client.render.item.FabricatorItemRenderer("fabricator")
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanFabrication.WY_FABRICATOR_ITEM,
+                name -> () -> new com.human.client.render.item.FabricatorItemRenderer("wy_fabricator")
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanFabrication.USCM_FABRICATOR_ITEM,
+                name -> () -> new com.human.client.render.item.FabricatorItemRenderer("uscm_fabricator")
+            );
+
+        // [stated] Oct 17 - the vaporizer: its geo model (with the real liquid behind the windows), the shared machine
+        // screen on its own art, and the model in the hand for all three editions.
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanVaporizer.VAPORIZER_BLOCK_ENTITY,
+                context -> new com.human.client.render.block.VaporizerRenderer()
+            );
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanVaporizer.VAPORIZER_MENU,
+                com.human.client.screen.ElectricMachineScreen::new
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanVaporizer.VAPORIZER_ITEM,
+                name -> () -> new com.human.client.render.item.VaporizerItemRenderer("vaporizer")
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanVaporizer.WY_VAPORIZER_ITEM,
+                name -> () -> new com.human.client.render.item.VaporizerItemRenderer("wy_vaporizer")
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                com.human.common.registry.init.HumanVaporizer.USCM_VAPORIZER_ITEM,
+                name -> () -> new com.human.client.render.item.VaporizerItemRenderer("uscm_vaporizer")
+            );
+
+        // [stated] Oct 17 - the distributor: the shared machine renderer (its fan strip and LED) and its own screen.
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanDistributor.DISTRIBUTOR_BLOCK_ENTITY,
+                ElectricMachineRenderer::new
+            );
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanDistributor.DISTRIBUTOR_MENU,
+                com.human.client.screen.DistributorScreen::new
+            );
 
         // The machines' client tick - animation clock and working sound. Handed in from here so common code never
         // names a client class.
@@ -336,6 +466,11 @@ public class HumanClient {
     }
 
     private static void registerBlockRenderLayers() {
+        // USCM set: the cage mesh has see-through holes; the window glass is tinted, so it draws translucent.
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.block.HumanUscmBlocks.CAGE_MESH, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.block.HumanUscmBlocks.WINDOW, RenderType.translucent());
+        // W-Y set: its window glass is tinted too.
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.block.HumanWyBlocks.WINDOW, RenderType.translucent());
         // Fluid tanks: the window glass is clear with a translucent glint, so the whole tank draws translucent.
         MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.STEEL_FLUID_TANK, RenderType.translucent());
         MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanBlocks.FLUID_PIPE, RenderType.cutout());
@@ -352,6 +487,13 @@ public class HumanClient {
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_CHAIN_FENCE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_GRATE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_BARS, RenderType.cutout());
+        // Oct 21 - metal bars, chains and ladders: see-through, like their vanilla counterparts.
+        com.human.common.registry.init.HumanMetalFixtures.bars()
+            .forEach(block -> MOD.registries().registerBlockRenderLayer(block, RenderType.cutout()));
+        com.human.common.registry.init.HumanMetalFixtures.chains()
+            .forEach(block -> MOD.registries().registerBlockRenderLayer(block, RenderType.cutout()));
+        com.human.common.registry.init.HumanMetalFixtures.ladders()
+            .forEach(block -> MOD.registries().registerBlockRenderLayer(block, RenderType.cutout()));
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_CHAIN_FENCE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanSteelBlocks.STEEL_GRATE, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanTitaniumBlocks.TITANIUM_CHAIN_FENCE, RenderType.cutout());
@@ -369,6 +511,12 @@ public class HumanClient {
         MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_PRESS, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_HYDRATOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanBlocks.ELECTRIC_FREEZER, RenderType.cutout());
+        // ⚠ Oct 19 (his report: "the front of the distributor when powered turns black"). The distributor's three
+        // editions have the same LED overlay face as every other machine but were never put on the cutout layer, so
+        // the overlay's transparent pixels drew BLACK over the whole front the moment it was powered.
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanDistributor.DISTRIBUTOR, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanDistributor.WY_DISTRIBUTOR, RenderType.cutout());
+        MOD.registries().registerBlockRenderLayer(com.human.common.registry.init.HumanDistributor.USCM_DISTRIBUTOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_DOOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanIndustrialGlassBlocks.INDUSTRIAL_GLASS_TRAP_DOOR, RenderType.cutout());
         MOD.registries().registerBlockRenderLayer(HumanFerroaluminumBlocks.FERROALUMINUM_DOOR, RenderType.cutout());
@@ -420,12 +568,39 @@ public class HumanClient {
 
     private static void registerEntityHeadData() {
         EntityHeadDataCache.put(HumanEntityTypes.MARINE, HumanEntityHeadData.MARINE);
+        // [stated] Oct 13 - the soldier types share the marine's proportions.
+        EntityHeadDataCache.put(HumanEntityTypes.TACTICAL_MARINE, HumanEntityHeadData.MARINE);
+        EntityHeadDataCache.put(HumanEntityTypes.WY_COMMANDO, HumanEntityHeadData.MARINE);
+        EntityHeadDataCache.put(HumanEntityTypes.WY_ELITE, HumanEntityHeadData.MARINE);
+        EntityHeadDataCache.put(HumanEntityTypes.WY_SPEC_OPS_COMMANDO, HumanEntityHeadData.MARINE);
+        EntityHeadDataCache.put(HumanEntityTypes.WY_SPEC_OPS_ELITE, HumanEntityHeadData.MARINE);
+        EntityHeadDataCache.put(HumanEntityTypes.WY_APE_TROOPER, HumanEntityHeadData.MARINE);
     }
 
     private static void registerEntityRenderers() {
         MOD.registries().registerEntityRenderer(HumanEntityTypes.FLAMETHROW, FlamethrowRenderer::new);
+        // The chem thrower's lingering cloud draws nothing itself - its particles come from its own client tick.
+        MOD.registries().registerEntityRenderer(HumanEntityTypes.CHEM_CLOUD, net.minecraft.client.renderer.entity.NoopRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.GRENADE_THROWN, ThrownItemRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE, MarineRenderer::new);
+        // [stated] Oct 13 - the tactical marine keeps the marine body; the Weyland-Yutani units wear the employee body.
+        MOD.registries().registerEntityRenderer(HumanEntityTypes.TACTICAL_MARINE, MarineRenderer::new);
+        MOD.registries()
+            .registerEntityRenderer(HumanEntityTypes.WY_COMMANDO, com.human.client.render.entity.WeylandYutaniSoldierRenderer::new);
+        MOD.registries()
+            .registerEntityRenderer(HumanEntityTypes.WY_ELITE, com.human.client.render.entity.WeylandYutaniSoldierRenderer::new);
+        MOD.registries()
+            .registerEntityRenderer(
+                HumanEntityTypes.WY_SPEC_OPS_COMMANDO,
+                com.human.client.render.entity.WeylandYutaniSoldierRenderer::new
+            );
+        MOD.registries()
+            .registerEntityRenderer(HumanEntityTypes.WY_SPEC_OPS_ELITE, com.human.client.render.entity.WeylandYutaniSoldierRenderer::new);
+        MOD.registries()
+            .registerEntityRenderer(HumanEntityTypes.WY_APE_TROOPER, com.human.client.render.entity.WeylandYutaniSoldierRenderer::new);
+        com.human.common.gameplay.entity.living.human.soldier.WeylandYutaniEmployeeFeatureManager.installOutfitCatalog(
+            com.human.client.render.entity.WeylandYutaniEmployeeOutfits::forSex
+        );
         MOD.registries().registerEntityRenderer(HumanEntityTypes.COLONIST, com.human.client.render.entity.ColonistRenderer::new);
         // [stated] Sep 30: colonists pick a random jumpsuit from every outfit texture present - listed here, on the
         // client.
@@ -458,6 +633,11 @@ public class HumanClient {
             .registerItemRenderer(
                 HumanGunItems.FLAMETHROWER_SEVASTOPOL,
                 name -> () -> new SevastopolFlamethrowerItemRenderer(name)
+            );
+        MOD.registries()
+            .registerItemRenderer(
+                HumanGunItems.CHEM_THROWER,
+                name -> () -> new com.human.client.render.item.gun.ChemThrowerItemRenderer(name)
             );
         MOD.registries().registerItemRenderer(HumanGunItems.M37_12_SHOTGUN, name -> () -> new M3712ShotgunItemRenderer(name));
         MOD.registries()
@@ -521,5 +701,11 @@ public class HumanClient {
 
     private static void registerParasiteHeadAttachmentOffsetData() {
         ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.MARINE, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.TACTICAL_MARINE, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.WY_COMMANDO, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.WY_ELITE, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.WY_SPEC_OPS_COMMANDO, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.WY_SPEC_OPS_ELITE, HumanParasiteAttachmentOffsetData.MARINE);
+        ParasiteHeadAttachmentOffsetDataCache.put(HumanEntityTypes.WY_APE_TROOPER, HumanParasiteAttachmentOffsetData.MARINE);
     }
 }

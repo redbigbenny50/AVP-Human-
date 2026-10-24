@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "avp_human:block/wy_alarm_pillar",
+    "side": "avp_human:block/wy_pillar_grey_band",
+    "top": "avp_human:block/wy_ceiling_panel"
+  }
+}

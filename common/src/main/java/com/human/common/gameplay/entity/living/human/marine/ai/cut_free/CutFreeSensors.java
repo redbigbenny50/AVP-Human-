@@ -2,7 +2,6 @@ package com.human.common.gameplay.entity.living.human.marine.ai.cut_free;
 
 import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.entity.living.human.marine.MarineAllyUtil;
-import com.human.common.registry.init.HumanEntityTypes;
 import com.human.common.registry.tag.HumanItemTags;
 import com.human.compatibility.avp_predator.HumanPredatorNet;
 import com.just.ai.goap.StateKey;
@@ -27,7 +26,8 @@ public class CutFreeSensors {
     public static final Sensor.Mono<Marine, Option<Marine>> NEAREST_NETTED_MARINE = Sensors.lazyCompose(
         StateKey.sensed("nearest_netted_marine"),
         (marine, worldState) -> {
-            var marines = marine.getEntitySenseCache().getByType(HumanEntityTypes.MARINE.get());
+            // Every soldier type (all share the Marine class) - a netted W-Y or tactical squadmate is cut free too.
+            var marines = marine.getEntitySenseCache().getByClass(Marine.class);
 
             Marine nearest = null;
             double nearestDistance = Double.MAX_VALUE;

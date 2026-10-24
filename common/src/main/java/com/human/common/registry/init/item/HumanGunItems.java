@@ -27,6 +27,12 @@ public class HumanGunItems {
         HumanServices.FACTORY.createGunSupplier(GunData.FLAMETHROWER_SEVASTOPOL)
     );
 
+    /** [stated] Oct 18 - the chem thrower, ammo = the vaporizer's tanks; his model with the player-arm rig. */
+    public static final BLibHolder<Item> CHEM_THROWER = create(
+        "chem_thrower",
+        HumanServices.FACTORY.createGunSupplier(GunData.CHEM_THROWER)
+    );
+
     public static final BLibHolder<Item> M37_12_SHOTGUN = create(
         "m37_12_shotgun",
         HumanServices.FACTORY.createGunSupplier(GunData.M37_12_SHOTGUN)
@@ -80,6 +86,8 @@ public class HumanGunItems {
         REGISTRY.registerAll();
         IDENTITY_REGISTRY.register(F903WE_RIFLE);
         IDENTITY_REGISTRY.register(FLAMETHROWER_SEVASTOPOL);
+        // ⚠ Required for any BLib-animated item: without it the animator is not kept per gun and the clips never play.
+        IDENTITY_REGISTRY.register(CHEM_THROWER);
         IDENTITY_REGISTRY.register(M37_12_SHOTGUN);
         IDENTITY_REGISTRY.register(M41A_PULSE_RIFLE);
         IDENTITY_REGISTRY.register(M42A3_SNIPER_RIFLE);

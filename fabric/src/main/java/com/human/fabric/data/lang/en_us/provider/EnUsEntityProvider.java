@@ -14,9 +14,16 @@ public class EnUsEntityProvider {
 
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         addEntity(builder, HumanEntityTypes.FLAMETHROW, "Flamethrow");
+        addEntity(builder, HumanEntityTypes.CHEM_CLOUD, "Chem Cloud");
         addEntity(builder, HumanEntityTypes.GRENADE_THROWN, "Grenade");
         addEntity(builder, HumanEntityTypes.MARINE_DOG, "Marine Dog");
         addEntity(builder, HumanEntityTypes.MARINE, "Marine");
+        addEntity(builder, HumanEntityTypes.TACTICAL_MARINE, "Tactical Marine");
+        addEntity(builder, HumanEntityTypes.WY_COMMANDO, "W-Y Commando");
+        addEntity(builder, HumanEntityTypes.WY_ELITE, "W-Y Elite");
+        addEntity(builder, HumanEntityTypes.WY_SPEC_OPS_COMMANDO, "W-Y Spec Ops Commando");
+        addEntity(builder, HumanEntityTypes.WY_SPEC_OPS_ELITE, "W-Y Spec Ops Elite");
+        addEntity(builder, HumanEntityTypes.WY_APE_TROOPER, "W-Y APE Trooper");
         addEntity(builder, HumanEntityTypes.COLONIST, "Colonist");
         // The trade screen title and name of a colonist holding the job - see ElectricianProfession.
         builder.add("entity.avp_human.colonist.electrician", "Electrician");

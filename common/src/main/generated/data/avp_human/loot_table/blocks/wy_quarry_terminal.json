@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "avp_human:wy_quarry_terminal",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "part": "core"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "avp_human:wy_quarry_terminal"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

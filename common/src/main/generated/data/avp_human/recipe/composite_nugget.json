@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "avp_human:composite_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "avp_human:composite_nugget"
+  }
+}

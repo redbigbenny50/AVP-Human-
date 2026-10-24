@@ -1,0 +1,32 @@
+{
+  "textures": {
+    "glass": "avp_human:block/uscm_window_dlr",
+    "particle": "avp_human:block/uscm_window_single"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#glass",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
+}

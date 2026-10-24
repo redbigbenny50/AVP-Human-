@@ -51,6 +51,7 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.NEODYMIUM_MAGNET);
         CreativeModeTabUtil.accept(output, HumanItems.STEEL_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.COMPOSITE_INGOT);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET);
         CreativeModeTabUtil.accept(output, HumanItems.TITANIUM_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.URANIUM_INGOT);
         CreativeModeTabUtil.accept(output, HumanItems.ZINC_INGOT);
@@ -62,6 +63,7 @@ public class IngredientsCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.CPU);
         CreativeModeTabUtil.accept(output, HumanItems.RAM);
         CreativeModeTabUtil.accept(output, HumanItems.SSD);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanFabrication.BLUEPRINT_CHIP);
         CreativeModeTabUtil.accept(output, HumanItems.MOTHERBOARD);
         CreativeModeTabUtil.accept(output, HumanItems.POWER_SUPPLY);
         CreativeModeTabUtil.accept(output, HumanItems.DIODE);
@@ -78,6 +80,7 @@ public class IngredientsCreativeModeTabInitializer {
         // Blueprint materials
         CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_F903WE_RIFLE);
         CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_FLAMETHROWER_SEVASTOPOL);
+        CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_CHEM_THROWER);
         CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_M37_12_SHOTGUN);
         CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_M41A_PULSE_RIFLE);
         CreativeModeTabUtil.accept(output, HumanItems.BLUEPRINT_M42A3_SNIPER_RIFLE);

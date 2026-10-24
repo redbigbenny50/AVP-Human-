@@ -69,7 +69,10 @@ public final class FluidPipeSystem {
 
     private boolean dirty = true;
 
-    private long lastRebuild = Long.MIN_VALUE;
+    // Oct 14 FIX - was Long.MIN_VALUE: "now - Long.MIN_VALUE" OVERFLOWS to a huge negative number, so the time check
+    // never passed. Half of it leaves room to subtract any real game time.
+    // This one meant NO fluid network ever formed: no flanges, nothing moved, anywhere.
+    private long lastRebuild = Long.MIN_VALUE / 2;
 
     private FluidPipeSystem() {}
 
@@ -322,6 +325,204 @@ public final class FluidPipeSystem {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Wiring-tool readout
+    // ------------------------------------------------------------------------------------------------------------
+
+    /**
+     * [stated] Oct 14: "build in that pipe detection with the wiring tool so it tells us whats not working or being
+     * seen". Read-only: every end is worked out with the network's OWN port() and mode(), so the readout cannot
+     * disagree with what the network does, and fluid is only ever peeked at or test-filled (simulate), never moved.
+     *
+     * @param level the level
+     * @param pipe  the clicked pipe
+     * @return the lines to show the player
+     */
+    public List<net.minecraft.network.chat.Component> diagnose(ServerLevel level, BlockPos pipe) {
+        var lines = new ArrayList<net.minecraft.network.chat.Component>();
+        var network = pipeIndex.get(pipe);
+
+        if (network == null) {
+            lines.add(com.human.common.gameplay.block.pipe.PipeDiagnostics.header("Fluid pipe: not in a network"));
+            lines.add(
+                dirty
+                    ? com.human.common.gameplay.block.pipe.PipeDiagnostics.note(
+                        "The networks are about to be rebuilt - click again in a moment."
+                    )
+                    : com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                        "No pipe in this run touches a block it can move fluid in or out of, so there is nothing to move between."
+                    )
+            );
+            return lines;
+        }
+
+        var count = network.ends.size();
+        lines.add(
+            com.human.common.gameplay.block.pipe.PipeDiagnostics.header(
+                "Fluid network: " + network.pipes.size() + (network.pipes.size() == 1 ? " pipe, " : " pipes, ") + count
+                    + (count == 1 ? " end" : " ends")
+            )
+        );
+
+        var ports = new PipeFluidAccess.Port[count];
+        var modes = new byte[count];
+        var filters = new com.human.common.gameplay.block.pipe.PipeFilter[count];
+        var names = new String[count];
+
+        for (var index = 0; index < count; index++) {
+            var end = network.ends.get(index);
+            ports[index] = end.port(level);
+            modes[index] = end.mode(level, ports[index]);
+            var entity = level.isLoaded(end.pipe()) && level.getBlockEntity(end.pipe()) instanceof FluidPipeBlockEntity pipeEntity
+                ? pipeEntity
+                : null;
+            filters[index] = entity == null ? null : entity.getFilter(end.face());
+            var setting = entity == null ? FluidPipeBlockEntity.AUTO : entity.getOverride(end.face());
+            names[index] = level.isLoaded(end.target())
+                ? com.human.common.gameplay.block.pipe.PipeDiagnostics.where(level, end.target(), end.face())
+                : "unloaded block";
+
+            if (index >= com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) {
+                continue;
+            }
+
+            var detail = new ArrayList<String>();
+
+            if (!level.isLoaded(end.target())) {
+                detail.add("that chunk is not loaded");
+            } else if (modes[index] == 0) {
+                detail.add(whyNotWorking(setting, ports[index]));
+            }
+
+            if (modes[index] == FluidPipeBlockEntity.OUT || modes[index] == FluidPipeBlockEntity.BOTH) {
+                var held = ports[index].peek(Integer.MAX_VALUE);
+                detail.add(
+                    held.isEmpty()
+                        ? "empty"
+                        : "holds " + held.amount() + " mB "
+                            + com.human.common.gameplay.item.canister.UniversalCanisterItem.fluidName(held.fluid()).getString()
+                );
+            }
+
+            detail.add(com.human.common.gameplay.block.pipe.PipeDiagnostics.filterNote(filters[index]));
+            lines.add(
+                com.human.common.gameplay.block.pipe.PipeDiagnostics.endLine(
+                    names[index],
+                    setting,
+                    modes[index],
+                    com.human.common.gameplay.block.pipe.PipeDiagnostics.join(detail)
+                )
+            );
+        }
+
+        if (count > com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) {
+            lines.add(
+                com.human.common.gameplay.block.pipe.PipeDiagnostics.note(
+                    " ...and " + (count - com.human.common.gameplay.block.pipe.PipeDiagnostics.MAX_ENDS_LISTED) + " more ends"
+                )
+            );
+        }
+
+        lines.add(fluidVerdict(ports, modes, filters, names));
+        return lines;
+    }
+
+    private static String whyNotWorking(byte setting, PipeFluidAccess.Port port) {
+        if (port instanceof FluidIntakePort) {
+            return "open fluid - set this end to Extract to draw from it";
+        }
+
+        if (!port.present()) {
+            return "this face does not take or give fluid";
+        }
+
+        return switch (setting) {
+            case FluidPipeBlockEntity.OFF -> "set to Off";
+            case FluidPipeBlockEntity.PULL -> "set to Extract, but this face cannot give fluid out";
+            case FluidPipeBlockEntity.PUSH -> "set to Input, but this face cannot take fluid in";
+            default -> "this face can neither take nor give fluid";
+        };
+    }
+
+    /** A dry run of one transfer: the first source with fluid, through both filters, into a test-filled sink. */
+    private static net.minecraft.network.chat.Component fluidVerdict(
+        PipeFluidAccess.Port[] ports,
+        byte[] modes,
+        com.human.common.gameplay.block.pipe.PipeFilter[] filters,
+        String[] names
+    ) {
+        var anySource = false;
+        var anySink = false;
+
+        for (var mode : modes) {
+            anySource |= mode == FluidPipeBlockEntity.OUT || mode == FluidPipeBlockEntity.BOTH;
+            anySink |= mode == FluidPipeBlockEntity.IN || mode == FluidPipeBlockEntity.BOTH;
+        }
+
+        if (!anySource) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                "Nothing moves: no end is extracting. Set the end at the block holding the fluid to Extract."
+            );
+        }
+
+        if (!anySink) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+                "Nothing moves: no end is taking fluid in. Set the end at the receiving block to Input."
+            );
+        }
+
+        var anyFluid = false;
+        String blocked = null;
+
+        for (var s = 0; s < ports.length; s++) {
+            if (modes[s] != FluidPipeBlockEntity.OUT && modes[s] != FluidPipeBlockEntity.BOTH) {
+                continue;
+            }
+
+            var offer = ports[s].peek(1000);
+
+            if (offer.isEmpty()) {
+                continue;
+            }
+
+            anyFluid = true;
+            var fluid = offer.fluid();
+            var fluidName = com.human.common.gameplay.item.canister.UniversalCanisterItem.fluidName(fluid).getString();
+
+            if (filters[s] != null && !filters[s].allowsFluid(fluid)) {
+                blocked = "the filter at " + names[s] + " does not let " + fluidName + " out";
+                continue;
+            }
+
+            for (var d = 0; d < ports.length; d++) {
+                if (d == s || modes[d] != FluidPipeBlockEntity.IN && modes[d] != FluidPipeBlockEntity.BOTH) {
+                    continue;
+                }
+
+                if (filters[d] != null && !filters[d].allowsFluid(fluid)) {
+                    blocked = "the filter at " + names[d] + " does not let " + fluidName + " in";
+                    continue;
+                }
+
+                if (ports[d].fill(fluid, offer.amount(), true) > 0) {
+                    return com.human.common.gameplay.block.pipe.PipeDiagnostics.ok(
+                        "Working: " + fluidName + " can move from " + names[s] + " to " + names[d] + "."
+                    );
+                }
+
+                blocked = names[d] + " will not accept " + fluidName + " (it is full, or does not take that fluid)";
+            }
+        }
+
+        if (!anyFluid) {
+            return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem("Nothing moves: every extracting end is empty.");
+        }
+
+        return com.human.common.gameplay.block.pipe.PipeDiagnostics.problem(
+            "Nothing moves: " + (blocked == null ? "no receiving end besides the source itself." : blocked + ".")
+        );
+    }
+
     private static final class Network {
 
         private final List<End> ends;
@@ -347,12 +548,36 @@ public final class FluidPipeSystem {
          */
         private final int phase;
 
+        private final PipeFluidAccess.Port[] portsBuffer;
+
+        private final byte[] modesBuffer;
+
+        private final com.human.common.gameplay.block.pipe.PipeFilter[] filtersBuffer;
+
+        private final boolean[] machinesBuffer;
+
+        private final byte[] prioritiesBuffer;
+
+        private final int[] sinkBuffer;
+
+        private static final byte IN_MODE = FluidPipeBlockEntity.IN;
+
+        private static final byte BOTH_MODE = FluidPipeBlockEntity.BOTH;
+
         Network(List<End> ends, List<BlockPos> pipes) {
             this.ends = ends;
             this.pipes = pipes;
             this.phase = pipes.isEmpty() ? 0 : Math.floorMod(pipes.get(0).hashCode(), MODE_REFRESH_INTERVAL);
             this.sleepTicks = new int[ends.size()];
             this.sleepLength = new int[ends.size()];
+            // Oct 13 hardening - one set of working arrays per network, reused every round (its ends are fixed until
+            // it is rebuilt), instead of six new ones per network per round.
+            this.portsBuffer = new PipeFluidAccess.Port[ends.size()];
+            this.modesBuffer = new byte[ends.size()];
+            this.filtersBuffer = new com.human.common.gameplay.block.pipe.PipeFilter[ends.size()];
+            this.machinesBuffer = new boolean[ends.size()];
+            this.prioritiesBuffer = new byte[ends.size()];
+            this.sinkBuffer = new int[ends.size()];
         }
 
         /** Oct 8 - {@return one pipe of this network, as BlockPos.asLong - names it in /blib perf} */
@@ -366,12 +591,12 @@ public final class FluidPipeSystem {
             }
 
             var count = ends.size();
-            var ports = new PipeFluidAccess.Port[count];
-            var modes = new byte[count];
+            var ports = portsBuffer;
+            var modes = modesBuffer;
             // Oct 8: each end's filter, kind and priority, read once per round (see the item network for the rules).
-            var filters = new com.human.common.gameplay.block.pipe.PipeFilter[count];
-            var machines = new boolean[count];
-            var priorities = new byte[count];
+            var filters = filtersBuffer;
+            var machines = machinesBuffer;
+            var priorities = prioritiesBuffer;
 
             for (var index = 0; index < count; index++) {
                 var end = ends.get(index);
@@ -392,7 +617,8 @@ public final class FluidPipeSystem {
 
             var budget = FLOW_PER_TICK;
             var start = Math.floorMod(turn++, count);
-            var sinks = sinkOrder(count, start, modes, machines, priorities);
+            var sinks = sinkBuffer;
+            var sinkCount = sinkOrder(count, start, modes, machines, priorities);
 
             // Red sources first, then yellow - a yellow block gives only what green blocks want.
             for (var pass = 0; pass < 2 && budget > 0; pass++) {
@@ -422,7 +648,7 @@ public final class FluidPipeSystem {
                     }
 
                     // Oct 8: best sinks first - priority, then machines before storage, then the round's turn.
-                    for (var sinkIndex = 0; sinkIndex < sinks.length && budget > 0 && !offer.isEmpty(); sinkIndex++) {
+                    for (var sinkIndex = 0; sinkIndex < sinkCount && budget > 0 && !offer.isEmpty(); sinkIndex++) {
                         var d = sinks[sinkIndex];
 
                         if (d == s) {
@@ -485,7 +711,7 @@ public final class FluidPipeSystem {
                             // lifted the world block; an output-only port refuses fills) used to lose the remainder.
                             // Offer it to the remaining sinks in order; only fluid nobody will hold at all is lost,
                             // and that needs a sink that lied in its own simulation.
-                            for (var later = sinkIndex + 1; later < sinks.length && leftover > 0; later++) {
+                            for (var later = sinkIndex + 1; later < sinkCount && leftover > 0; later++) {
                                 var other = sinks[later];
 
                                 if (other == s || other == d || ports[other].storage().equals(source.storage())) {
@@ -524,31 +750,40 @@ public final class FluidPipeSystem {
             sleepTicks[s] = sleepLength[s];
         }
 
-        /** @return the accepting ends, best first: priority, then machines before storage, then the round's turn */
-        private static int[] sinkOrder(int count, int start, byte[] modes, boolean[] machines, byte[] priorities) {
-            var order = new ArrayList<Integer>(count);
+        /**
+         * Oct 13 hardening - the accepting ends, best first, written into this network's own buffer (no list, no
+         * boxing, every round): priority, then machines before storage, then the round's turn. An insertion sort keeps
+         * ends of the same priority and kind in turn order, exactly as the stable list sort did.
+         *
+         * @return how many sinks were written
+         */
+        private int sinkOrder(int count, int start, byte[] modes, boolean[] machines, byte[] priorities) {
+            var written = 0;
 
             for (var offset = 0; offset < count; offset++) {
                 var d = (start + offset) % count;
 
-                if (modes[d] == FluidPipeBlockEntity.IN || modes[d] == FluidPipeBlockEntity.BOTH) {
-                    order.add(d);
+                if (modes[d] != IN_MODE && modes[d] != BOTH_MODE) {
+                    continue;
                 }
+
+                var at = written;
+
+                while (at > 0 && ranksBelow(sinkBuffer[at - 1], d, machines, priorities)) {
+                    sinkBuffer[at] = sinkBuffer[at - 1];
+                    at--;
+                }
+
+                sinkBuffer[at] = d;
+                written++;
             }
 
-            // Stable: ends of the same priority and kind keep the rotating turn order.
-            order.sort((a, b) -> {
-                var byPriority = Byte.compare(priorities[b], priorities[a]);
-                return byPriority != 0 ? byPriority : Boolean.compare(machines[b], machines[a]);
-            });
+            return written;
+        }
 
-            var result = new int[order.size()];
-
-            for (var index = 0; index < result.length; index++) {
-                result[index] = order.get(index);
-            }
-
-            return result;
+        /** Whether end {@code a} belongs after end {@code b}: lower priority, or the same priority but storage. */
+        private static boolean ranksBelow(int a, int b, boolean[] machines, byte[] priorities) {
+            return priorities[a] < priorities[b] || priorities[a] == priorities[b] && !machines[a] && machines[b];
         }
 
         /** Keeps each port pipe's flange colour matching what the block's face does now. */

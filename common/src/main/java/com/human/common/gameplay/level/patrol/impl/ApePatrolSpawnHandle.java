@@ -26,11 +26,25 @@ public class ApePatrolSpawnHandle {
             .withSpawnPositionSelector(player -> {
                 var position = PatrolSpawner.PositionSelector.NEAR_PLAYER.select(player);
 
-                if (position == null || !player.level().getBiome(position).is(HumanBiomeTags.HAS_WY_APE_PATROLS)) {
+                if (position == null) {
                     return null;
                 }
 
-                return position;
+                if (player.level().getBiome(position).is(HumanBiomeTags.HAS_WY_APE_PATROLS)) {
+                    return position;
+                }
+
+                // [stated] Oct 13 - "the ape units should appear in xenomorph territory if avp alien is installed even
+                // if
+                // its not their usual biome". Without avp_alien no hive claim exists and this never passes.
+                if (
+                    player.level() instanceof net.minecraft.server.level.ServerLevel serverLevel
+                        && com.human.common.gameplay.entity.living.human.soldier.HiveTerritory.isHiveTerritory(serverLevel, position)
+                ) {
+                    return position;
+                }
+
+                return null;
             })
             .build(this::spawn);
         this.ticker = PatrolSpawnerTicker.builder()
@@ -48,7 +62,12 @@ public class ApePatrolSpawnHandle {
     }
 
     private void spawn(Level level, Player player, BlockPos.MutableBlockPos mutableBlockPos) {
-        var spawnedMarines = MarineSpawner.spawn(level, player, mutableBlockPos);
+        var spawnedMarines = MarineSpawner.spawn(
+            level,
+            player,
+            mutableBlockPos,
+            com.human.common.registry.init.HumanEntityTypes.WY_APE_TROOPER.get()
+        );
 
         MarineSquadLeadershipDecorator.INSTANCE.decorate(level, spawnedMarines);
 

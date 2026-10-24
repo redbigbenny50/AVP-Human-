@@ -73,6 +73,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 def localAvpAlienJar = rootProject.file("../AVP-Alien-/neoforge/build/libs/avp_alien-neoforge-${minecraft_version}-${project.avp_alien_version}.jar")
 
 dependencies {
+    // [stated] Oct 21 - Create Aeronautics ships. Compiled against Sable ONLY: not bundled, not required at runtime -
+    // the Sable hook applies only when Sable is installed. Put the jar in libs/ at the root of the avp_human project.
+    compileOnly files("${rootDir}/libs/sable-neoforge-1.21.1-2.0.6.jar")
+
     implementation "dev.architectury:architectury-neoforge:${project.architectury_version}"
     implementation "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
     implementation("com.blib:blib-neoforge-${minecraft_version}:${project.blib_version}") {

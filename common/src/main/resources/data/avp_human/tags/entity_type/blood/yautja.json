@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "avp_predator:yautja_jungle",
+      "required": false
+    }
+  ]
+}

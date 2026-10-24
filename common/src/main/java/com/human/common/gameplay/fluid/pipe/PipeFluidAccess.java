@@ -60,6 +60,19 @@ public interface PipeFluidAccess {
             return new EndpointPort(endpoint, side, pos);
         }
 
+        // Oct 17 FIX - [stated] "fluid pipe is set to extract but doesnt show" on the quarry's liquid port (the top of
+        // the back-right block; output only). That block is a PART of the terminal and has no block entity of its own,
+        // so it was only ever reached through the loader's fluid capability, as if it were another mod's block - and
+        // that path calls a face "can take out" only while there is liquid in it right now. An empty tank, which is
+        // what the quarry has until it digs into liquid, read as a face with nothing to give: the end resolved to off,
+        // so no red flange, until the first liquid arrived. It is our own tank, so it is now opened as ours: its own
+        // rule decides (out through the top, never in), whatever is in it.
+        var quarryPort = com.human.common.gameplay.quarry.QuarryTerminalBlock.liquidPort(level, pos, level.getBlockState(pos), side);
+
+        if (quarryPort != null) {
+            return new EndpointPort(quarryPort, side, pos);
+        }
+
         var foreign = Holder.get().openForeign(level, pos, side);
 
         return foreign != null ? foreign : NONE;

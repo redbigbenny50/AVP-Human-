@@ -41,6 +41,13 @@ public class HumanNeoForge {
     public static final Supplier<MapCodec<NetherBridgeLootModifier>> NETHER_BRIDGE_LOOT_MODIFIER =
         GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(NetherBridgeLootModifier.NAME, () -> NetherBridgeLootModifier.CODEC);
 
+    /** [stated] Oct 19 - spiders and cave spiders: a 20% cobweb. */
+    public static final Supplier<MapCodec<com.human.neoforge.data.loot.modifier.SpiderCobwebLootModifier>> SPIDER_COBWEB_LOOT_MODIFIER =
+        GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(
+            com.human.neoforge.data.loot.modifier.SpiderCobwebLootModifier.NAME,
+            () -> com.human.neoforge.data.loot.modifier.SpiderCobwebLootModifier.CODEC
+        );
+
     public HumanNeoForge(IEventBus modBus) {
         GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(modBus);
 
@@ -50,6 +57,9 @@ public class HumanNeoForge {
         // fine on Fabric.
         NeoForgeLatexFluid.register(modBus);
         NeoForgeLatexFluid.installFactory();
+        // [stated] Oct 17 - the three xeno acids, the same way and for the same reason.
+        com.human.neoforge.fluid.NeoForgeAcidFluid.register(modBus);
+        com.human.neoforge.fluid.NeoForgeAcidFluid.installFactory();
 
         // ⚠ No ordering constraint here, unlike the fluid factory - the bridge is consulted at interaction time, long
         // after registration. It just has to be installed at all, or the charging pad silently transfers nothing.
@@ -59,6 +69,7 @@ public class HumanNeoForge {
         // [stated] Sep 30: fluid pipes reach other mods' fluid blocks.
         com.human.neoforge.fluid.NeoForgePipeFluidAccess.install();
         com.human.neoforge.fluid.NeoForgePipeItemAccess.install();
+        com.human.neoforge.quarry.NeoForgeQuarryProtection.install();
         com.human.neoforge.fluid.NeoForgeFluidConnections.install();
         com.human.neoforge.fluid.NeoForgePortRefresh.install();
 
@@ -66,6 +77,8 @@ public class HumanNeoForge {
         modBus.addListener(com.human.neoforge.fluid.NeoForgeCanisterFluidHandler::register);
         // [stated] Sep 30: the battery pack and nuclear battery as energy items.
         modBus.addListener(com.human.neoforge.power.NeoForgeBatteryEnergy::register);
+        // Storage crates as item handlers, for hoppers and other mods.
+        modBus.addListener(com.human.neoforge.storage.NeoForgeCrateItemHandler::register);
 
         // Shift + left-click with a canister places it as a block. Fires on client and server; cancelling on the client
         // stops the mining but still sends the click, and the server-side call does the placing.

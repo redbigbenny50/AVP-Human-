@@ -82,6 +82,9 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .add(HumanItems.REGULATOR.get())
             .add(HumanItems.RESISTOR.get())
             .add(HumanItems.SERVO.get())
+            // [stated] Oct 20 - the speaker and the resonator are made at the electronics workstation too.
+            .add(HumanItems.SPEAKER.get())
+            .add(com.human.common.registry.init.HumanBlocks.RESONATOR_BLOCK.get().asItem())
             .add(HumanItems.SMART_RECEIVER.get())
             .add(HumanItems.TRANSISTOR.get())
             .add(com.human.common.registry.init.item.HumanBlockItems.DESK_TERMINAL_BLOCK.get())
@@ -428,6 +431,45 @@ public class HumanItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .addTag(HumanCommonItemTags.NUGGETS_TITANIUM)
             .addTag(HumanCommonItemTags.NUGGETS_URANIUM)
             .addTag(HumanCommonItemTags.NUGGETS_ZINC);
+
+        // Oct 21 - the composite nugget, and every metal chain in the shared chain tag (the capture chain recipe reads
+        // it).
+        var compositeNuggets = net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "nuggets/composite")
+        );
+
+        getOrCreateTagBuilder(compositeNuggets)
+            .setReplace(false)
+            .add(com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_NUGGET.get());
+
+        getOrCreateTagBuilder(CommonItemTags.NUGGETS)
+            .setReplace(false)
+            .addTag(compositeNuggets);
+
+        getOrCreateTagBuilder(
+            net.minecraft.tags.TagKey.create(
+                net.minecraft.core.registries.Registries.ITEM,
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "chains")
+            )
+        )
+            .setReplace(false)
+            .add(
+                com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN_ITEM.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN_ITEM.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN_ITEM.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN_ITEM.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN_ITEM.get()
+            );
+
+        // [stated] Oct 23 - the metal signs in vanilla's sign item tags.
+        var signItems = getOrCreateTagBuilder(net.minecraft.tags.ItemTags.SIGNS);
+        var hangingSignItems = getOrCreateTagBuilder(net.minecraft.tags.ItemTags.HANGING_SIGNS);
+
+        for (var set : com.human.common.registry.init.HumanSigns.all()) {
+            signItems.add(set.signItem().get());
+            hangingSignItems.add(set.hangingSignItem().get());
+        }
 
         getOrCreateTagBuilder(HumanCommonItemTags.NUGGETS_ALUMINUM)
             .setReplace(false)

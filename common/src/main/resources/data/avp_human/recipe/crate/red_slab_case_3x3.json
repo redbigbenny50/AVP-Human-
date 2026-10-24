@@ -1,0 +1,24 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "avp_human:plastic_blocks"
+    },
+    "B": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "#": {
+      "item": "avp_human:red_slab_case_2x2"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "A#A",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:red_slab_case_3x3"
+  }
+}

@@ -80,29 +80,94 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     /** Oct 2: the cryotube controller - its name, breakers, cryofluid buffer and hub chip all ride on the item. */
+    /**
+     * Blocks that hold items: everything the block entity carries goes onto the ONE dropped item - name, breaker ports,
+     * fluid and container contents.
+     * <p>
+     * ⚠⚠ NO applyExplosionCondition. That condition lets an explosion drop NOTHING, and for a block holding items it
+     * would destroy them: the cryotube controller's backup batteries, a drive bay's SSDs and blueprints. Oct 13 quality
+     * check - the controller used it until then.
+     * </p>
+     */
+    /**
+     * The fabricator: four blocks, one block id. ONLY the core drops, and it carries everything - name, breaker ports
+     * and all 35 slots. Without the part check, one fabricator would drop four.
+     */
+    /** Only the CORE drops the terminal: the other five blocks are part of the same machine and drop nothing. */
+    private net.minecraft.world.level.storage.loot.LootTable.Builder createQuarryTerminalTable(
+        net.minecraft.world.level.block.Block block
+    ) {
+        return net.minecraft.world.level.storage.loot.LootTable.lootTable()
+            .withPool(
+                net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                    .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                    .when(
+                        net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                            .setProperties(
+                                net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties()
+                                    .hasProperty(
+                                        com.human.common.gameplay.quarry.QuarryTerminalBlock.PART,
+                                        com.human.common.gameplay.quarry.QuarryTerminalPart.CORE
+                                    )
+                            )
+                    )
+                    .add(net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block))
+                    .when(net.minecraft.world.level.storage.loot.predicates.ExplosionCondition.survivesExplosion())
+            );
+    }
+
+    private net.minecraft.world.level.storage.loot.LootTable.Builder createFabricatorTable(
+        net.minecraft.world.level.block.Block block
+    ) {
+        return net.minecraft.world.level.storage.loot.LootTable.lootTable()
+            .withPool(
+                net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                    .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                    .when(
+                        net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                            .setProperties(
+                                net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties()
+                                    .hasProperty(
+                                        com.human.common.gameplay.fabrication.FabricatorBlock.PART,
+                                        com.human.common.gameplay.fabrication.FabricatorPart.CORE
+                                    )
+                            )
+                    )
+                    .add(
+                        net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
+                            .apply(
+                                net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                    .copyComponents(
+                                        net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
+                                    )
+                                    .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+                                    .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
+                                    .include(net.minecraft.core.component.DataComponents.CONTAINER)
+                            )
+                    )
+            );
+    }
+
     private net.minecraft.world.level.storage.loot.LootTable.Builder createCryotubeControllerTable(
         net.minecraft.world.level.block.Block block
     ) {
         return net.minecraft.world.level.storage.loot.LootTable.lootTable()
             .withPool(
-                applyExplosionCondition(
-                    block,
-                    net.minecraft.world.level.storage.loot.LootPool.lootPool()
-                        .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
-                        .add(
-                            net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
-                                .apply(
-                                    net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
-                                        .copyComponents(
-                                            net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
-                                        )
-                                        .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
-                                        .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
-                                        .include(com.human.common.registry.init.HumanDataComponents.FLUID_CONTENT.get())
-                                        .include(net.minecraft.core.component.DataComponents.CONTAINER)
-                                )
-                        )
-                )
+                net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                    .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1.0F))
+                    .add(
+                        net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(block)
+                            .apply(
+                                net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                    .copyComponents(
+                                        net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY
+                                    )
+                                    .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+                                    .include(com.human.common.registry.init.HumanDataComponents.POWER_PORTS.get())
+                                    .include(com.human.common.registry.init.HumanDataComponents.FLUID_CONTENT.get())
+                                    .include(net.minecraft.core.component.DataComponents.CONTAINER)
+                            )
+                    )
             );
     }
 
@@ -196,6 +261,17 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         add(HumanBlocks.STEEL_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
         add(HumanBlocks.WY_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
         add(HumanBlocks.USCM_CRYOTUBE_CONTROLLER.get(), this::createCryotubeControllerTable);
+        // [stated] Oct 13: a broken drive bay keeps its SSDs and blueprints - same keep-everything table.
+        add(com.human.common.registry.init.HumanFabrication.DRIVE_BAY.get(), this::createCryotubeControllerTable);
+        add(com.human.common.registry.init.HumanFabrication.WY_DRIVE_BAY.get(), this::createCryotubeControllerTable);
+        add(com.human.common.registry.init.HumanFabrication.USCM_DRIVE_BAY.get(), this::createCryotubeControllerTable);
+        add(com.human.common.registry.init.HumanFabrication.FABRICATOR.get(), this::createFabricatorTable);
+        add(com.human.common.registry.init.HumanFabrication.WY_FABRICATOR.get(), this::createFabricatorTable);
+        add(com.human.common.registry.init.HumanFabrication.USCM_FABRICATOR.get(), this::createFabricatorTable);
+        add(com.human.common.registry.init.HumanQuarry.QUARRY_TERMINAL.get(), this::createQuarryTerminalTable);
+        add(com.human.common.registry.init.HumanQuarry.WY_QUARRY_TERMINAL.get(), this::createQuarryTerminalTable);
+        add(com.human.common.registry.init.HumanQuarry.USCM_QUARRY_TERMINAL.get(), this::createQuarryTerminalTable);
+        dropSelf(com.human.common.registry.init.HumanQuarry.QUARRY_FRAME);
         dropSelf(HumanBlocks.BLUEPRINT_BLOCK);
         dropSelf(CoreBlocks.BRASS_BLOCK);
         dropSelf(HumanFerroaluminumBlocks.CHISELED_FERROALUMINUM);
@@ -249,6 +325,28 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(CoreBlocks.SILICA_GRAVEL);
         dropSelf(CoreBlocks.SILICON_BLOCK);
         dropSelf(HumanSteelBlocks.STEEL_BARS);
+
+        // Oct 21 - metal bars, chains and ladders.
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN);
+        // Oct 23 - metal signs. The wall and wall-hanging blocks drop like their standing/ceiling block (dropsLike),
+        // so only those two have tables, as with vanilla's signs.
+        for (var set : com.human.common.registry.init.HumanSigns.all()) {
+            dropSelf(set.sign());
+            dropSelf(set.hangingSign());
+        }
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.TITANIUM_BARS);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_BARS);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_BARS);
+        dropSelf(com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_BARS);
         dropSelf(HumanSteelBlocks.STEEL_BLOCK);
         dropSelf(HumanSteelBlocks.STEEL_BUTTON);
         dropSelf(HumanSteelBlocks.STEEL_CHAIN_FENCE);
@@ -454,6 +552,10 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(HumanCompositeBlocks.COMPOSITE_TRAP_DOOR);
         dropSelf(HumanCompositeBlocks.COMPOSITE_TREAD);
         dropSelf(HumanCompositeBlocks.COMPOSITE_TREAD_STAIRS);
+        // [stated] Sep 28 - every USCM block drops itself (the lockers also spill their contents, from the block).
+        com.human.common.registry.init.block.HumanUscmBlocks.ALL.forEach(block -> dropSelf(block));
+        // [stated] Oct 20 - every W-Y block drops itself (the locker also spills its contents, from the block).
+        com.human.common.registry.init.block.HumanWyBlocks.ALL.forEach(block -> dropSelf(block));
         dropSlab(HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
         dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB);
         dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB);
@@ -482,6 +584,15 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         add(HumanBlocks.ELECTRIC_PRESS, this::createNameableBlockEntityTable);
         add(HumanBlocks.ELECTRIC_HYDRATOR, this::createNameableBlockEntityTable);
         add(HumanBlocks.ELECTRIC_FREEZER, this::createNameableBlockEntityTable);
+        // [stated] Oct 17 - the vaporizer, like every machine. Its top block and the acid liquids drop nothing.
+        add(com.human.common.registry.init.HumanVaporizer.VAPORIZER, this::createNameableBlockEntityTable);
+        add(com.human.common.registry.init.HumanVaporizer.WY_VAPORIZER, this::createNameableBlockEntityTable);
+        add(com.human.common.registry.init.HumanVaporizer.USCM_VAPORIZER, this::createNameableBlockEntityTable);
+        // [stated] Oct 17 - the distributor drops itself; its slot, cards and chamber spill/empty like the other
+        // machines.
+        add(com.human.common.registry.init.HumanDistributor.DISTRIBUTOR, this::createNameableBlockEntityTable);
+        add(com.human.common.registry.init.HumanDistributor.WY_DISTRIBUTOR, this::createNameableBlockEntityTable);
+        add(com.human.common.registry.init.HumanDistributor.USCM_DISTRIBUTOR, this::createNameableBlockEntityTable);
         dropSelf(HumanBlocks.MACHINE_BLOCK);
         dropSelf(HumanBlocks.ELECTRONICS_WORKSTATION);
 
@@ -494,6 +605,9 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(HumanBlocks.USCM_FLUID_TANK);
         add(HumanBlocks.INDUSTRIAL_FURNACE, this::createNameableBlockEntityTable);
         add(HumanBlocks.INFINITE_POWER_GENERATOR, this::createNameableBlockEntityTable);
+        // [stated] Oct 20 - the creative test blocks drop themselves.
+        dropSelf(com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_BATTERY.get());
+        dropSelf(com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK.get());
         dropSelf(CoreBlocks.LATEX_BLOCK.get());
         dropSelf(CoreBlocks.KELP_BLOCK.get());
         dropSelf(CoreBlocks.LATEX_TAP.get());

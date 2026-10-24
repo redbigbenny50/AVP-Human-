@@ -5,7 +5,8 @@
     "avp_human:mid_game_loot_modifier",
     "avp_human:end_game_loot_modifier",
     "avp_human:bastion_treasure_loot_modifier",
-    "avp_human:nether_bridge_loot_modifier"
+    "avp_human:nether_bridge_loot_modifier",
+    "avp_human:spider_cobweb_loot_modifier"
   ],
   "replace": false
 }

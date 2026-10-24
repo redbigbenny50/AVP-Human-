@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/crate/yellow_slab_container"
+    },
+    "facing=south": {
+      "model": "avp_human:block/crate/yellow_slab_container"
+    },
+    "facing=east": {
+      "model": "avp_human:block/crate/yellow_slab_container"
+    },
+    "facing=west": {
+      "model": "avp_human:block/crate/yellow_slab_container"
+    }
+  }
+}

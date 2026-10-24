@@ -19,6 +19,9 @@ description   = '''${mod_description}'''
 config        = "${mod_id}.mixins.json"
 [[mixins]]
 config        = "${mod_id}.neoforge.mixins.json"
+# Create Aeronautics ships (Sable): applied only when Sable is installed - see SableMixinPlugin.
+[[mixins]]
+config        = "${mod_id}.neoforge.sable.mixins.json"
 [[dependencies.${mod_id}]]
 modId         = "neoforge"
 type          = "required"
@@ -57,4 +60,4 @@ side          = "BOTH"
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
 #[features.${mod_id}]
-#openGLVersion="[3.2,)"
+#openGLVersion="[3.2,)"

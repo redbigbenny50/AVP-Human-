@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/ladder",
+  "textures": {
+    "particle": "avp_human:block/aluminum_ladder",
+    "texture": "avp_human:block/aluminum_ladder"
+  }
+}

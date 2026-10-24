@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * <h2>FILTERS</h2> Each end has a {@link PipeFilter} (Oct 8): any number of entries - exact items or fluids, tags,
  * whole mods - an allow / block switch and a priority. With no entries everything passes, as with the machine filter.
  */
-public abstract class PipeBlockEntity extends BlockEntity {
+public abstract class PipeBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
 
     public static final byte IN = 1;
 
@@ -158,6 +158,22 @@ public abstract class PipeBlockEntity extends BlockEntity {
             case PUSH -> canIn ? IN : 0;
             default -> canIn && canOut ? BOTH : canIn ? IN : canOut ? OUT : 0;
         };
+    }
+
+    /**
+     * [stated] Oct 21 - landed from a ship rotated: every end's setting, colour override and filter turns to the face
+     * it now points at. The network itself is rebuilt from the pipes after any change, so nothing else is needed.
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (!move.rotated()) {
+            return;
+        }
+
+        move.rotateFaces(modes);
+        move.rotateFaces(overrides);
+        move.rotateFaces(filters);
+        changed();
     }
 
     private void changed() {

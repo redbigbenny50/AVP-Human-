@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/titanium"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "IRI",
+    "ICI",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:titanium_tech_case_1x1"
+  }
+}

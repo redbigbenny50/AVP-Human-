@@ -13,6 +13,8 @@ import com.human.common.registry.init.creative_mode_tab.initializer.IngredientsC
 import com.human.common.registry.init.creative_mode_tab.initializer.PowerCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.SpawnEggsCreativeModeTabInitializer;
 import com.human.common.registry.init.creative_mode_tab.initializer.ToolsAndUtilitiesCreativeModeTabInitializer;
+import com.human.common.registry.init.creative_mode_tab.initializer.UscmCreativeModeTabInitializer;
+import com.human.common.registry.init.creative_mode_tab.initializer.WyCreativeModeTabInitializer;
 import com.human.common.registry.init.item.HumanGunItems;
 import com.human.common.registry.init.item.HumanItems;
 import com.human.common.registry.init.item.HumanSpawnEggItems;
@@ -79,6 +81,20 @@ public class HumanCreativeModeTabs {
         HumanCreativeModeTabKeys.TOOLS_AND_UTILITIES_KEY,
         () -> new ItemStack(HumanItems.CANISTER.get()),
         ToolsAndUtilitiesCreativeModeTabInitializer.OUTPUT_CONSUMER
+    );
+
+    /** [stated] Sep 28 - the USCM faction tab: its license first, then every USCM block, machine and crate. */
+    public static final BLibHolder<CreativeModeTab> USCM = create(
+        HumanCreativeModeTabKeys.USCM_KEY,
+        () -> new ItemStack(com.human.common.registry.init.HumanFabrication.USCM_FACTION_LICENSE.get()),
+        UscmCreativeModeTabInitializer.OUTPUT_CONSUMER
+    );
+
+    /** The Weyland-Yutani faction tab, the same pattern: its license first, then its machines and crates. */
+    public static final BLibHolder<CreativeModeTab> WY = create(
+        HumanCreativeModeTabKeys.WY_KEY,
+        () -> new ItemStack(com.human.common.registry.init.HumanFabrication.WY_FACTION_LICENSE.get()),
+        WyCreativeModeTabInitializer.OUTPUT_CONSUMER
     );
 
     public static BLibHolder<CreativeModeTab> create(

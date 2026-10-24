@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/uscm_floor_trench"
+    },
+    "facing=east": {
+      "model": "avp_human:block/uscm_floor_trench",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "avp_human:block/uscm_floor_trench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/uscm_floor_trench",
+      "y": 270
+    }
+  }
+}

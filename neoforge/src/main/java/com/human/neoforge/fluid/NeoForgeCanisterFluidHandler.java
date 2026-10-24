@@ -65,11 +65,31 @@ public final class NeoForgeCanisterFluidHandler implements IFluidHandlerItem {
             var type : java.util.List.of(
                 com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_PRESS.get(),
                 com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_HYDRATOR.get(),
-                com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_FREEZER.get()
+                com.human.common.registry.init.HumanBlockEntityTypes.ELECTRIC_FREEZER.get(),
+                // [stated] Oct 17 - the vaporizer takes liquid in through the front of its bottom block.
+                com.human.common.registry.init.HumanVaporizer.VAPORIZER_BLOCK_ENTITY.get(),
+                // [stated] Oct 17 - the distributor takes liquid in through its TOP.
+                com.human.common.registry.init.HumanDistributor.DISTRIBUTOR_BLOCK_ENTITY.get(),
+                // ⚠ Oct 21 quality pass - the Creative Fluid Tank was never registered, so no pipe could see it.
+                com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK_BLOCK_ENTITY.get()
             )
         ) {
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type, NeoForgeFluidEndpointHandler::forSide);
         }
+
+        // Oct 15 - the quarry terminal's LIQUID port: the top of its back-row counter-clockwise block, which has no
+        // block entity of its own, so it is registered on the BLOCKS and resolved to the terminal's tank.
+        event.registerBlock(
+            Capabilities.FluidHandler.BLOCK,
+            (level, pos, state, blockEntity, side) -> {
+                var port = com.human.common.gameplay.quarry.QuarryTerminalBlock.liquidPort(level, pos, state, side);
+
+                return port == null ? null : NeoForgeFluidEndpointHandler.forSide(port, side);
+            },
+            com.human.common.registry.init.HumanQuarry.QUARRY_TERMINAL.get(),
+            com.human.common.registry.init.HumanQuarry.WY_QUARRY_TERMINAL.get(),
+            com.human.common.registry.init.HumanQuarry.USCM_QUARRY_TERMINAL.get()
+        );
     }
 
     @Override

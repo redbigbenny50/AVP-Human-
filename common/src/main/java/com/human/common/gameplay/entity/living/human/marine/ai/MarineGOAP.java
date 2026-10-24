@@ -642,7 +642,9 @@ public class MarineGOAP {
     private static boolean isHunted(Marine marine, LivingEntity livingEntity) {
         // Oct 5 - the hated tag OR any monster or boss, from any mod, minus the exclusions in MarineHuntRules.
         return com.human.common.gameplay.entity.living.human.marine.MarineHuntRules.isHuntedOnSight(livingEntity)
-            || shouldAttackLeaderTarget(marine, livingEntity);
+            || shouldAttackLeaderTarget(marine, livingEntity)
+            // [stated] Oct 13 - a soldier of a faction at war with this one is hunted on sight (none are, yet).
+            || com.human.common.gameplay.entity.living.human.soldier.HumanFactionRelations.areHostile(marine, livingEntity);
     }
 
     /**

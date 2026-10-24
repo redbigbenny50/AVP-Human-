@@ -33,6 +33,16 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.LATEX_BUCKET);
         generateStandardItem(generators, HumanItems.HONEY_BUCKET);
         generateStandardItem(generators, HumanItems.CRYOFLUID_BUCKET);
+        // [stated] Oct 17 - the chem line: the acid buckets and the gas tanks.
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.XENO_ACID_BUCKET);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.NETHER_XENO_ACID_BUCKET);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.IRRADIATED_XENO_ACID_BUCKET);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.ALUMINUM_TANK);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.CRYO_TANK);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.INFERNIUM_TANK);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.ACIDIUM_TANK);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.NETHER_ACIDIUM_TANK);
+        generateStandardItem(generators, com.human.common.registry.init.HumanChemicals.IRRADIUM_TANK);
         generateStandardItem(generators, HumanItems.CRYOGEL);
         generateStandardItem(generators, HumanItems.TITANIUM_CAPTURE_CORD);
         generateStandardItem(generators, HumanItems.HUB_UPGRADE);
@@ -122,6 +132,7 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.BLUEPRINT_M37_12_SHOTGUN);
         generateStandardItem(generators, HumanItems.BLUEPRINT_F903WE_RIFLE);
         generateStandardItem(generators, HumanItems.BLUEPRINT_FLAMETHROWER_SEVASTOPOL);
+        generateStandardItem(generators, HumanItems.BLUEPRINT_CHEM_THROWER);
         generateStandardItem(generators, HumanItems.BLUEPRINT_M41A_PULSE_RIFLE);
         generateStandardItem(generators, HumanItems.BLUEPRINT_M56_SMARTGUN);
         generateStandardItem(generators, HumanItems.BLUEPRINT_M6B_ROCKET_LAUNCHER);

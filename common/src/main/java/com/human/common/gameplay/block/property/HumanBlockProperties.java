@@ -79,9 +79,18 @@ public class HumanBlockProperties {
         .isSuffocating(Blocks::never)
         .isViewBlocking(Blocks::never);
 
+    /**
+     * ⚠ Oct 20 (tester: "redstone signal still does not travel through industrial glass"). Copying vanilla glass copies
+     * its isRedstoneConductor(never) too, so no industrial glass ever carried a signal. It now uses vanilla's OWN
+     * default rule for solid blocks: a block conducts redstone when its collision shape is a full cube. So the full
+     * blocks (clear, dyed, and the USCM / W-Y window glass that shares these properties) carry power like stone, while
+     * the stairs, slabs, walls, panes, doors and trapdoors - not full cubes - do not, exactly as stone's own stairs and
+     * slabs don't.
+     */
     private static final Supplier<BlockPropertyBuilder> INDUSTRIAL_GLASS_SUPPLIER = () -> BlockPropertyBuilder.inherit(Blocks.GLASS)
         .requiresCorrectToolForDrops()
-        .strength(5);
+        .strength(5)
+        .isRedstoneConductor((state, level, pos) -> state.isCollisionShapeFullBlock(level, pos));
 
     public static final BlockPropertyBuilder INDUSTRIAL_GLASS = INDUSTRIAL_GLASS_SUPPLIER.get();
 

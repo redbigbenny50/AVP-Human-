@@ -98,6 +98,21 @@ public class ThermoelectricGeneratorBlockEntity extends PowerNodeBlockEntity imp
 
     private PowerMode cachedMode = PowerMode.OFF;
 
+    /**
+     * ⚠ Oct 21 (tester: "put a 5th lava down and it still says 800 ... remove a lava and still says 1000"). The class
+     * comment always promised that "a neighbour change re-reads it at once", but nothing ever did: the plates were only
+     * read every {@value #SENSE_INTERVAL_TICKS} ticks, so the output (and the wiring tool's readout of it) lagged up to
+     * two seconds behind every lava block placed or removed. A neighbour change now sets this, and the very next tick
+     * re-reads the plates. (Set from the block's neighbour update, read on the tick - so the re-read never runs in the
+     * middle of another block's update.)
+     */
+    private boolean senseNow = true;
+
+    /** A block next to it changed - re-read the plates on the next tick. */
+    public void neighbourChanged() {
+        senseNow = true;
+    }
+
     public ThermoelectricGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(HumanBlockEntityTypes.THERMOELECTRIC_GENERATOR.get(), pos, state);
     }
@@ -106,9 +121,11 @@ public class ThermoelectricGeneratorBlockEntity extends PowerNodeBlockEntity imp
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         super.serverTick(level, blockPos, blockState);
 
-        if ((level.getGameTime() + blockPos.hashCode()) % SENSE_INTERVAL_TICKS != 0) {
+        if (!senseNow && (level.getGameTime() + blockPos.hashCode()) % SENSE_INTERVAL_TICKS != 0) {
             return;
         }
+
+        senseNow = false;
 
         var hotPlates = countHotPlates(level, blockPos);
         var heat = hotPlates * HEAT_PER_PLATE;

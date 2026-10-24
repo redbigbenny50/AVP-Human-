@@ -99,6 +99,20 @@ public abstract class PowerConsumerBlockEntity extends PowerNodeBlockEntity impl
     // Fuse panel
     // ------------------------------------------------------------------------------------------------------------
 
+    /**
+     * [stated] Oct 21 - its wireless link: if the panel moved with it, follow the panel; if the panel stayed behind,
+     * the link is gone (a ship and the ground cannot share a panel).
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        super.onShipMove(move);
+
+        if (fusePanel != null) {
+            fusePanel = move.remap(fusePanel);
+            setChanged();
+        }
+    }
+
     public @org.jetbrains.annotations.Nullable BlockPos getFusePanel() {
         return fusePanel;
     }

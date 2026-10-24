@@ -143,4 +143,20 @@ public class LootTableModifiers {
                 .add(LootItem.lootTableItem(HumanItems.BLUEPRINT_FLAMETHROWER_SEVASTOPOL.get()).setWeight(33))
         )
         .build();
+
+    /**
+     * [stated] Oct 19 - "Killing spiders and poison spiders has a 20% chance to drop a cob web". Spider and cave
+     * spider: one cobweb, one time in five, alongside their usual string and eyes.
+     */
+    public static final BLibLootModifier SPIDER_COBWEB_LOOT_TABLE_MODIFIER = BLibLootModifier.builder()
+        .addInjectionTargets(
+            net.minecraft.world.entity.EntityType.SPIDER.getDefaultLootTable(),
+            net.minecraft.world.entity.EntityType.CAVE_SPIDER.getDefaultLootTable()
+        )
+        .addPool(
+            LootPool.lootPool()
+                .add(EmptyLootItem.emptyItem().setWeight(80))
+                .add(LootItem.lootTableItem(net.minecraft.world.item.Items.COBWEB).setWeight(20))
+        )
+        .build();
 }

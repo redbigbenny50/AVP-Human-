@@ -256,6 +256,19 @@ public class GunItem extends Item {
         // Component.literal(fireMode.identifier() + " (" + fireMode.ammunitionData().consumedAmmunition() + " / Shot)")
         // );
 
+        // The chem thrower has no single ammunition item: show the vapor that is loaded instead.
+        if (gunConfig == com.human.common.gameplay.item.gun.GunData.CHEM_THROWER) {
+            var vapor = com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.onGun(itemStack);
+
+            TooltipUtil.appendLabel(
+                list,
+                "tooltip.avp.ammunition_type",
+                vapor == null
+                    ? Component.translatable("tooltip.avp_human.chem_thrower.unloaded")
+                    : Component.translatable(vapor.tank().getDescriptionId())
+            );
+        }
+
         if (itemSupplier != null) {
             var item = itemSupplier.get();
 

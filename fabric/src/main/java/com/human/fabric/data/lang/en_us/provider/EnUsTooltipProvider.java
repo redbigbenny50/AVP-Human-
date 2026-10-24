@@ -13,7 +13,21 @@ public class EnUsTooltipProvider {
         // Power breakers. ⚠ The direction is a separate key so the message reads naturally in languages that inflect
         // it - concatenating "Port closed: " + "north" would not translate.
         builder.add("message.avp_human.port_closed", "%s port closed");
+        // [stated] Oct 20 - the creative test blocks.
+        builder.add("tooltip.avp_human.creative_only", "Creative only - cannot be crafted");
+        builder.add("message.avp_human.creative_fluid_tank.set", "Creative Fluid Tank set to %s");
+        builder.add("message.avp_human.creative_fluid_tank.cleared", "Creative Fluid Tank cleared");
+        builder.add("message.avp_human.soldier.contract_only", "Weyland-Yutani personnel only work under a company contract.");
         builder.add("message.avp_human.port_opened", "%s port opened");
+        // Oct 21 - the resonator's right-click status.
+        builder.add("message.avp_human.resonator.active", "Resonator running - field reaches %s blocks (sneak + right-click to show it)");
+        builder.add("message.avp_human.resonator.no_alien", "Resonator: no effect - AVP Alien is not installed");
+        builder.add("message.avp_human.resonator.panel_unpowered", "Resonator: no power from its fuse panel (needs %s FE/t)");
+        builder.add("message.avp_human.resonator.nothing_below", "Resonator: no power - feed it from UNDERNEATH (needs %s FE/t)");
+        builder.add(
+            "message.avp_human.resonator.underpowered",
+            "Resonator: not enough power - needs %s FE/t from below (check the breaker on its underside)"
+        );
         builder.add("message.avp_human.direction.north", "North");
         builder.add("message.avp_human.direction.south", "South");
         builder.add("message.avp_human.direction.east", "East");
@@ -147,6 +161,8 @@ public class EnUsTooltipProvider {
         builder.add("message.avp_human.cryo.too_big", "The specimen does not fit in this cryotank");
         builder.add("message.avp_human.cryo.cannot_freeze", "The specimen could not be frozen");
         builder.add("message.avp_human.cryo.frozen", "Specimen frozen");
+        builder.add("message.avp_human.cryo.extracted", "Specimen pulled out - frozen solid until it thaws");
+        builder.add("message.avp_human.cryo.extract_failed", "There is no room to pull the specimen out");
         builder.add("message.avp_human.cryo.refused", "That cannot be frozen in a cryotank");
         builder.add("message.avp_human.cryo.occupied_resize", "Release the specimen before changing this cryotank's size");
         builder.add("gui.avp_human.cryo.unknown", "Unknown specimen");
@@ -156,6 +172,17 @@ public class EnUsTooltipProvider {
         // The universal canister.
         builder.add("item.avp_human.canister.filled", "%s Canister");
         builder.add("tooltip.avp_human.canister.amount", "%s / %s buckets");
+        // [stated] Oct 23 - the Weyland-Yutani music disc.
+        builder.add("item.avp_human.wy_music_disc_1", "Music Disc");
+        builder.add("item.avp_human.wy_music_disc_1_fragment", "Disc Fragment");
+        builder.add("item.avp_human.wy_music_disc_1_fragment.desc", "Music Disc - Building Better Worlds");
+        builder.add("jukebox_song.avp_human.building_better_worlds", "Rotch Gwylt - Building Better Worlds");
+        builder.add("subtitles.jukebox_sounds.building_better_worlds", "Building Better Worlds plays");
+        // [stated] Oct 23 - how to use a canister, one line per click.
+        builder.add("tooltip.avp_human.canister.use.fill", "Right-click a fluid: fill it");
+        builder.add("tooltip.avp_human.canister.use.tank", "Right-click a tank: pour in or draw out");
+        builder.add("tooltip.avp_human.canister.use.pour", "Shift + right-click: pour it out");
+        builder.add("tooltip.avp_human.canister.use.place", "Shift + left-click: place as a block");
         builder.add("message.avp_human.canister.empty", "Empty");
 
         // Fluid tanks.
@@ -252,9 +279,9 @@ public class EnUsTooltipProvider {
         builder.add("gui.avp_human.pipe_end.empty.fluid", "Click with a filled bucket or canister, or pick a fluid from the search");
         builder.add("gui.avp_human.pipe_end.clear", "Click with an empty hand to clear");
         builder.add("gui.avp_human.pipe_end.mode.auto.desc", "Whatever the block's face does");
-        builder.add("gui.avp_human.pipe_end.mode.pull.desc", "Take from this block");
-        builder.add("gui.avp_human.pipe_end.mode.push.desc", "Put into this block");
-        builder.add("gui.avp_human.pipe_end.mode.both.desc", "A buffer: takes from pulling ends, gives to pushing ends");
+        builder.add("gui.avp_human.pipe_end.mode.pull.desc", "Output: the pipe takes out of this block (connect to its output)");
+        builder.add("gui.avp_human.pipe_end.mode.push.desc", "Input: the pipe puts into this block (connect to its input)");
+        builder.add("gui.avp_human.pipe_end.mode.both.desc", "A buffer: fills from Output ends, empties into Input ends");
         builder.add("gui.avp_human.pipe_end.mode.off.desc", "This end does nothing");
         // Oct 8: the filter page.
         builder.add("gui.avp_human.pipe_end.search.hint", "Item, #tag or @mod");
@@ -274,7 +301,8 @@ public class EnUsTooltipProvider {
         builder.add("gui.avp_human.pipe_end.clear_all", "Clear");
         builder.add("gui.avp_human.pipe_end.done", "Done");
         builder.add("gui.avp_human.pipe_end.lines", "%s lines");
-        builder.add("gui.avp_human.pipe_end.empty_filter", "No lines: everything passes");
+        // Oct 23 - shortened: the filter editor draws it beside the Done button, with 102 px of room (it was 139 px).
+        builder.add("gui.avp_human.pipe_end.empty_filter", "No lines: all pass");
         builder.add("gui.avp_human.pipe_end.any", "Any");
         builder.add("gui.avp_human.pipe_end.not_enchanted.short", "Plain");
         builder.add(
@@ -293,8 +321,12 @@ public class EnUsTooltipProvider {
         builder.add("gui.avp_human.pipe_end.hot.food", "Food");
         builder.add("message.avp_human.pipe_end", "%s end: %s");
         builder.add("message.avp_human.pipe_end.auto", "Auto");
-        builder.add("message.avp_human.pipe_end.pull", "Pull");
-        builder.add("message.avp_human.pipe_end.push", "Push");
+        // [stated] Oct 14 - named from the block's side: Extract takes out of the block, Input puts into it. The ids
+        // stay "pull" / "push", so saved pipes and every flange setting in existing worlds are unchanged.
+        // [stated] Oct 23 - "change the name extract back to output so it fits": the pull mode is Output everywhere -
+        // the end's button, its tooltip and the chat message - and fits its 31 px button.
+        builder.add("message.avp_human.pipe_end.pull", "Output");
+        builder.add("message.avp_human.pipe_end.push", "Input");
         builder.add("message.avp_human.pipe_end.both", "Both");
         builder.add("message.avp_human.pipe_end.off", "Off");
         builder.add("gui.avp_human.cable_ports", "Cable Ports");
@@ -323,11 +355,14 @@ public class EnUsTooltipProvider {
         builder.add("gui.avp_human.sentry.no_power", "No power");
         builder.add("gui.avp_human.sentry.no_chest", "No ammo chest nearby");
         builder.add("gui.avp_human.sentry.no_bullets", "Out of ammo");
+        // Oct 23 - the turret screen's own line; the tooltip's "Overheated - cooling down" is wider than its display.
+        builder.add("gui.avp_human.sentry.overheated", "Overheated: cooling");
         builder.add("gui.avp_human.sentry.wired", "Wired to a fuse panel");
         builder.add("gui.avp_human.sentry.battery", "Battery");
         builder.add("tooltip.avp_human.hub_upgrade", "In a machine: lets it be wired to a fuse panel - no cable needed, only range");
         builder.add("gui.avp_human.fuse_panel.devices", "%s / %s devices");
-        builder.add("gui.avp_human.fuse_panel.empty", "Bind devices with the wiring tool");
+        // Oct 23 - shortened to fit the 144 px device list ("Bind devices with the wiring tool" was 159 px).
+        builder.add("gui.avp_human.fuse_panel.empty", "Bind with the wiring tool");
         builder.add("gui.avp_human.fuse_panel.unknown", "Unknown device");
         builder.add("gui.avp_human.fuse_panel.unbind", "Unbind");
         builder.add("gui.avp_human.fuse_panel.out_of_range", "Out of range - not powered");
@@ -359,34 +394,57 @@ public class EnUsTooltipProvider {
         builder.add("gui.avp_human.machine.port.face.right", "Right");
         builder.add("gui.avp_human.machine.port.face.top", "Top");
         builder.add("gui.avp_human.machine.port.face.bottom", "Bottom");
-        builder.add("message.avp_human.fuse.selected", "Fuse panel selected - %s / %s devices");
+        builder.add(
+            "message.avp_human.fuse.selected",
+            "Fuse panel selected (%s/%s devices) - please right-click the device you wish to connect"
+        );
         // Oct 7 - wiring tool tooltip, and the desk terminal's power messages.
         builder.add("tooltip.avp_human.wiring_tool.selected", "Selected fuse panel: %s, %s, %s");
         builder.add("tooltip.avp_human.wiring_tool.readout", "Right-click a power block or cable: show its power and grid");
-        builder.add("tooltip.avp_human.wiring_tool.select_panel", "Right-click a fuse panel: select it");
-        builder.add("tooltip.avp_human.wiring_tool.bind", "Then right-click a device: wire it to that panel (again to unwire)");
+        builder.add(
+            "tooltip.avp_human.wiring_tool.select_panel",
+            "Right-click a fuse panel, then a device: connect them (again to disconnect)"
+        );
+        builder.add("tooltip.avp_human.wiring_tool.bind", "Or right-click the device first, then the fuse panel");
         builder.add("tooltip.avp_human.wiring_tool.toggle", "Sneak + right-click: switch a machine on/off, or open/close a power port");
-        builder.add("tooltip.avp_human.wiring_tool.clear", "Sneak + right-click the air: clear the selected panel");
+        builder.add("tooltip.avp_human.wiring_tool.clear", "Sneak + right-click the air: clear the selection");
         builder.add("message.avp_human.terminal.booting", "Terminal starting up...");
         builder.add("message.avp_human.terminal.not_wired", "No power - wire it to a fuse panel, or place it on a redstone generator");
         builder.add("message.avp_human.terminal.no_power", "No power - its power source has no power");
-        builder.add("message.avp_human.fuse.cleared", "Fuse panel selection cleared");
-        builder.add("message.avp_human.fuse.bound", "Bound to the fuse panel - %s / %s devices");
-        builder.add("message.avp_human.fuse.unbound", "Unbound from the fuse panel - %s / %s devices");
-        builder.add("message.avp_human.fuse.needs_hub_chip", "This machine needs a hub chip first");
-        builder.add("message.avp_human.fuse.cannot_bind", "That cannot be wired to a fuse panel");
-        builder.add("message.avp_human.fuse.out_of_range", "Too far from the fuse panel - %s blocks at most");
-        builder.add("message.avp_human.fuse.full", "The fuse panel is full - %s devices");
-        builder.add("message.avp_human.fuse.other_dimension", "The selected fuse panel is in another dimension");
+        builder.add("message.avp_human.fuse.cleared", "Wiring selection cleared");
+        builder.add("message.avp_human.fuse.bound", "Connection successful (%s/%s devices)");
+        builder.add("message.avp_human.fuse.unbound", "Disconnected from the fuse panel (%s/%s devices)");
+        builder.add("message.avp_human.fuse.needs_hub_chip", "Connection failed: this machine needs a hub chip first");
+        builder.add("message.avp_human.fuse.cannot_bind", "Connection failed: that cannot be wired to a fuse panel");
+        builder.add("message.avp_human.fuse.out_of_range", "Connection failed: out of range - %s blocks away, the fuse panel reaches %s");
+        builder.add("message.avp_human.fuse.full", "Connection failed: the fuse panel is full (%s devices)");
+        builder.add("message.avp_human.fuse.other_dimension", "Connection failed: the selected fuse panel is in another dimension");
         builder.add("message.avp_human.fuse.gone", "The selected fuse panel is gone - select one again");
+        // [stated] Oct 14 - wiring feedback: device-first prompts, the no-power warning, the device-side failures.
+        builder.add(
+            "message.avp_human.fuse.device_selected",
+            "Device selected - please right-click the fuse panel you wish to connect it to"
+        );
+        builder.add(
+            "message.avp_human.fuse.sentry_selected",
+            "Turret selected - please right-click the fuse panel you wish to connect it to"
+        );
+        builder.add(
+            "message.avp_human.fuse.bound_no_power",
+            "Connection successful, but the fuse panel has no power - run a powered cable into its back (%s/%s devices)"
+        );
+        builder.add("message.avp_human.fuse.device_other_dimension", "Connection failed: the selected device is in another dimension");
+        builder.add("message.avp_human.fuse.device_gone", "The selected device is gone - select it again");
+        builder.add("tooltip.avp_human.wiring_tool.selected_device", "Selected device: %s, %s, %s");
+        builder.add("tooltip.avp_human.wiring_tool.selected_sentry", "Selected device: a sentry turret");
         builder.add("tooltip.avp_human.battery.charge", "Charge: %s / %s FE");
         builder.add("tooltip.avp_human.battery.rechargeable", "Rechargeable");
         builder.add("tooltip.avp_human.battery.single_use", "Not rechargeable - used up when drained");
-        builder.add("gui.avp_human.workstation.storage.rows", "Storage - rows %s-%s of %s");
-        builder.add("gui.avp_human.workstation.pick", "Pick what to make");
-        builder.add("gui.avp_human.workstation.missing", "Missing materials");
-        builder.add("gui.avp_human.workstation.full", "Storage too full");
-        builder.add("gui.avp_human.workstation.ready", "Ready - take it");
+        builder.add("gui.avp_human.workstation.storage.rows", "STORAGE  ROWS %s-%s OF %s");
+        builder.add("gui.avp_human.workstation.pick", "PICK WHAT TO MAKE.");
+        builder.add("gui.avp_human.workstation.missing", "MISSING MATERIALS.");
+        builder.add("gui.avp_human.workstation.full", "STORAGE TOO FULL.");
+        builder.add("gui.avp_human.workstation.ready", "READY. TAKE IT.");
         builder.add("gui.avp_human.workstation.material.uses", "Needs %s in all");
         builder.add("gui.avp_human.workstation.material.missing", "%s short - not enough in storage");
         builder.add("gui.avp_human.machine.keep_items", "Item Output");

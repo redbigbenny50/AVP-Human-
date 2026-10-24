@@ -26,6 +26,8 @@ public class PowerCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.AEROKINETIC_GENERATOR);
         CreativeModeTabUtil.accept(output, HumanBlocks.HYDROELECTRIC_GENERATOR);
         CreativeModeTabUtil.accept(output, HumanBlocks.THERMOELECTRIC_GENERATOR);
+        // [stated] Oct 20 - creative blocks at the end of their own sections.
+        CreativeModeTabUtil.accept(output, HumanBlocks.INFINITE_POWER_GENERATOR);
 
         // Distribution and storage
         CreativeModeTabUtil.accept(output, HumanBlocks.CABLE);
@@ -33,10 +35,9 @@ public class PowerCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.CRYOTANK);
         CreativeModeTabUtil.accept(output, HumanBlocks.CRYOTUBE_CONTROLLER);
         CreativeModeTabUtil.accept(output, HumanBlocks.STEEL_CRYOTUBE_CONTROLLER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.WY_CRYOTUBE_CONTROLLER);
-        CreativeModeTabUtil.accept(output, HumanBlocks.USCM_CRYOTUBE_CONTROLLER);
         CreativeModeTabUtil.accept(output, HumanBlocks.BATTERY);
         CreativeModeTabUtil.accept(output, HumanBlocks.CHARGING_HUB);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_BATTERY);
         CreativeModeTabUtil.accept(output, HumanItems.WIRING_TOOL);
         CreativeModeTabUtil.accept(output, HumanItems.CAPACITY_UPGRADE);
         CreativeModeTabUtil.accept(output, HumanItems.TRANSFER_UPGRADE);
@@ -78,12 +79,19 @@ public class PowerCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.ELECTRIC_HYDRATOR);
         CreativeModeTabUtil.accept(output, HumanBlocks.ELECTRIC_FREEZER);
         CreativeModeTabUtil.accept(output, HumanBlocks.ELECTRONICS_WORKSTATION);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanFabrication.DRIVE_BAY);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanFabrication.FABRICATOR);
+        // [stated] Oct 17 - the vaporizer. Its W-Y and USCM editions (and every other faction machine) live in their
+        // faction tabs since Sep 28.
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanVaporizer.VAPORIZER);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanDistributor.DISTRIBUTOR);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanQuarry.QUARRY_TERMINAL);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanQuarry.QUARRY_FRAME);
         CreativeModeTabUtil.accept(output, HumanBlocks.STEEL_FLUID_TANK);
         CreativeModeTabUtil.accept(output, HumanBlocks.FERROALUMINUM_FLUID_TANK);
         CreativeModeTabUtil.accept(output, HumanBlocks.ALUMINUM_FLUID_TANK);
         CreativeModeTabUtil.accept(output, HumanBlocks.TITANIUM_FLUID_TANK);
-        CreativeModeTabUtil.accept(output, HumanBlocks.WY_FLUID_TANK);
-        CreativeModeTabUtil.accept(output, HumanBlocks.USCM_FLUID_TANK);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK);
 
         // Latex production - the rubber for cable insulation starts here
         CreativeModeTabUtil.accept(output, CoreBlocks.LATEX_TAP);

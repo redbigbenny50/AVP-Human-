@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "avp_human:wy_spec_ops_commando",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:attack_damage",
+      "operation": "ADDITIVE",
+      "value": 1.0
+    },
+    {
+      "id": "avp_human:intelligence",
+      "operation": "ADDITIVE",
+      "value": 30.0
+    }
+  ]
+}

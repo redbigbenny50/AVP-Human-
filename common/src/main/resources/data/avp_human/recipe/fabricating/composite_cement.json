@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:ingots/composite"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:green_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:composite_cement"
+  }
+}

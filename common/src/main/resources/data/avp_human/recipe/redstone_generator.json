@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "SCS",
+    "BRB",
+    "SIS"
+  ],
+  "key": {
+    "S": { "tag": "avp_human:plastic_blocks" },
+    "R": { "item": "avp_human:redstone_crystal" },
+    "B": { "item": "avp_human:neodymium_magnet" },
+    "C": { "item": "avp_human:integrated_circuit" },
+    "I": { "item": "minecraft:iron_block" }
+  },
+  "result": {
+    "id": "avp_human:redstone_generator",
+    "count": 1
+  }
+}

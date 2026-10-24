@@ -41,19 +41,19 @@ public final class CaptureCordRopeRenderer {
 
     /** Called with the pose stack at the held entity's render origin, as vanilla's own {@code renderLeash} is. */
     public static void render(Entity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffers, Entity holder) {
-        // Vanilla's lead anchor, verbatim.
-        var bodyAngle = (double) (entity.getPreciseBodyRotation(partialTick) * (float) (Math.PI / 180.0)) + (Math.PI / 2);
-        var offset = entity.getLeashOffset(partialTick);
-        var dx = Math.cos(bodyAngle) * offset.z + Math.sin(bodyAngle) * offset.x;
-        var dz = Math.sin(bodyAngle) * offset.z - Math.cos(bodyAngle) * offset.x;
-
+        // Oct 10 - ATTACH TO THE MIDDLE OF THE BODY. [stated] "the capture cord it doesnt center on the mob it seems to
+        // attach to their head? we want it to kinda attach to the center of the mob like leads and the chain do".
+        // This used vanilla's lead anchor (getLeashOffset), which sits near EYE height and a little forward of the
+        // body - so on most mobs the cord met them at the head. Same point avp_alien's capture chain uses: 60% of the
+        // hitbox height on the centre line (just above the middle, where a harness would sit), so the cord and the
+        // chain meet a mob at the same place. No yaw term is needed once the point is on the centre line.
         var entityPos = new Vec3(
             Mth.lerp(partialTick, entity.xo, entity.getX()),
             Mth.lerp(partialTick, entity.yo, entity.getY()),
             Mth.lerp(partialTick, entity.zo, entity.getZ())
         );
 
-        var start = new Vec3(dx, offset.y, dz);
+        var start = new Vec3(0.0, entity.getBbHeight() * 0.6, 0.0);
         var end = holder.getRopeHoldPosition(partialTick).subtract(entityPos);
         var light = LevelRenderer.getLightColor(entity.level(), entity.blockPosition());
 

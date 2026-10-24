@@ -60,6 +60,7 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         addCompositeBlocks();
         addTitaniumBlocks();
         addClimbableBlocks();
+        addSignBlocks();
         addMineableWithAxeBlocks();
         addMineableWithHoeBlocks();
         addMineableWithPickaxeBlocks();
@@ -192,12 +193,18 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 HumanBlocks.ELECTRIC_PRESS.get(),
                 HumanBlocks.ELECTRIC_HYDRATOR.get(),
                 HumanBlocks.ELECTRIC_FREEZER.get(),
+                // [stated] Oct 17 - the distributor, the same family as the freezer.
+                com.human.common.registry.init.HumanDistributor.DISTRIBUTOR.get(),
+                com.human.common.registry.init.HumanDistributor.WY_DISTRIBUTOR.get(),
+                com.human.common.registry.init.HumanDistributor.USCM_DISTRIBUTOR.get(),
                 HumanBlocks.ELECTRONICS_WORKSTATION.get(),
                 // Faster with a pickaxe; deliberately NOT in needs_*_tool - see CanisterBlock.
                 CoreBlocks.DEEPSLATE_TITANIUM_ORE.get(),
                 HumanBlocks.DESK_TERMINAL_BLOCK.get(),
                 HumanBlocks.INDUSTRIAL_FURNACE.get(),
                 HumanBlocks.INFINITE_POWER_GENERATOR.get(),
+                com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_BATTERY.get(),
+                com.human.common.registry.init.HumanCreativeBlocks.CREATIVE_FLUID_TANK.get(),
                 HumanBlocks.LEAD_CHEST.get(),
                 HumanBlocks.NUKE_BLOCK.get(),
                 CoreBlocks.RAW_TITANIUM_BLOCK.get(),
@@ -236,6 +243,33 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     private void addMineableWithPickaxeBlocks() {
+        // Oct 13 quality check: drive bays and every storage crate mine at pickaxe speed. Neither needs a tool to drop
+        // -
+        // this only stops a pickaxe being as slow as a bare hand on them.
+        var storagePickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
+
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.DRIVE_BAY.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.WY_DRIVE_BAY.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.USCM_DRIVE_BAY.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.FABRICATOR.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.WY_FABRICATOR.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanFabrication.USCM_FABRICATOR.get());
+        // [stated] Oct 17 - the vaporizer, both of its blocks (breaking the top breaks the machine).
+        storagePickaxe.add(com.human.common.registry.init.HumanVaporizer.VAPORIZER.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanVaporizer.WY_VAPORIZER.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanVaporizer.USCM_VAPORIZER.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanVaporizer.VAPORIZER_TOP.get());
+        // The quarry terminals and frame mine at pickaxe speed; like the fabricator, no tool is needed to drop them.
+        storagePickaxe.add(com.human.common.registry.init.HumanQuarry.QUARRY_TERMINAL.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanQuarry.WY_QUARRY_TERMINAL.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanQuarry.USCM_QUARRY_TERMINAL.get());
+        storagePickaxe.add(com.human.common.registry.init.HumanQuarry.QUARRY_FRAME.get());
+        com.human.common.registry.init.HumanCrates.BLOCK_BY_TYPE.values().forEach(crate -> storagePickaxe.add(crate.get()));
+        // [stated] Sep 28 - the USCM base set mines with a pickaxe.
+        com.human.common.registry.init.block.HumanUscmBlocks.ALL.forEach(block -> storagePickaxe.add(block.get()));
+        // [stated] Oct 20 - the W-Y building set mines with a pickaxe.
+        com.human.common.registry.init.block.HumanWyBlocks.ALL.forEach(block -> storagePickaxe.add(block.get()));
+
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
             .addTag(HumanBlockTags.CONCRETE)
             .addTag(HumanBlockTags.FERROALUMINUM)
@@ -288,6 +322,10 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 HumanBlocks.ELECTRIC_PRESS.get(),
                 HumanBlocks.ELECTRIC_HYDRATOR.get(),
                 HumanBlocks.ELECTRIC_FREEZER.get(),
+                // [stated] Oct 17 - the distributor, the same family as the freezer.
+                com.human.common.registry.init.HumanDistributor.DISTRIBUTOR.get(),
+                com.human.common.registry.init.HumanDistributor.WY_DISTRIBUTOR.get(),
+                com.human.common.registry.init.HumanDistributor.USCM_DISTRIBUTOR.get(),
                 HumanBlocks.ELECTRONICS_WORKSTATION.get(),
                 HumanBlocks.HYDROELECTRIC_GENERATOR.get(),
                 HumanBlocks.SOLAR_PANEL.get(),
@@ -331,7 +369,71 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             .add(CoreBlocks.KELP_BLOCK.get());
     }
 
+    /**
+     * [stated] Oct 23 - the metal signs join vanilla's four sign tags (which roll up into all_signs and
+     * all_hanging_signs, read by vanilla's own sign handling and by other mods) and are mined with a pickaxe.
+     */
+    private void addSignBlocks() {
+        var standing = getOrCreateTagBuilder(BlockTags.STANDING_SIGNS);
+        var wall = getOrCreateTagBuilder(BlockTags.WALL_SIGNS);
+        var ceiling = getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS);
+        var wallHanging = getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS);
+        var pickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
+
+        for (var set : com.human.common.registry.init.HumanSigns.all()) {
+            standing.add(set.sign().get());
+            wall.add(set.wallSign().get());
+            ceiling.add(set.hangingSign().get());
+            wallHanging.add(set.wallHangingSign().get());
+            set.blocks().forEach(block -> pickaxe.add(block.get()));
+        }
+    }
+
     private void addClimbableBlocks() {
+        // Oct 21 - the metal ladders climb like any ladder. They are also mined with a pickaxe, like the rest of the
+        // metal bars and chains; chains also join the shared chain tag other mods read.
+        getOrCreateTagBuilder(BlockTags.CLIMBABLE)
+            .add(
+                com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER.get()
+            );
+
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+            .add(
+                com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.STEEL_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_LADDER.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_BARS.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_BARS.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_BARS.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_BARS.get()
+            );
+
+        getOrCreateTagBuilder(
+            net.minecraft.tags.TagKey.create(
+                net.minecraft.core.registries.Registries.BLOCK,
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "chains")
+            )
+        )
+            .setReplace(false)
+            .add(
+                com.human.common.registry.init.HumanMetalFixtures.STEEL_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.TITANIUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.FERROALUMINUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.ALUMINUM_CHAIN.get(),
+                com.human.common.registry.init.HumanMetalFixtures.COMPOSITE_CHAIN.get()
+            );
+
         getOrCreateTagBuilder(BlockTags.CLIMBABLE)
             .add(
                 HumanFerroaluminumBlocks.FERROALUMINUM_CHAIN_FENCE.get(),
@@ -735,14 +837,21 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
 
-        getOrCreateTagBuilder(foreignBlockTag("gigeresque", "acid_resistant"))
+        var gigeresqueAcidResistant = getOrCreateTagBuilder(foreignBlockTag("gigeresque", "acid_resistant"))
             .addTag(HumanBlockTags.COMPOSITE)
             .addTag(HumanBlockTags.INDUSTRIAL_GLASS)
             .addTag(HumanBlockTags.PLASTIC);
 
         // [stated] Oct 3: composite stands up to xenomorph acid three times longer than steel.
-        getOrCreateTagBuilder(HumanBlockTags.ACID_RESISTANT_3X)
+        var acidResistant3x = getOrCreateTagBuilder(HumanBlockTags.ACID_RESISTANT_3X)
             .addTag(HumanBlockTags.COMPOSITE);
+
+        // [stated] Sep 28: the USCM base set is built of composite, so it resists acid exactly like the composite
+        // blocks.
+        com.human.common.registry.init.block.HumanUscmBlocks.ALL.forEach(block -> {
+            acidResistant3x.add(block.get());
+            gigeresqueAcidResistant.add(block.get());
+        });
     }
 
     /**

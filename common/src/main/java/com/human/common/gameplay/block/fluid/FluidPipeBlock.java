@@ -56,6 +56,16 @@ public class FluidPipeBlock extends PipeBlock {
     }
 
     @Override
+    protected java.util.List<net.minecraft.network.chat.Component> diagnose(ServerLevel level, BlockPos pos) {
+        return FluidPipeSystem.get(level).diagnose(level, pos);
+    }
+
+    @Override
+    protected String cargo() {
+        return "fluid";
+    }
+
+    @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }

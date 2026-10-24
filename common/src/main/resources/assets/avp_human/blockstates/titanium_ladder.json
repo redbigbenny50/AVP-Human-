@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "avp_human:block/titanium_ladder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "avp_human:block/titanium_ladder"
+    },
+    "facing=south": {
+      "model": "avp_human:block/titanium_ladder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/titanium_ladder",
+      "y": 270
+    }
+  }
+}

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * frozen specimen costs the server nothing per tick. The client gets a copy only to draw it.
  * <h2>Nothing here ticks</h2> The controller drives the thaw; a tank only stores.
  */
-public class CryotankBlockEntity extends BlockEntity {
+public class CryotankBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
 
     private static final String NBT_MASTER = "master";
 
@@ -100,6 +100,34 @@ public class CryotankBlockEntity extends BlockEntity {
 
     public boolean isMaster() {
         return getMasterPos().equals(worldPosition);
+    }
+
+    /**
+     * [stated] Oct 21 - moved with a ship. Its master moved with it (the whole tank goes), so it follows; the tube
+     * controller that owns it follows if it came too, or lets go if it stayed behind.
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (master != null) {
+            master = move.remap(master);
+        }
+
+        if (owner != null) {
+            owner = move.remap(owner);
+        }
+
+        setChanged();
+    }
+
+    /**
+     * After the whole batch: the master re-forms its tank from the blocks as they now stand - the specimen is carried
+     * over by the re-form, and a tank that landed turned gets its master back on the corner the layout expects.
+     */
+    @Override
+    public void afterShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        if (isMaster()) {
+            CryotankFormation.reform(move.level(), worldPosition);
+        }
     }
 
     public @Nullable BlockPos getOwner() {

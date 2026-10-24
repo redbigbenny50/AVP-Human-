@@ -66,7 +66,11 @@ public class HumanBlocks {
         () -> new ChargingHubBlock(HumanBlockProperties.STEEL.build().noOcclusion())
     );
 
-    public static final BLibHolder<Block> BLUEPRINT_BLOCK = create("blueprint_block", HumanBlockProperties.STEEL);
+    /** [stated] Oct 13: the blueprint table - also the commissary villager's job site. Unpowered. */
+    public static final BLibHolder<Block> BLUEPRINT_BLOCK = create(
+        "blueprint_block",
+        () -> new com.human.common.gameplay.fabrication.BlueprintTableBlock(HumanBlockProperties.STEEL.build())
+    );
 
     /**
      * [stated] Oct 1: the cryoconduit - connection only, like the power cable, from a cryotube controller to its

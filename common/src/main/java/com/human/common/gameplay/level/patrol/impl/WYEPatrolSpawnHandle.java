@@ -48,7 +48,12 @@ public class WYEPatrolSpawnHandle {
     }
 
     private void spawn(Level level, Player player, BlockPos.MutableBlockPos mutableBlockPos) {
-        var spawnedMarines = MarineSpawner.spawn(level, player, mutableBlockPos);
+        var spawnedMarines = MarineSpawner.spawn(
+            level,
+            player,
+            mutableBlockPos,
+            com.human.common.registry.init.HumanEntityTypes.WY_ELITE.get()
+        );
 
         MarineSquadLeadershipDecorator.INSTANCE.decorate(level, spawnedMarines);
 

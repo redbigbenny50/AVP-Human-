@@ -62,4 +62,38 @@ public class HumanJEIPlugin implements IModPlugin {
     public void registerModInfo(IModInfoRegistration modAliasRegistration) {
         modAliasRegistration.addModAliases(Human.MOD_ID, "avp", "avp_human");
     }
+
+    /**
+     * [stated] Oct 17: without avp_alien, everything made from xeno blood - the acid tanks, the acid buckets and the
+     * acid fluids - is hidden, so nobody looks up an item they could never make. Matched by id, so items and fluids go
+     * through the same check.
+     */
+    @Override
+    public void onRuntimeAvailable(mezz.jei.api.runtime.IJeiRuntime runtime) {
+        if (com.human.common.gameplay.acid.AcidAvailability.available()) {
+            return;
+        }
+
+        var locked = com.human.common.gameplay.acid.AcidAvailability.lockedIds();
+        var manager = runtime.getIngredientManager();
+
+        hide(manager, mezz.jei.api.constants.VanillaTypes.ITEM_STACK, locked);
+        hide(manager, runtime.getJeiHelpers().getPlatformFluidHelper().getFluidIngredientType(), locked);
+    }
+
+    private static <V> void hide(
+        mezz.jei.api.runtime.IIngredientManager manager,
+        mezz.jei.api.ingredients.IIngredientType<V> type,
+        java.util.Set<ResourceLocation> locked
+    ) {
+        var helper = manager.getIngredientHelper(type);
+        var hidden = manager.getAllIngredients(type)
+            .stream()
+            .filter(ingredient -> locked.contains(helper.getResourceLocation(ingredient)))
+            .toList();
+
+        if (!hidden.isEmpty()) {
+            manager.removeIngredientsAtRuntime(type, hidden);
+        }
+    }
 }

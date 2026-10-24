@@ -197,7 +197,10 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
     ) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
 
-        if (level instanceof ServerLevel serverLevel && !oldState.is(this)) {
+        // ⚠ Oct 21 - NOT when the block is being MOVED (Sable building or landing a ship, a Create contraption): the
+        // whole tank moves block by block carrying its data, and re-forming mid-move works from a half-moved tank. The
+        // move hook (ShipMoves) re-forms it once the whole batch is in place.
+        if (level instanceof ServerLevel serverLevel && !oldState.is(this) && !movedByPiston) {
             CryotankFormation.reform(serverLevel, pos);
         }
     }
@@ -212,7 +215,8 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
     ) {
         CryotankBlockEntity stranded = null;
 
-        if (level instanceof ServerLevel serverLevel && !newState.is(this)) {
+        // A MOVED block (see onPlace) breaks no seal and re-forms nothing: its specimen moves with its data.
+        if (level instanceof ServerLevel serverLevel && !newState.is(this) && !movedByPiston) {
             // ⚠ BEFORE super: the block entity is still readable here and gone after.
             logBreak(serverLevel, pos);
             stranded = breakSeal(serverLevel, pos);
@@ -224,7 +228,7 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
 
         super.onRemove(state, level, pos, newState, movedByPiston);
 
-        if (level instanceof ServerLevel serverLevel && !newState.is(this)) {
+        if (level instanceof ServerLevel serverLevel && !newState.is(this) && !movedByPiston) {
             CryotankFormation.reformAround(serverLevel, pos);
 
             // A specimen whose release failed and whose master is THIS block would vanish with its block entity.
@@ -357,6 +361,17 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
     ) {
         // Only when the player is actually holding a mob - otherwise a cryotank block in hand must still place, to
         // grow the tank. Both sides can see a lead, a cord AND a capture chain, so they agree.
+        // [stated] Oct 19 - a lead, the titanium cord or a capture chain used on a tank that holds a specimen, with no
+        // mob already in tow, pulls the specimen OUT. Both sides can see the item and whether the tank is occupied (the
+        // tank syncs its specimen for the renderer), so they agree on the click.
+        if (captive(level, player) == null && isTether(stack) && occupied(level, pos)) {
+            if (level instanceof ServerLevel serverLevel) {
+                tryExtract(serverLevel, pos, player, stack, hitResult);
+            }
+
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+
         if (captive(level, player) == null) {
             // Vanilla calls this even with an EMPTY hand, and only goes on to useWithoutItem (the readout) on
             // PASS_TO_DEFAULT. ⚠ With anything IN hand it must be SKIP instead: passing would run the readout and
@@ -390,6 +405,101 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
 
         tryCapture(level, pos, player);
         return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Extraction - [stated] Oct 19
+    // ------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A lead, the titanium cord, or avp_alien's capture chain. ⚠ The chain is recognised by its registry name (an
+     * avp_alien item whose id contains "capture_chain"), so avp_human needs no dependency on avp_alien to see it.
+     */
+    private static boolean isTether(ItemStack stack) {
+        if (stack.is(Items.LEAD) || stack.is(com.human.common.registry.init.item.HumanItems.TITANIUM_CAPTURE_CORD.get())) {
+            return true;
+        }
+
+        var id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
+
+        return "avp_alien".equals(id.getNamespace()) && id.getPath().contains("capture_chain");
+    }
+
+    private static boolean occupied(Level level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof CryotankBlockEntity block
+            && level.getBlockEntity(block.getMasterPos()) instanceof CryotankBlockEntity master
+            && master.hasSpecimen();
+    }
+
+    /**
+     * [stated] Oct 19: "using a capture chain cord or leash on a cryotank with a mob in it should pull it out of cryo
+     * deactivating the tank and starting a thaw timer on the mob. This is so you can take them out."
+     * <ul>
+     * <li>The specimen comes out beside the face you clicked (or the nearest free spot), FROZEN SOLID with a fresh
+     * five-minute thaw timer, whatever its health - so it can be dragged away before it wakes.</li>
+     * <li>The tank is emptied and goes dark; its controller logs the release and stops billing it.</li>
+     * <li>On a lead or the cord it comes out tied to you, using up the lead or cord as tying one on does. A hostile on
+     * a lead lets go when it thaws, as for any frozen hostile. ⚠ avp_alien's capture chain has no way for another mod
+     * to start a hold, so a chained specimen comes out frozen beside you - use the chain on it to take it in tow.</li>
+     * <li>It is never netted coming out.</li>
+     * </ul>
+     */
+    private static void tryExtract(ServerLevel level, BlockPos pos, Player player, ItemStack stack, BlockHitResult hitResult) {
+        if (
+            !(level.getBlockEntity(pos) instanceof CryotankBlockEntity block)
+                || !(level.getBlockEntity(block.getMasterPos()) instanceof CryotankBlockEntity master)
+                || !master.hasSpecimen()
+        ) {
+            return;
+        }
+
+        var name = master.getCard() != null
+            ? net.minecraft.world.entity.EntityType.byString(master.getCard().getString("type"))
+                .map(t -> t.getDescription().getString())
+                .orElse("?")
+            : "?";
+
+        // Out on the side that was clicked, if there is room there; otherwise the usual free spot around the tank.
+        var entity = CryoSpecimens.releaseFromTankEntity(level, master, pos.relative(hitResult.getDirection()), false);
+
+        if (entity == null) {
+            tell(player, "extract_failed");
+            return;
+        }
+
+        master.setSpecimen(null, 1.0F, 0.0F, 0.0F);
+
+        var controller = CryoNetwork.controllerFor(level, master);
+        var owner = master.getOwner();
+
+        if (owner != null && level.isLoaded(owner) && level.getBlockEntity(owner) instanceof CryotubeControllerBlockEntity owning) {
+            controller = owning;
+        }
+
+        if (controller != null) {
+            controller.logEvent("released", controller.tubeLabel(master.getBlockPos()), name);
+            controller.requestRescan();
+            controller.sendSnapshotSoon();
+        }
+
+        if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
+            com.human.common.gameplay.freeze.FrozenSolid.freezeOutOfCryo(living);
+        }
+
+        if (entity instanceof Mob mob) {
+            if (stack.is(Items.LEAD)) {
+                mob.setLeashedTo(player, true);
+                stack.consume(1, player);
+            } else if (
+                stack.is(com.human.common.registry.init.item.HumanItems.TITANIUM_CAPTURE_CORD.get())
+                    && !mob.getType().is(com.human.common.registry.tag.HumanEntityTypeTags.CAPTURE_CORD_BLACKLIST)
+            ) {
+                com.human.common.gameplay.item.CaptureCordTether.attach(mob, player);
+                stack.consume(1, player);
+            }
+        }
+
+        tell(player, "extracted");
     }
 
     /** The mob this player has brought: on a cord or lead (visible to both sides), or on avp_alien's capture chain. */
@@ -478,7 +588,7 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
             return;
         }
 
-        var scale = CryoSpecimens.fitScale(master, mob.getBbWidth(), mob.getBbHeight());
+        var scale = CryoSpecimens.fitScale(master, mob.getBbWidth(), CryoSpecimens.frozenHeight(mob));
 
         if (scale <= 0.0F) {
             tell(player, "too_big");

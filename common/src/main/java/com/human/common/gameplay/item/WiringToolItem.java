@@ -31,10 +31,12 @@ import java.util.Locale;
  * </ul>
  * <h2>FUSE PANELS</h2> [stated] Sep 30:
  * <ul>
- * <li><b>Right-click a fuse panel</b>: select it. The tool remembers it.</li>
- * <li><b>With a panel selected, right-click a device</b>: bind it to that panel, or unbind it if it already is. A
- * device binds if it is in the {@code avp_human:fuse_devices} tag, or is a machine with a hub chip; it must be within
- * the panel's range, and the panel must have room.</li>
+ * <li><b>Right-click a fuse panel</b>: select it, then right-click a device to connect it (again to disconnect).</li>
+ * <li><b>Or device first</b> ([stated] Oct 14): right-click a device - its power readout shows and it is selected -
+ * then right-click the fuse panel. Works for sentry turrets too.</li>
+ * <li>A device connects if it is in the {@code avp_human:fuse_devices} tag, or is a machine with a hub chip; it must be
+ * within the panel's range, and the panel must have room. Every outcome is said on screen ([stated] Oct 14): success,
+ * success-but-the-panel-has-no-power, or the reason it failed.</li>
  * <li><b>Shift + right-click the air</b>: clear the selection.</li>
  * </ul>
  * Anything that cannot bind still gets the readout. Wall switches and hacking wait for those blocks.
@@ -47,16 +49,71 @@ public class WiringToolItem extends Item {
         super(properties);
     }
 
+    /** The three things the tool can hold selected - only one at a time. */
+    private static final com.blib.api.common.registry.v1.BLibHolder<net.minecraft.core.component.DataComponentType<net.minecraft.core.GlobalPos>> SELECTED_PANEL =
+        com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL;
+
+    private static final com.blib.api.common.registry.v1.BLibHolder<net.minecraft.core.component.DataComponentType<net.minecraft.core.GlobalPos>> SELECTED_DEVICE =
+        com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_DEVICE;
+
+    private static final com.blib.api.common.registry.v1.BLibHolder<net.minecraft.core.component.DataComponentType<java.util.UUID>> SELECTED_SENTRY =
+        com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_SENTRY;
+
+    // ------------------------------------------------------------------------------------------------------------
+    // [stated] Oct 14 - on-screen feedback so nobody files a false bug report: "If you click on a fuse panel have it
+    // say 'panel selected please right click the device you wish to connect' have the reverse come up if selecting
+    // the device first. If its successful have it say connection successful if it fails say why ... if its
+    // connection was successful but the panel has no power." Device first shows the power readout AND selects it.
+    // Status lines go to the action bar (above the hotbar); the readout stays in chat, so neither hides the other.
+    // ------------------------------------------------------------------------------------------------------------
+
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
         var level = context.getLevel();
         var pos = context.getClickedPos();
         var player = context.getPlayer();
         var blockEntity = level.getBlockEntity(pos);
-        var isCable = level.getBlockState(pos).getBlock() instanceof CableBlock;
+        var state = level.getBlockState(pos);
 
+        // [stated] Oct 14 - a pipe: the network readout (what is connected, what each end does, why nothing moves).
+        if (state.getBlock() instanceof com.human.common.gameplay.block.pipe.PipeBlock pipe) {
+            if (!level.isClientSide && player != null) {
+                pipe.printWiringReadout((ServerLevel) level, pos, state, player);
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        // [stated] Oct 20 - shift-right-click a resonator to SEE its field: the 32-block sphere, drawn through blocks
+        // for a few seconds. (A plain right-click still binds it to a fuse panel; its only cable face is underneath,
+        // so it has no breaker for a shift-click to toggle anyway.)
+        if (
+            player != null && player.isShiftKeyDown()
+                && blockEntity instanceof com.human.common.gameplay.block.entity.power.impl.ResonatorBlockEntity
+        ) {
+            if (level.isClientSide) {
+                // Through the hook, never the client renderer itself: this class loads on dedicated servers too.
+                com.human.common.gameplay.block.resonator.ResonatorSphereHook.show.accept(
+                    pos,
+                    com.human.common.gameplay.block.entity.power.impl.ResonatorBlockEntity.RADIUS
+                );
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        var isCable = state.getBlock() instanceof CableBlock;
+
+        // [stated] Oct 14: "when holding a wiring tool it should not open the block you are clicking on. it should be
+        // trying to wire it or give you one of the messages why it cant be wired." Any block that is not part of the
+        // power system says so - the click is used either way (the block itself never sees it - see
+        // MixinBlockStateBase_WiringToolFirst).
         if (!(blockEntity instanceof PowerNodeBlockEntity) && !isCable) {
-            return InteractionResult.PASS;
+            if (!level.isClientSide && player != null) {
+                status(player, "message.avp_human.fuse.cannot_bind", ChatFormatting.RED);
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         if (level.isClientSide || player == null) {
@@ -68,14 +125,33 @@ public class WiringToolItem extends Item {
 
         if (!player.isShiftKeyDown()) {
             if (blockEntity instanceof com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel) {
-                selectPanel(serverLevel, player, tool, panel);
+                // A device picked first is connected to the panel clicked now; otherwise the panel is selected.
+                if (tool.has(SELECTED_DEVICE.get()) || tool.has(SELECTED_SENTRY.get())) {
+                    connectSelectedDevice(serverLevel, player, tool, panel);
+                } else {
+                    selectPanel(serverLevel, player, tool, panel);
+                }
+
                 return InteractionResult.CONSUME;
             }
 
-            var selected = tool.get(com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get());
+            if (blockEntity instanceof com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity device) {
+                var selected = tool.get(SELECTED_PANEL.get());
 
-            if (selected != null && blockEntity instanceof com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity device) {
-                toggleBinding(serverLevel, player, tool, selected, device);
+                if (selected != null) {
+                    var panel = resolvePanel(serverLevel, player, tool, selected);
+
+                    if (panel != null) {
+                        connectBlock(serverLevel, player, panel, device);
+                    }
+
+                    return InteractionResult.CONSUME;
+                }
+
+                // Device first: the readout as always, and the device is selected if it can be wired.
+                readout(serverLevel, player, pos, blockEntity);
+                selectDevice(serverLevel, player, tool, device);
+
                 return InteractionResult.CONSUME;
             }
         }
@@ -96,9 +172,47 @@ public class WiringToolItem extends Item {
     }
 
     /**
-     * Oct 7 - [stated] "the wiring tool has no tool tip to explain how it works". One line per thing it does, plus the
-     * panel it currently has selected.
+     * [stated] Sep 30 / Oct 14: right-click a SENTRY TURRET with a panel selected to connect it (or disconnect it), or
+     * with nothing selected to select it, then right-click the panel. Turrets are entities, so this is the tool's
+     * entity interaction - and the turret passes wiring-tool clicks on to it (see SentryTurret.mobInteract).
      */
+    @Override
+    public @NotNull InteractionResult interactLivingEntity(
+        @NotNull net.minecraft.world.item.ItemStack stack,
+        @NotNull Player player,
+        @NotNull net.minecraft.world.entity.LivingEntity entity,
+        @NotNull net.minecraft.world.InteractionHand hand
+    ) {
+        if (!(entity instanceof com.human.common.gameplay.entity.machine.SentryTurret turret)) {
+            return InteractionResult.PASS;
+        }
+
+        if (!(player.level() instanceof ServerLevel level)) {
+            return InteractionResult.SUCCESS;
+        }
+
+        // The stack in hand, not the copy vanilla may pass: the selection must stay on the tool.
+        var tool = player.getItemInHand(hand);
+        var selected = tool.get(SELECTED_PANEL.get());
+
+        if (selected == null) {
+            tool.remove(SELECTED_DEVICE.get());
+            tool.set(SELECTED_SENTRY.get(), turret.getUUID());
+            level.playSound(null, turret.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.BLOCKS, 0.4F, 1.4F);
+            status(player, "message.avp_human.fuse.sentry_selected", ChatFormatting.AQUA);
+
+            return InteractionResult.CONSUME;
+        }
+
+        var panel = resolvePanel(level, player, tool, selected);
+
+        if (panel != null) {
+            connectSentry(level, player, panel, turret);
+        }
+
+        return InteractionResult.CONSUME;
+    }
+
     @Override
     public void appendHoverText(
         @NotNull net.minecraft.world.item.ItemStack stack,
@@ -108,18 +222,31 @@ public class WiringToolItem extends Item {
     ) {
         super.appendHoverText(stack, context, lines, flag);
 
-        var selected = stack.get(com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get());
+        var panel = stack.get(SELECTED_PANEL.get());
+        var device = stack.get(SELECTED_DEVICE.get());
 
-        if (selected != null) {
-            var pos = selected.pos();
+        if (panel != null) {
+            var pos = panel.pos();
             lines.add(
                 Component.translatable("tooltip.avp_human.wiring_tool.selected", pos.getX(), pos.getY(), pos.getZ())
-                    .withStyle(net.minecraft.ChatFormatting.AQUA)
+                    .withStyle(ChatFormatting.AQUA)
             );
         }
 
+        if (device != null) {
+            var pos = device.pos();
+            lines.add(
+                Component.translatable("tooltip.avp_human.wiring_tool.selected_device", pos.getX(), pos.getY(), pos.getZ())
+                    .withStyle(ChatFormatting.AQUA)
+            );
+        }
+
+        if (stack.has(SELECTED_SENTRY.get())) {
+            lines.add(Component.translatable("tooltip.avp_human.wiring_tool.selected_sentry").withStyle(ChatFormatting.AQUA));
+        }
+
         for (var key : TOOLTIP_LINES) {
-            lines.add(Component.translatable(key).withStyle(net.minecraft.ChatFormatting.GRAY));
+            lines.add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -131,7 +258,7 @@ public class WiringToolItem extends Item {
         "tooltip.avp_human.wiring_tool.clear"
     };
 
-    /** Shift + right-click the air clears the selected fuse panel. */
+    /** Shift + right-click the air clears whatever is selected - panel, device or turret. */
     @Override
     public @NotNull net.minecraft.world.InteractionResultHolder<net.minecraft.world.item.ItemStack> use(
         @NotNull net.minecraft.world.level.Level level,
@@ -139,12 +266,12 @@ public class WiringToolItem extends Item {
         @NotNull net.minecraft.world.InteractionHand hand
     ) {
         var tool = player.getItemInHand(hand);
-        var key = com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get();
+        var anything = tool.has(SELECTED_PANEL.get()) || tool.has(SELECTED_DEVICE.get()) || tool.has(SELECTED_SENTRY.get());
 
-        if (player.isShiftKeyDown() && tool.has(key)) {
+        if (player.isShiftKeyDown() && anything) {
             if (!level.isClientSide) {
-                tool.remove(key);
-                player.displayClientMessage(Component.translatable("message.avp_human.fuse.cleared"), true);
+                clearSelection(tool);
+                status(player, "message.avp_human.fuse.cleared", ChatFormatting.GRAY);
             }
 
             return net.minecraft.world.InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
@@ -153,89 +280,156 @@ public class WiringToolItem extends Item {
         return super.use(level, player, hand);
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Selecting
+    // ------------------------------------------------------------------------------------------------------------
+
     private static void selectPanel(
         ServerLevel level,
         Player player,
         net.minecraft.world.item.ItemStack tool,
         com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel
     ) {
-        tool.set(
-            com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get(),
-            net.minecraft.core.GlobalPos.of(level.dimension(), panel.getBlockPos())
-        );
+        clearSelection(tool);
+        tool.set(SELECTED_PANEL.get(), net.minecraft.core.GlobalPos.of(level.dimension(), panel.getBlockPos()));
         level.playSound(null, panel.getBlockPos(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.BLOCKS, 0.4F, 1.4F);
-        player.displayClientMessage(
-            Component.translatable("message.avp_human.fuse.selected", panel.getBoundCount(), panel.getDeviceCapacity()),
-            true
-        );
+        status(player, "message.avp_human.fuse.selected", ChatFormatting.AQUA, panel.getBoundCount(), panel.getDeviceCapacity());
     }
 
-    private static void toggleBinding(
+    /**
+     * Device first. A device that can be wired is selected; one that cannot says why, so a machine without its hub chip
+     * is not mistaken for a broken tool. Other consumers just show their readout.
+     */
+    private static void selectDevice(
         ServerLevel level,
         Player player,
         net.minecraft.world.item.ItemStack tool,
-        net.minecraft.core.GlobalPos selected,
         com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity device
     ) {
-        var panelPos = selected.pos();
-        var devicePos = device.getBlockPos();
+        if (!device.canBindToFusePanel()) {
+            if (device instanceof ElectricMachineBlockEntity) {
+                status(player, "message.avp_human.fuse.needs_hub_chip", ChatFormatting.RED);
+            }
 
-        if (!selected.dimension().equals(level.dimension())) {
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.other_dimension"), true);
             return;
+        }
+
+        clearSelection(tool);
+        tool.set(SELECTED_DEVICE.get(), net.minecraft.core.GlobalPos.of(level.dimension(), device.getBlockPos()));
+        level.playSound(null, device.getBlockPos(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.BLOCKS, 0.4F, 1.4F);
+        status(player, "message.avp_human.fuse.device_selected", ChatFormatting.AQUA);
+    }
+
+    /** Device first, then the panel: connect whichever device the tool holds. The selection is used up either way. */
+    private static void connectSelectedDevice(
+        ServerLevel level,
+        Player player,
+        net.minecraft.world.item.ItemStack tool,
+        com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel
+    ) {
+        var device = tool.get(SELECTED_DEVICE.get());
+        var sentry = tool.get(SELECTED_SENTRY.get());
+
+        tool.remove(SELECTED_DEVICE.get());
+        tool.remove(SELECTED_SENTRY.get());
+
+        if (device != null) {
+            if (!device.dimension().equals(level.dimension())) {
+                status(player, "message.avp_human.fuse.device_other_dimension", ChatFormatting.RED);
+                return;
+            }
+
+            if (
+                !level.isLoaded(device.pos())
+                    || !(level.getBlockEntity(
+                        device.pos()
+                    ) instanceof com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity consumer)
+            ) {
+                status(player, "message.avp_human.fuse.device_gone", ChatFormatting.RED);
+                return;
+            }
+
+            connectBlock(level, player, panel, consumer);
+            return;
+        }
+
+        // A turret: found by its id in THIS dimension only (it may have been picked up, killed or moved elsewhere).
+        if (!(level.getEntity(sentry) instanceof com.human.common.gameplay.entity.machine.SentryTurret turret) || !turret.isAlive()) {
+            status(player, "message.avp_human.fuse.device_gone", ChatFormatting.RED);
+            return;
+        }
+
+        connectSentry(level, player, panel, turret);
+    }
+
+    private static void clearSelection(net.minecraft.world.item.ItemStack tool) {
+        tool.remove(SELECTED_PANEL.get());
+        tool.remove(SELECTED_DEVICE.get());
+        tool.remove(SELECTED_SENTRY.get());
+    }
+
+    /** The selected panel, or null - after saying why (another dimension, or gone, which also clears it). */
+    private static com.human.common.gameplay.power.fuse.@org.jetbrains.annotations.Nullable FusePanelBlockEntity resolvePanel(
+        ServerLevel level,
+        Player player,
+        net.minecraft.world.item.ItemStack tool,
+        net.minecraft.core.GlobalPos selected
+    ) {
+        if (!selected.dimension().equals(level.dimension())) {
+            status(player, "message.avp_human.fuse.other_dimension", ChatFormatting.RED);
+            return null;
         }
 
         if (
-            !level.isLoaded(panelPos) || !(level.getBlockEntity(
-                panelPos
-            ) instanceof com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel)
+            !level.isLoaded(selected.pos())
+                || !(level.getBlockEntity(selected.pos()) instanceof com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel)
         ) {
-            tool.remove(com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get());
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.gone"), true);
-            return;
+            tool.remove(SELECTED_PANEL.get());
+            status(player, "message.avp_human.fuse.gone", ChatFormatting.RED);
+            return null;
         }
 
-        // Already on this panel: unbind.
+        return panel;
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Connecting - one path per kind of device, used by both orders
+    // ------------------------------------------------------------------------------------------------------------
+
+    private static void connectBlock(
+        ServerLevel level,
+        Player player,
+        com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel,
+        com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity device
+    ) {
+        var panelPos = panel.getBlockPos();
+        var devicePos = device.getBlockPos();
+
+        // Already on this panel: disconnect.
         if (panelPos.equals(device.getFusePanel())) {
             panel.unbind(devicePos);
             device.setFusePanel(null);
             level.playSound(null, devicePos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.6F, 0.6F);
-            player.displayClientMessage(
-                Component.translatable("message.avp_human.fuse.unbound", panel.getBoundCount(), panel.getDeviceCapacity()),
-                true
-            );
+            status(player, "message.avp_human.fuse.unbound", ChatFormatting.GRAY, panel.getBoundCount(), panel.getDeviceCapacity());
             return;
         }
 
         if (!device.canBindToFusePanel()) {
-            player.displayClientMessage(
-                Component.translatable(
-                    device instanceof ElectricMachineBlockEntity
-                        ? "message.avp_human.fuse.needs_hub_chip"
-                        : "message.avp_human.fuse.cannot_bind"
-                ),
-                true
+            status(
+                player,
+                device instanceof ElectricMachineBlockEntity
+                    ? "message.avp_human.fuse.needs_hub_chip"
+                    : "message.avp_human.fuse.cannot_bind",
+                ChatFormatting.RED
             );
             return;
         }
 
-        if (!panel.isInRange(devicePos)) {
-            player.displayClientMessage(
-                Component.translatable(
-                    "message.avp_human.fuse.out_of_range",
-                    com.human.common.gameplay.power.fuse.FusePanelBlockEntity.RANGE
-                ),
-                true
-            );
+        if (!checkRangeAndRoom(player, panel, devicePos)) {
             return;
         }
 
-        if (panel.getBoundCount() >= panel.getDeviceCapacity()) {
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.full", panel.getDeviceCapacity()), true);
-            return;
-        }
-
-        // One panel per device: binding here moves it off its old panel.
+        // One panel per device: connecting here moves it off its old panel.
         var previous = device.getFusePanel();
 
         if (
@@ -248,81 +442,31 @@ public class WiringToolItem extends Item {
         panel.bind(devicePos);
         device.setFusePanel(panelPos);
         level.playSound(null, devicePos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.6F, 1.2F);
-        player.displayClientMessage(
-            Component.translatable("message.avp_human.fuse.bound", panel.getBoundCount(), panel.getDeviceCapacity()),
-            true
-        );
+        connected(level, player, panel);
     }
 
-    /**
-     * [stated] Sep 30: with a fuse panel selected, right-click a SENTRY TURRET to bind it (or unbind it). Turrets are
-     * entities, so this is the tool's entity interaction rather than its block one.
-     */
-    @Override
-    public @NotNull InteractionResult interactLivingEntity(
-        @NotNull net.minecraft.world.item.ItemStack stack,
-        @NotNull Player player,
-        @NotNull net.minecraft.world.entity.LivingEntity entity,
-        @NotNull net.minecraft.world.InteractionHand hand
+    private static void connectSentry(
+        ServerLevel level,
+        Player player,
+        com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel,
+        com.human.common.gameplay.entity.machine.SentryTurret turret
     ) {
-        var key = com.human.common.registry.init.HumanDataComponents.SELECTED_FUSE_PANEL.get();
-        var selected = stack.get(key);
-
-        if (!(entity instanceof com.human.common.gameplay.entity.machine.SentryTurret turret) || selected == null) {
-            return InteractionResult.PASS;
-        }
-
-        if (!(player.level() instanceof ServerLevel level)) {
-            return InteractionResult.SUCCESS;
-        }
-
-        if (!selected.dimension().equals(level.dimension())) {
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.other_dimension"), true);
-            return InteractionResult.CONSUME;
-        }
-
-        var panelPos = selected.pos();
-
-        if (
-            !level.isLoaded(panelPos) || !(level.getBlockEntity(
-                panelPos
-            ) instanceof com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel)
-        ) {
-            stack.remove(key);
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.gone"), true);
-            return InteractionResult.CONSUME;
-        }
-
+        var panelPos = panel.getBlockPos();
         var id = turret.getUUID();
 
         if (panelPos.equals(turret.getFusePanel())) {
             panel.unbindSentry(id);
             turret.setFusePanel(null);
             level.playSound(null, turret.blockPosition(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.6F, 0.6F);
-            player.displayClientMessage(
-                Component.translatable("message.avp_human.fuse.unbound", panel.getBoundCount(), panel.getDeviceCapacity()),
-                true
-            );
-            return InteractionResult.CONSUME;
+            status(player, "message.avp_human.fuse.unbound", ChatFormatting.GRAY, panel.getBoundCount(), panel.getDeviceCapacity());
+            return;
         }
 
-        if (!panel.isInRange(turret.blockPosition())) {
-            player.displayClientMessage(
-                Component.translatable(
-                    "message.avp_human.fuse.out_of_range",
-                    com.human.common.gameplay.power.fuse.FusePanelBlockEntity.RANGE
-                ),
-                true
-            );
-            return InteractionResult.CONSUME;
+        if (!checkRangeAndRoom(player, panel, turret.blockPosition())) {
+            return;
         }
 
-        if (panel.getBoundCount() >= panel.getDeviceCapacity()) {
-            player.displayClientMessage(Component.translatable("message.avp_human.fuse.full", panel.getDeviceCapacity()), true);
-            return InteractionResult.CONSUME;
-        }
-
-        // One panel per turret: binding here moves it off its old panel.
+        // One panel per turret: connecting here moves it off its old panel.
         var previous = turret.getFusePanel();
 
         if (
@@ -335,12 +479,66 @@ public class WiringToolItem extends Item {
         panel.bindSentry(id, turret.blockPosition());
         turret.setFusePanel(panelPos);
         level.playSound(null, turret.blockPosition(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.6F, 1.2F);
-        player.displayClientMessage(
-            Component.translatable("message.avp_human.fuse.bound", panel.getBoundCount(), panel.getDeviceCapacity()),
-            true
-        );
+        connected(level, player, panel);
+    }
 
-        return InteractionResult.CONSUME;
+    /** Range, then room - each failure says which, with the numbers. */
+    private static boolean checkRangeAndRoom(
+        Player player,
+        com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel,
+        net.minecraft.core.BlockPos devicePos
+    ) {
+        if (!panel.isInRange(devicePos)) {
+            // The same straight-line distance the panel's own range check measures, rounded up.
+            var distance = (int) Math.ceil(Math.sqrt(devicePos.distSqr(panel.getBlockPos())));
+
+            status(
+                player,
+                "message.avp_human.fuse.out_of_range",
+                ChatFormatting.RED,
+                distance,
+                com.human.common.gameplay.power.fuse.FusePanelBlockEntity.RANGE
+            );
+            return false;
+        }
+
+        if (panel.getBoundCount() >= panel.getDeviceCapacity()) {
+            status(player, "message.avp_human.fuse.full", ChatFormatting.RED, panel.getDeviceCapacity());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Connected. Green - or yellow if the panel has no power to pass on: not on a grid at all (no cable into its back),
+     * or on one that is generating nothing and has nothing stored. One grid snapshot, on this click only.
+     */
+    private static void connected(ServerLevel level, Player player, com.human.common.gameplay.power.fuse.FusePanelBlockEntity panel) {
+        var grid = PowerSystem.get(level).gridAt(panel.getBlockPos());
+        var powered = false;
+
+        if (grid != null) {
+            var snapshot = grid.snapshot();
+            powered = snapshot.generation() > 0 || snapshot.stored() > 0;
+        }
+
+        if (powered) {
+            status(player, "message.avp_human.fuse.bound", ChatFormatting.GREEN, panel.getBoundCount(), panel.getDeviceCapacity());
+        } else {
+            status(
+                player,
+                "message.avp_human.fuse.bound_no_power",
+                ChatFormatting.YELLOW,
+                panel.getBoundCount(),
+                panel.getDeviceCapacity()
+            );
+        }
+    }
+
+    /** One status line above the hotbar, coloured by what it means. */
+    private static void status(Player player, String key, ChatFormatting colour, Object... args) {
+        player.displayClientMessage(Component.translatable(key, args).withStyle(colour), true);
     }
 
     private static void toggleMachine(ServerLevel level, Player player, ElectricMachineBlockEntity machine) {

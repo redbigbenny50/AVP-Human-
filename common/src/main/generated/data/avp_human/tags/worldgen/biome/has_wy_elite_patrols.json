@@ -1,9 +1,5 @@
 {
   "values": [
-    {
-      "id": "#minecraft:is_taiga",
-      "required": false
-    },
     "minecraft:birch_forest",
     "minecraft:old_growth_birch_forest"
   ]

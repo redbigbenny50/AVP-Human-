@@ -75,6 +75,17 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
             groundPathNavigation.setCanOpenDoors(true);
         }
 
+        // [stated] Oct 23 - "make sure all humans can open doors." The line above only lets the pathfinder plan a
+        // route THROUGH a closed door; nothing ever opened one, so every human - marine, colonist, every W-Y unit -
+        // walked up to a closed door and stood there. This is vanilla's villager door goal: it opens the door in the
+        // path and closes it behind them (true). Added HERE, in the shared constructor, and not in registerGoals, so
+        // no human type can lose it by overriding that. Vanilla's goal selector ticks for every mob with AI, whatever
+        // else drives it (the marines' GOAP plans move them through this same navigation).
+        //
+        // Works on any door a hand can open: every avp_human metal door (steel, titanium, ferroaluminum, composite)
+        // uses the copper door type, which can be. Iron-type doors that need redstone stay shut, as for villagers.
+        this.goalSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.OpenDoorGoal(this, true));
+
         setPathfindingMalus(PathType.WATER, DEFAULT_WATER_MALUS);
         getNavigation().setCanFloat(true);
         this.humanFeatureManager = new HumanFeatureManager(this);

@@ -21,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class CableBlock extends Block implements net.minecraft.world.level.block.EntityBlock {
+public class CableBlock extends Block implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.level.block.SimpleWaterloggedBlock {
+
+    public static final BooleanProperty WATERLOGGED = net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
     /**
      * [stated] Sep 30: whether any arm meets a BLOCK (not another cable) - such a cable ends in his coloured flange
@@ -156,6 +158,7 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
                 .setValue(UP, false)
                 .setValue(DOWN, false)
                 .setValue(PORTED, false)
+                .setValue(WATERLOGGED, false)
         );
     }
 
@@ -169,7 +172,10 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
             return null;
         }
 
-        return computeState(level, pos, this.defaultBlockState());
+        // Placed into water, it is placed waterlogged.
+        var water = level.getFluidState(pos).getType() == net.minecraft.world.level.material.Fluids.WATER;
+
+        return computeState(level, pos, this.defaultBlockState().setValue(WATERLOGGED, water));
     }
 
     /**
@@ -302,6 +308,15 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
         @NotNull BlockPos pos,
         @NotNull BlockPos neighborPos
     ) {
+        // Waterlogged: keep the water in it flowing, as vanilla waterloggable blocks do.
+        if (state.getValue(WATERLOGGED)) {
+            level.scheduleTick(
+                pos,
+                net.minecraft.world.level.material.Fluids.WATER,
+                net.minecraft.world.level.material.Fluids.WATER.getTickDelay(level)
+            );
+        }
+
         // ⚠ The server decides. A client cannot see another mod's energy block, so it keeps what the server sent.
         if (level.isClientSide()) {
             return state;
@@ -312,7 +327,21 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, PORTED);
+        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, PORTED, WATERLOGGED);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Water - Oct 17 FIX: [stated] "pipes both and cables pop when water touches them and they cant be placed in
+    // water or waterlogged". A thin block that is not a liquid container is one water washes away, and one placed into
+    // water is washed away the moment the water next moves. Now it is WATERLOGGABLE like a vanilla fence or chain: it
+    // can be placed in water, sits in it, and water flowing into it fills it instead of breaking it.
+    // ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected @NotNull net.minecraft.world.level.material.FluidState getFluidState(@NotNull BlockState state) {
+        return state.getValue(WATERLOGGED)
+            ? net.minecraft.world.level.material.Fluids.WATER.getSource(false)
+            : super.getFluidState(state);
     }
 
     @Override
@@ -403,6 +432,27 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
      * [stated] Sep 30: bare-hand right-click a cable that touches another mod's energy block opens its port screen,
      * where each such face is set to auto, out, in, both or off. A cable touching nothing foreign does nothing.
      */
+    /**
+     * Oct 10 - the wiring tool's cable readout must reach the tool: a cable with an external port consumes the click to
+     * open its port screen, which ran before the tool and swallowed it. Same fix as PowerNodeEntityBlock#useItemOn.
+     */
+    @Override
+    protected @NotNull net.minecraft.world.ItemInteractionResult useItemOn(
+        @NotNull net.minecraft.world.item.ItemStack stack,
+        @NotNull BlockState state,
+        @NotNull net.minecraft.world.level.Level level,
+        @NotNull BlockPos pos,
+        @NotNull net.minecraft.world.entity.player.Player player,
+        @NotNull net.minecraft.world.InteractionHand hand,
+        @NotNull net.minecraft.world.phys.BlockHitResult hitResult
+    ) {
+        if (stack.getItem() instanceof com.human.common.gameplay.item.WiringToolItem) {
+            return net.minecraft.world.ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
     @Override
     protected @NotNull net.minecraft.world.InteractionResult useWithoutItem(
         @NotNull BlockState state,

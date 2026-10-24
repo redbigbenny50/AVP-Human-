@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/composite"
+    }
+  },
+  "pattern": [
+    "I I",
+    "III",
+    "I I"
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:composite_ladder"
+  }
+}

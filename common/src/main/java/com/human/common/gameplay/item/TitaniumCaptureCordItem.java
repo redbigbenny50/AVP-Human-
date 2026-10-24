@@ -36,8 +36,28 @@ public class TitaniumCaptureCordItem extends Item {
         @NotNull LivingEntity target,
         @NotNull InteractionHand hand
     ) {
+        return target instanceof Mob mob ? capture(stack, player, mob) : InteractionResult.PASS;
+    }
+
+    /**
+     * Puts a mob on the cord. Called from {@code MixinMob_CaptureCordInteract} at the very start of
+     * {@code Mob.interact} - BEFORE the mob's own right-click - and from {@link #interactLivingEntity} as a fallback.
+     * <p>
+     * [stated] Oct 14: "capture cord should work on dogs and villagers just like the capture chain from alien module".
+     * The item's own interaction only runs if the mob passes the click, and colonists (trading), marine dogs (sitting)
+     * and vanilla villagers (trading) always consume it - so the cord never reached them. avp_alien's capture chain
+     * avoids that by acting on the entity-interact event, before the mob; the mixin does the same here. Also like the
+     * chain: a blacklist tag ({@code avp_human:capture_cord_blacklist}, the chain's dragon/warden/wither plus the
+     * sentry turret, a machine).
+     * </p>
+     */
+    public static InteractionResult capture(ItemStack stack, Player player, Mob mob) {
         // Already on a cord or a lead: leave it be. (Right-clicking the one you hold lets it go - see the Mob mixin.)
-        if (!(target instanceof Mob mob) || !mob.isAlive() || mob.isLeashed() || CaptureCordTether.isHeld(mob)) {
+        if (!mob.isAlive() || mob.isLeashed() || CaptureCordTether.isHeld(mob)) {
+            return InteractionResult.PASS;
+        }
+
+        if (mob.getType().is(com.human.common.registry.tag.HumanEntityTypeTags.CAPTURE_CORD_BLACKLIST)) {
             return InteractionResult.PASS;
         }
 

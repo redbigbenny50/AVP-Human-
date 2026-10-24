@@ -207,12 +207,27 @@ public final class MachineSideControls {
         );
     }
 
+    /** The filter hint never runs to more lines than this; the box is sized for exactly what it draws. */
+    private static final int FILTER_HINT_MAX_LINES = 3;
+
+    private int filterHintLines() {
+        var lines = font.split(Component.translatable("gui.avp_human.machine.filter.hint"), ElectricMachineBlockEntity.FILTER_SIZE * ROW)
+            .size();
+        return Math.max(1, Math.min(FILTER_HINT_MAX_LINES, lines));
+    }
+
     /** {x, y, width, height} of a field's pop-up, opening to the right of its button. */
     private int[] popupBox(Field field, int buttonY) {
         var x = columnX + BUTTON + GAP;
 
         return switch (field) {
-            case FILTER -> new int[] { x, buttonY, PAD * 2 + ElectricMachineBlockEntity.FILTER_SIZE * ROW, PAD * 2 + ROW + 12 };
+            // ⚠ Oct 23 - the hint under the slots WRAPS inside the box now ("Left: set Right: clear" is 108 px over a
+            // 72 px row of slots), so the box grows by however many lines it takes. One line: the old height exactly.
+            case FILTER -> new int[] {
+                x,
+                buttonY,
+                PAD * 2 + ElectricMachineBlockEntity.FILTER_SIZE * ROW,
+                PAD * 2 + ROW + 3 + filterHintLines() * GuiText.LINE_HEIGHT };
             case PORTS -> new int[] {
                 x,
                 buttonY,
@@ -445,11 +460,14 @@ public final class MachineSideControls {
                 }
             }
 
-            graphics.drawString(
+            GuiText.drawWrapped(
+                graphics,
                 font,
                 Component.translatable("gui.avp_human.machine.filter.hint"),
                 box[0] + PAD,
                 box[1] + PAD + ROW + 2,
+                ElectricMachineBlockEntity.FILTER_SIZE * ROW,
+                FILTER_HINT_MAX_LINES,
                 TEXT,
                 false
             );
@@ -637,7 +655,8 @@ public final class MachineSideControls {
             var box = popupBox(open, buttonY(fields.indexOf(open)));
 
             if (inside(mouseX, mouseY, box[0], box[1], box[2], box[3])) {
-                graphics.renderComponentTooltip(
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
                     font,
                     List.of(
                         Component.translatable("gui.avp_human.machine.filter"),
@@ -675,7 +694,7 @@ public final class MachineSideControls {
                         );
                     }
 
-                    graphics.renderComponentTooltip(font, lines, mouseX, mouseY);
+                    com.human.client.screen.widget.GuiText.tooltip(graphics, font, lines, mouseX, mouseY);
                     return;
                 }
             }
@@ -684,7 +703,8 @@ public final class MachineSideControls {
         var field = buttonAt(fields, mouseX, mouseY);
 
         if (field != null && open == null) {
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(
                     Component.translatable("gui.avp_human.machine.side." + field.name().toLowerCase(java.util.Locale.ROOT)),

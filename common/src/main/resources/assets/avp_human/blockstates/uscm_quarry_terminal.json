@@ -1,0 +1,76 @@
+{
+  "variants": {
+    "facing=north,part=core": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=north,part=console": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=north,part=back": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=north,part=back_top": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=north,part=back_cw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=north,part=back_ccw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=core": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=console": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=back": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=back_top": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=back_cw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=east,part=back_ccw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=core": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=console": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=back": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=back_top": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=back_cw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=south,part=back_ccw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=core": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=console": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=back": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=back_top": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=back_cw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    },
+    "facing=west,part=back_ccw": {
+      "model": "avp_human:block/uscm_quarry_terminal"
+    }
+  }
+}

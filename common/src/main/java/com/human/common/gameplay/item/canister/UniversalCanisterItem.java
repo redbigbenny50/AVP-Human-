@@ -342,17 +342,22 @@ public class UniversalCanisterItem extends Item {
     ) {
         var content = getContent(stack);
 
-        if (content.isEmpty()) {
-            return;
+        if (!content.isEmpty()) {
+            tooltip.add(
+                Component.translatable(
+                    "tooltip.avp_human.canister.amount",
+                    content.amount() / FluidContent.BUCKET,
+                    CAPACITY_BUCKETS
+                ).withStyle(ChatFormatting.GRAY)
+            );
         }
 
-        tooltip.add(
-            Component.translatable(
-                "tooltip.avp_human.canister.amount",
-                content.amount() / FluidContent.BUCKET,
-                CAPACITY_BUCKETS
-            ).withStyle(ChatFormatting.GRAY)
-        );
+        // [stated] Oct 23 - the tooltip lists how to use it: right click, shift right click and shift left click. One
+        // line each, kept short (vanilla does not wrap item tooltips), in the order a player meets them.
+        tooltip.add(Component.translatable("tooltip.avp_human.canister.use.fill").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.avp_human.canister.use.tank").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.avp_human.canister.use.pour").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.avp_human.canister.use.place").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     /**

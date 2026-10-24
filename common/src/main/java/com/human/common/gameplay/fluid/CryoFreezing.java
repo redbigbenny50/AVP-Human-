@@ -58,6 +58,20 @@ public final class CryoFreezing {
             return;
         }
 
+        // [stated] Oct 19 - eggs freeze (or, nether ones, die) the moment cryo touches them, and take no damage - a
+        // hurt egg opens.
+        if (com.human.common.gameplay.freeze.FrozenSolid.reactsOnContact(living)) {
+            com.human.common.gameplay.freeze.FrozenSolid.tryFreeze(living);
+            return;
+        }
+
+        // [stated] Oct 19 - frozen solid already: standing in cryofluid keeps it frozen (the thaw timer back to full)
+        // and does no more damage.
+        if (com.human.common.gameplay.freeze.FrozenSolid.isFrozen(living)) {
+            com.human.common.gameplay.freeze.FrozenSolid.keepFrozen(living);
+            return;
+        }
+
         var required = living.getTicksRequiredToFreeze();
         living.setTicksFrozen(Math.min(required + FREEZE_PER_TICK, living.getTicksFrozen() + FREEZE_PER_TICK));
 
@@ -73,7 +87,8 @@ public final class CryoFreezing {
 
     /** A full set of cryo-protective armour, or a mob that is immune by type. */
     public static boolean isImmune(LivingEntity living) {
-        if (living.getType().is(HumanEntityTypeTags.CRYOFLUID_IMMUNE)) {
+        // [stated] Oct 19 - a 100% cold resistance gene is cold immunity.
+        if (living.getType().is(HumanEntityTypeTags.CRYOFLUID_IMMUNE) || com.human.common.util.GeneImmunity.coldImmune(living)) {
             return true;
         }
 

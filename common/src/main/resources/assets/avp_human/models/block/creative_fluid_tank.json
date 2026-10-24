@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "avp_human:block/creative_fluid_tank_side",
+    "end": "avp_human:block/creative_fluid_tank_top"
+  }
+}

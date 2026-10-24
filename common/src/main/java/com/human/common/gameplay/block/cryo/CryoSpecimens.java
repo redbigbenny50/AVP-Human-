@@ -2,6 +2,7 @@ package com.human.common.gameplay.block.cryo;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +25,51 @@ public final class CryoSpecimens {
     private static final double BREAKOUT_TARGET_RANGE = 16.0;
 
     private CryoSpecimens() {}
+
+    /**
+     * [stated] Oct 19 - a queen fitted a tank by her hitbox and then stuck out of its top: her frozen (curled) pose is
+     * TALLER than the box she walks around in. These are the avp_alien castes whose frozen pose stands higher than
+     * their hitbox, as measured from their models in their cryo poses (blocks). Matched on the end of the id so every
+     * strain is covered (queen, nether_queen, aberrant_queen, irradiated_queen ...). Only the height is held to the
+     * pose - the renderer shrinks a pose that is merely wide - and a mob not listed fits by its hitbox, as before.
+     */
+    private static final java.util.Map<String, Float> FROZEN_POSE_HEIGHTS = java.util.Map.of(
+        "queen",
+        6.65F,
+        "empress",
+        7.6F,
+        "harbinger",
+        7.0F,
+        "praetorian",
+        4.45F,
+        "predalien",
+        4.45F,
+        "ravager",
+        4.1F,
+        "crusher",
+        2.9F
+    );
+
+    /** How tall this mob stands frozen: its hitbox, or its frozen pose where that is taller (FROZEN_POSE_HEIGHTS). */
+    public static float frozenHeight(net.minecraft.world.entity.Entity mob) {
+        var hitbox = mob.getBbHeight();
+        var id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+
+        if (!"avp_alien".equals(id.getNamespace())) {
+            return hitbox;
+        }
+
+        var path = id.getPath();
+        var scale = mob instanceof net.minecraft.world.entity.LivingEntity living ? living.getScale() : 1.0F;
+
+        for (var entry : FROZEN_POSE_HEIGHTS.entrySet()) {
+            if (path.equals(entry.getKey()) || path.endsWith("_" + entry.getKey())) {
+                return Math.max(hitbox, entry.getValue() * scale);
+            }
+        }
+
+        return hitbox;
+    }
 
     /** @return 1 if it fits as it is, {@value #SQUEEZE_SCALE} if only squeezed, or 0 if it does not fit at all */
     public static float fitScale(CryotankBlockEntity tank, float width, float height) {
@@ -48,6 +94,10 @@ public final class CryoSpecimens {
     public static boolean freeze(CryotankBlockEntity tank, Mob mob, float scale) {
         mob.ejectPassengers();
         mob.stopRiding();
+
+        // [stated] Oct 19 - "if the mob is netted it pops the net off when you place them inside". Freed the same way a
+        // blade cuts it free, BEFORE it is saved, so the stored specimen carries no net.
+        com.human.compatibility.avp_predator.HumanPredatorNet.release(mob);
 
         var tag = new CompoundTag();
 
@@ -91,21 +141,31 @@ public final class CryoSpecimens {
         @org.jetbrains.annotations.Nullable net.minecraft.core.BlockPos preferred,
         boolean brokeOut
     ) {
+        return releaseFromTankEntity(level, tank, preferred, brokeOut) != null;
+    }
+
+    /** As {@link #releaseFromTank}, handing back the specimen that came out (or null). */
+    public static @org.jetbrains.annotations.Nullable Entity releaseFromTankEntity(
+        ServerLevel level,
+        CryotankBlockEntity tank,
+        @org.jetbrains.annotations.Nullable net.minecraft.core.BlockPos preferred,
+        boolean brokeOut
+    ) {
         var tag = tank.getSpecimen();
 
         if (tag == null) {
-            return false;
+            return null;
         }
 
         if (preferred != null) {
             var at = preferred.getBottomCenter();
 
             if (fits(level, at, tank.specimenWidth(), tank.specimenHeight())) {
-                return release(level, tag, at, brokeOut);
+                return spawn(level, tag, at, brokeOut);
             }
         }
 
-        return releaseNear(
+        return releaseNearEntity(
             level,
             tag,
             tank.getBlockPos(),
@@ -132,6 +192,20 @@ public final class CryoSpecimens {
         float height,
         boolean brokeOut
     ) {
+        return releaseNearEntity(level, tag, min, sx, sy, sz, width, height, brokeOut) != null;
+    }
+
+    private static @org.jetbrains.annotations.Nullable Entity releaseNearEntity(
+        ServerLevel level,
+        CompoundTag tag,
+        net.minecraft.core.BlockPos min,
+        int sx,
+        int sy,
+        int sz,
+        float width,
+        float height,
+        boolean brokeOut
+    ) {
         var centreX = min.getX() + sx / 2.0;
         var centreZ = min.getZ() + sz / 2.0;
 
@@ -139,7 +213,7 @@ public final class CryoSpecimens {
         var top = new Vec3(centreX, min.getY() + sy, centreZ);
 
         if (fits(level, top, width, height)) {
-            return release(level, tag, top, brokeOut);
+            return spawn(level, tag, top, brokeOut);
         }
 
         // Then around the base, one ring at a time, a few blocks out at most.
@@ -156,13 +230,13 @@ public final class CryoSpecimens {
                 );
 
                 if (fits(level, at, width, height)) {
-                    return release(level, tag, at, brokeOut);
+                    return spawn(level, tag, at, brokeOut);
                 }
             }
         }
 
         // Nowhere clear: on top anyway. Better a cramped specimen than one that can never come out.
-        return release(level, tag, top, brokeOut);
+        return spawn(level, tag, top, brokeOut);
     }
 
     private static boolean fits(ServerLevel level, Vec3 at, float width, float height) {
@@ -187,6 +261,10 @@ public final class CryoSpecimens {
      * @return true once the entity is in the world
      */
     public static boolean release(ServerLevel level, CompoundTag tag, Vec3 at, boolean brokeOut) {
+        return spawn(level, tag, at, brokeOut) != null;
+    }
+
+    private static @org.jetbrains.annotations.Nullable Entity spawn(ServerLevel level, CompoundTag tag, Vec3 at, boolean brokeOut) {
         var entity = EntityType.loadEntityRecursive(
             tag.copy(),
             level,
@@ -197,7 +275,13 @@ public final class CryoSpecimens {
         );
 
         if (entity == null || !level.tryAddFreshEntityWithPassengers(entity)) {
-            return false;
+            return null;
+        }
+
+        // [stated] Oct 19 - "when they come out they should be not netted". New specimens go in net-free already; this
+        // also covers anything frozen before that rule, whose saved data may still say netted.
+        if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
+            com.human.compatibility.avp_predator.HumanPredatorNet.release(living);
         }
 
         if (brokeOut && entity instanceof Mob mob) {
@@ -208,6 +292,6 @@ public final class CryoSpecimens {
             }
         }
 
-        return true;
+        return entity;
     }
 }

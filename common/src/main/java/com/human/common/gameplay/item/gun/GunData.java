@@ -55,6 +55,35 @@ public class GunData {
         )
         .build();
 
+    /**
+     * The chem thrower - runs on the vaporizer's five vapor tanks. One tank = 1,000, used up whole, like the
+     * flamethrower's fuel tank. ⚠ NO ammunition item here: it takes five, so the reload is its own
+     * ({@link com.human.common.gameplay.item.gun.chem.ChemThrowerReloading}) and every shared ammo lookup (marines,
+     * resupply, HUD, calibers) already skips a gun with none. Damage 0 here - what the blast does is the vapor's effect
+     * ({@link com.human.common.gameplay.vapor.VaporEffects}; each vapor does what its liquid does; the cryomist freezes
+     * solid). The spray has its own sound (start / loop / stop); the reload sounds are still the flamethrower's.
+     */
+    public static final GunConfig CHEM_THROWER = GunConfig.builder()
+        .withDurability(4096)
+        .withMaximumAmmunition(1000)
+        .withReloadAmount(1000)
+        .withReloadTimeInTicks(com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.RELOAD_TICKS)
+        .withFireMode(
+            FireModeConfig.builder()
+                .withCooldownInTicks(1)
+                .withDamage(0F)
+                // [stated] Oct 18: a directed blast about 8 blocks ahead.
+                .withRange(8)
+                .withReloadFinishSound(HumanSoundEvents.WEAPON_FLAMETHROWER_SEVASTOPOL_RELOAD_FINISH)
+                .withReloadStartSound(HumanSoundEvents.WEAPON_FLAMETHROWER_SEVASTOPOL_RELOAD_START)
+                // [stated] Oct 19 - no per-shot sound: the spray is heard as one sound that fades in, loops while the
+                // trigger is held and fades out on release (client ChemThrowerSound, driven by the blast packets).
+                .withPrimaryShootSound(null)
+                .withGunAttackAction(com.human.common.gameplay.item.gun.attack.projectile.ChemBlastGunAttackAction.INSTANCE)
+                .build()
+        )
+        .build();
+
     public static final GunConfig M37_12_SHOTGUN = GunConfig.builder()
         .withDurability(1024)
         .withMaximumAmmunition(6)

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "avp_human:block/uscm_wall_panel_inset"
+  }
+}

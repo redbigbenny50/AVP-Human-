@@ -118,13 +118,35 @@ public final class GunKillBloodEffect {
             .normalize();
     }
 
+    /** How much a splat is darkened relative to its jet. Glowing blood is not darkened at all. */
+    private static final float SPLAT_SHADE = 0.72F;
+
+    private static final float GLOW = 1.0F;
+
+    /**
+     * {@return red, green, blue and splat shade for a blood type} The fourth value is how much a splat is darkened:
+     * {@link #SPLAT_SHADE} for ordinary blood, {@link #GLOW} for blood that glows. The hit shards read only the first
+     * three.
+     * <p>
+     * ⚠ Every gun blood effect is drawn with plain colour shaders (lines, debug quads) that ignore world light, so all
+     * blood is already full-bright in the dark; glowing blood stands out by being brighter and never darkened.
+     */
     static float[] colorFor(int fluidType) {
         return switch (fluidType) {
             // These are the base RGB values used by AVP-Alien's AcidParticle, BlueAcidParticle and
             // IrradiatedAcidParticle.
-            case 1 -> new float[] { 160.0F / 255.0F, 158.0F / 255.0F, 9.0F / 255.0F };
-            case 2, 3, 4 -> new float[] { 78.0F / 255.0F, 101.0F / 255.0F, 229.0F / 255.0F };
-            default -> new float[] { 0.92F, 0.015F, 0.02F };
+            case 1 -> new float[] { 160.0F / 255.0F, 158.0F / 255.0F, 9.0F / 255.0F, SPLAT_SHADE };
+            // Synthetics: milky white. Oct 18 - [stated] "synthetics would bleed white" (they shared the blue before).
+            case 2 -> new float[] { 242.0F / 255.0F, 242.0F / 255.0F, 234.0F / 255.0F, SPLAT_SHADE };
+            case 3, 4 -> new float[] { 78.0F / 255.0F, 101.0F / 255.0F, 229.0F / 255.0F, SPLAT_SHADE };
+            // Yautja: the bright highlight green of avp_predator's yautja blood on the ground (#60ff40), never
+            // darkened - [stated] "the yautja blood would glow ... a slightly brighter green but it has to glow".
+            case 5 -> new float[] { 96.0F / 255.0F, 255.0F / 255.0F, 64.0F / 255.0F, GLOW };
+            // Engineers: blue-grey. [stated] "engineers when we add them would have a blue grey blood".
+            case 6 -> new float[] { 127.0F / 255.0F, 147.0F / 255.0F, 168.0F / 255.0F, SPLAT_SHADE };
+            // Black goo mutants: dark charcoal - [stated] "black blood or a dark charcoal". Pure black would vanish.
+            case 7 -> new float[] { 38.0F / 255.0F, 38.0F / 255.0F, 43.0F / 255.0F, SPLAT_SHADE };
+            default -> new float[] { 0.92F, 0.015F, 0.02F, SPLAT_SHADE };
         };
     }
 
@@ -173,16 +195,16 @@ public final class GunKillBloodEffect {
         float alpha
     ) {
         vertices.addVertex(matrix, (float) a.x, (float) a.y, (float) a.z)
-            .setColor(color[0] * 0.72F, color[1] * 0.72F, color[2] * 0.72F, alpha)
+            .setColor(color[0] * color[3], color[1] * color[3], color[2] * color[3], alpha)
             .setNormal(0.0F, 1.0F, 0.0F);
         vertices.addVertex(matrix, (float) b.x, (float) b.y, (float) b.z)
-            .setColor(color[0] * 0.72F, color[1] * 0.72F, color[2] * 0.72F, alpha)
+            .setColor(color[0] * color[3], color[1] * color[3], color[2] * color[3], alpha)
             .setNormal(0.0F, 1.0F, 0.0F);
         vertices.addVertex(matrix, (float) c.x, (float) c.y, (float) c.z)
-            .setColor(color[0] * 0.72F, color[1] * 0.72F, color[2] * 0.72F, alpha)
+            .setColor(color[0] * color[3], color[1] * color[3], color[2] * color[3], alpha)
             .setNormal(0.0F, 1.0F, 0.0F);
         vertices.addVertex(matrix, (float) d.x, (float) d.y, (float) d.z)
-            .setColor(color[0] * 0.72F, color[1] * 0.72F, color[2] * 0.72F, alpha)
+            .setColor(color[0] * color[3], color[1] * color[3], color[2] * color[3], alpha)
             .setNormal(0.0F, 1.0F, 0.0F);
     }
 

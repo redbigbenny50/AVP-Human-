@@ -367,6 +367,26 @@ public class GeneBonusDataSubProvider extends GeneBonusDataProvider {
             )
         );
 
+        // [stated] Oct 13 - the soldier types split out of the marine carry the marine's genes.
+        for (
+            EntityType<?> soldier : List.<EntityType<?>>of(
+                HumanEntityTypes.TACTICAL_MARINE.get(),
+                HumanEntityTypes.WY_COMMANDO.get(),
+                HumanEntityTypes.WY_ELITE.get(),
+                HumanEntityTypes.WY_SPEC_OPS_COMMANDO.get(),
+                HumanEntityTypes.WY_SPEC_OPS_ELITE.get(),
+                HumanEntityTypes.WY_APE_TROOPER.get()
+            )
+        ) {
+            add(
+                soldier,
+                List.of(
+                    new Tuple2<>(Genes.ATTACK_DAMAGE, new GeneModifier(GeneOperationType.ADDITIVE, 1.0)),
+                    new Tuple2<>(Genes.INTELLIGENCE, new GeneModifier(GeneOperationType.ADDITIVE, 30.0))
+                )
+            );
+        }
+
         // Non-hosts
         touchedEntries.add(EntityType.ALLAY);
         touchedEntries.add(EntityType.AXOLOTL);

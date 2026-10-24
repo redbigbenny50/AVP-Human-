@@ -1,0 +1,54 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "avp_predator"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "avp_predator"
+      ]
+    }
+  ],
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:written_book_content": {
+                  "title": "Elevator Tech's Journal",
+                  "author": "J. Ruiz",
+                  "pages": [
+                    "{\"text\": \"ELEVATOR TECH'S JOURNAL\\n\\nIf you're reading this: I didn't do it. Any of it. Read to the end.\"}",
+                    "{\"text\": \"On the trek in, a pillager raid hit the convoy. I fell down a bank into the mud.\\nThat is the only reason I'm alive.\"}",
+                    "{\"text\": \"From the mud I saw it. A shimmer, like heat over a road. It walked through the pillagers like they were paper.\"}",
+                    "{\"text\": \"Then it picked up a ravager. With ONE ARM. It skinned it right there and took the head. Like a trophy.\\nI stayed in that mud a long time.\"}",
+                    "{\"text\": \"The raid never reached camp. Nobody believed me. They said I hit my head.\"}",
+                    "{\"text\": \"Since then the elevator keeps breaking. Not breaking. Being taken apart. Bolts gone. Motor parts gone. Machines stripped.\\nSomething is shopping.\"}",
+                    "{\"text\": \"I call it the ghost. You never see it. You see the jungle bend wrong. You hear clicking. Then something is missing.\"}",
+                    "{\"text\": \"Last night the crew had enough. They grabbed the rifles and went hunting it.\\nThe ghost shimmered... and became a DEMON. A mask. Blades. Blue fire from its shoulder.\"}",
+                    "{\"text\": \"It was over in a minute. I was face down in a puddle of their blood, no gun, shaking.\\nIt walked right up to me. Looked at me.\\nThen it walked away.\"}",
+                    "{\"text\": \"It went to the foreman's office, tore the door off its hinges... and carried out the fridge.\\nTHE FRIDGE.\"}",
+                    "{\"text\": \"I'm going into the jungle now. Anywhere but here.\\nI wrote this so nobody blames me.\\nI didn't strip the machines. I didn't take the fridge.\"}"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

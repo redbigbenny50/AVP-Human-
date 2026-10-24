@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/chain",
+  "textures": {
+    "particle": "avp_human:block/steel_chain",
+    "all": "avp_human:block/steel_chain"
+  }
+}

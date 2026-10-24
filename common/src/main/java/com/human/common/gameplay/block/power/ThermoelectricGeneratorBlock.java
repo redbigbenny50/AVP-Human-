@@ -53,6 +53,28 @@ public class ThermoelectricGeneratorBlock extends PowerNodeEntityBlock<Thermoele
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
+    /** Oct 21 - lava, fire or a furnace placed, removed or lit beside it: the plates are re-read on the next tick. */
+    @Override
+    protected void neighborChanged(
+        @NotNull BlockState state,
+        @NotNull net.minecraft.world.level.Level level,
+        @NotNull BlockPos pos,
+        @NotNull Block neighbourBlock,
+        @NotNull BlockPos neighbourPos,
+        boolean movedByPiston
+    ) {
+        super.neighborChanged(state, level, pos, neighbourBlock, neighbourPos, movedByPiston);
+
+        if (
+            !level.isClientSide
+                && level.getBlockEntity(
+                    pos
+                ) instanceof com.human.common.gameplay.block.entity.power.impl.ThermoelectricGeneratorBlockEntity generator
+        ) {
+            generator.neighbourChanged();
+        }
+    }
+
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;

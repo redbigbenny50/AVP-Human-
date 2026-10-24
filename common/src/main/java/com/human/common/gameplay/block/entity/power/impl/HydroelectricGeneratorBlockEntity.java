@@ -347,23 +347,17 @@ public class HydroelectricGeneratorBlockEntity extends PowerNodeBlockEntity impl
     }
 
     /**
-     * Water falling onto the wheel from above. Vanilla marks a descending column with {@code FALLING}, which is exactly
-     * "landing near the front/back of it from up top" and the strongest feed there is.
+     * Water falling onto the wheel from above.
+     * <p>
+     * ⚠ Oct 21 (tester screenshot: a row of sources on top of the wheels, flowing ACROSS them, made full power). This
+     * counted ANY water directly above as falling - a still source sitting on the hub, or a sheet running sideways
+     * along the tops, scored the same as a waterfall. [stated] "the intent is water on top is flowing down not across."
+     * Only water actually MOVING DOWN onto the wheel (the same downward-flow test the faces use, {@link #isFalling})
+     * counts now; water lying on or running across the top turns nothing.
+     * </p>
      */
     private static int fallingStrength(Level level, BlockPos section) {
-        var above = level.getFluidState(section.above());
-
-        if (!above.is(Fluids.WATER) && !above.is(Fluids.FLOWING_WATER)) {
-            return 0;
-        }
-
-        // ⚠⚠ THIS LINE CRASHED AND I REINTRODUCED IT. It read LiquidBlock.LEVEL - a BLOCK property, 0-15 - off a
-        // FLUID state, which carries FlowingFluid.LEVEL (1-8) instead, so it threw the moment flowing water touched
-        // the wheel: "Cannot get property IntegerProperty{name=level...} does not exist in minecraft:flowing_water".
-        // Both branches of the ternary also returned the same value, so the test decided nothing.
-        //
-        // Water overhead IS the falling case whatever its level; no property read is needed at all.
-        return STRENGTH_FALLING;
+        return isFalling(level, section.above()) ? STRENGTH_FALLING : 0;
     }
 
     /**
@@ -386,6 +380,17 @@ public class HydroelectricGeneratorBlockEntity extends PowerNodeBlockEntity impl
 
         if (!fluid.is(Fluids.WATER) && !fluid.is(Fluids.FLOWING_WATER)) {
             return false;
+        }
+
+        // ⚠ Oct 21 - vanilla's FALLING flag first. Checked against vanilla's FlowingFluid.getFlow: it only adds the
+        // downward component when a SOLID face sits beside the falling water, so a waterfall dropping through open air
+        // onto the wheel reported no downward flow at all. FALLING is set on every block of a descending column,
+        // touching a wall or not; a source lying still, or a sheet running sideways, never has it.
+        if (
+            fluid.hasProperty(net.minecraft.world.level.material.FlowingFluid.FALLING)
+                && fluid.getValue(net.minecraft.world.level.material.FlowingFluid.FALLING)
+        ) {
+            return true;
         }
 
         // ⚠ Negative Y is downward. A still source returns ~0 here and correctly scores nothing.

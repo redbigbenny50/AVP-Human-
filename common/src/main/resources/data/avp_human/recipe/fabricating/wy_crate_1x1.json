@@ -1,0 +1,39 @@
+{
+  "type": "avp_human:fabricating",
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:chest"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "avp_human:white_plastic"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "tag": "c:ingots/ferroaluminum"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:orange_dye"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:light_gray_dye"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_crate_1x1"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "avp_human:polymer"
+    },
+    "D": {
+      "item": "minecraft:yellow_dye"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "PDP",
+    "SCS",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:yellow_slab_case_1x1"
+  }
+}

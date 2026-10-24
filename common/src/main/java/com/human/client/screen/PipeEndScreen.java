@@ -153,6 +153,32 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
         refilter();
     }
 
+    /**
+     * Oct 14 FIX - the cryofluid report: "still unable to get the cryofluid into his cryochamber". Whether this is a
+     * FLUID pipe is read from the block at the pipe's position, and that position reaches the client in the menu's data
+     * slots - which arrive in the packets AFTER the screen opens (vanilla handles the open-screen packet, running init,
+     * first). So init always saw (0, 0, 0), decided "item pipe", and listed ITEMS: on a fluid pipe the only "cryofluid"
+     * to pick was the bucket ITEM, a line no fluid ever matches - and an Allow filter of it blocked all flow.
+     * Re-checked every tick until the real position is in; the list is rebuilt the moment the answer changes.
+     */
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+
+        if (minecraft == null || minecraft.level == null) {
+            return;
+        }
+
+        var nowFluid = PipeEndMenu.isFluidPipe(minecraft.level, menu.getPipePos());
+
+        if (nowFluid != fluidPipe) {
+            fluidPipe = nowFluid;
+            buildCandidates();
+            layoutSearch();
+            refilter();
+        }
+    }
+
     private void layoutSearch() {
         if (search == null) {
             return;
@@ -177,12 +203,18 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
                 var key = BuiltInRegistries.FLUID.getKey(fluid);
                 var name = UniversalCanisterItem.fluidName(fluid);
                 var bucket = fluid.getBucket();
+                // [stated] Oct 14 - "it should treat the bucket and or the fluid the same": the bucket's own name and
+                // id
+                // find the fluid too, so searching "cryofluid bucket" lands on cryofluid.
+                var bucketWords = bucket == Items.AIR
+                    ? ""
+                    : " " + new ItemStack(bucket).getHoverName().getString() + " " + BuiltInRegistries.ITEM.getKey(bucket);
                 add(
                     new Candidate(
                         BuiltInRegistries.FLUID.getId(fluid),
                         key,
                         name,
-                        (name.getString() + " " + key).toLowerCase(Locale.ROOT),
+                        (name.getString() + " " + key + bucketWords).toLowerCase(Locale.ROOT),
                         fluid,
                         bucket == Items.AIR ? ItemStack.EMPTY : new ItemStack(bucket)
                     )
@@ -258,6 +290,40 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
         }
 
         textResults = false;
+
+        if (query.isEmpty() && fluidPipe && minecraft != null && minecraft.player != null) {
+            // [stated] Oct 14 - nothing typed on a FLUID pipe: the fluids of the buckets the player carries first, the
+            // way an item pipe lists the player's own items first. Hold a cryofluid bucket and cryofluid is first.
+            var own = new LinkedHashSet<ResourceLocation>();
+
+            for (var stack : minecraft.player.getInventory().items) {
+                if (stack.isEmpty() || stack.is(Items.BUCKET)) {
+                    continue;
+                }
+
+                for (var candidate : all) {
+                    if (candidate.fluid() != null && candidate.fluid().getBucket() == stack.getItem()) {
+                        own.add(candidate.key());
+                    }
+                }
+            }
+
+            for (var key : own) {
+                var candidate = byKey.get(key);
+
+                if (candidate != null) {
+                    results.add(new Result(PipeFilter.Kind.EXACT, key.toString(), candidate));
+                }
+            }
+
+            for (var candidate : all) {
+                if (!own.contains(candidate.key())) {
+                    results.add(new Result(PipeFilter.Kind.EXACT, candidate.key().toString(), candidate));
+                }
+            }
+
+            return;
+        }
 
         if (query.isEmpty() && !fluidPipe && minecraft != null && minecraft.player != null) {
             // Nothing typed: the player's own items first - the usual reason to open a filter.
@@ -410,7 +476,11 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (page == Page.FILTER) {
-            renderBackground(graphics, mouseX, mouseY, partialTick);
+            // Oct 14 FIX - [stated] "the text from the previous screen overlaps it". AbstractContainerScreen's
+            // renderBackground is "dim the world, THEN renderBg" (read in the 1.21.1 bytecode), and renderBg draws the
+            // whole main page - mode buttons, filter preview, Copy/Paste/Clear, "No lines" - under the filter page.
+            // Only the dimming is wanted here.
+            renderTransparentBackground(graphics);
             renderFilterPage(graphics, mouseX, mouseY, partialTick);
             return;
         }
@@ -447,13 +517,14 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
             var chosen = mode == setting;
             var hovered = inArea(mouseX, mouseY, x, y, MODE_W, 14);
             graphics.fill(x, y, x + MODE_W, y + 14, chosen ? 0xFF2F6F2F : hovered ? 0xFF6A6A6A : 0xFF4A4A4A);
-            graphics.drawCenteredString(
-                font,
-                Component.translatable("message.avp_human.pipe_end." + MODES[mode]),
-                x + MODE_W / 2,
-                y + 3,
-                0xFFFFFF
-            );
+            // ⚠ Oct 23 - [stated] the mode is called "Output" again ("Extract" was 38 px on this 31 px button).
+            // "Output"
+            // is 31 px of ink - exactly the button - so it is centred on its INK, not on its advance: vanilla's
+            // centring
+            // counts the blank column after the last letter and would push the "O" one pixel past the left edge.
+            var label = Component.translatable("message.avp_human.pipe_end." + MODES[mode]);
+            var ink = Math.max(0, font.width(label) - 1);
+            graphics.drawString(font, label, x + (MODE_W - ink) / 2, y + 3, 0xFFFFFF, true);
         }
 
         // Preview of the first lines (the full list is on the filter page).
@@ -1111,7 +1182,8 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
     private void renderMainTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
         for (var mode = 0; mode < MODES.length; mode++) {
             if (inArea(mouseX, mouseY, leftPos + 8 + mode * (MODE_W + 2), topPos + MODE_Y, MODE_W, 14)) {
-                graphics.renderComponentTooltip(
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
                     font,
                     List.of(
                         Component.translatable("message.avp_human.pipe_end." + MODES[mode]),
@@ -1127,17 +1199,35 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
         var y = topPos + CONTROL_Y;
 
         if (inArea(mouseX, mouseY, leftPos + 8, y, 50, 15)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.toggle.desc"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.pipe_end.toggle.desc"),
+                mouseX,
+                mouseY
+            );
         } else if (inArea(mouseX, mouseY, leftPos + 60, y, 52, 15)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.priority.desc"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.pipe_end.priority.desc"),
+                mouseX,
+                mouseY
+            );
         } else if (inArea(mouseX, mouseY, leftPos + 114, y, 54, 15)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.filter.desc"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.pipe_end.filter.desc"),
+                mouseX,
+                mouseY
+            );
         } else {
             var entries = liveFilter().entries();
 
             for (var index = 0; index < Math.min(PREVIEW_COUNT, entries.size()); index++) {
                 if (inArea(mouseX, mouseY, leftPos + 8 + index * 18, topPos + FILTER_Y, 16, 16)) {
-                    graphics.renderTooltip(font, entryLabel(entries.get(index)), mouseX, mouseY);
+                    com.human.client.screen.widget.GuiText.tooltip(graphics, font, entryLabel(entries.get(index)), mouseX, mouseY);
                     return;
                 }
             }
@@ -1150,19 +1240,32 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
         var rw = rightWidth();
 
         if (inArea(mouseX, mouseY, rx, py + 20, 50, 15)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.toggle.desc"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.pipe_end.toggle.desc"),
+                mouseX,
+                mouseY
+            );
             return;
         }
 
         if (inArea(mouseX, mouseY, rx + 54, py + 20, Math.max(60, rw - 54), 15)) {
-            graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.priority.desc"), mouseX, mouseY);
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
+                font,
+                Component.translatable("gui.avp_human.pipe_end.priority.desc"),
+                mouseX,
+                mouseY
+            );
             return;
         }
 
         if (!fluidPipe) {
             for (var index = 0; index < HOT_BUTTONS.length; index++) {
                 if (inArea(mouseX, mouseY, hotX(index), hotY(index), 48, 13)) {
-                    graphics.renderTooltip(
+                    com.human.client.screen.widget.GuiText.tooltip(
+                        graphics,
                         font,
                         Component.literal("#" + HOT_BUTTONS[index][1]).withStyle(ChatFormatting.GRAY),
                         mouseX,
@@ -1185,7 +1288,8 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
                     var candidate = results.get(index).candidate();
 
                     if (candidate != null) {
-                        graphics.renderComponentTooltip(
+                        com.human.client.screen.widget.GuiText.tooltip(
+                            graphics,
                             font,
                             List.of(candidate.name(), Component.literal(candidate.key().toString()).withStyle(ChatFormatting.DARK_GRAY)),
                             mouseX,
@@ -1210,17 +1314,29 @@ public class PipeEndScreen extends AbstractContainerScreen<PipeEndMenu> {
             var y = entriesTop() + row * 18;
 
             if (inArea(mouseX, mouseY, rx + rw - 14, y + 3, 12, 12)) {
-                graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.remove"), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
+                    font,
+                    Component.translatable("gui.avp_human.pipe_end.remove"),
+                    mouseX,
+                    mouseY
+                );
                 return;
             }
 
             if (!fluidPipe && inArea(mouseX, mouseY, rx + rw - 40, y + 2, 24, 14)) {
-                graphics.renderTooltip(font, Component.translatable("gui.avp_human.pipe_end.not_enchanted.desc"), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
+                    font,
+                    Component.translatable("gui.avp_human.pipe_end.not_enchanted.desc"),
+                    mouseX,
+                    mouseY
+                );
                 return;
             }
 
             if (inArea(mouseX, mouseY, rx, y, rw, 18)) {
-                graphics.renderTooltip(font, entryLabel(entries.get(index)), mouseX, mouseY);
+                com.human.client.screen.widget.GuiText.tooltip(graphics, font, entryLabel(entries.get(index)), mouseX, mouseY);
                 return;
             }
         }

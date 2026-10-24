@@ -243,7 +243,8 @@ public final class OptionSideControls {
         var field = buttonAt(visible(), mouseX, mouseY);
 
         if (field != null) {
-            graphics.renderComponentTooltip(
+            com.human.client.screen.widget.GuiText.tooltip(
+                graphics,
                 font,
                 List.of(field.name(), Component.translatable("gui.avp_human.machine.side.click").withStyle(ChatFormatting.DARK_GRAY)),
                 mouseX,

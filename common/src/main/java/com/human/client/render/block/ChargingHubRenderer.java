@@ -29,9 +29,37 @@ public class ChargingHubRenderer extends AzBlockEntityRenderer<ChargingHubBlockE
 
     private static final ResourceLocation TEXTURE = HumanResources.blockTextureLocation(NAME);
 
-    private static final ResourceLocation PLATE = HumanResources.blockTextureLocation(NAME + "_plate");
+    /**
+     * ⚠ Oct 16 - the animated plate is SIX SEPARATE FRAME TEXTURES ({@code _plate_0} to {@code _plate_5}, and the same
+     * for the glow), stepped here by game time, 3 ticks a frame - not one strip with a {@code .mcmeta}. A strip is only
+     * cropped and advanced when BLib's own animated-texture wrapper owns it and the renderer calls it each frame; this
+     * overlay layer never did, and with another animated-texture mod installed (GeckoLib wraps the same lookup) the
+     * strip could be drawn whole, squashed onto the plate. The quarry terminal's working screen showed exactly that.
+     */
+    private static final int PLATE_FRAMES = 6;
 
-    private static final ResourceLocation PLATE_GLOW = HumanResources.blockTextureLocation(NAME + "_plate_glow");
+    private static final int PLATE_FRAME_TICKS = 3;
+
+    private static final ResourceLocation[] PLATE = frames(NAME + "_plate_");
+
+    private static final ResourceLocation[] PLATE_GLOW = frames(NAME + "_plate_glow_");
+
+    private static ResourceLocation[] frames(String prefix) {
+        var frames = new ResourceLocation[PLATE_FRAMES];
+
+        for (int frame = 0; frame < PLATE_FRAMES; frame++) {
+            frames[frame] = HumanResources.blockTextureLocation(prefix + frame);
+        }
+
+        return frames;
+    }
+
+    /** The plate frame showing now, the same for every charging hub (as the strip's animation was). */
+    private static int plateFrame() {
+        var level = net.minecraft.client.Minecraft.getInstance().level;
+
+        return level == null ? 0 : (int) (level.getGameTime() / PLATE_FRAME_TICKS % PLATE_FRAMES);
+    }
 
     /**
      * Where the pad item sits, taken from the {@code item_mount} bone in charging_hub.geo.json: pivot [0, 12.5, -4.5]
@@ -120,8 +148,8 @@ public class ChargingHubRenderer extends AzBlockEntityRenderer<ChargingHubBlockE
                 .addRenderLayer(new com.blib.api.client.render.v1.layer.AzAutoGlowingLayer<>())
                 // ⚠ Restored after the layer was fixed: the holes came from the layer using a TRANSLUCENT render type
                 // (which writes depth for transparent pixels), not from the passes themselves.
-                .addRenderLayer(new AzOverlayTextureLayer<>($ -> PLATE, false))
-                .addRenderLayer(new AzOverlayTextureLayer<>($ -> PLATE_GLOW, true))
+                .addRenderLayer(new AzOverlayTextureLayer<>($ -> PLATE[plateFrame()], false))
+                .addRenderLayer(new AzOverlayTextureLayer<>($ -> PLATE_GLOW[plateFrame()], true))
                 .build()
         );
     }

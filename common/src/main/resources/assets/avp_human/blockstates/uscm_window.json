@@ -1,0 +1,1060 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "east": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_single"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "east": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_u"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "east": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_d"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_ud"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_l"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_ul"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_dl"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_udl"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_r"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_ur"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_dr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_udr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "east": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_lr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "east": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_ulr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "east": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_dlr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_north_udlr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_single"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_u"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_d"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_ud"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_l"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_ul"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_dl"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_udl"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_r"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_ur"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_dr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_udr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_lr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_ulr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_dlr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_south_udlr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_single"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_u"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_d"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_ud"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_l"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_ul"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_dl"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_udl"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "south": "false",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_r"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "south": "false",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_ur"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "south": "false",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_dr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "south": "false",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_udr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "south": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_lr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "south": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_ulr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "south": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_dlr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "south": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_east_udlr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_single"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_u"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_d"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_ud"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_l"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_ul"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_dl"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_udl"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_r"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_ur"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_dr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_udr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_lr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_ulr"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "true",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_dlr"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_west_udlr"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_single"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_u"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_d"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_ud"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_l"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_ul"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_dl"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_udl"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_r"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_ur"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_dr"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_udr"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_lr"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_ulr"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_dlr"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_up_udlr"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_single"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_u"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_d"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_ud"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_l"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_ul"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_dl"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_udl"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_r"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_ur"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_dr"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_udr"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_lr"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_ulr"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "north": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_dlr"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "avp_human:block/uscm_window_down_udlr"
+      }
+    }
+  ]
+}

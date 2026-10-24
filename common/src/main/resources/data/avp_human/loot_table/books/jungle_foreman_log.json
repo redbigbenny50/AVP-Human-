@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "avp_predator"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "avp_predator"
+      ]
+    }
+  ],
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:written_book_content": {
+                  "title": "Jungle Camp Foreman's Log",
+                  "author": "R. Okafor",
+                  "pages": [
+                    "{\"text\": \"JUNGLE CAMP\\nFOREMAN'S LOG\\n\\nDay 2. Monazite. Everywhere. Every machine shop in the colonies wants it for magnets. We'll be rich by the end of the quarter.\"}",
+                    "{\"text\": \"Day 3. Got a fridge for the office.\\n\\nDay 6. Radio check with the swamp camp. Mallory hasn't found a single grain. He asked about my fridge twice. I may have described it in detail.\"}",
+                    "{\"text\": \"Day 9. The mining elevator is down. Night shift says there was a \\\"blue flash\\\" and the cable just melted through. Clean cut. Glowing.\\nRequisitioned a new cable. Blamed the heat.\"}",
+                    "{\"text\": \"Day 11. Strange clicking from the treeline at night. Rhythmic. Crew says it's birds. I have never heard a bird click in sentences.\"}",
+                    "{\"text\": \"Day 14. Second elevator cable melted. Another blue flash. Nobody saw who. Nobody saw anything. Hendricks has stopped going near the trees.\"}",
+                    "{\"text\": \"Day 16. Night shift took the camp rifles and went into the trees after the clicking.\\nThey didn't come back.\\nFound their helmets lined up neatly on the elevator platform.\"}",
+                    "{\"text\": \"Same night. Office door torn off its hinges. Taken: two drills, the welding torch...\\nand the fridge.\\nWHO STEALS A FRIDGE.\"}",
+                    "{\"text\": \"Day 17. Radioed Mallory. He complained about mud, frogs, and a worker who steals rocks.\\nIt sounded wonderful. Quiet. Nobody steals fridges in a swamp.\"}",
+                    "{\"text\": \"Day 18. Ruiz from the elevator crew is missing too.\\nThe clicking was very close tonight.\\nRequesting a transfer to the swamp.\"}"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

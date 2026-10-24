@@ -21,7 +21,6 @@ import com.human.common.gameplay.entity.living.human.marine.ai.heal_self.strateg
 import com.human.common.gameplay.entity.living.human.marine.sentry.SentryTargetFilter;
 import com.human.common.gameplay.item.GunItem;
 import com.human.common.gameplay.item.ItemCooldownUser;
-import com.human.common.gameplay.level.patrol.decorator.gear.MarineGearDecorator;
 import com.human.common.gameplay.menu.marine.MarineInventoryContainer;
 import com.human.common.gameplay.menu.marine.MarineInventoryMenu;
 import com.human.common.network.packet.S2CMarineSentryFilterPayload;
@@ -1514,7 +1513,10 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
                 SPAWN_EGG,
                 SPAWNER,
                 TRIGGERED,
-                TRIAL_SPAWNER -> MarineGearDecorator.INSTANCE.decorate(level(), this);
+                // [stated] Oct 13 - each soldier type spawns in its own kit (SoldierProfiles); a marine's is unchanged.
+                TRIAL_SPAWNER -> com.human.common.gameplay.entity.living.human.soldier.SoldierProfiles.of(getType())
+                    .kit()
+                    .decorate(level(), this);
             case BREEDING,
                 CHUNK_GENERATION,
                 CONVERSION,
@@ -1567,6 +1569,21 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
         }
 
         if (itemStack.getItem() == Items.DIAMOND && !hasLeader()) {
+            // [stated] Oct 13 - Weyland-Yutani soldiers only work under a company contract (not built yet), so they
+            // turn the diamond down and the player keeps it.
+            if (!com.human.common.gameplay.entity.living.human.soldier.SoldierHiring.canHire(this, player)) {
+                if (!level().isClientSide) {
+                    player.displayClientMessage(
+                        net.minecraft.network.chat.Component.translatable(
+                            com.human.common.gameplay.entity.living.human.soldier.SoldierHiring.CONTRACT_ONLY
+                        ),
+                        true
+                    );
+                }
+
+                return InteractionResult.sidedSuccess(level().isClientSide);
+            }
+
             itemStack.consume(1, player);
             setLeader(player);
             // Taking the contract means leaving the patrol - otherwise the sergeant keeps pulling him back.
@@ -1672,6 +1689,19 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             Codecs.UUID.decode(BLibCodecs.Schema.NBT, compoundTag.get(NBT_LEADER_UUID))
                 .ifOk(uuid -> this.leaderUUIDOption = Option.ofNullable(uuid));
         }
+
+        // Absent on every soldier saved before the split: resolved on first use instead (see faction()).
+        this.faction = null;
+
+        if (compoundTag.contains(NBT_FACTION)) {
+            var id = compoundTag.getString(NBT_FACTION);
+
+            for (var candidate : com.human.common.gameplay.fabrication.Faction.values()) {
+                if (candidate.id().equals(id)) {
+                    this.faction = candidate;
+                }
+            }
+        }
     }
 
     @Override
@@ -1699,12 +1729,82 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             compoundTag.putInt(NBT_RESUPPLY_TICK, Math.max(0, resupply.getResupplyTick() - tickCount));
         }
         leaderUUIDOption.ifSome(leaderUUID -> compoundTag.put(NBT_LEADER_UUID, Codecs.UUID.encode(BLibCodecs.Schema.NBT, leaderUUID)));
+        compoundTag.putString(NBT_FACTION, faction().id());
         squadLeaderUUIDOption.ifSome(
             squadLeaderUUID -> compoundTag.put(
                 NBT_SQUAD_LEADER_UUID,
                 Codecs.UUID.encode(BLibCodecs.Schema.NBT, squadLeaderUUID)
             )
         );
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // [stated] Oct 13 - the soldier split: faction and body
+    // ------------------------------------------------------------------------------------------------------------
+
+    private static final String NBT_FACTION = "SoldierFaction";
+
+    /** Null until first asked; saved from then on. */
+    private com.human.common.gameplay.fabrication.@Nullable Faction faction;
+
+    private com.human.common.gameplay.entity.living.human.@Nullable HumanFeatureManager employeeFeatures;
+
+    /**
+     * This soldier's faction. Normally its type's ({@code SoldierProfiles}). A {@code marine} saved before the split
+     * that is wearing Weyland-Yutani armour and has NO leader is a W-Y soldier from an old patrol and is recognised as
+     * one; a hired marine always stays USCM, whatever it wears, so no player's squad can ever change sides.
+     * <p>
+     * Resolved on first use, never during loading (armour and leader must both be in), and kept only on the server: a
+     * client asking before the equipment has arrived must not lock in a guess.
+     * </p>
+     */
+    public com.human.common.gameplay.fabrication.Faction faction() {
+        var known = faction;
+
+        if (known != null) {
+            return known;
+        }
+
+        var resolved = com.human.common.gameplay.entity.living.human.soldier.SoldierProfiles.of(getType()).faction();
+
+        if (getType() == com.human.common.registry.init.HumanEntityTypes.MARINE.get() && !hasLeader() && wearsWeylandYutaniArmor()) {
+            resolved = com.human.common.gameplay.fabrication.Faction.WY;
+        }
+
+        if (!level().isClientSide) {
+            faction = resolved;
+        }
+
+        return resolved;
+    }
+
+    private boolean wearsWeylandYutaniArmor() {
+        var chest = getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+
+        return chest.is(com.human.common.registry.init.item.HumanArmorItems.WY_COMMANDO_CHESTPLATE.get())
+            || chest.is(com.human.common.registry.init.item.HumanArmorItems.WY_ELITE_CHESTPLATE.get())
+            || chest.is(com.human.common.registry.init.item.HumanArmorItems.WY_APE_CHESTPLATE.get());
+    }
+
+    /**
+     * The Weyland-Yutani units wear the {@code weyland_yutani_employee} body (skin, hair, beard, eyes, jumpsuit) - the
+     * colonist's look, [stated] "the colonist is a better match than the marine". Decided by type, which the client
+     * knows without syncing anything.
+     */
+    @Override
+    public com.human.common.gameplay.entity.living.human.HumanFeatureManager getHumanFeatureManager() {
+        if (!com.human.common.gameplay.entity.living.human.soldier.SoldierProfiles.of(getType()).employeeBody()) {
+            return super.getHumanFeatureManager();
+        }
+
+        var features = employeeFeatures;
+
+        if (features == null) {
+            features = new com.human.common.gameplay.entity.living.human.soldier.WeylandYutaniEmployeeFeatureManager(this);
+            employeeFeatures = features;
+        }
+
+        return features;
     }
 
     public BiomeSenseCache getBiomeSenseCache() {

@@ -49,6 +49,32 @@ public class HumanItems {
 
     public static final BLibHolder<Item> ASH_BALL = create("ash_ball");
 
+    /**
+     * [stated] Oct 23 - a Weyland-Yutani music disc, "Building Better Worlds", by the same artist as avp_alien's and
+     * avp_predator's discs (Rotch Gwylt). Made like theirs: nine fragments craft the disc; the fragments turn up in the
+     * mining camp chests.
+     */
+    public static final BLibHolder<Item> WY_MUSIC_DISC_1 = create(
+        "wy_music_disc_1",
+        () -> new Item(
+            new Item.Properties()
+                .stacksTo(1)
+                .rarity(net.minecraft.world.item.Rarity.RARE)
+                .jukeboxPlayable(
+                    net.minecraft.resources.ResourceKey.create(
+                        net.minecraft.core.registries.Registries.JUKEBOX_SONG,
+                        net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "building_better_worlds")
+                    )
+                )
+        )
+    );
+
+    /** Vanilla's own disc fragment: its tooltip is the "<item>.desc" lang line naming the song. */
+    public static final BLibHolder<Item> WY_MUSIC_DISC_1_FRAGMENT = create(
+        "wy_music_disc_1_fragment",
+        () -> new net.minecraft.world.item.DiscFragmentItem(new Item.Properties())
+    );
+
     public static final BLibHolder<Item> BARREL = create("barrel");
 
     /**
@@ -67,6 +93,9 @@ public class HumanItems {
     public static final BLibHolder<Item> BLUEPRINT_F903WE_RIFLE = create("blueprint_f903we_rifle");
 
     public static final BLibHolder<Item> BLUEPRINT_FLAMETHROWER_SEVASTOPOL = create("blueprint_flamethrower_sevastopol");
+
+    /** [stated] Oct 18 - the chem thrower's blueprint, the first step to its recipe. */
+    public static final BLibHolder<Item> BLUEPRINT_CHEM_THROWER = create("blueprint_chem_thrower");
 
     public static final BLibHolder<Item> BLUEPRINT_M37_12_SHOTGUN = create("blueprint_m37_12_shotgun");
 

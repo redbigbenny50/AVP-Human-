@@ -36,6 +36,15 @@ public abstract class MixinAzAnimator_CryoPose {
             if (com.human.client.render.cryo.CryoIcon.isIcon(entity) && CryoPose.applyIcon(self, entity)) {
                 return;
             }
+
+            // [stated] Oct 19 - a mob frozen solid starts no new clips (no attack, no new idle): its pose is held where
+            // it froze (MixinAzModelRenderer_FrozenSolid).
+            if (
+                com.human.client.freeze.FrozenSolidClient.isFrozen(entity)
+                    && !com.human.compatibility.avp_predator.HumanPredatorNet.isNettedOnClient(entity)
+            ) {
+                return;
+            }
         }
 
         @SuppressWarnings("unchecked")

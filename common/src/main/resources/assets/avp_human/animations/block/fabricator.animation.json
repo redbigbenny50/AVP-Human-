@@ -1,0 +1,62 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"fabricating": {
+			"loop": true,
+			"animation_length": 4.44444,
+			"bones": {
+				"printer_z": {
+					"position": {
+						"0": {
+							"vector": [0, 0, 0]
+						},
+						"1.11111": {
+							"vector": [0, 0, -5]
+						},
+						"2.22222": {
+							"vector": [0, 0, 1]
+						},
+						"4.44444": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"printer_y": {
+					"position": {
+						"0": {
+							"vector": [0, 0, 0]
+						},
+						"1.11111": {
+							"vector": [0, -5, 0]
+						},
+						"3.33333": {
+							"vector": [0, -4.67, 0]
+						},
+						"4.44444": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"printer_x": {
+					"position": {
+						"0": {
+							"vector": [0, 0, 0]
+						},
+						"2.22222": {
+							"vector": [-5, 0, 0]
+						},
+						"3.33333": {
+							"vector": [4.5, 0, 0]
+						},
+						"4.44444": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"idle.loop": {
+			"loop": true
+		}
+	}
+}

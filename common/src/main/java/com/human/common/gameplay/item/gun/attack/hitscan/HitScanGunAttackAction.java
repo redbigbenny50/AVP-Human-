@@ -259,7 +259,58 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             );
     }
 
+    /**
+     * Blood types beyond red, acid and the blue strains. Oct 18 - [stated] "the yautja are red when they 'bleed' from
+     * these attacks when it should be the same color as the blood on the ground" (it glows); "synthetics would bleed
+     * white, and engineers when we add them would have a blue grey blood and goo mutants would have black blood or a
+     * dark charcoal". Colours are in GunKillBloodEffect.colorFor.
+     */
+    static final int FLUID_SYNTHETIC = 2;
+
+    static final int FLUID_YAUTJA = 5;
+
+    static final int FLUID_ENGINEER = 6;
+
+    static final int FLUID_BLACK_GOO = 7;
+
+    /**
+     * Data-driven blood types: {@code data/avp_human/tags/entity_type/blood/*.json}. A modpack (or a sibling mod) adds
+     * a creature to the right tag and it bleeds the right colour, no code involved. Checked FIRST, so a tag always wins
+     * over the name guesses below.
+     */
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> YAUTJA_BLOOD = bloodTag("yautja");
+
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> SYNTHETIC_BLOOD = bloodTag("synthetic");
+
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> ENGINEER_BLOOD = bloodTag("engineer");
+
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> BLACK_GOO_BLOOD = bloodTag("black_goo");
+
+    private static net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> bloodTag(String name) {
+        return net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ENTITY_TYPE,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "blood/" + name)
+        );
+    }
+
     private static int killFluidType(net.minecraft.world.entity.Entity entity) {
+        var type = entity.getType();
+
+        if (entity instanceof LivingEntity) {
+            if (type.is(YAUTJA_BLOOD)) {
+                return FLUID_YAUTJA;
+            }
+            if (type.is(ENGINEER_BLOOD)) {
+                return FLUID_ENGINEER;
+            }
+            if (type.is(BLACK_GOO_BLOOD)) {
+                return FLUID_BLACK_GOO;
+            }
+            if (type.is(SYNTHETIC_BLOOD)) {
+                return FLUID_SYNTHETIC;
+            }
+        }
+
         // Via the compat proxy, NOT a direct Alien reference: this method is on the firing path of every gun, and a
         // hard link to another mod's class here crashes anyone running avp_human without avp_alien.
         var strainFluid = HumanAlienBlood.fluidType(entity);
@@ -269,6 +320,17 @@ public final class HitScanGunAttackAction implements GunAttackAction {
         var key = entity.getType().builtInRegistryHolder().key().location();
         var namespace = key.getNamespace();
         var path = key.getPath();
+        // By name, like every other case here, so avp_human needs nothing from avp_predator. Checked before the
+        // keyword cases below, which a future yautja variant's name could otherwise trip.
+        // ⚠ Living creatures only: avp_predator's yautja_grenade is a thrown projectile, and shooting one must not
+        // spray yautja blood.
+        if (namespace.equals("avp_predator") && path.contains("yautja") && entity instanceof LivingEntity) {
+            return FLUID_YAUTJA;
+        }
+        // Engineers are not in the game yet: by name, so they bleed right the moment they are added.
+        if (path.contains("engineer") && entity instanceof LivingEntity) {
+            return FLUID_ENGINEER;
+        }
         if (path.contains("irradiated")) {
             return 4;
         }
@@ -279,7 +341,7 @@ public final class HitScanGunAttackAction implements GunAttackAction {
             return 1;
         }
         if (path.contains("android") || path.contains("synthetic") || path.contains("robot")) {
-            return 2;
+            return FLUID_SYNTHETIC;
         }
         return 0;
     }

@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "avp_human:mining_camp_jungle",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1840396241,
+    "spacing": 48,
+    "separation": 24,
+    "spread_type": "triangular"
+  }
+}

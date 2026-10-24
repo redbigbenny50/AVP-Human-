@@ -38,6 +38,17 @@ public class GunInputHandler {
         firingTicks++;
 
         if (itemStack.getItem() instanceof GunItem gunItem) {
+            // [stated] Oct 18 - an EMPTY chem thrower with more than one vapor carried: the wheel is only ever opened
+            // by the reload key, so a player can carry it empty "without a menu floating in front of me until i make a
+            // decision" - the trigger just says how. (One kind carried: the server loads it on the trigger.)
+            // ⚠ Here, not in the fire pipeline: the pipeline runs on the SERVER only.
+            if (
+                com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.isChemThrower(itemStack)
+                    && itemStack.getOrDefault(com.human.common.registry.init.HumanDataComponents.AMMUNITION.get(), 0) <= 0
+            ) {
+                com.human.common.gameplay.item.gun.chem.ChemThrowerReloading.onEmptyClient(player, itemStack);
+            }
+
             // The server owns shots, hit detection, ammunition and confirmed recoil.
             Human.MOD.networking().sendToServer(new C2SGunFirePayload(tickProgress, player.getYRot(), player.getXRot()));
         }

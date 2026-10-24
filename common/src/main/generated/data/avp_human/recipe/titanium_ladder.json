@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/titanium"
+    }
+  },
+  "pattern": [
+    "I I",
+    "III",
+    "I I"
+  ],
+  "result": {
+    "count": 8,
+    "id": "avp_human:titanium_ladder"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/wy_floor_grate_strip"
+    },
+    "facing=east": {
+      "model": "avp_human:block/wy_floor_grate_strip",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "avp_human:block/wy_floor_grate_strip",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/wy_floor_grate_strip",
+      "y": 270
+    }
+  }
+}

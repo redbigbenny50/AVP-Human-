@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "T": {
+      "item": "avp_human:desk_terminal"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "item": "avp_human:canister"
+    }
+  },
+  "pattern": [
+    "DTD",
+    "MMM",
+    "PCP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:quarry_terminal"
+  }
+}

@@ -25,6 +25,26 @@ public class HumanPacketDirectionRegistry {
             new PacketDirection.C2S<>(C2SDaggerOffHandAttackPayload.TYPE, C2SDaggerOffHandAttackPayload.CODEC)
         );
         REGISTRY.registerPacketDirection(new PacketDirection.C2S<>(C2SGunReloadPayload.TYPE, C2SGunReloadPayload.CODEC));
+        // [stated] Oct 18 - the chem thrower: the wheel's pick, its blast for the watching clients to draw, and "open
+        // the wheel" once the purge finishes.
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.C2S<>(
+                com.human.common.network.packet.C2SChemReloadPayload.TYPE,
+                com.human.common.network.packet.C2SChemReloadPayload.CODEC
+            )
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.S2C<>(
+                com.human.common.network.packet.S2CChemBlastPayload.TYPE,
+                com.human.common.network.packet.S2CChemBlastPayload.CODEC
+            )
+        );
+        REGISTRY.registerPacketDirection(
+            new PacketDirection.S2C<>(
+                com.human.common.network.packet.S2COpenChemWheelPayload.TYPE,
+                com.human.common.network.packet.S2COpenChemWheelPayload.CODEC
+            )
+        );
         REGISTRY.registerPacketDirection(
             new PacketDirection.C2S<>(C2SPlayerToggleCrawlPayload.TYPE, C2SPlayerToggleCrawlPayload.CODEC)
         );

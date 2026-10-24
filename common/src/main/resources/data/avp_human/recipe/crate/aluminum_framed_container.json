@@ -1,0 +1,24 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/aluminum"
+    },
+    "B": {
+      "tag": "c:storage_blocks/aluminum"
+    },
+    "#": {
+      "item": "avp_human:aluminum_framed_crate_3x3"
+    }
+  },
+  "pattern": [
+    "BIB",
+    "I#I",
+    "BIB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:aluminum_framed_container"
+  }
+}

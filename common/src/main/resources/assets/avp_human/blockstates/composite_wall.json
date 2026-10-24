@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "avp_human:block/composite_wall"
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 90
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 180
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 270
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "y": 90
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "avp_human:block/composite_wall",
+        "x": 270,
+        "y": 90
+      }
+    ]
+  }
+}

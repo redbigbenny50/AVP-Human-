@@ -22,6 +22,18 @@ public abstract class MixinMob_CaptureCordInteract {
         var self = (Mob) (Object) this;
 
         if (!CaptureCordTether.isHeldBy(self, player)) {
+            // [stated] Oct 14 - holding a capture cord: put the mob on it HERE, before the mob's own right-click
+            // (trading, sitting, a screen) can swallow the click - as avp_alien's capture chain does.
+            var held = player.getItemInHand(hand);
+
+            if (held.getItem() instanceof com.human.common.gameplay.item.TitaniumCaptureCordItem) {
+                var result = com.human.common.gameplay.item.TitaniumCaptureCordItem.capture(held, player, self);
+
+                if (result.consumesAction()) {
+                    callbackInfo.setReturnValue(result);
+                }
+            }
+
             return;
         }
 

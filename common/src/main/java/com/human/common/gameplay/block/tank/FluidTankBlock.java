@@ -31,9 +31,9 @@ import org.jetbrains.annotations.Nullable;
  * {@link FluidTankFormation}.</li>
  * <li>64 buckets per block, held by the tank's controller ({@link FluidTankBlockEntity}).</li>
  * <li>Buckets and canisters fill and drain it; comparators read the fill level.</li>
- * <li>Pipes: in through the top, out through the bottom, sides input by default. [stated] Sep 29 - everything is BARE
- * HAND, like the pipes' own settings, no tool: right-click a side where a pipe is attached to switch that port between
- * input and output.</li>
+ * <li>Pipes: in through the top, out through the bottom. A side with a pipe is a port BOTH ways, and the pipe's own
+ * flange (bare-hand click on the pipe end) picks in, out or both - [stated] Oct 18. Sides no longer have a setting of
+ * their own.</li>
  * <li>Empty hand anywhere else: says what is inside. SNEAK + empty hand: windows on or off for the whole tank.</li>
  * <li>The item form does NOT keep fluid, as in Create.</li>
  * </ul>
@@ -113,7 +113,11 @@ public class FluidTankBlock extends BaseEntityBlock {
     ) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
 
-        if (!level.isClientSide && !oldState.is(this)) {
+        // ⚠ Oct 21 - NOT when the block is being MOVED (Sable building or landing a ship, a Create contraption): those
+        // move the whole tank, block by block, carrying each block's data. Re-forming after each single block - with
+        // the rest of the tank half-moved and the new block's data not even loaded yet - split the tank and spilled
+        // its fluid. The move hook (ShipMoves) puts the tank right once the whole batch is in place.
+        if (!level.isClientSide && !oldState.is(this) && !movedByPiston) {
             FluidTankFormation.onPlaced(level, pos, this);
 
             if (level.getBlockEntity(pos) instanceof FluidTankBlockEntity tank) {
@@ -151,7 +155,8 @@ public class FluidTankBlock extends BaseEntityBlock {
         @NotNull BlockState newState,
         boolean movedByPiston
     ) {
-        if (level.isClientSide || newState.is(this)) {
+        // ⚠ Oct 21 - a MOVED block (see onPlace) leaves without re-forming what it left: the rest is moving too.
+        if (level.isClientSide || newState.is(this) || movedByPiston) {
             super.onRemove(state, level, pos, newState, movedByPiston);
             return;
         }
@@ -233,22 +238,13 @@ public class FluidTankBlock extends BaseEntityBlock {
                 true
             );
         } else if (
-            com.human.common.gameplay.fluid.FluidConnections.isConnected(level, pos, hit.getDirection())
+            hit.getDirection().getAxis().isVertical()
+                && com.human.common.gameplay.fluid.FluidConnections.isConnected(level, pos, hit.getDirection())
                 && !(level.getBlockState(pos.relative(hit.getDirection())).getBlock() instanceof FluidTankBlock)
         ) {
-            var face = hit.getDirection();
-
-            if (face.getAxis().isHorizontal()) {
-                var output = tank.toggleSide(face);
-
-                level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.4F, output ? 0.8F : 1.0F);
-                player.displayClientMessage(
-                    Component.translatable(output ? "message.avp_human.fluid_tank.side_output" : "message.avp_human.fluid_tank.side_input"),
-                    true
-                );
-            } else {
-                player.displayClientMessage(Component.translatable("message.avp_human.fluid_tank.fixed_port"), true);
-            }
+            // Top in, bottom out - fixed. (Oct 18: SIDES have no setting of their own any more - a side is both ways
+            // and the pipe's flange decides, so a side click just says what is inside, like anywhere else.)
+            player.displayClientMessage(Component.translatable("message.avp_human.fluid_tank.fixed_port"), true);
         } else {
             player.displayClientMessage(FluidContainerInteractions.describe(tank), true);
         }

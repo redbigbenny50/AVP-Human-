@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "avp_human:steel_ingot"
+    },
+    "D": {
+      "item": "avp_human:servo"
+    },
+    "S": {
+      "item": "avp_human:speaker"
+    }
+  },
+  "pattern": [
+    "SAS",
+    "SDS",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:resonator"
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "avp_alien"
+      ]
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "avp_alien"
+    }
+  ]
+}

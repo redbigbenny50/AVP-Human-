@@ -1,130 +1,111 @@
 package com.human.common.gameplay.block.entity.power.impl;
 
-import com.alien.common.data.AlienVariantTypes;
-import com.alien.common.registry.tag.AlienBlockTags;
 import com.human.common.gameplay.block.entity.power.PowerConsumerBlockEntity;
-import com.human.common.property.HumanProperties;
-import com.human.common.property.HumanPropertyAccess;
 import com.human.common.registry.init.HumanBlockEntityTypes;
 import com.human.compatibility.avp_alien.AVPAlien;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * [stated] Oct 20 - the resonator, redesigned: no longer a resin cleaner. "In lore certain frequencies could slow and
+ * knock out xenos." While powered it holds a 32-block sphere in which xenos are slowed and, after 15 seconds, put to
+ * sleep, and eggs cannot open - everything the xenos do is avp_alien's (com.alien.common.gameplay.resonance.Resonance);
+ * this block only supplies the pulse.
+ * <ul>
+ * <li>500 FE a tick, from a cable UNDERNEATH it (its only power face), or wirelessly from a fuse panel it is bound to
+ * with the wiring tool.</li>
+ * <li>One pulse a second while powered. Unpowered (or without avp_alien) it does nothing at all; xenos it had put to
+ * sleep wake about two seconds after the pulses stop.</li>
+ * <li>Shift-right-click it with the wiring tool to see the sphere, through blocks, for a few seconds.</li>
+ * </ul>
+ */
 public class ResonatorBlockEntity extends PowerConsumerBlockEntity {
 
-    private int tickCounter;
+    public static final long POWER_PER_TICK = 500L;
+
+    /** The field's reach - kept equal to avp_alien's Resonance.RADIUS (the human side draws it without avp_alien). */
+    public static final int RADIUS = 32;
+
+    private static final int PULSE_INTERVAL_TICKS = 20;
+
+    /**
+     * Oct 21 - how long it keeps showing as running after power stops: a grid that is short for a tick or two must not
+     * flicker the spin (or flood clients with block updates).
+     */
+    private static final int ACTIVE_GRACE_TICKS = 20;
+
+    /** Server: the game time it was last powered (not saved - it only smooths the running state). */
+    private long lastPoweredTick = Long.MIN_VALUE / 2;
 
     private final ResonatorAnimationDispatcher animationDispatcher;
 
-    private final Map<Item, Integer> resinBallCounts;
-
     public ResonatorBlockEntity(BlockPos pos, BlockState blockState) {
         super(HumanBlockEntityTypes.RESONATOR.get(), pos, blockState);
-        this.tickCounter = 0;
         this.animationDispatcher = new ResonatorAnimationDispatcher();
-        this.resinBallCounts = new HashMap<>();
     }
 
     @Override
     public long getRequestedPower() {
-        return 1000;
+        return POWER_PER_TICK;
     }
 
+    /** [stated] Oct 20 - "uses power from a cable underneath it" (or a fuse panel, which is wireless). */
+    @Override
+    public boolean canConnectOn(Direction direction) {
+        return direction == Direction.DOWN;
+    }
+
+    /**
+     * ⚠ Oct 21 - SERVER. These used to ask for the animation here, but the animation only plays on the CLIENT and the
+     * request returns at once on the server - so it never spun. The server now only keeps the block's ACTIVE state
+     * right (changed only when it actually flips, so a steady resonator sends nothing); every client sees that state
+     * and {@link #clientTick} plays the matching animation.
+     */
     @Override
     public void unpoweredTick(Level level, BlockPos blockPos, BlockState blockState) {
-        animationDispatcher.unpowered(this);
+        if (level.getGameTime() - lastPoweredTick > ACTIVE_GRACE_TICKS) {
+            setActive(level, blockPos, blockState, false);
+        }
+    }
+
+    /** CLIENT, every tick: spin while running, wind down when not. Both requests are no-ops once already playing. */
+    public void clientTick(BlockState state) {
+        if (
+            state.hasProperty(com.human.common.gameplay.block.power.ResonatorBlock.ACTIVE)
+                && state.getValue(com.human.common.gameplay.block.power.ResonatorBlock.ACTIVE)
+        ) {
+            animationDispatcher.powered(this);
+        } else {
+            animationDispatcher.unpowered(this);
+        }
+    }
+
+    private static void setActive(Level level, BlockPos pos, BlockState state, boolean active) {
+        var property = com.human.common.gameplay.block.power.ResonatorBlock.ACTIVE;
+
+        if (!state.hasProperty(property) || state.getValue(property) == active) {
+            return;
+        }
+
+        // UPDATE_CLIENTS only: the same block in a new state keeps its block entity, and neighbours need nothing.
+        level.setBlock(pos, state.setValue(property, active), net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
     @Override
     public void poweredTick(Level level, BlockPos blockPos, BlockState blockState) {
-        animationDispatcher.powered(this);
+        lastPoweredTick = level.getGameTime();
+        setActive(level, blockPos, blockState, true);
 
-        tickCounter++;
-
-        var tickValue = HumanPropertyAccess.INSTANCE.get(HumanProperties.Blocks.Resonator.REPLACE_FREQUENCY_IN_TICKS);
-
-        if (tickCounter % tickValue != 0) {
+        // Offset by position so many resonators do not all pulse on the same tick.
+        if ((level.getGameTime() + blockPos.asLong()) % PULSE_INTERVAL_TICKS != 0) {
             return;
         }
 
-        var radius = HumanPropertyAccess.INSTANCE.get(HumanProperties.Blocks.Resonator.REPLACE_RADIUS_IN_BLOCKS);
-
-        if (!AVPAlien.MOD.isLoaded()) {
-            return;
-        }
-
-        BlockPos.betweenClosedStream(blockPos.offset(-radius, -radius, -radius), blockPos.offset(radius, radius, radius))
-            .forEach(currentPos -> {
-                var currentState = level.getBlockState(currentPos);
-
-                AlienVariantTypes.getFor(currentState)
-                    .ifSome(alienVariantType -> {
-                        // TODO: Use variant-specific tag here.
-                        if (currentState.is(AlienBlockTags.RESIN_VEINS)) {
-                            level.setBlockAndUpdate(currentPos, Blocks.AIR.defaultBlockState());
-
-                            var resinBallItem = alienVariantType.resinBall().get();
-                            addResinBallItem(resinBallItem);
-
-                            setChanged();
-
-                            return;
-                        }
-
-                        // TODO: Use variant-specific tag here.
-                        if (currentState.is(AlienBlockTags.RESIN)) {
-                            // TODO: This is not a safe assumption to make!
-                            var replacementBlock = currentPos.getY() <= 0 ? Blocks.DEEPSLATE : Blocks.STONE;
-
-                            level.setBlockAndUpdate(currentPos, replacementBlock.defaultBlockState());
-
-                            var resinBallItem = alienVariantType.resinBall().get();
-                            addResinBallItem(resinBallItem);
-
-                            setChanged();
-                        }
-                    });
-            });
-    }
-
-    public void addResinBallItem(Item resinBallItem) {
-        resinBallCounts.merge(resinBallItem, 1, Integer::sum);
-        setChanged();
-    }
-
-    public Map<Item, Integer> getResinBallCounts() {
-        return Collections.unmodifiableMap(resinBallCounts);
-    }
-
-    public void onRightClick(Player player) {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-
-        if (!resinBallCounts.isEmpty()) {
-            for (var entry : resinBallCounts.entrySet()) {
-                var resinBallItem = entry.getKey();
-                var count = entry.getValue();
-
-                if (count > 0) {
-                    var resinBallStack = new ItemStack(resinBallItem, count);
-                    var resinBallEntity = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), resinBallStack);
-                    level.addFreshEntity(resinBallEntity);
-                }
-            }
-
-            resinBallCounts.clear();
-            setChanged();
+        if (level instanceof ServerLevel serverLevel && AVPAlien.MOD.isLoaded()) {
+            com.human.compatibility.avp_alien.AlienResonanceBridge.pulse(serverLevel, blockPos);
         }
     }
 }

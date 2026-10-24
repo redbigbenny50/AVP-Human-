@@ -51,6 +51,71 @@ public class StructureUtil {
         return column.getBlock(surfaceY).getFluidState().is(FluidTags.WATER);
     }
 
+    /** Water this deep or deeper at a sample counts as DEEP: a lake, river or ocean edge, not a marsh. */
+    private static final int DEEP_WATER_BLOCKS = 3;
+
+    /** How many of the nine samples may be deep water before a site is refused. */
+    private static final int MAX_DEEP_SAMPLES = 3;
+
+    /**
+     * Whether a site is mostly shallow - the rule for the swamp and jungle mining camps.
+     * <p>
+     * [stated] Oct 23 - "swamps are normally 60% water", so {@link #isSiteDry} (any water at all refuses the site)
+     * would keep the swamp camp out of almost every swamp. This allows shallow water anywhere on the site - marsh and
+     * puddles - and refuses only a site that sits on DEEP water ({@value #DEEP_WATER_BLOCKS}+ blocks): the centre deep,
+     * or more than {@value #MAX_DEEP_SAMPLES} of the same nine samples ({@value #FOOTPRINT_STEP} blocks apart) deep.
+     * That keeps both camps off lakes, rivers and ocean edges inside their biomes.
+     * </p>
+     * <p>
+     * ⚡ Same cost as isSiteDry: one raw-terrain column per sample, at most nine, once per candidate site, and it stops
+     * as soon as the answer is known.
+     * </p>
+     */
+    public static boolean isSiteMostlyShallow(@NotNull Structure.GenerationContext generationContext) {
+        var chunkPos = generationContext.chunkPos();
+        var centreX = chunkPos.getMiddleBlockX();
+        var centreZ = chunkPos.getMiddleBlockZ();
+        var deepSamples = 0;
+
+        for (int dx = -FOOTPRINT_STEP; dx <= FOOTPRINT_STEP; dx += FOOTPRINT_STEP) {
+            for (int dz = -FOOTPRINT_STEP; dz <= FOOTPRINT_STEP; dz += FOOTPRINT_STEP) {
+                if (!isDeepWaterAt(generationContext, centreX + dx, centreZ + dz)) {
+                    continue;
+                }
+                if ((dx == 0 && dz == 0) || ++deepSamples > MAX_DEEP_SAMPLES) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Whether the raw terrain at (x, z) has at least {@value #DEEP_WATER_BLOCKS} blocks of water from its surface down.
+     */
+    private static boolean isDeepWaterAt(@NotNull Structure.GenerationContext generationContext, int x, int z) {
+        var generator = generationContext.chunkGenerator();
+        var heightAccessor = generationContext.heightAccessor();
+        var surfaceY = generator.getFirstOccupiedHeight(
+            x,
+            z,
+            Heightmap.Types.WORLD_SURFACE_WG,
+            heightAccessor,
+            generationContext.randomState()
+        );
+        var column = generator.getBaseColumn(x, z, heightAccessor, generationContext.randomState());
+
+        for (int depth = 0; depth < DEEP_WATER_BLOCKS; depth++) {
+            var y = surfaceY - depth;
+            if (y < heightAccessor.getMinBuildHeight() || !column.getBlock(y).getFluidState().is(FluidTags.WATER)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /** @deprecated tests a single block only - use {@link #isSiteDry}. Kept so nothing else that calls it breaks. */
     @Deprecated
     public static boolean hasAtLeast1NonWaterCorner(@NotNull Structure.GenerationContext generationContext) {

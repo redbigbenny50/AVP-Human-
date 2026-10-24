@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "avp_human:blueprint_chem_thrower"
+    },
+    {
+      "item": "avp_human:barrel"
+    },
+    {
+      "item": "avp_human:grip"
+    },
+    {
+      "item": "avp_human:receiver"
+    },
+    {
+      "item": "avp_human:aluminum_tank"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:chem_thrower"
+  }
+}

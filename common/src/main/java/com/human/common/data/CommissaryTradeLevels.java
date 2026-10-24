@@ -140,6 +140,14 @@ public class CommissaryTradeLevels {
             3,
             12,
             0.09f
+        ),
+        // [stated] Oct 13: the USCM faction license - every USCM fabricator print - for 32 diamonds.
+        (entity, randomSource) -> new MerchantOffer(
+            new ItemCost(Items.DIAMOND, 32),
+            new ItemStack(com.human.common.registry.init.HumanFabrication.USCM_FACTION_LICENSE.get(), 1),
+            12,
+            30,
+            0.0f
         )
     );
 }

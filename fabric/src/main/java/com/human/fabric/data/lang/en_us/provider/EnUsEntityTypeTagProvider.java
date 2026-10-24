@@ -9,6 +9,8 @@ public class EnUsEntityTypeTagProvider {
 
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
         builder.add(HumanEntityTypeTags.HATED_BY_MARINES, "Hated By Marines");
+        builder.add(HumanEntityTypeTags.SOLDIERS, "Soldiers");
+        builder.add(HumanEntityTypeTags.CAPTURE_CORD_BLACKLIST, "Capture Cord Blacklist");
         builder.add(HumanEntityTypeTags.IGNORED_BY_MARINES, "Ignored By Marines");
         builder.add(HumanEntityTypeTags.RADIATION_RESISTANT, "Radiation Resistant");
     };

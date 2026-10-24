@@ -131,6 +131,65 @@ public class FusePanelBlockEntity extends PowerNodeBlockEntity implements PowerN
         return devices.size() + sentries.size();
     }
 
+    /**
+     * [stated] Oct 21 - built into or landed from a ship. Its wireless devices are kept by position: each one that
+     * moved with it is followed to its new spot; one left behind is unbound (a ship and the ground cannot share a
+     * panel). Sentries are bound by their id, so they stay bound; their remembered spot follows when it was part of the
+     * move.
+     */
+    @Override
+    public void onShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        super.onShipMove(move);
+
+        var kept = new ArrayList<BlockPos>();
+
+        for (var device : devices) {
+            var now = move.remap(device);
+
+            if (now != null) {
+                kept.add(now);
+            }
+        }
+
+        devices.clear();
+        devices.addAll(kept);
+
+        for (int index = 0; index < sentries.size(); index++) {
+            var sentry = sentries.get(index);
+            var now = move.remap(sentry.pos());
+
+            if (now != null) {
+                sentries.set(index, new BoundSentry(sentry.id(), now));
+            }
+        }
+
+        setChanged();
+    }
+
+    /**
+     * Quality pass: a sentry turret is an ENTITY - Sable carries it separately from the blocks - and it remembers its
+     * panel by position too, so after the panel moved the turret would still point at the panel's old spot and lose
+     * power. Each bound turret that is loaded and still names this panel's OLD position is pointed at the new one. (A
+     * turret not loaded right now keeps the old position; the panel's own unbind check then lets it go.)
+     */
+    @Override
+    public void afterShipMove(com.human.common.gameplay.ship.ShipMove move) {
+        var old = move.original(worldPosition);
+
+        if (old == null) {
+            return;
+        }
+
+        for (var sentry : sentries) {
+            if (
+                move.level().getEntity(sentry.id()) instanceof com.human.common.gameplay.entity.machine.SentryTurret turret
+                    && old.equals(turret.getFusePanel())
+            ) {
+                turret.setFusePanel(worldPosition);
+            }
+        }
+    }
+
     public boolean isBoundSentry(java.util.UUID id) {
         for (var sentry : sentries) {
             if (sentry.id().equals(id)) {

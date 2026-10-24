@@ -75,11 +75,24 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
 
     private static final String NBT_LAST_RESTOCK = "ColonistLastRestock";
 
+    private static final String NBT_BED = "ColonistBed";
+
+    /** [stated] Oct 23 - how far a colonist looks for a free bed to claim, in blocks. */
+    public static final int BED_SEARCH_RADIUS = 32;
+
+    /** Bed time, as villagers keep it: from dusk (12000) to the end of the night. */
+    private static final long SLEEP_FROM = 12000L;
+
+    private static final long SLEEP_UNTIL = 24000L;
+
     private final ColonistFeatureManager colonistFeatureManager;
 
     private @Nullable Player tradingPlayer;
 
     private @Nullable MerchantOffers offers;
+
+    /** Whether offers loaded from a save have been checked against the profession's current list this session. */
+    private boolean offersReconciled;
 
     private @Nullable ResourceLocation professionId;
 
@@ -92,6 +105,19 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
     private int workstationScanCooldown;
 
     private int workstationReturnCooldown;
+
+    /**
+     * The bed this colonist has claimed, or null.
+     * <p>
+     * [stated] Oct 23 - colonists "assign to beds like villagers do." Claimed through vanilla's own point-of-interest
+     * system - the same HOME ticket a villager takes - so a colonist and a villager can never claim the same bed, and
+     * the claim survives the chunk unloading exactly as a villager's does. Released when the colonist dies or is
+     * removed; dropped (and a new one sought) when the bed is broken.
+     * </p>
+     */
+    private @Nullable BlockPos bedPos;
+
+    private int bedScanCooldown;
 
     public ColonistEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -111,6 +137,8 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
+        // [stated] Oct 23 - to bed at night. Above the stroll and look goals, which it sets aside while it runs.
+        this.goalSelector.addGoal(3, new ColonistSleepGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.85D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -189,7 +217,11 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
                 updateProfession(serverLevel);
             }
 
-            tickReturnToWorkstation(serverLevel);
+            tickBedClaim(serverLevel);
+            // At night a colonist with a bed goes to it; the walk back to the workstation waits for the morning.
+            if (!(isSleepTime() && bedPos != null)) {
+                tickReturnToWorkstation(serverLevel);
+            }
         }
     }
 
@@ -317,6 +349,95 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
         return false;
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Bed
+    // ------------------------------------------------------------------------------------------------------------
+
+    public @Nullable BlockPos getBedPos() {
+        return bedPos;
+    }
+
+    /** Night, in a dimension where beds work (never in the Nether or the End, where a bed is a bomb). */
+    public boolean isSleepTime() {
+        if (!level().dimensionType().bedWorks()) {
+            return false;
+        }
+        var time = level().getDayTime() % 24000L;
+        return time >= SLEEP_FROM && time < SLEEP_UNTIL;
+    }
+
+    /** Whether the claimed bed is still a bed. An unloaded bed counts as there: it is never judged gone unseen. */
+    public boolean isBedStillThere() {
+        if (bedPos == null) {
+            return false;
+        }
+        if (!level().isLoaded(bedPos)) {
+            return true;
+        }
+        return level().getBlockState(bedPos).getBlock() instanceof net.minecraft.world.level.block.BedBlock;
+    }
+
+    /**
+     * Claims a free bed when it has none, and lets go of one that has been broken. Every five to ten seconds - beds do
+     * not move, and the claim itself is a lookup in vanilla's point-of-interest index, not a block scan.
+     */
+    private void tickBedClaim(ServerLevel level) {
+        if (--bedScanCooldown > 0) {
+            return;
+        }
+        bedScanCooldown = 100 + getRandom().nextInt(100);
+
+        if (bedPos != null) {
+            if (!isBedStillThere()) {
+                // The bed (and with it its point of interest) is gone; there is no ticket left to hand back.
+                bedPos = null;
+            }
+            return;
+        }
+
+        level.getPoiManager()
+            .take(
+                type -> type.is(net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME),
+                (type, pos) -> true,
+                blockPosition(),
+                BED_SEARCH_RADIUS
+            )
+            .ifPresent(pos -> bedPos = pos.immutable());
+    }
+
+    /**
+     * Hands the bed back so a villager or another colonist can claim it.
+     * <p>
+     * ⚠ Only if the bed's point of interest still exists: vanilla's {@code PoiManager.release} THROWS for a position
+     * with none ("POI never registered"), which is what a broken bed leaves. Villagers guard their release the same
+     * way.
+     * </p>
+     */
+    private void releaseBed() {
+        if (bedPos != null && level() instanceof ServerLevel serverLevel) {
+            var poi = serverLevel.getPoiManager();
+            if (poi.getType(bedPos).isPresent()) {
+                poi.release(bedPos);
+            }
+        }
+        bedPos = null;
+    }
+
+    @Override
+    public void die(@NotNull net.minecraft.world.damagesource.DamageSource damageSource) {
+        releaseBed();
+        super.die(damageSource);
+    }
+
+    @Override
+    public void remove(@NotNull net.minecraft.world.entity.Entity.RemovalReason removalReason) {
+        // Killed or discarded, not merely unloaded: an unloaded colonist keeps its bed, as a villager does.
+        if (!level().isClientSide && removalReason.shouldDestroy()) {
+            releaseBed();
+        }
+        super.remove(removalReason);
+    }
+
     private void tickReturnToWorkstation(ServerLevel level) {
         if (workstationPos == null || getProfession() == null || --workstationReturnCooldown > 0) {
             return;
@@ -339,7 +460,8 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         var profession = getProfession();
 
-        if (profession == null || !isAlive() || tradingPlayer != null && tradingPlayer != player) {
+        // A sleeping colonist does not trade, as a sleeping villager does not.
+        if (profession == null || !isAlive() || isSleeping() || tradingPlayer != null && tradingPlayer != player) {
             return super.mobInteract(player, hand);
         }
 
@@ -386,9 +508,45 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
             var profession = getProfession();
 
             offers = profession == null ? new MerchantOffers() : profession.createOffers(this);
+            offersReconciled = true;
+        } else if (!offersReconciled) {
+            offersReconciled = true;
+            addMissingOffers();
         }
 
         return offers;
+    }
+
+    /**
+     * A saved trade list never changes on its own, so a trade added to a profession later would never reach a colonist
+     * already in the world. [stated] Oct 13: the electrician gained the W-Y faction license. Any offer the profession
+     * makes now whose result the saved list does not have is appended; saved offers, and how often they have been used,
+     * are left alone.
+     */
+    private void addMissingOffers() {
+        var profession = getProfession();
+
+        if (profession == null || offers == null) {
+            return;
+        }
+
+        for (var fresh : profession.createOffers(this)) {
+            var known = false;
+
+            for (var saved : offers) {
+                if (
+                    ItemStack.isSameItemSameComponents(saved.getResult(), fresh.getResult())
+                        && saved.getItemCostA().item().equals(fresh.getItemCostA().item())
+                ) {
+                    known = true;
+                    break;
+                }
+            }
+
+            if (!known) {
+                offers.add(fresh);
+            }
+        }
     }
 
     @Override
@@ -458,6 +616,10 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
         compound.put(NBT_PROFESSION_DATA, professionData.copy());
         compound.putLong(NBT_LAST_RESTOCK, lastRestock);
 
+        if (bedPos != null) {
+            compound.putLong(NBT_BED, bedPos.asLong());
+        }
+
         if (offers != null) {
             MerchantOffers.CODEC.encodeStart(registryAccess().createSerializationContext(NbtOps.INSTANCE), offers)
                 .result()
@@ -473,6 +635,7 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
         workstationPos = compound.contains(NBT_WORKSTATION) ? BlockPos.of(compound.getLong(NBT_WORKSTATION)) : null;
         professionData = compound.getCompound(NBT_PROFESSION_DATA).copy();
         lastRestock = compound.getLong(NBT_LAST_RESTOCK);
+        bedPos = compound.contains(NBT_BED) ? BlockPos.of(compound.getLong(NBT_BED)) : null;
         offers = null;
 
         if (compound.contains(NBT_OFFERS)) {

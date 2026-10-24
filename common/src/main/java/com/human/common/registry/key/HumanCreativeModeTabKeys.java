@@ -23,6 +23,11 @@ public class HumanCreativeModeTabKeys {
 
     public static final ResourceKey<CreativeModeTab> TOOLS_AND_UTILITIES_KEY = create("human_tools_and_utilities");
 
+    /** [stated] Sep 28 - each faction has its own tab for its blocks and machines, its license in the first slot. */
+    public static final ResourceKey<CreativeModeTab> USCM_KEY = create("human_uscm");
+
+    public static final ResourceKey<CreativeModeTab> WY_KEY = create("human_wy");
+
     public static ResourceKey<CreativeModeTab> create(String name) {
         return ResourceKey.create(
             BuiltInRegistries.CREATIVE_MODE_TAB.key(),

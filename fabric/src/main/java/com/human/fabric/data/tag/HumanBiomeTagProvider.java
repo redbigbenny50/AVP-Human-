@@ -60,14 +60,26 @@ public class HumanBiomeTagProvider extends FabricTagProvider<Biome> {
             .add(Biomes.MANGROVE_SWAMP)
             .add(Biomes.SWAMP);
 
-        applyStandardWYBiomes(HumanBiomeTags.HAS_WY_APE_PATROLS);
-        applyStandardWYBiomes(HumanBiomeTags.HAS_WY_COMMANDO_PATROLS)
-            .add(Biomes.DARK_FOREST);
-        applyStandardWYBiomes(HumanBiomeTags.HAS_WY_ELITE_PATROLS);
-        applyStandardWYBiomes(HumanBiomeTags.HAS_WY_SPEC_OPS_COMMANDO_PATROLS)
-            .add(Biomes.DARK_FOREST);
-        applyStandardWYBiomes(HumanBiomeTags.HAS_WY_SPEC_OPS_ELITE_PATROLS)
-            .add(Biomes.DARK_FOREST);
+        // [stated] Oct 13 - "space out the biomes": one family per W-Y unit, none shared between them, and dark forest
+        // left to the tactical marine. The APE also turns up in avp_alien hive territory (ApePatrolSpawnHandle).
+        getOrCreateTagBuilder(HumanBiomeTags.HAS_WY_APE_PATROLS)
+            .addOptionalTag(BiomeTags.IS_BADLANDS);
+        getOrCreateTagBuilder(HumanBiomeTags.HAS_WY_COMMANDO_PATROLS)
+            .addOptionalTag(BiomeTags.IS_TAIGA);
+        getOrCreateTagBuilder(HumanBiomeTags.HAS_WY_ELITE_PATROLS)
+            .add(Biomes.BIRCH_FOREST)
+            .add(Biomes.OLD_GROWTH_BIRCH_FOREST);
+        getOrCreateTagBuilder(HumanBiomeTags.HAS_WY_SPEC_OPS_COMMANDO_PATROLS)
+            .add(Biomes.SNOWY_PLAINS)
+            .add(Biomes.ICE_SPIKES)
+            .add(Biomes.SNOWY_SLOPES)
+            .add(Biomes.GROVE);
+        getOrCreateTagBuilder(HumanBiomeTags.HAS_WY_SPEC_OPS_ELITE_PATROLS)
+            .add(Biomes.WINDSWEPT_HILLS)
+            .add(Biomes.WINDSWEPT_GRAVELLY_HILLS)
+            .add(Biomes.WINDSWEPT_FOREST)
+            .add(Biomes.STONY_PEAKS)
+            .add(Biomes.JAGGED_PEAKS);
 
         getOrCreateTagBuilder(HumanBiomeTags.IS_IRRADIATED)
             .addOptional(HumanBiomeKeys.NUKED_BIOME);
@@ -88,12 +100,5 @@ public class HumanBiomeTagProvider extends FabricTagProvider<Biome> {
             .add(Biomes.SUNFLOWER_PLAINS)
             .add(Biomes.WINDSWEPT_HILLS)
             .add(Biomes.WINDSWEPT_SAVANNA);
-    }
-
-    private FabricTagProvider<Biome>.FabricTagBuilder applyStandardWYBiomes(TagKey<Biome> biomeTag) {
-        return getOrCreateTagBuilder(biomeTag)
-            .addOptionalTag(BiomeTags.IS_TAIGA)
-            .add(Biomes.BIRCH_FOREST)
-            .add(Biomes.OLD_GROWTH_BIRCH_FOREST);
     }
 }

@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north,part=core": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=north,part=side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=north,part=top": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=north,part=top_side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=east,part=core": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=east,part=side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=east,part=top": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=east,part=top_side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=south,part=core": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=south,part=side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=south,part=top": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=south,part=top_side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=west,part=core": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=west,part=side": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=west,part=top": {
+      "model": "avp_human:block/uscm_fabricator"
+    },
+    "facing=west,part=top_side": {
+      "model": "avp_human:block/uscm_fabricator"
+    }
+  }
+}

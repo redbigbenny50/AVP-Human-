@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:crate_upgrade",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "avp_human:plastic_blocks"
+    },
+    "#": {
+      "item": "avp_human:orange_slab_case_3x3"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "A#A",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:orange_slab_container"
+  }
+}

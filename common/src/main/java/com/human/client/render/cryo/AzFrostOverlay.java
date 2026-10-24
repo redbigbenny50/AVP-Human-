@@ -33,7 +33,20 @@ public final class AzFrostOverlay {
      */
     public static final int FROST_COLOUR = 0xB3FFFFFF;
 
+    /**
+     * True while the frost pass is drawing (render thread only). [Oct 19] The queen was frozen solid - the effect was
+     * on her - but showed no frost, while every other caste did. A model can give some of its bones their own texture
+     * (a bone texture override), and BLib then draws those bones with that texture in EVERY pass, the frost pass
+     * included - so on a model built that way the frost re-render just redrew its normal textures.
+     * {@code MixinAzModelRenderer_FrostPass} reads this and sends every bone to the frost buffer while it is set.
+     */
+    private static boolean frostPass;
+
     private AzFrostOverlay() {}
+
+    public static boolean inFrostPass() {
+        return frostPass;
+    }
 
     public static <K, T> void render(AzRendererPipelineContext<K, T> context) {
         var target = context.animatable() instanceof Entity entity ? entity : context.currentEntity();
@@ -62,7 +75,14 @@ public final class AzFrostOverlay {
         context.setRenderColor(FROST_COLOUR);
         context.setVertexConsumer(context.multiBufferSource().getBuffer(type));
         context.setSkipFlatCubes(true);
-        pipeline.reRender(context);
+        frostPass = true;
+
+        try {
+            pipeline.reRender(context);
+        } finally {
+            frostPass = false;
+        }
+
         context.setRenderColor(previousColour);
         context.setSkipFlatCubes(previousSkipFlatCubes);
         context.setRenderType(previousType);

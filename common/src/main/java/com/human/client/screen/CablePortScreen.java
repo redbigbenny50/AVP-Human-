@@ -53,7 +53,8 @@ public class CablePortScreen extends AbstractContainerScreen<CablePortMenu> {
             if (menu.hasExternal(face) && overButton(row, mouseX, mouseY)) {
                 var mode = menu.getMode(face);
 
-                graphics.renderComponentTooltip(
+                com.human.client.screen.widget.GuiText.tooltip(
+                    graphics,
                     font,
                     List.of(
                         Component.translatable("gui.avp_human.cable_ports.mode." + mode.id()),

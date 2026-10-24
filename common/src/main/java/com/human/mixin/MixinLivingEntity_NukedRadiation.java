@@ -20,16 +20,29 @@ public abstract class MixinLivingEntity_NukedRadiation extends Entity {
         super(entityType, level);
     }
 
+    /** Whether this entity stood in the nuked biome at its last check - refreshed once a second, see {@link #tick}. */
+    @Unique
+    private boolean avp_human$inNukedBiome;
+
+    /**
+     * ⚡ Runs for EVERY living entity, every tick. Oct 13 audit: it used to run on both sides and check all four armour
+     * slots and the biome every tick, although almost nothing is ever in the nuked biome and radiation is applied on
+     * the server only. Now: server only; the biome once a second per entity (staggered by id); armour only for the few
+     * that are actually in fallout. Same result - a mark per tick while standing in the biome.
+     */
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo callbackInfo) {
         var self = LivingEntity.class.cast(this);
 
-        if (!HumanPredicates.canBeIrradiated(self)) {
+        if (self.level().isClientSide()) {
             return;
         }
 
-        if (!isIsEntityInAnIrradiatedBiome(self)) {
-            // Entity is not in an irradiated biome, can't possibly irradiate them. Abort.
+        if ((self.tickCount + self.getId()) % 20 == 0) {
+            avp_human$inNukedBiome = isIsEntityInAnIrradiatedBiome(self);
+        }
+
+        if (!avp_human$inNukedBiome || !HumanPredicates.canBeIrradiated(self)) {
             return;
         }
 

@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "avp_human:mining_camp_swamp",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1840396213,
+    "spacing": 40,
+    "separation": 20,
+    "spread_type": "triangular"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "avp_human:block/wy_pillar_grey_band"
+    },
+    "axis=z": {
+      "model": "avp_human:block/wy_pillar_grey_band",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "avp_human:block/wy_pillar_grey_band",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

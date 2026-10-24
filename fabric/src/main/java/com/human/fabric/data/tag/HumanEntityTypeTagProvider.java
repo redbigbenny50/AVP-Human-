@@ -34,6 +34,8 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
         addGigeresqueHosts();
         addPredatorHeatTiers();
         addPredatorNetEscapeTier();
+        addSoldiers();
+        addCaptureCordBlacklist();
     }
 
     /**
@@ -49,7 +51,8 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
     private void addPredatorHeatTiers() {
         // Marines are people: they read exactly as warm as a player does, which is the point of hunting them.
         getOrCreateTagBuilder(predatorHeatTag("warm_blooded_large"))
-            .add(HumanEntityTypes.MARINE.get());
+            .add(HumanEntityTypes.MARINE.get())
+            .add(splitSoldiers());
 
         getOrCreateTagBuilder(predatorHeatTag("warm_blooded"))
             .add(HumanEntityTypes.MARINE_DOG.get());
@@ -74,7 +77,7 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
     private void addPredatorNetEscapeTier() {
         getOrCreateTagBuilder(
             TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("avp_predator", "net_escape_medium"))
-        ).add(HumanEntityTypes.MARINE.get());
+        ).add(HumanEntityTypes.MARINE.get()).add(splitSoldiers());
     }
 
     private static TagKey<EntityType<?>> predatorHeatTag(String tier) {
@@ -169,7 +172,8 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
         getOrCreateTagBuilder(BLibEntityTypeTags.HUMANOIDS)
             .add(
                 HumanEntityTypes.MARINE.get()
-            );
+            )
+            .add(splitSoldiers());
     }
 
     private void addRadiationResistant() {
@@ -185,6 +189,37 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
         getOrCreateTagBuilder(HumanEntityTypeTags.FREEZE_SOLID_IMMUNE)
             .add(EntityType.ENDER_DRAGON, EntityType.WITHER);
 
+        // [stated] Oct 19 - avp_alien's eggs and nether strain. Optional ids, so the tags load without avp_alien.
+        // Irradiated eggs and xenos are not here: they are immune to cold (avp_alien's own cryo-fuel rule).
+        getOrCreateTagBuilder(HumanEntityTypeTags.FREEZES_INSTANTLY)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "ovomorph"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "aberrant_ovomorph"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "royal_ovomorph"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "royal_aberrant_ovomorph"));
+
+        getOrCreateTagBuilder(HumanEntityTypeTags.SHATTERS_FROM_COLD)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_ovomorph"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "royal_nether_ovomorph"));
+
+        getOrCreateTagBuilder(HumanEntityTypeTags.FREEZE_OR_EXPLODE)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_drone"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_warrior"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_runner"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_prowler"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_spitter"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_boiler"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_burster"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_carrier"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_chrysalis"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_crusher"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_praetorian"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_ravager"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_razor_claw"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_harbinger"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_predalien"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_queen"))
+            .addOptional(ResourceLocation.fromNamespaceAndPath("avp_alien", "nether_empress"));
+
         // Bosses do not go in a jar. Packs extend this.
         getOrCreateTagBuilder(HumanEntityTypeTags.CRYOTANK_BLACKLIST)
             .add(EntityType.WITHER, EntityType.ENDER_DRAGON, EntityType.ELDER_GUARDIAN, EntityType.WARDEN);
@@ -192,12 +227,14 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
 
     private void addHatedByXenomorphs() {
         getOrCreateTagBuilder(foreignEntityTypeTag("avp_alien", "hated_by_xenomorphs"))
-            .add(HumanEntityTypes.MARINE.get());
+            .add(HumanEntityTypes.MARINE.get())
+            .add(splitSoldiers());
     }
 
     private void addHosts() {
         getOrCreateTagBuilder(foreignEntityTypeTag("avp_alien", "hosts"))
-            .add(HumanEntityTypes.MARINE.get());
+            .add(HumanEntityTypes.MARINE.get())
+            .add(splitSoldiers());
     }
 
     /**
@@ -209,11 +246,13 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
      */
     private void addGigeresqueHosts() {
         getOrCreateTagBuilder(foreignEntityTypeTag("gigeresque", "neohost"))
-            .add(HumanEntityTypes.MARINE.get(), HumanEntityTypes.COLONIST.get());
+            .add(HumanEntityTypes.MARINE.get(), HumanEntityTypes.COLONIST.get())
+            .add(splitSoldiers());
 
         // Classic facehugger hosts: a hugged marine or colonist bursts a classic chestburster.
         getOrCreateTagBuilder(foreignEntityTypeTag("gigeresque", "classicalienhost"))
-            .add(HumanEntityTypes.MARINE.get(), HumanEntityTypes.COLONIST.get());
+            .add(HumanEntityTypes.MARINE.get(), HumanEntityTypes.COLONIST.get())
+            .add(splitSoldiers());
 
         // Runner hosts (Gigeresque's dog-born runner line; wolves are already in it).
         getOrCreateTagBuilder(foreignEntityTypeTag("gigeresque", "runnerhost"))
@@ -234,6 +273,52 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
      * present, and an unused tag file for an absent mod is simply inert data.
      * </p>
      */
+    /**
+     * [stated] Oct 13 - the soldier types split out of the marine. They go everywhere the marine goes above, and:
+     * <ul>
+     * <li>{@code avp_human:soldiers} - every soldier type, the marine included, for faction work and datapacks.</li>
+     * <li>avp_alien's {@code xenomorph_threat_3_high_danger} and avp_predator's {@code skinnable}, which list
+     * {@code avp_human:marine} by name in their own files (read from avp_alien 0.2.7s-fork and avp_predator
+     * 0.1.6ab-fork). Tag files merge across mods, so the new types are added from this side and neither sibling needs a
+     * change; without them installed the files are inert.</li>
+     * </ul>
+     */
+    private void addSoldiers() {
+        getOrCreateTagBuilder(HumanEntityTypeTags.SOLDIERS)
+            .add(HumanEntityTypes.MARINE.get())
+            .add(splitSoldiers());
+
+        getOrCreateTagBuilder(foreignEntityTypeTag("avp_alien", "xenomorph_threat_3_high_danger"))
+            .add(splitSoldiers());
+
+        getOrCreateTagBuilder(foreignEntityTypeTag("avp_predator", "skinnable"))
+            .add(splitSoldiers());
+    }
+
+    /**
+     * [stated] Oct 14 - what the capture cord refuses: avp_alien's capture-chain blacklist (the boss mobs) plus the
+     * sentry turret, which is a machine rather than a specimen. Datapackable.
+     */
+    private void addCaptureCordBlacklist() {
+        getOrCreateTagBuilder(HumanEntityTypeTags.CAPTURE_CORD_BLACKLIST)
+            .add(EntityType.ENDER_DRAGON)
+            .add(EntityType.WARDEN)
+            .add(EntityType.WITHER)
+            .add(HumanEntityTypes.SENTRY_TURRET.get());
+    }
+
+    /** The soldier types split out of the marine (Oct 13), for every tag the marine is in. */
+    private static EntityType<?>[] splitSoldiers() {
+        return new EntityType<?>[] {
+            HumanEntityTypes.TACTICAL_MARINE.get(),
+            HumanEntityTypes.WY_COMMANDO.get(),
+            HumanEntityTypes.WY_ELITE.get(),
+            HumanEntityTypes.WY_SPEC_OPS_COMMANDO.get(),
+            HumanEntityTypes.WY_SPEC_OPS_ELITE.get(),
+            HumanEntityTypes.WY_APE_TROOPER.get()
+        };
+    }
+
     private static TagKey<EntityType<?>> foreignEntityTypeTag(String namespace, String path) {
         return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(namespace, path));
     }
