@@ -86,6 +86,9 @@ public class HumanClient {
     public static final BLibClientMod MOD = BLibClientMod.createFor(Human.MOD);
 
     public static void initialize() {
+        // Oct 24 - drops on BLib's shared JEI, REI and EMI tabs.
+        com.human.client.compat.HumanViewers.register();
+
         // The wiring tool shows a resonator's sphere through this hook (see ResonatorSphereHook).
         com.human.common.gameplay.block.resonator.ResonatorSphereHook.show =
             com.human.client.render.ResonatorSphereDisplay::show;

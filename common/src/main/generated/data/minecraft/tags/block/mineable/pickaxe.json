@@ -34,6 +34,30 @@
     "avp_human:composite_wall_sign",
     "avp_human:composite_hanging_sign",
     "avp_human:composite_wall_hanging_sign",
+    {
+      "id": "avp_human:steel_alternator",
+      "required": false
+    },
+    {
+      "id": "avp_human:steel_electric_gearbox",
+      "required": false
+    },
+    {
+      "id": "avp_human:wy_alternator",
+      "required": false
+    },
+    {
+      "id": "avp_human:wy_electric_gearbox",
+      "required": false
+    },
+    {
+      "id": "avp_human:uscm_alternator",
+      "required": false
+    },
+    {
+      "id": "avp_human:uscm_electric_gearbox",
+      "required": false
+    },
     "avp_human:drive_bay",
     "avp_human:wy_drive_bay",
     "avp_human:uscm_drive_bay",

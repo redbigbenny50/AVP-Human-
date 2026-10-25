@@ -19,7 +19,14 @@ import org.jetbrains.annotations.Nullable;
  * unloads, relogs and crashes with all its NBT - genes, effects, names and so on. So it is saved here exactly as the
  * game saves an entity to disk ({@code saveAsPassenger}), and nothing of it exists in the world until it is released. A
  * frozen specimen costs the server nothing per tick. The client gets a copy only to draw it.
- * <h2>Nothing here ticks</h2> The controller drives the thaw; a tank only stores.
+ * <h2>The controller drives the thaw - and a tank no controller serves thaws on its own</h2> The controller bills a
+ * tank and thaws it when power or cryofluid fail. 🚨 Oct 24 - [stated, relayed] "break the cryocontroller, the mob can
+ * stay there forever without consuming energy nor cryo fluids." With the controller gone nothing billed the tank AND
+ * nothing thawed it, so a specimen sat frozen for free forever. Now every controller marks the tanks it serves each
+ * tick, and a tank holding a specimen that no controller has served for two seconds thaws exactly as if its power had
+ * failed: the glass clears over a normal thaw and the specimen breaks out awake. The same catches a tank left past a
+ * controller's size caps, or cut off from its controller by a broken conduit. A controller that comes back in time
+ * stops it - its next tick resets the thaw, as it does after any power cut.
  */
 public class CryotankBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
 
@@ -81,6 +88,70 @@ public class CryotankBlockEntity extends BlockEntity implements com.human.common
      * countdown ends the specimen is let out. Cleared when the tube empties.
      */
     private boolean deactivated;
+
+    /** The last game tick a controller served this tank; never saved, so a loaded tank starts with a fresh grace. */
+    private long lastServedTick = Long.MIN_VALUE;
+
+    /** How long a tank with a specimen may go unserved before it starts thawing on its own: two seconds. */
+    private static final int UNSERVED_GRACE_TICKS = 40;
+
+    /** Where the controller that last served it stands; never saved, like the tick. */
+    private @Nullable BlockPos lastServedBy;
+
+    /** Called by the controller that serves this tank, every tick it does. */
+    void markServed(long gameTime, BlockPos controller) {
+        lastServedTick = gameTime;
+        lastServedBy = controller.immutable();
+    }
+
+    /** Server tick for the master block: the unserved-tank thaw (see the class doc). Cheap when nothing is frozen. */
+    public static void serverTick(
+        net.minecraft.world.level.Level level,
+        BlockPos pos,
+        net.minecraft.world.level.block.state.BlockState state,
+        CryotankBlockEntity tank
+    ) {
+        if (!(level instanceof net.minecraft.server.level.ServerLevel serverLevel) || !tank.isMaster() || !tank.hasSpecimen()) {
+            return;
+        }
+
+        var now = level.getGameTime();
+
+        if (tank.lastServedTick == Long.MIN_VALUE) {
+            tank.lastServedTick = now;
+            return;
+        }
+
+        if (now - tank.lastServedTick <= UNSERVED_GRACE_TICKS) {
+            return;
+        }
+
+        // ⚠ Second pass, Oct 24: a controller in a chunk that is merely UNLOADED (the player standing at its edge) has
+        // not
+        // stopped serving - it is just not ticking. Thawing then would let a specimen break out because of where
+        // someone
+        // stood. Only a controller that is loaded and gone (broken, or no longer serving) lets the tank thaw.
+        if (tank.lastServedBy != null && !level.isLoaded(tank.lastServedBy)) {
+            tank.lastServedTick = now;
+            return;
+        }
+
+        var ticks = tank.thawTicks + 1;
+        var required = tank.thawTicksRequired();
+
+        if (ticks < required) {
+            tank.setThawTicks(ticks);
+            tank.tickFrost();
+            return;
+        }
+
+        if (CryoSpecimens.releaseFromTank(serverLevel, tank, null, true)) {
+            tank.setSpecimen(null, 1.0F, 0.0F, 0.0F);
+        } else {
+            // A failed release (a UUID clash, a damaged save) is not retried every tick - each try builds an entity.
+            tank.setThawTicks(Math.max(0, required - 100));
+        }
+    }
 
     /** The specimen's data sheet - see {@link SpecimenCard}. */
     private @Nullable CompoundTag card;

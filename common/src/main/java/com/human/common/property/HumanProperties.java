@@ -39,6 +39,46 @@ public class HumanProperties {
 
         }
 
+        /**
+         * Oct 24 - the Create converters (alternator and electric gearbox), NeoForge with Create only. [stated] "option
+         * 1 and config options yes". Defaults give whole numbers at Create's speeds: 384 FE/t out and 512 FE/t in at
+         * 256 RPM, both multiples of 8, and the same 75% round trip as Create Crafts & Additions.
+         */
+        public static class CreateConverters {
+
+            private static final BLibPropertyKey.Parent CONVERTERS = BLOCKS.child("create_converters");
+
+            public static final HumanProperty<Float> ALTERNATOR_FE_PER_RPM = new HumanProperty<>(
+                CONVERTERS.leaf("alternator_fe_per_rpm", BLibPropertySerializers.FLOAT),
+                1.5F
+            );
+
+            public static final HumanProperty<Float> GEARBOX_FE_PER_RPM = new HumanProperty<>(
+                CONVERTERS.leaf("electric_gearbox_fe_per_rpm", BLibPropertySerializers.FLOAT),
+                2.0F
+            );
+
+            public static final HumanProperty<Integer> GEARBOX_MIN_DRAW = new HumanProperty<>(
+                CONVERTERS.leaf("electric_gearbox_min_draw", BLibPropertySerializers.INT),
+                8
+            );
+
+            public static final HumanProperty<Float> STRESS_PER_RPM = new HumanProperty<>(
+                CONVERTERS.leaf("stress_per_rpm", BLibPropertySerializers.FLOAT),
+                64.0F
+            );
+
+            public static final HumanProperty<Integer> BUFFER = new HumanProperty<>(
+                CONVERTERS.leaf("buffer", BLibPropertySerializers.INT),
+                5000
+            );
+
+            public static final HumanProperty<Boolean> ALTERNATOR_UPGRADES = new HumanProperty<>(
+                CONVERTERS.leaf("alternator_upgrades_enabled", BLibPropertySerializers.BOOLEAN),
+                true
+            );
+        }
+
         public static class SentryTurret {
 
             private static final BLibPropertyKey.Parent SENTRY_TURRET = BLOCKS.child("sentry_turret");

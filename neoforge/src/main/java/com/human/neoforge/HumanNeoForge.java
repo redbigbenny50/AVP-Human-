@@ -77,6 +77,10 @@ public class HumanNeoForge {
         modBus.addListener(com.human.neoforge.fluid.NeoForgeCanisterFluidHandler::register);
         // [stated] Sep 30: the battery pack and nuclear battery as energy items.
         modBus.addListener(com.human.neoforge.power.NeoForgeBatteryEnergy::register);
+
+        // Oct 24 - the M42A3 blueprint in ocean ruin chests and trail ruin suspicious gravel (HumanNeoForgeLoot).
+        com.human.neoforge.loot.HumanNeoForgeLoot.register();
+        modBus.addListener(com.human.neoforge.power.NeoForgeCableEnergy::register);
         // Storage crates as item handlers, for hoppers and other mods.
         modBus.addListener(com.human.neoforge.storage.NeoForgeCrateItemHandler::register);
 
@@ -99,6 +103,14 @@ public class HumanNeoForge {
                 }
             }
         );
+
+        // Oct 24 - the Create converters (alternator, electric gearbox). Registered ONLY when Create is installed: they
+        // are built on Create's own classes, which do not exist without it. The class is touched nowhere else, so
+        // without
+        // Create it is never loaded.
+        if (net.neoforged.fml.ModList.get().isLoaded("create")) {
+            com.human.neoforge.compat.create.HumanCreate.register(modBus);
+        }
 
         Human.initialize();
     }

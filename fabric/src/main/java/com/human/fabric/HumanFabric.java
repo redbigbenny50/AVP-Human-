@@ -31,6 +31,7 @@ public class HumanFabric implements ModInitializer {
         com.human.fabric.fluid.FabricCanisterFluidStorage.register();
         // [stated] Sep 30: the battery pack and nuclear battery as Team Reborn Energy items.
         com.human.fabric.power.FabricBatteryEnergy.register();
+        com.human.fabric.power.FabricCableEnergy.register();
         // Storage crates as item storage, for hoppers and other mods.
         com.human.fabric.storage.FabricCrateItemStorage.register();
         // Fluid endpoints as blocks: the placed canister and all six tanks. Each face's rule comes from the endpoint.
@@ -121,5 +122,20 @@ public class HumanFabric implements ModInitializer {
 
         // [stated] Oct 19 - spiders and cave spiders: a 20% cobweb.
         LootTableModifiers.SPIDER_COBWEB_LOOT_TABLE_MODIFIER.apply(key, builder);
+
+        // Oct 24 - the M42A3 blueprint in ruins: a pool of its own in ocean ruin chests, and an entry IN the existing
+        // pool of the trail ruins' rare archaeology (brushing keeps only the first item, so it must not be its own
+        // pool).
+        for (var pool : com.human.common.data.loot.HumanVanillaLoot.extraPools(key)) {
+            builder.withPool(pool);
+        }
+        var entries = com.human.common.data.loot.HumanVanillaLoot.extraArchaeologyEntries(key);
+        if (!entries.isEmpty()) {
+            builder.modifyPools(pool -> {
+                for (var item : entries) {
+                    pool.add(net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(item));
+                }
+            });
+        }
     }
 }

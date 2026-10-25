@@ -91,7 +91,9 @@ public class PowerGridExploreUtil {
             return true;
         }
 
-        if (level.getBlockEntity(from) instanceof PowerNodeBlockEntity node && !node.isFaceConnectable(direction)) {
+        // Oct 24 - any block that says which faces carry power (PowerFaces), not only PowerNodeBlockEntity: the Create
+        // converters cannot extend it and would otherwise connect on every face, gear sides included.
+        if (level.getBlockEntity(from) instanceof com.human.common.gameplay.power.PowerFaces node && !node.isFaceConnectable(direction)) {
             return false;
         }
 
@@ -99,7 +101,7 @@ public class PowerGridExploreUtil {
             return false;
         }
 
-        return !(level.getBlockEntity(to) instanceof PowerNodeBlockEntity neighbour)
+        return !(level.getBlockEntity(to) instanceof com.human.common.gameplay.power.PowerFaces neighbour)
             || neighbour.isFaceConnectable(direction.getOpposite());
     }
 

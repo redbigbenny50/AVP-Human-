@@ -51,6 +51,12 @@ type          = "optional"
 versionRange  = "[${avp_predator_version},${avp_predator_excl_end_version})"
 side          = "BOTH"
 [[dependencies.${mod_id}]]
+modId         = "create"
+type          = "optional"
+versionRange  = "[6.0.0,)"
+ordering      = "AFTER"
+side          = "BOTH"
+[[dependencies.${mod_id}]]
 modId         = "gigeresque"
 type          = "optional"
 versionRange  = "[${gigeresque_version},${gigeresque_excl_end_version})"

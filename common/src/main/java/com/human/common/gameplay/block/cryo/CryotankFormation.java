@@ -125,7 +125,12 @@ public final class CryotankFormation {
             var placed = false;
 
             if (level.getBlockEntity(targetPos) instanceof CryotankBlockEntity target && !target.hasSpecimen()) {
-                var scale = CryoSpecimens.fitScale(target, specimen.width(), specimen.height());
+                // Oct 24 - measured by the frozen body and pose, like a fresh freeze, not by the stored hitbox.
+                var frozen = CryoSpecimens.frozenSize(specimen.tag(), specimen.width(), specimen.height());
+                var specimenId = net.minecraft.resources.ResourceLocation.tryParse(specimen.tag().getString("id"));
+                var scale = specimenId == null
+                    ? CryoSpecimens.fitScale(target, frozen[0], frozen[1])
+                    : CryoSpecimens.fitScale(target, specimenId, frozen[0], frozen[1]);
 
                 if (scale > 0.0F) {
                     target.setSpecimen(specimen.tag(), scale, specimen.width(), specimen.height());

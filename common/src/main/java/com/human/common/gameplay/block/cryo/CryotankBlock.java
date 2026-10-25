@@ -146,6 +146,22 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
         return new CryotankBlockEntity(pos, state);
     }
 
+    /** Oct 24 - server only: the unserved-tank thaw (CryotankBlockEntity.serverTick). */
+    @Override
+    public <T extends BlockEntity> @Nullable net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+        @NotNull Level level,
+        @NotNull BlockState state,
+        @NotNull net.minecraft.world.level.block.entity.BlockEntityType<T> type
+    ) {
+        return level.isClientSide
+            ? null
+            : createTickerHelper(
+                type,
+                com.human.common.registry.init.HumanBlockEntityTypes.CRYOTANK.get(),
+                CryotankBlockEntity::serverTick
+            );
+    }
+
     @Override
     protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
@@ -588,7 +604,14 @@ public class CryotankBlock extends BaseEntityBlock implements CryoConduitEndpoin
             return;
         }
 
-        var scale = CryoSpecimens.fitScale(master, mob.getBbWidth(), CryoSpecimens.frozenHeight(mob));
+        // Oct 24 - the WIDTH is the body's, not the hitbox's (see CryoSpecimens.FROZEN_POSE_WIDTHS).
+        // Oct 24 - only eggs, chestbursters and adolescents go in a 1x1 (CryoSpecimens.minimumAcross).
+        var scale = CryoSpecimens.fitScale(
+            master,
+            net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()),
+            CryoSpecimens.frozenWidth(mob),
+            CryoSpecimens.frozenHeight(mob)
+        );
 
         if (scale <= 0.0F) {
             tell(player, "too_big");

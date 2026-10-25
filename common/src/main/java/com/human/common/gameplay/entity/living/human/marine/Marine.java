@@ -530,6 +530,10 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
      * on its own slow cadence.
      */
     private void tickSquadAndFieldcraft() {
+        // Oct 24 - no grenades, flanking or pat-downs with a facehugger on his face.
+        if (isFacehugged(this)) {
+            return;
+        }
         // Callout: a fresh hit is told to the squad at once.
         var hurtStamp = getLastHurtByMobTimestamp();
 
@@ -545,7 +549,7 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             // ⚠ Review fix - only conclude "water does not work here" from a marine that is STANDING IN its water and
             // still burning. One that walked out, or was re-lit by lava or a fire block, proves nothing about the
             // dimension, and one false mark would stop every marine using buckets there until restart.
-            var standingInFire = level().getBlockState(blockPosition()).is(net.minecraft.tags.BlockTags.FIRE) || isInLava();
+            var standingInFire = com.human.common.util.HumanFire.isFire(level().getBlockState(blockPosition())) || isInLava();
 
             if (isOnFire() && isInWater() && !standingInFire) {
                 MarineBucketMemory.markWaterless(level());
@@ -599,7 +603,7 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
 
     /** Standing in fire or lava, a burning marine moves off it first - otherwise nothing can put it out. */
     private void stepOffBurningGround() {
-        var standingInFire = level().getBlockState(blockPosition()).is(net.minecraft.tags.BlockTags.FIRE) || isInLava();
+        var standingInFire = com.human.common.util.HumanFire.isFire(level().getBlockState(blockPosition())) || isInLava();
 
         if (!standingInFire) {
             return;
@@ -677,7 +681,7 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             net.minecraft.world.entity.LivingEntity.class,
             getBoundingBox().inflate(PAT_SEARCH_RADIUS),
             other -> other != this && other.isAlive() && other.isOnFire() && !other.fireImmune() && !other.isInLava()
-                && !level().getBlockState(other.blockPosition()).is(net.minecraft.tags.BlockTags.FIRE)
+                && !com.human.common.util.HumanFire.isFire(level().getBlockState(other.blockPosition()))
                 && isPatDownFriend(other)
                 // Review pass 2 - a sentry or a marine told to hold only helps a friend right beside it.
                 && ((!isSentry() && getMode() != MarineMode.HOLD) || distanceToSqr(other) <= 36.0)
@@ -1307,6 +1311,19 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
 
         if (!level().isClientSide) {
             migrateLegacySquadLeader();
+
+            // Oct 24 - a facehugger on his face: no target, no trigger, no aim pose (AbstractHuman.isFacehugged).
+            if (isFacehugged(this)) {
+                if (getTarget() != null) {
+                    setTarget(null);
+                }
+                if (isUsingItem()) {
+                    stopUsingItem();
+                }
+                if (isAggressive()) {
+                    setAggressive(false);
+                }
+            }
 
             tickCampHome();
             perfLap = com.blib.api.common.perf.v1.BLibPerf.lap(this, "marine.campHome", perfLap);

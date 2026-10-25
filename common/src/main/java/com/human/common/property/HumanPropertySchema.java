@@ -49,6 +49,37 @@ public class HumanPropertySchema {
             HumanProperties.Blocks.SentryTurret.RANGE.defaultValue()
         )
         .addBlankLine()
+        .addComment("Create converters (NeoForge with Create only). FE per tick for each RPM of the alternator's input.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.ALTERNATOR_FE_PER_RPM.key(),
+            HumanProperties.Blocks.CreateConverters.ALTERNATOR_FE_PER_RPM.defaultValue()
+        )
+        .addComment("FE per tick the electric gearbox draws for each RPM it turns at.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.GEARBOX_FE_PER_RPM.key(),
+            HumanProperties.Blocks.CreateConverters.GEARBOX_FE_PER_RPM.defaultValue()
+        )
+        .addComment("The least FE per tick a running electric gearbox draws.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.GEARBOX_MIN_DRAW.key(),
+            HumanProperties.Blocks.CreateConverters.GEARBOX_MIN_DRAW.defaultValue()
+        )
+        .addComment("Stress units per RPM: the alternator's load on Create, and the gearbox's capacity.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.STRESS_PER_RPM.key(),
+            HumanProperties.Blocks.CreateConverters.STRESS_PER_RPM.defaultValue()
+        )
+        .addComment("FE each converter holds internally.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.BUFFER.key(),
+            HumanProperties.Blocks.CreateConverters.BUFFER.defaultValue()
+        )
+        .addComment("If disabled, speed and efficiency cards do nothing in an alternator.")
+        .addProperty(
+            HumanProperties.Blocks.CreateConverters.ALTERNATOR_UPGRADES.key(),
+            HumanProperties.Blocks.CreateConverters.ALTERNATOR_UPGRADES.defaultValue()
+        )
+        .addBlankLine()
         .addComment("If enabled, bullets from guns will damage blocks.")
         .addProperty(
             HumanProperties.Weapons.BULLETS_DAMAGE_BLOCKS_ENABLED.key(),

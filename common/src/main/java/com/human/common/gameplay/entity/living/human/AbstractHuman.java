@@ -213,4 +213,29 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
         this.ticksUntilBored.set(getRandom().nextIntBetweenInclusive(MIN_IDLE_TIME_IN_TICKS, MAX_IDLE_TIME_IN_TICKS));
     }
 
+    /** avp_alien's parasites (facehuggers of every strain), by tag id - no compile dependency on avp_alien. */
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<?>> ALIEN_PARASITES =
+        net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ENTITY_TYPE,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_alien", "parasites")
+        );
+
+    /**
+     * Whether a facehugger is on this human's face.
+     * <p>
+     * [stated, relayed] Oct 24 - "marines keep shooting in the air even after being successfully facehugged." avp_alien
+     * only switches a hugged mob's AI off ten seconds into the hug (when the embryo takes hold), and a marine's own
+     * fieldcraft (grenades, flanking) runs outside that AI entirely - so for those first seconds he went on firing
+     * blind, wherever his last aim pointed. A man with a facehugger clamped over his face does not shoot; see
+     * Marine.tick and MarineTargetScan.
+     * </p>
+     */
+    public static boolean isFacehugged(net.minecraft.world.entity.Entity human) {
+        for (var passenger : human.getPassengers()) {
+            if (passenger.getType().is(ALIEN_PARASITES)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

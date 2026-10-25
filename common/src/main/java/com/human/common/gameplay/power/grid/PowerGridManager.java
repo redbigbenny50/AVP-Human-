@@ -38,6 +38,23 @@ public class PowerGridManager {
     private final Map<BlockPos, PowerNode[]> externals = new HashMap<>();
 
     /**
+     * [stated] Oct 24 - the faces that OFFER energy to another mod's block our cable cannot reach into itself (flux
+     * plugs and points, energy pipes) - see ExposedCableFace. Kept beside {@link #externals} and cleared with it.
+     */
+    private final Map<BlockPos, com.human.common.gameplay.power.external.ExposedCableFace[]> exposed = new HashMap<>();
+
+    /**
+     * The face of {@code cable} that offers energy on {@code face}, or null - what the energy capabilities answer with.
+     */
+    public @org.jetbrains.annotations.Nullable com.human.common.gameplay.power.external.ExposedCableFace exposedFace(
+        BlockPos cable,
+        Direction face
+    ) {
+        var faces = exposed.get(cable);
+        return faces == null ? null : faces[face.ordinal()];
+    }
+
+    /**
      * Cables whose arms and flange colours should be looked at again - every cable a discovery walk passes, so cables
      * already in a world when this loads get their flanges. Handled after the walk, in {@link #tick}: changing a block
      * inside a walk could merge grids while the walk is still going.
@@ -272,6 +289,7 @@ public class PowerGridManager {
             grids.remove(oldRoot);
             // A removed cable's stand-ins went with its old grid.
             externals.remove(removed);
+            exposed.remove(removed);
 
             for (var direction : VALUES) {
                 seeds.add(removed.relative(direction));
@@ -347,6 +365,19 @@ public class PowerGridManager {
             }
         }
 
+        var oldExposed = exposed.remove(pos);
+
+        if (oldExposed != null) {
+            for (var face : oldExposed) {
+                if (face != null) {
+                    grid.remove(face.inboundNode());
+                    grid.remove(face.outboundNode());
+                }
+            }
+        }
+
+        com.human.common.gameplay.power.external.ExposedCableFace[] offered = null;
+
         if (
             !(level instanceof net.minecraft.server.level.ServerLevel serverLevel)
                 || !(level.getBlockState(pos).getBlock() instanceof com.human.common.gameplay.block.power.CableBlock)
@@ -392,11 +423,27 @@ public class PowerGridManager {
 
                 nodes[direction.ordinal()] = node;
                 grid.add(node);
+            } else {
+                // Oct 24 - a block our cable cannot reach into (it pushes or pulls by itself): offer this face to it
+                // instead, as its mode allows (ExposedCableFace). Never both on one face, so nothing can loop.
+                var face = com.human.common.gameplay.power.external.ExposedCableFace.forMode(modes.get(pos, direction));
+                if (face != null) {
+                    if (offered == null) {
+                        offered = new com.human.common.gameplay.power.external.ExposedCableFace[VALUES.length];
+                    }
+                    offered[direction.ordinal()] = face;
+                    grid.add(face.inboundNode());
+                    grid.add(face.outboundNode());
+                }
             }
         }
 
         if (nodes != null) {
             externals.put(pos.immutable(), nodes);
+        }
+
+        if (offered != null) {
+            exposed.put(pos.immutable(), offered);
         }
 
         if (touchesBlock) {

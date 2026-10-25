@@ -23,6 +23,36 @@ public class EnUsBlockProvider {
     private static final HashSet<Block> TOUCHED_ENTRIES = new HashSet<>();
 
     public static final Consumer<FabricLanguageProvider.TranslationBuilder> CONSUMER = builder -> {
+        // Oct 24 - the Create converters. NeoForge-with-Create only, so this Fabric datagen cannot reach their holders;
+        // their keys go in by name.
+        builder.add("block.avp_human.steel_alternator", "Steel Alternator");
+        builder.add("block.avp_human.steel_electric_gearbox", "Steel Electric Gearbox");
+        builder.add("block.avp_human.wy_alternator", "Weyland-Yutani Alternator");
+        builder.add("block.avp_human.wy_electric_gearbox", "Weyland-Yutani Electric Gearbox");
+        builder.add("block.avp_human.uscm_alternator", "USCM Alternator");
+        builder.add("block.avp_human.uscm_electric_gearbox", "USCM Electric Gearbox");
+        builder.add("avp_human.create.electric_gearbox.speed", "Gearbox Speed");
+        builder.add("avp_human.create.goggle.generating", "Generating: %s FE/t");
+        builder.add("avp_human.create.goggle.drawing", "Drawing: %s FE/t");
+        builder.add("avp_human.create.goggle.no_power", "No power");
+        builder.add("gui.avp_human.converter.alternator", "ALTERNATOR");
+        builder.add("gui.avp_human.converter.electric_gearbox", "ELECTRIC GEARBOX");
+        builder.add("gui.avp_human.converter.cards", "CARDS");
+        builder.add("gui.avp_human.converter.speed", "SPEED");
+        builder.add("gui.avp_human.converter.load", "LOAD");
+        builder.add("gui.avp_human.converter.output", "OUTPUT");
+        builder.add("gui.avp_human.converter.buffer", "BUFFER");
+        builder.add("gui.avp_human.converter.generating", "GENERATING");
+        builder.add("gui.avp_human.converter.overstressed", "OVERSTRESSED");
+        builder.add("gui.avp_human.converter.redstone_off", "REDSTONE OFF");
+        builder.add("gui.avp_human.converter.stopped", "STOPPED");
+        builder.add("gui.avp_human.converter.set_to", "SET TO");
+        builder.add("gui.avp_human.converter.draw", "DRAW");
+        builder.add("gui.avp_human.converter.supplies", "SUPPLIES");
+        builder.add("gui.avp_human.converter.running", "RUNNING");
+        builder.add("gui.avp_human.converter.no_power", "NO POWER");
+        builder.add("gui.avp_human.converter.off", "OFF");
+        builder.add("gui.avp_human.converter.set_on_front", "SET SPEED ON FRONT");
         addBlock(builder, HumanBlocks.BLUEPRINT_BLOCK, "Blueprint Table");
         addBlock(builder, HumanBlocks.CABLE, "Cable");
         addBlock(builder, HumanBlocks.CRYOCONDUIT, "Cryoconduit");

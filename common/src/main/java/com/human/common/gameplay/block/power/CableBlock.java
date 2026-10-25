@@ -520,7 +520,8 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
         // ⚠ The neighbour's FACE decides, not merely that it is a power block. A machine takes power at its back only
         // and a battery never at its front, and a closed breaker is closed to cables too - so the cable neither draws
         // an arm to that face nor joins the grid through it.
-        if (blockEntity instanceof com.human.common.gameplay.block.entity.power.PowerNodeBlockEntity node) {
+        // Oct 24 - PowerFaces, so the Create converters' gear sides take no cable arm (see PowerFaces).
+        if (blockEntity instanceof com.human.common.gameplay.power.PowerFaces node) {
             return node.isFaceConnectable(direction.getOpposite());
         }
 

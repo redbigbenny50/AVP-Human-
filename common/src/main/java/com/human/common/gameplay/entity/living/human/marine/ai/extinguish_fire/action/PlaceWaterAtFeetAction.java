@@ -6,7 +6,6 @@ import com.just.ai.goap.action.Action;
 import com.just.ai.goap.state.Blackboard;
 import com.just.core.functional.option.Option;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -72,7 +71,7 @@ public class PlaceWaterAtFeetAction {
 
     private static @NotNull BlockPos getBestPosForWaterPlacement(Marine marine) {
         return BlockPos.betweenClosedStream(marine.getBoundingBox())
-            .filter(blockPos -> marine.level().getBlockState(blockPos).is(BlockTags.FIRE))
+            .filter(blockPos -> com.human.common.util.HumanFire.isFire(marine.level().getBlockState(blockPos)))
             .findFirst()
             .orElse(marine.blockPosition());
     }

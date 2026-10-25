@@ -157,9 +157,10 @@ public final class VaporBlockEffects {
 
     /** Cryofluid puts fires out - the fire in the vapor, or the one it touches. */
     private static void extinguish(ServerLevel level, BlockPos cell, BlockState cellState, BlockPos touched, BlockState touchedState) {
-        if (cellState.getBlock() instanceof BaseFireBlock) {
+        // Oct 24 - any fire, Burnt's included (HumanFire).
+        if (com.human.common.util.HumanFire.isFire(cellState)) {
             level.removeBlock(cell, false);
-        } else if (touchedState.getBlock() instanceof BaseFireBlock) {
+        } else if (com.human.common.util.HumanFire.isFire(touchedState)) {
             level.removeBlock(touched, false);
         }
     }
@@ -187,7 +188,7 @@ public final class VaporBlockEffects {
         // Open air, or a plant the fire would burn straight through (grass, flowers, ferns, dead bushes).
         var burnable = cellState.isAir() || cellState.canBeReplaced() && cellState.getFluidState().isEmpty();
 
-        if (!burnable || cellState.getBlock() instanceof BaseFireBlock) {
+        if (!burnable || com.human.common.util.HumanFire.isFire(cellState)) {
             return;
         }
 

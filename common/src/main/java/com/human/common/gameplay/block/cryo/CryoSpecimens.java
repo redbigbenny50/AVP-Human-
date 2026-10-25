@@ -50,6 +50,129 @@ public final class CryoSpecimens {
         2.9F
     );
 
+    /**
+     * 🚨 Oct 24 - [stated] "Cryotubes seem to allow xenos way too big into small ones for example a praetorian in a 1x1
+     * tank." The fit checked a mob's WIDTH by its hitbox, and several castes are given deliberately narrow hitboxes so
+     * they can path through hive halls - a praetorian's is 0.98 blocks, so it passed a 1x1 tank, and the renderer then
+     * crushed a creature nearly twice that wide into the glass.
+     * <p>
+     * These are the castes whose BODY is wider than their hitbox: side-to-side across the shoulders and arms, measured
+     * from each model (blocks, at its own scale). Length is left out on purpose - tails trail behind and are curled
+     * into the frozen pose, which the renderer already fits. Matched on the end of the id like the heights, so every
+     * strain is covered; anything not listed fits by its hitbox, as before.
+     * </p>
+     */
+    private static final java.util.Map<String, Float> FROZEN_POSE_WIDTHS = java.util.Map.ofEntries(
+        java.util.Map.entry("queen", 5.6F),
+        java.util.Map.entry("empress", 3.4F),
+        java.util.Map.entry("harbinger", 3.0F),
+        java.util.Map.entry("ravager", 2.39F),
+        java.util.Map.entry("crusher", 2.3F),
+        java.util.Map.entry("praetorian", 1.68F),
+        java.util.Map.entry("predalien", 1.51F),
+        java.util.Map.entry("boiler", 1.45F),
+        java.util.Map.entry("chrysalis", 1.25F),
+        java.util.Map.entry("carrier", 1.08F)
+    );
+
+    /**
+     * The narrowest tank this kind of creature may ever go in, whatever its measured size.
+     * <ul>
+     * <li>[stated] Oct 24 - "Eggs, chest bursters, and adols should be the only ones in 1x1 tanks", then "facehuggers
+     * can go in 1x1": eggs, facehuggers, chestbursters (their cocoons included) and adolescents, in every strain and
+     * royal or predalien form, fit a 1x1. Every other xenomorph needs 2x2.</li>
+     * <li>[stated] "Villagers and people go in 2x2 preds too": villagers, wandering traders, witches, zombie villagers
+     * and illagers; avp_human's marines, W-Y soldiers and colonists; and every avp_predator mob.</li>
+     * </ul>
+     * Anything else (animals, other mods' mobs) fits by its size alone, as before.
+     */
+    public static int minimumAcross(net.minecraft.resources.ResourceLocation id) {
+        var path = id.getPath();
+
+        switch (id.getNamespace()) {
+            case "avp_alien" -> {
+                var small = path.contains("ovomorph")
+                    || path.contains("facehugger")
+                    || path.contains("chestburster")
+                    || path.contains("adolescent");
+                return small ? 1 : 2;
+            }
+            case "avp_predator" -> {
+                return 2;
+            }
+            case "avp_human" -> {
+                var person = path.equals("marine") || path.equals("tactical_marine") || path.startsWith("wy_")
+                    || path.equals("colonist");
+                return person ? 2 : 1;
+            }
+            case "minecraft" -> {
+                var type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(id);
+                var person = type == net.minecraft.world.entity.EntityType.VILLAGER
+                    || type == net.minecraft.world.entity.EntityType.WANDERING_TRADER
+                    || type == net.minecraft.world.entity.EntityType.WITCH
+                    || type == net.minecraft.world.entity.EntityType.ZOMBIE_VILLAGER
+                    || type.is(net.minecraft.tags.EntityTypeTags.ILLAGER);
+                return person ? 2 : 1;
+            }
+            default -> {
+                return 1;
+            }
+        }
+    }
+
+    /** The fit, with the 1x1 rule above applied first: 0 when the tank is narrower than this kind may ever go in. */
+    public static float fitScale(
+        CryotankBlockEntity tank,
+        net.minecraft.resources.ResourceLocation id,
+        float width,
+        float height
+    ) {
+        if (Math.min(tank.sizeX(), tank.sizeZ()) < minimumAcross(id)) {
+            return 0.0F;
+        }
+        return fitScale(tank, width, height);
+    }
+
+    /** How wide this mob is frozen: its hitbox, or its body where that is wider (FROZEN_POSE_WIDTHS). */
+    public static float frozenWidth(net.minecraft.world.entity.Entity mob) {
+        var id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        var scale = mob instanceof net.minecraft.world.entity.LivingEntity living ? living.getScale() : 1.0F;
+        return poseSize(FROZEN_POSE_WIDTHS, id, scale, mob.getBbWidth());
+    }
+
+    /**
+     * The frozen width and height of a STORED specimen, from its saved entity id - for a tank that is re-formed around
+     * a creature already inside it, which has no live entity to measure. {@code hitboxWidth}/{@code hitboxHeight} are
+     * the sizes stored with it at freezing; the stored scale is the creature's own, so the hitbox already carries it.
+     */
+    public static float[] frozenSize(net.minecraft.nbt.CompoundTag tag, float hitboxWidth, float hitboxHeight) {
+        var id = net.minecraft.resources.ResourceLocation.tryParse(tag.getString("id"));
+        if (id == null) {
+            return new float[] { hitboxWidth, hitboxHeight };
+        }
+        return new float[] {
+            poseSize(FROZEN_POSE_WIDTHS, id, 1.0F, hitboxWidth),
+            poseSize(FROZEN_POSE_HEIGHTS, id, 1.0F, hitboxHeight) };
+    }
+
+    private static float poseSize(
+        java.util.Map<String, Float> table,
+        net.minecraft.resources.ResourceLocation id,
+        float scale,
+        float hitbox
+    ) {
+        if (!"avp_alien".equals(id.getNamespace())) {
+            return hitbox;
+        }
+        var path = id.getPath();
+        for (var entry : table.entrySet()) {
+            if (path.equals(entry.getKey()) || path.endsWith("_" + entry.getKey())) {
+                return Math.max(hitbox, entry.getValue() * scale);
+            }
+        }
+        return hitbox;
+    }
+
     /** How tall this mob stands frozen: its hitbox, or its frozen pose where that is taller (FROZEN_POSE_HEIGHTS). */
     public static float frozenHeight(net.minecraft.world.entity.Entity mob) {
         var hitbox = mob.getBbHeight();

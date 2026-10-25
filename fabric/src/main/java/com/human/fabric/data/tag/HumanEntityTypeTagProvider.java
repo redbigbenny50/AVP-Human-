@@ -232,8 +232,11 @@ public class HumanEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
     }
 
     private void addHosts() {
+        // Oct 24 - [stated, relayed] "Facehuggers are not attacking colonists at all." The colonist was never in this
+        // tag, so to every facehugger, egg and parasite rule it simply was not a host.
         getOrCreateTagBuilder(foreignEntityTypeTag("avp_alien", "hosts"))
             .add(HumanEntityTypes.MARINE.get())
+            .add(HumanEntityTypes.COLONIST.get())
             .add(splitSoldiers());
     }
 

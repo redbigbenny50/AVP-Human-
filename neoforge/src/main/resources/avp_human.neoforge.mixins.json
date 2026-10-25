@@ -3,8 +3,14 @@
   "minVersion": "0.8",
   "package": "com.human.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
-  "client": ["client.MixinClientHooks_OversizedRenders", "client.MixinOversizedRenderers_RenderBox"],
+  "mixins": [
+    "LootPoolEntriesAccessor",
+    "LootTablePoolsAccessor"
+  ],
+  "client": [
+    "client.MixinClientHooks_OversizedRenders",
+    "client.MixinOversizedRenderers_RenderBox"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

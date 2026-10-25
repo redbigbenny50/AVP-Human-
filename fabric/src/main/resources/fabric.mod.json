@@ -23,8 +23,12 @@
     "fabric-datagen": [
       "com.human.fabric.data.HumanDataGenerator"
     ],
-    "rei_client": [],
-    "jei_mod_plugin": []
+    "rei_client": [
+      "com.human.client.compat.rei.HumanREIClient"
+    ],
+    "jei_mod_plugin": [
+      "com.human.client.compat.jei.HumanJEIPlugin"
+    ]
   },
   "mixins": [
     "${mod_id}.mixins.json",

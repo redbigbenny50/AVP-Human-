@@ -18,6 +18,61 @@ public class HumanREIClient implements REIClientPlugin {
         registry.add(new IndustrialCategory());
 
         registry.addWorkstations(IndustrialCategory.INDUSTRIAL_FURNACE, EntryStacks.of(HumanBlocks.INDUSTRIAL_FURNACE.get()));
+
+        // Oct 24 - where every blueprint is found (BlueprintSources), and the blueprint table's scan and copy.
+        registry.add(new BlueprintSourceDisplays.SourceCategory());
+        registry.add(
+            new HumanMachineDisplays.MachineCategory(
+                HumanMachineDisplays.BLUEPRINT_TABLE,
+                com.human.common.registry.init.HumanBlocks.BLUEPRINT_BLOCK.get()
+            )
+        );
+        registry.add(
+            new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.DRYING, net.minecraft.world.level.block.Blocks.HONEY_BLOCK)
+        );
+        registry.addWorkstations(HumanMachineDisplays.DRYING, EntryStacks.of(net.minecraft.world.level.block.Blocks.CAULDRON));
+        registry.addWorkstations(
+            HumanMachineDisplays.BLUEPRINT_TABLE,
+            EntryStacks.of(com.human.common.registry.init.HumanBlocks.BLUEPRINT_BLOCK.get())
+        );
+
+        // Oct 24 - every machine with its own recipes gets a tab (see HumanMachineDisplays).
+        registry.add(new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.GRINDING, HumanMachineDisplays.grinder()));
+        registry.add(new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.PRESSING, HumanMachineDisplays.press()));
+        registry.add(new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.FREEZING, HumanMachineDisplays.freezer()));
+        registry.add(new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.HYDRATING, HumanMachineDisplays.hydrator()));
+        registry.add(
+            new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.FABRICATING, HumanMachineDisplays.fabricators().getFirst())
+        );
+        registry.add(
+            new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.VAPORIZING, HumanMachineDisplays.vaporizers().getFirst())
+        );
+
+        registry.addWorkstations(HumanMachineDisplays.GRINDING, EntryStacks.of(HumanMachineDisplays.grinder()));
+        registry.addWorkstations(HumanMachineDisplays.PRESSING, EntryStacks.of(HumanMachineDisplays.press()));
+        registry.addWorkstations(HumanMachineDisplays.FREEZING, EntryStacks.of(HumanMachineDisplays.freezer()));
+        registry.addWorkstations(HumanMachineDisplays.HYDRATING, EntryStacks.of(HumanMachineDisplays.hydrator()));
+        for (var fabricator : HumanMachineDisplays.fabricators()) {
+            registry.addWorkstations(HumanMachineDisplays.FABRICATING, EntryStacks.of(fabricator));
+        }
+        for (var vaporizer : HumanMachineDisplays.vaporizers()) {
+            registry.addWorkstations(HumanMachineDisplays.VAPORIZING, EntryStacks.of(vaporizer));
+        }
+
+        // The electric machines that run vanilla (or our industrial) recipes, as workstations on those tabs.
+        registry.addWorkstations(IndustrialCategory.INDUSTRIAL_FURNACE, EntryStacks.of(HumanBlocks.ELECTRIC_INDUSTRIAL_FURNACE.get()));
+        registry.addWorkstations(
+            me.shedaniel.rei.plugin.common.BuiltinPlugin.SMELTING,
+            EntryStacks.of(HumanBlocks.ELECTRIC_FURNACE.get())
+        );
+        registry.addWorkstations(
+            me.shedaniel.rei.plugin.common.BuiltinPlugin.SMOKING,
+            EntryStacks.of(HumanBlocks.ELECTRIC_SMOKER.get())
+        );
+        registry.addWorkstations(
+            me.shedaniel.rei.plugin.common.BuiltinPlugin.BLASTING,
+            EntryStacks.of(HumanBlocks.ELECTRIC_BLAST_FURNACE.get())
+        );
     }
 
     @Override
@@ -27,6 +82,44 @@ public class HumanREIClient implements REIClientPlugin {
             HumanRecipes.INDUSTRIAL_FURNACE_RECIPE_TYPE.get(),
             IndustrialDisplay::new
         );
+
+        registry.registerRecipeFiller(
+            com.human.common.gameplay.recipe.GrinderRecipe.class,
+            HumanRecipes.GRINDING_TYPE.get(),
+            HumanMachineDisplays::grinding
+        );
+        registry.registerRecipeFiller(
+            com.human.common.gameplay.recipe.PressRecipe.class,
+            HumanRecipes.PRESSING_TYPE.get(),
+            HumanMachineDisplays::pressing
+        );
+        registry.registerRecipeFiller(
+            com.human.common.gameplay.recipe.FreezerRecipe.class,
+            HumanRecipes.FREEZING_TYPE.get(),
+            HumanMachineDisplays::freezing
+        );
+        registry.registerRecipeFiller(
+            com.human.common.gameplay.recipe.HydratorRecipe.class,
+            HumanRecipes.HYDRATING_TYPE.get(),
+            HumanMachineDisplays::hydrating
+        );
+        registry.registerRecipeFiller(
+            com.human.common.gameplay.fabrication.FabricatingRecipe.class,
+            com.human.common.registry.init.HumanFabrication.FABRICATING_TYPE.get(),
+            HumanMachineDisplays::fabricating
+        );
+        for (var recipe : com.human.client.compat.VaporizingRecipe.all()) {
+            registry.add(HumanMachineDisplays.vaporizing(recipe));
+        }
+        for (var display : BlueprintSourceDisplays.all()) {
+            registry.add(display);
+        }
+        for (var recipe : com.human.client.compat.BlueprintTableRecipe.all()) {
+            registry.add(HumanMachineDisplays.blueprintTable(recipe));
+        }
+        for (var recipe : com.human.client.compat.DryingRecipe.all()) {
+            registry.add(HumanMachineDisplays.drying(recipe));
+        }
     }
 
     /**

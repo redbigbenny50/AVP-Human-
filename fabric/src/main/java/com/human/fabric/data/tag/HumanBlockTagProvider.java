@@ -246,6 +246,17 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // Oct 13 quality check: drive bays and every storage crate mine at pickaxe speed. Neither needs a tool to drop
         // -
         // this only stops a pickaxe being as slow as a bare hand on them.
+        // Oct 24 - the Create converters: OPTIONAL entries - the blocks exist only on NeoForge with Create installed,
+        // and
+        // a required entry for a missing block would fail the whole tag.
+        var pickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "steel_alternator"));
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "steel_electric_gearbox"));
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "wy_alternator"));
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "wy_electric_gearbox"));
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "uscm_alternator"));
+        pickaxe.addOptional(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("avp_human", "uscm_electric_gearbox"));
+
         var storagePickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
 
         storagePickaxe.add(com.human.common.registry.init.HumanFabrication.DRIVE_BAY.get());

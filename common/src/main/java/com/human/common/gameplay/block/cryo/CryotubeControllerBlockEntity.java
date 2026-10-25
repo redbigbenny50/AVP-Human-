@@ -560,6 +560,16 @@ public class CryotubeControllerBlockEntity extends PowerConsumerBlockEntity impl
             return;
         }
 
+        // Oct 24 - every tank this controller serves is marked, every tick, so a tank NO controller serves (this one
+        // broken, a conduit cut, past the caps) knows to thaw on its own - see CryotankBlockEntity.serverTick. Marked
+        // whatever happens to it below (kept, thawing, paused, deactivated): all of those are this controller's call.
+        var now = level.getGameTime();
+        for (var masterPos : served) {
+            if (level.isLoaded(masterPos) && level.getBlockEntity(masterPos) instanceof CryotankBlockEntity servedTank) {
+                servedTank.markServed(now, worldPosition);
+            }
+        }
+
         var wanting = wantingByPriority();
         var fuelled = hasFuel();
         var remaining = gridSupply;

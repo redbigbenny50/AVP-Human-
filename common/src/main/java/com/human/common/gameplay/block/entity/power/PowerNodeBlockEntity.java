@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PowerNodeBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware {
+public abstract class PowerNodeBlockEntity extends BlockEntity implements com.human.common.gameplay.ship.ShipMoveAware, com.human.common.gameplay.power.PowerFaces {
 
     private boolean hasInitialized = false;
 
@@ -85,6 +85,7 @@ public abstract class PowerNodeBlockEntity extends BlockEntity implements com.hu
         return false;
     }
 
+    @Override
     public boolean isFaceConnectable(Direction direction) {
         return direction != null && canConnectOn(direction) && ports.isOpen(direction);
     }

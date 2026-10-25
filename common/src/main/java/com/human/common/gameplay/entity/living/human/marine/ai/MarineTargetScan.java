@@ -64,6 +64,13 @@ public final class MarineTargetScan {
     public List<LivingEntity> sense(Marine marine, BiPredicate<Marine, LivingEntity> isEligible) {
         var now = marine.tickCount;
 
+        // Oct 24 - a facehugged marine sees nothing to shoot at (AbstractHuman.isFacehugged).
+        if (com.human.common.gameplay.entity.living.human.AbstractHuman.isFacehugged(marine)) {
+            targets = List.of();
+            hasScanned = false;
+            return targets;
+        }
+
         if (hasScanned && lastScanTick == now) {
             return targets;
         }
