@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The Cosmetic Crafter's screen ([stated] Oct 31 approved mockup, 320 x 248): SETS, CATALOGUE, the selected design
- * with its STYLE drawer (one license slot per faction row) and materials, then INPUT + NETWORK, the inventory, and
- * CRAFT with its output and power gauge.
+ * The Cosmetic Crafter's screen ([stated] Oct 31 approved mockup, 320 x 248): SETS, CATALOGUE, the selected design with
+ * its STYLE drawer (one license slot per faction row) and materials, then INPUT + NETWORK, the inventory, and CRAFT
+ * with its output and power gauge.
  * <p>
  * Everything the screen needs from the server rides in this menu's data slots - no extra packet. The catalogue itself
  * is the same Java table on both sides, so an entry is just its index. Every choice goes through vanilla's menu-button
@@ -78,8 +78,8 @@ public class CosmeticCrafterMenu extends AbstractContainerMenu {
     private static final int REFRESH_TICKS = 10;
 
     /**
-     * Data slots: 0 progress, 1 status, 2 queued, 3 count, 4 running, 5 draw, 6 selected, 7 linked, 8 licenses,
-     * 9 the machine's edition, 10+ have.
+     * Data slots: 0 progress, 1 status, 2 queued, 3 count, 4 running, 5 draw, 6 selected, 7 linked, 8 licenses, 9 the
+     * machine's edition, 10+ have.
      */
     private static final int DATA_HAVE = 10;
 
@@ -157,7 +157,12 @@ public class CosmeticCrafterMenu extends AbstractContainerMenu {
 
         for (int slot = 0; slot < CosmeticCrafterBlockEntity.OUTPUT_SLOTS; slot++) {
             addSlot(
-                new Slot(container, CosmeticCrafterBlockEntity.FIRST_OUTPUT + slot, OUTPUT_X + (slot % 2) * 18, OUTPUT_Y + (slot / 2) * 18) {
+                new Slot(
+                    container,
+                    CosmeticCrafterBlockEntity.FIRST_OUTPUT + slot,
+                    OUTPUT_X + (slot % 2) * 18,
+                    OUTPUT_Y + (slot / 2) * 18
+                ) {
 
                     @Override
                     public boolean mayPlace(@NotNull ItemStack stack) {

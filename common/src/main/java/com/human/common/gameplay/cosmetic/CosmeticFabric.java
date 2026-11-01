@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The colour of a piece's fabric (cushions, bedding, curtains, the coat). [stated] Oct 31: right-click with any dye
- * to recolour only the fabric; the dye is not used up and there is no reset - dye it again to change it.
- * {@link #DEFAULT} is the faction's own fabric colour.
+ * The colour of a piece's fabric (cushions, bedding, curtains, the coat). [stated] Oct 31: right-click with any dye to
+ * recolour only the fabric; the dye is not used up and there is no reset - dye it again to change it. {@link #DEFAULT}
+ * is the faction's own fabric colour.
  */
 public enum CosmeticFabric implements StringRepresentable {
 

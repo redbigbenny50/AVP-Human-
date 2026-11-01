@@ -2224,7 +2224,7 @@
   "gene.avp.avp_human:ink": "Ink",
   "gene.avp.avp_human:ink.desc": "A bucket draws ink.",
   "gene.avp.avp_human:intelligence": "Intelligence",
-  "gene.avp.avp_human:intelligence.desc": "Mental capacity. On a player: up to 50% more XP from orbs and 30% off enchanting and anvil costs.",
+  "gene.avp.avp_human:intelligence.desc": "Mental capacity. On a player: up to 50% more XP from orbs and 30% off enchanting and anvil costs. On a mob: drops up to 50% more XP.",
   "gene.avp.avp_human:jump_height": "Jump Height",
   "gene.avp.avp_human:jump_height.desc": "Jumps higher.",
   "gene.avp.avp_human:keen_senses": "Keen Senses",

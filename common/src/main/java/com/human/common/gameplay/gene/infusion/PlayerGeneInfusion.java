@@ -97,11 +97,7 @@ public final class PlayerGeneInfusion {
 
         manager.setInfusionUntil(player.level().getGameTime() + DURATION_TICKS);
         player.addEffect(new MobEffectInstance(HumanMobEffects.getGeneInfusionHolder(), DURATION_TICKS, 0, false, false, true));
-        com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(
-            player,
-            contents.geneBonusDataEntries().stream().map(GeneBonusDataEntry::id).toList(),
-            null
-        );
+        // [stated] Nov 1: injecting teaches nothing - only the Gene Analyzer teaches genes.
         player.level().playSound(null, player.blockPosition(), SoundEvents.HONEY_DRINK, SoundSource.PLAYERS, 0.6F, 1.6F);
         player.displayClientMessage(
             Component.literal(applied == 1 ? "Infused with 1 gene for 3 days." : "Infused with " + applied + " genes for 3 days."),

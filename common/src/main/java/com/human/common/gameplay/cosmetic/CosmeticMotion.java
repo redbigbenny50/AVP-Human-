@@ -16,4 +16,9 @@ package com.human.common.gameplay.cosmetic;
  * @param amount degrees open (doors, lids) or degrees per tick (spinners)
  * @param spin   true for a spinner
  */
-public record CosmeticMotion(String bone, char axis, float amount, boolean spin) {}
+public record CosmeticMotion(
+    String bone,
+    char axis,
+    float amount,
+    boolean spin
+) {}

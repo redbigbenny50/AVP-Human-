@@ -203,7 +203,8 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             return null;
         }
 
-        // [stated] Oct 31 - heading to a bunk or asleep in one: the bunk goal has the path, so the agent sits out (plans
+        // [stated] Oct 31 - heading to a bunk or asleep in one: the bunk goal has the path, so the agent sits out
+        // (plans
         // are kept and resume when the marine is up).
         if (inEntityTick && isBunking()) {
             return null;

@@ -67,8 +67,8 @@ public class CosmeticBlockEntity extends BlockEntity {
     private int holoRefreshCooldown;
 
     /**
-     * Client only: what runs each client tick on a running machine piece - its working loop. Set by the client at start-up
-     * (as for the powered machines); null on a dedicated server, where this never ticks.
+     * Client only: what runs each client tick on a running machine piece - its working loop. Set by the client at
+     * start-up (as for the powered machines); null on a dedicated server, where this never ticks.
      */
     public static java.util.function.@org.jetbrains.annotations.Nullable Consumer<CosmeticBlockEntity> clientTicker;
 
@@ -78,10 +78,15 @@ public class CosmeticBlockEntity extends BlockEntity {
     /** A storage piece's contents ([stated] Oct 31: chest-style storage); null for anything else. */
     private final CosmeticStorage.@org.jetbrains.annotations.Nullable Contents storage;
 
-    /** Client only: the wall display's own random tactical map (heights 0..255, 0 = water), built once from its position. */
+    /**
+     * Client only: the wall display's own random tactical map (heights 0..255, 0 = water), built once from its
+     * position.
+     */
     public byte[] randomMap;
 
-    /** Bumped whenever the projection data changes; the renderer rebuilds its cached arrays only then, never per frame. */
+    /**
+     * Bumped whenever the projection data changes; the renderer rebuilds its cached arrays only then, never per frame.
+     */
     public int holoVersion;
 
     /** Client only: the renderer's cached per-column arrays, and the data version they were built from. */
@@ -95,7 +100,8 @@ public class CosmeticBlockEntity extends BlockEntity {
         this.items = NonNullList.withSize(mounts == null ? 0 : mounts.length, ItemStack.EMPTY);
         this.holotable = state.getBlock() instanceof CosmeticBlock block && CosmeticBlock.isMapDisplay(block.design());
         this.storage = state.getBlock() instanceof CosmeticBlock block && CosmeticStorage.has(block.design())
-            ? new CosmeticStorage.Contents(this, CosmeticStorage.SLOTS.get(block.design())) : null;
+            ? new CosmeticStorage.Contents(this, CosmeticStorage.SLOTS.get(block.design()))
+            : null;
         java.util.Arrays.fill(holoHeights, UNKNOWN);
         this.holoRefreshCooldown = 1 + (int) (Math.floorMod(pos.asLong() * 31L, (long) HOLO_REFRESH_TICKS));
     }
@@ -180,7 +186,8 @@ public class CosmeticBlockEntity extends BlockEntity {
                 var x = originX + (int) ((i + 0.5) * size / HOLO);
                 var z = originZ + (int) ((j + 0.5) * size / HOLO);
                 var chunk = level.getChunkSource().getChunkNow(x >> 4, z >> 4);
-                var height = chunk == null ? holoHeights[index]
+                var height = chunk == null
+                    ? holoHeights[index]
                     : chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, x & 15, z & 15);
 
                 if (kind != holoKinds[index] || height != holoHeights[index]) {
@@ -284,7 +291,8 @@ public class CosmeticBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        // Only what clients DRAW: rack/shelf items and a map display's projection. Storage contents stay on the server -
+        // Only what clients DRAW: rack/shelf items and a map display's projection. Storage contents stay on the server
+        // -
         // with a room full of lockers, sending every inventory with every chunk would be pure waste.
         var tag = new CompoundTag();
 

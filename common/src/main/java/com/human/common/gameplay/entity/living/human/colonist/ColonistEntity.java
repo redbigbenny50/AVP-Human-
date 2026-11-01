@@ -218,7 +218,8 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
             }
 
             tickBedClaim(serverLevel);
-            // At night a colonist with a bed - or, lacking one, a bunk - goes to it; the walk back to the workstation waits
+            // At night a colonist with a bed - or, lacking one, a bunk - goes to it; the walk back to the workstation
+            // waits
             // for the morning.
             if (!(isSleepTime() && (bedPos != null || getBunkPos() != null))) {
                 tickReturnToWorkstation(serverLevel);

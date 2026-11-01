@@ -87,12 +87,16 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
         registerDefaultState(state);
     }
 
-    /** Makes the block for a design: the only way these blocks are created, so the state definition knows the design. */
+    /**
+     * Makes the block for a design: the only way these blocks are created, so the state definition knows the design.
+     */
     public static CosmeticBlock create(Properties properties, CosmeticDesign design, CosmeticStyle style) {
         BUILDING.set(design);
 
         try {
-            return design.hasContents() ? new CosmeticSpecimenBlock(properties, design, style) : new CosmeticBlock(properties, design, style);
+            return design.hasContents()
+                ? new CosmeticSpecimenBlock(properties, design, style)
+                : new CosmeticBlock(properties, design, style);
         } finally {
             BUILDING.remove();
         }
@@ -227,7 +231,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
                         stack.shrink(1);
                     }
 
-                    level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MAP_IN.get(), SoundSource.BLOCKS, 0.4F, 1.6F);
+                    level.playSound(
+                        null,
+                        pos,
+                        com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MAP_IN.get(),
+                        SoundSource.BLOCKS,
+                        0.4F,
+                        1.6F
+                    );
                 }
 
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -249,7 +260,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
 
             if (!level.isClientSide) {
                 setOnEveryCell(level, pos, state, FABRIC, fabric);
-                level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DYE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(
+                    null,
+                    pos,
+                    com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DYE.get(),
+                    SoundSource.BLOCKS,
+                    1.0F,
+                    1.0F
+                );
             }
 
             // [stated] Oct 31: the dye is not used up.
@@ -284,7 +302,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
                         player.drop(map, false);
                     }
 
-                    level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MAP_OUT.get(), SoundSource.BLOCKS, 0.4F, 1.6F);
+                    level.playSound(
+                        null,
+                        pos,
+                        com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MAP_OUT.get(),
+                        SoundSource.BLOCKS,
+                        0.4F,
+                        1.6F
+                    );
                 }
 
                 return InteractionResult.sidedSuccess(level.isClientSide);
@@ -301,7 +326,10 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
 
         // Storage: the chest screen; its doors follow the viewers (see CosmeticStorage), not the click.
         if (CosmeticStorage.has(design)) {
-            if (!level.isClientSide && level.getBlockEntity(corePos(pos, state)) instanceof CosmeticBlockEntity decor && decor.storage() != null) {
+            if (
+                !level.isClientSide && level.getBlockEntity(corePos(pos, state)) instanceof CosmeticBlockEntity decor && decor
+                    .storage() != null
+            ) {
                 player.openMenu(CosmeticStorage.menu(decor.storage(), getName()));
             }
 
@@ -324,7 +352,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
 
             if (!level.isClientSide) {
                 setOnEveryCell(level, pos, state, SPINNING, spinning);
-                level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MACHINE_SWITCH.get(), SoundSource.BLOCKS, 0.6F, spinning ? 0.6F : 0.5F);
+                level.playSound(
+                    null,
+                    pos,
+                    com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_MACHINE_SWITCH.get(),
+                    SoundSource.BLOCKS,
+                    0.6F,
+                    spinning ? 0.6F : 0.5F
+                );
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -384,7 +419,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
                     stack.shrink(1);
                 }
 
-                level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_PLACE.get(), SoundSource.BLOCKS, 1.0F, 0.8F);
+                level.playSound(
+                    null,
+                    pos,
+                    com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_PLACE.get(),
+                    SoundSource.BLOCKS,
+                    1.0F,
+                    0.8F
+                );
             }
 
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -399,7 +441,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
                 player.drop(held, false);
             }
 
-            level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_TAKE.get(), SoundSource.BLOCKS, 1.0F, 0.8F);
+            level.playSound(
+                null,
+                pos,
+                com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_TAKE.get(),
+                SoundSource.BLOCKS,
+                1.0F,
+                0.8F
+            );
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -548,7 +597,7 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
         }
 
         if (best == null) {
-            return InteractionResult.sidedSuccess(level.isClientSide);   // every seat taken: swallow the click
+            return InteractionResult.sidedSuccess(level.isClientSide); // every seat taken: swallow the click
         }
 
         if (!level.isClientSide) {
@@ -557,7 +606,14 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
             player.setYRot(facing.toYRot() + bestTurn);
             player.setYHeadRot(player.getYRot());
             player.startRiding(seat);
-            level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_SIT.get(), SoundSource.BLOCKS, 0.8F, 0.9F);
+            level.playSound(
+                null,
+                pos,
+                com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_SIT.get(),
+                SoundSource.BLOCKS,
+                0.8F,
+                0.9F
+            );
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -582,17 +638,24 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
 
     /** Pieces that open with a lid or a case latch rather than a door - they sound like a case, not a cabinet. */
     private static final java.util.Set<CosmeticDesign> LIDDED = java.util.EnumSet.of(
-        CosmeticDesign.TOOL_CHEST, CosmeticDesign.SAMPLE_FREEZER, CosmeticDesign.CARGO_CRATE, CosmeticDesign.FIELD_SUPPLY_CASE,
+        CosmeticDesign.TOOL_CHEST,
+        CosmeticDesign.SAMPLE_FREEZER,
+        CosmeticDesign.CARGO_CRATE,
+        CosmeticDesign.FIELD_SUPPLY_CASE,
         CosmeticDesign.TISSUE_STORAGE
     );
 
     /** The opening or closing sound for a piece: a case for lidded pieces, a cabinet door for everything else. */
     public static SoundEvent doorSound(CosmeticDesign design, boolean open) {
         if (LIDDED.contains(design)) {
-            return open ? com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_LID_OPEN.get() : com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_LID_CLOSE.get();
+            return open
+                ? com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_LID_OPEN.get()
+                : com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_LID_CLOSE.get();
         }
 
-        return open ? com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DOOR_OPEN.get() : com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DOOR_CLOSE.get();
+        return open
+            ? com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DOOR_OPEN.get()
+            : com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_DOOR_CLOSE.get();
     }
 
     /** Every cell carries the same value, so the whole piece agrees whichever block is looked at. */
@@ -635,7 +698,10 @@ public class CosmeticBlock extends CosmeticMultiblock implements EntityBlock {
         }
 
         if (CosmeticStorage.has(design)) {
-            tooltip.add(Component.translatable("tooltip.avp_human.cosmetic.storage_hint", CosmeticStorage.SLOTS.get(design)).withStyle(ChatFormatting.GRAY));
+            tooltip.add(
+                Component.translatable("tooltip.avp_human.cosmetic.storage_hint", CosmeticStorage.SLOTS.get(design))
+                    .withStyle(ChatFormatting.GRAY)
+            );
         } else if (hasDoors(design)) {
             tooltip.add(Component.translatable("tooltip.avp_human.cosmetic.door_hint").withStyle(ChatFormatting.GRAY));
         }

@@ -188,7 +188,8 @@ public class HumanSoundEvents {
 
     public static final BLibHolder<SoundEvent> WEAPON_CHEM_THROWER_STOP = create("item.weapon.chem_thrower.stop");
 
-    // [stated] Oct 31 - cosmetic furniture sounds. Each points at a vanilla sound as a PLACEHOLDER in sounds.json; drop a
+    // [stated] Oct 31 - cosmetic furniture sounds. Each points at a vanilla sound as a PLACEHOLDER in sounds.json; drop
+    // a
     // real .ogg in and change that one entry, no code change needed.
     public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_DOOR_OPEN = create("block.cosmetic.door_open");
 

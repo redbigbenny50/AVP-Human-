@@ -365,7 +365,10 @@ public final class HumanMachineCategories {
             if (faction != null) {
                 output.addRichTooltipCallback(
                     (view, tooltip) -> tooltip.add(
-                        Component.translatable("gui.avp_human.cosmetic_crafter.needs_license", Component.translatable(recipe.style().translationKey()))
+                        Component.translatable(
+                            "gui.avp_human.cosmetic_crafter.needs_license",
+                            Component.translatable(recipe.style().translationKey())
+                        )
                             .withStyle(ChatFormatting.GOLD)
                     )
                 );

@@ -2,7 +2,6 @@ package com.human.client.render.item;
 
 import com.blib.api.client.render.v1.item.AzItemRenderer;
 import com.blib.api.client.render.v1.item.AzItemRendererConfig;
-import com.blib.api.client.render.v1.layer.AzAutoGlowingLayer;
 import com.human.HumanResources;
 import com.human.client.render.block.CosmeticDecorRenderer;
 import com.human.common.gameplay.cosmetic.CosmeticModelTables;
@@ -43,7 +42,7 @@ public class CosmeticItemRenderer extends AzItemRenderer {
 
         return AzItemRendererConfig.builder(HumanResources.blockGeoModelLocation("cosmetic/" + geo), texture)
             .useNewOffset(true)
-            .addRenderLayer(new AzAutoGlowingLayer<>())
+            .addRenderLayer(new com.human.client.render.CosmeticGlowLayer<>())
             .setBoneVisibilityFilter((bone, stack) -> hidden.contains(bone.getName()))
             // Never null: non-glass bones get the base render type back (BLib per-bone override rule).
             .setBoneRenderTypeOverrideProvider(bone -> bone.getName().startsWith(CosmeticDecorRenderer.GLASS_BONE) ? glass : cutout)

@@ -35,8 +35,14 @@ public final class CosmeticViewerInfo {
         page("cosmetic_dye", designs(CosmeticBlock::dyeable), "dye");
         page("cosmetic_motion", designs(design -> CosmeticBlock.hasDoors(design) || CosmeticBlock.spins(design)), "motion");
         page("cosmetic_mount", designs(design -> design.mount() == CosmeticDesign.Mount.WALL), "mount");
-        page("cosmetic_rack", designs(design -> CosmeticModelTables.SLOTS.containsKey(design.id())
-            && !CosmeticModelTables.SLOT_BONES.containsKey(design.id())), "rack");
+        page(
+            "cosmetic_rack",
+            designs(
+                design -> CosmeticModelTables.SLOTS.containsKey(design.id())
+                    && !CosmeticModelTables.SLOT_BONES.containsKey(design.id())
+            ),
+            "rack"
+        );
         page("cosmetic_shelf", designs(design -> CosmeticModelTables.SLOT_BONES.containsKey(design.id())), "shelf");
         page("cosmetic_seat", designs(design -> CosmeticModelTables.SEATS.containsKey(design.id())), "seat");
         page("cosmetic_bunk", designs(CosmeticBunks::isBunk), "bunk");

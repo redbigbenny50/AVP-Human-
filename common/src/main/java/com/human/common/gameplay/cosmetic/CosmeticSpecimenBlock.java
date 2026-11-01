@@ -25,9 +25,9 @@ import java.util.List;
 
 /**
  * A cosmetic piece with a swappable interior - terrariums, specimen tanks, crystal cases. [stated] Oct 31: right-click
- * it with a sapling, mushroom, amethyst shard, prismarine crystals, emerald, redstone, bone, rotten flesh or
- * fermented spider eye to change what is inside.
- * Only the contents its model has are accepted; anything else does nothing. The item is not used up.
+ * it with a sapling, mushroom, amethyst shard, prismarine crystals, emerald, redstone, bone, rotten flesh or fermented
+ * spider eye to change what is inside. Only the contents its model has are accepted; anything else does nothing. The
+ * item is not used up.
  * <p>
  * The choice lives in the {@link #CONTENTS} state of every cell, so it saves with the world and the renderer reads it
  * from the core without any block-entity data.
@@ -104,7 +104,14 @@ public class CosmeticSpecimenBlock extends CosmeticBlock {
                 }
             }
 
-            level.playSound(null, pos, com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_PLACE.get(), SoundSource.BLOCKS, 0.8F, 1.0F);
+            level.playSound(
+                null,
+                pos,
+                com.human.common.registry.init.HumanSoundEvents.BLOCK_COSMETIC_ITEM_PLACE.get(),
+                SoundSource.BLOCKS,
+                0.8F,
+                1.0F
+            );
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -122,7 +129,9 @@ public class CosmeticSpecimenBlock extends CosmeticBlock {
         tooltip.add(Component.translatable("tooltip.avp_human.cosmetic.contents_hint").withStyle(ChatFormatting.GRAY));
 
         for (var contents : accepted) {
-            tooltip.add(Component.literal(" - ").append(Component.translatable(contents.translationKey())).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(
+                Component.literal(" - ").append(Component.translatable(contents.translationKey())).withStyle(ChatFormatting.DARK_GRAY)
+            );
         }
     }
 

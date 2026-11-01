@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * The Cosmetic Crafter on its core (the back-middle block): its edition's skin and glowing screen, the other
- * factions' add-ons hidden, and the drawer/screen clips. It reaches past its core on every side, so it reports its
- * real size ({@link com.human.client.render.OversizedRender}) and never blinks out with the core's own block.
+ * The Cosmetic Crafter on its core (the back-middle block): its edition's skin and glowing screen, the other factions'
+ * add-ons hidden, and the drawer/screen clips. It reaches past its core on every side, so it reports its real size
+ * ({@link com.human.client.render.OversizedRender}) and never blinks out with the core's own block.
  */
 public class CosmeticCrafterRenderer extends AzBlockEntityRenderer<CosmeticCrafterBlockEntity> implements com.human.client.render.OversizedRender<CosmeticCrafterBlockEntity> {
 

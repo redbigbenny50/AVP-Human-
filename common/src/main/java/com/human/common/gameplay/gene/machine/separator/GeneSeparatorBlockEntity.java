@@ -406,7 +406,14 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
 
     void stopViewing() {
         if (viewers > 0 && --viewers == 0) {
-            if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> sync"), level.getGameTime(), System.currentTimeMillis());
+            if (level != null)
+                com.human.Human.LOGGER.info(
+                    "[GENE-DIAG] {} {} t={} ms={}",
+                    "separator",
+                    (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> sync"),
+                    level.getGameTime(),
+                    System.currentTimeMillis()
+                );
             sync();
         }
     }
@@ -491,7 +498,13 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
                 LID_OPEN.dispatchForBlockEntity(this);
             } else if (shownLid == 1) {
                 LID_CLOSE.dispatchForBlockEntity(this);
-                com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", "CLIENT lid_close dispatched", level.getGameTime(), System.currentTimeMillis());
+                com.human.Human.LOGGER.info(
+                    "[GENE-DIAG] {} {} t={} ms={}",
+                    "separator",
+                    "CLIENT lid_close dispatched",
+                    level.getGameTime(),
+                    System.currentTimeMillis()
+                );
             }
             shownLid = lid;
         }
@@ -588,7 +601,14 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
         supplied = tag.getBoolean(NBT_SUPPLIED);
         networkFull = tag.getBoolean(NBT_NETWORK_FULL);
         var diagLid = tag.getBoolean(NBT_LID);
-        if (level != null && level.isClientSide && diagLid != clientLid) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", "CLIENT update received lid=" + diagLid, level.getGameTime(), System.currentTimeMillis());
+        if (level != null && level.isClientSide && diagLid != clientLid)
+            com.human.Human.LOGGER.info(
+                "[GENE-DIAG] {} {} t={} ms={}",
+                "separator",
+                "CLIENT update received lid=" + diagLid,
+                level.getGameTime(),
+                System.currentTimeMillis()
+            );
         clientLid = diagLid;
     }
 

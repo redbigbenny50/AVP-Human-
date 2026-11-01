@@ -27,7 +27,7 @@ public class EnUsGeneProvider {
             builder,
             Genes.INTELLIGENCE,
             "Intelligence",
-            "Mental capacity. On a player: up to 50% more XP from orbs and 30% off enchanting and anvil costs."
+            "Mental capacity. On a player: up to 50% more XP from orbs and 30% off enchanting and anvil costs. On a mob: drops up to 50% more XP."
         );
         addGene(builder, Genes.KNOCKBACK_RESISTANCE, "Knockback Resistance", "Pushed back less by hits.");
         addGene(builder, Genes.MAX_HEALTH, "Max Health", "Adds health.");

@@ -28,7 +28,15 @@ public class GeneReaderMenu extends AbstractContainerMenu {
 
     public static final int MAX_LABEL = 20;
 
-    private final Container syringe = new SimpleContainer(1);
+    /** The syringe slot's container - it tells the menu when the syringe changes (see {@link #onSyringeChanged}). */
+    private final Container syringe = new SimpleContainer(1) {
+
+        @Override
+        public void setChanged() {
+            super.setChanged();
+            onSyringeChanged();
+        }
+    };
 
     private final Player player;
 
@@ -159,6 +167,59 @@ public class GeneReaderMenu extends AbstractContainerMenu {
 
         syringe.setChanged();
         broadcastChanges();
+    }
+
+    /**
+     * [stated] Nov 1 - server side, whenever the syringe in the slot changes (put in, renamed, cleared): a sample with
+     * no reader name is named SAMPLE-<SPECIES>-<n> (the item gets that name too unless it already has one), and the
+     * sample goes to the top of this reader's HISTORY.
+     */
+    private void onSyringeChanged() {
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)) {
+            return;
+        }
+        var stack = syringe();
+        var contents = stack.get(com.human.common.registry.init.HumanDataComponents.SYRINGE_CONTENTS.get());
+        if (stack.isEmpty() || contents == null || contents.geneBonusDataEntries().isEmpty()) {
+            return;
+        }
+        if (SyringeItem.sampleIdOf(stack) == null) {
+            var id = sampleName(serverPlayer, SyringeItem.donorOf(stack));
+            SyringeItem.setSampleId(stack, id);
+            if (!stack.has(DataComponents.CUSTOM_NAME)) {
+                stack.set(DataComponents.CUSTOM_NAME, Component.literal(id));
+            }
+        }
+        var reader = lockedHotbarSlot >= 0 ? player.getInventory().getItem(lockedHotbarSlot) : player.getOffhandItem();
+        if (reader.is(HumanItems.GENE_READER.get())) {
+            ReaderHistory.record(reader, stack);
+            if (lockedHotbarSlot < 0) {
+                // The off hand is not one of this menu's slots - send it from the player's own inventory menu.
+                serverPlayer.inventoryMenu.broadcastChanges();
+            }
+        }
+    }
+
+    /**
+     * SAMPLE-COW-3: the donor's species code and this player's next number for it. The whole name stays within the
+     * label's {@value #MAX_LABEL} characters - a long species code is shortened, never the number.
+     */
+    private static String sampleName(net.minecraft.server.level.ServerPlayer player, @org.jetbrains.annotations.Nullable String donor) {
+        String code;
+        if (donor == null) {
+            code = "UNKNOWN";
+        } else if (com.human.common.gameplay.gene.machine.GeneSplicing.SPLICED.equals(donor)) {
+            code = "SPLICED";
+        } else {
+            var id = net.minecraft.resources.ResourceLocation.tryParse(donor);
+            code = (id == null ? donor : id.getPath()).toUpperCase(java.util.Locale.ROOT);
+        }
+        var number = String.valueOf(com.human.common.gameplay.gene.discovery.GeneDiscoveries.nextSample(player, code));
+        var room = MAX_LABEL - "SAMPLE-".length() - 1 - number.length();
+        if (code.length() > room) {
+            code = code.substring(0, Math.max(1, room));
+        }
+        return "SAMPLE-" + code + "-" + number;
     }
 
     @Override

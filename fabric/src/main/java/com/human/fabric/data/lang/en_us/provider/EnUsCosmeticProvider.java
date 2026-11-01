@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import java.util.function.Consumer;
 
 /**
- * [stated] Oct 31 - names and screen text for the Cosmetic Crafter and its catalogue. Faction editions keep the
- * concept sheet's own names (USCM Field Workbench, W-Y Medical Cart...). Every screen label fits its frame at full size.
+ * [stated] Oct 31 - names and screen text for the Cosmetic Crafter and its catalogue. Faction editions keep the concept
+ * sheet's own names (USCM Field Workbench, W-Y Medical Cart...). Every screen label fits its frame at full size.
  */
 public final class EnUsCosmeticProvider {
 
@@ -886,22 +886,58 @@ public final class EnUsCosmeticProvider {
         builder.add("subtitles.block.cosmetic.dye", "Fabric dyed");
         builder.add("subtitles.block.cosmetic.sit", "Seat creaks");
         builder.add("tooltip.avp_human.cosmetic.shelf_hint", "Right-click a spot to put an item on the shelf");
-        builder.add("info.avp_human.cosmetic.storage", "Storage, like a chest: right-click to open it. Its doors or lid open while anyone has it open and close again when the last person closes it. It holds 9, 27 or 54 stacks depending on its size, and everything inside drops if it is broken.");
-        builder.add("info.avp_human.cosmetic.shelf", "A shelf you can stock. It comes with things on it; right-click a spot with an item to put that item there in place of what was on it, and right-click it again to take the item back - the original things return. Breaking the shelf drops anything you put on it.");
+        builder.add(
+            "info.avp_human.cosmetic.storage",
+            "Storage, like a chest: right-click to open it. Its doors or lid open while anyone has it open and close again when the last person closes it. It holds 9, 27 or 54 stacks depending on its size, and everything inside drops if it is broken."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.shelf",
+            "A shelf you can stock. It comes with things on it; right-click a spot with an item to put that item there in place of what was on it, and right-click it again to take the item back - the original things return. Breaking the shelf drops anything you put on it."
+        );
         builder.add("tooltip.avp_human.cosmetic.seat_hint", "Right-click with an empty hand to sit; sneak to stand");
         builder.add("tooltip.avp_human.cosmetic.bunk_hint", "A bed for two: click the top or bottom bunk to sleep");
         builder.add("tooltip.avp_human.cosmetic.holo_hint", "Right-click with a map to project it; sneak to rotate");
         builder.add("tooltip.avp_human.cosmetic.wall_map_hint", "Right-click with a map to show it");
-        builder.add("info.avp_human.cosmetic.table_map", "A briefing table. Right-click it with a filled map and its screen top shows the map's real terrain in green, read like a map laid on the table; right-click with an empty hand to take the map back. With no map it shows a random tactical map of its own.");
-        builder.add("info.avp_human.cosmetic.wall_map", "A situation display. Right-click it with a filled map and the big screen shows the map's real terrain in green - higher ground brighter, water teal - and follows it as it is explored. Right-click with an empty hand to take the map back. With no map it shows a random tactical map of its own.");
-        builder.add("info.avp_human.cosmetic.holo", "A holotable. Right-click it with a filled map and a green 3D projection of the map's real terrain rises over the table; right-click with an empty hand to take the map back. Sneak and right-click to start or stop the slow rotation. The projection follows the map as it is explored. Land the table has never seen loaded lies flat until it has.");
-        builder.add("info.avp_human.cosmetic.bunk", "Works as a bed for two. Right-click the upper half for the top bunk or the lower half for the bottom bunk. Sleeping sets your respawn point to the floor in front of it, and sleeps through the night with everyone else as a normal bed does. Colonists, marines and Weyland-Yutani troops use free bunks at night.");
-        builder.add("info.avp_human.cosmetic.seat", "You can sit on this: right-click it with an empty hand. A piece with several seats puts you on the free one nearest where you clicked. Sneak to stand up - you step off in front of it.");
-        builder.add("info.avp_human.cosmetic.rack", "A real weapon rack: right-click the mount you are looking at to hang the weapon in your hand, and right-click it again to take it back. Any weapon fits - AVP, TACZ or vanilla - and each is shown as its own mod draws it. Cases and lockers open first. Breaking the rack drops everything on it.");
-        builder.add("info.avp_human.cosmetic.dye", "Right-click with any dye to recolour this piece's fabric - its cushions, bedding, curtains or coat. Nothing else changes colour. The dye is not used up; to change the colour again, use another dye.");
-        builder.add("info.avp_human.cosmetic.motion", "Right-click with an empty hand to open or close its doors or lid, or to start and stop its fan or rotor.");
-        builder.add("info.avp_human.cosmetic.mount", "Place it on a wall, a floor or a ceiling: it mounts on whichever face you click. On a floor or ceiling it turns to face the way you are looking.");
-        builder.add("info.avp_human.cosmetic.contents", "Terrariums, specimen tanks and crystal cases show their contents through the glass. Right-click one with a sapling, mushroom, amethyst shard, prismarine crystals, emerald, redstone, bone, rotten flesh or fermented spider eye to change what is inside. Each piece accepts the contents its model has (listed on its tooltip), and the item is not used up.");
+        builder.add(
+            "info.avp_human.cosmetic.table_map",
+            "A briefing table. Right-click it with a filled map and its screen top shows the map's real terrain in green, read like a map laid on the table; right-click with an empty hand to take the map back. With no map it shows a random tactical map of its own."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.wall_map",
+            "A situation display. Right-click it with a filled map and the big screen shows the map's real terrain in green - higher ground brighter, water teal - and follows it as it is explored. Right-click with an empty hand to take the map back. With no map it shows a random tactical map of its own."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.holo",
+            "A holotable. Right-click it with a filled map and a green 3D projection of the map's real terrain rises over the table; right-click with an empty hand to take the map back. Sneak and right-click to start or stop the slow rotation. The projection follows the map as it is explored. Land the table has never seen loaded lies flat until it has."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.bunk",
+            "Works as a bed for two. Right-click the upper half for the top bunk or the lower half for the bottom bunk. Sleeping sets your respawn point to the floor in front of it, and sleeps through the night with everyone else as a normal bed does. Colonists, marines and Weyland-Yutani troops use free bunks at night."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.seat",
+            "You can sit on this: right-click it with an empty hand. A piece with several seats puts you on the free one nearest where you clicked. Sneak to stand up - you step off in front of it."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.rack",
+            "A real weapon rack: right-click the mount you are looking at to hang the weapon in your hand, and right-click it again to take it back. Any weapon fits - AVP, TACZ or vanilla - and each is shown as its own mod draws it. Cases and lockers open first. Breaking the rack drops everything on it."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.dye",
+            "Right-click with any dye to recolour this piece's fabric - its cushions, bedding, curtains or coat. Nothing else changes colour. The dye is not used up; to change the colour again, use another dye."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.motion",
+            "Right-click with an empty hand to open or close its doors or lid, or to start and stop its fan or rotor."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.mount",
+            "Place it on a wall, a floor or a ceiling: it mounts on whichever face you click. On a floor or ceiling it turns to face the way you are looking."
+        );
+        builder.add(
+            "info.avp_human.cosmetic.contents",
+            "Terrariums, specimen tanks and crystal cases show their contents through the glass. Right-click one with a sapling, mushroom, amethyst shard, prismarine crystals, emerald, redstone, bone, rotten flesh or fermented spider eye to change what is inside. Each piece accepts the contents its model has (listed on its tooltip), and the item is not used up."
+        );
         builder.add("gui.avp_human.cosmetic_crafter.catalogue", "CATALOGUE");
         builder.add("gui.avp_human.cosmetic_crafter.search", "Search...");
         builder.add("gui.avp_human.cosmetic_crafter.designs", "%s DESIGNS");

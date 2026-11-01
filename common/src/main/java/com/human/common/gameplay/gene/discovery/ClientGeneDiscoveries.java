@@ -15,11 +15,22 @@ public final class ClientGeneDiscoveries {
 
     private static volatile Set<String> species = Set.of();
 
+    /** Species profiled with the gene reader - see GeneDiscoveries#profile. */
+    private static volatile Set<String> profiles = Set.of();
+
     private ClientGeneDiscoveries() {}
 
-    public static void accept(String geneList, String speciesList) {
+    public static void accept(String geneList, String speciesList, String profileList) {
         genes = geneList.isEmpty() ? Set.of() : Set.of(geneList.split("\n"));
         species = speciesList.isEmpty() ? Set.of() : Set.of(speciesList.split("\n"));
+        profiles = profileList.isEmpty() ? Set.of() : Set.of(profileList.split("\n"));
+    }
+
+    /**
+     * Whether this player has profiled the species {@code entityTypeId} (a syringe's donor id) with the gene reader.
+     */
+    public static boolean hasProfile(@org.jetbrains.annotations.Nullable String entityTypeId) {
+        return entityTypeId != null && profiles.contains(entityTypeId);
     }
 
     public static boolean knowsGene(ResourceLocation id) {

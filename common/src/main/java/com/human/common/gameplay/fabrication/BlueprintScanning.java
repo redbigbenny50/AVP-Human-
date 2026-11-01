@@ -25,8 +25,7 @@ import java.util.WeakHashMap;
  * be lost.</li>
  * <li>Faction blocks - those are unlocked by a faction license, and a blueprint must not be a way round it.</li>
  * <li>Licenses, blank chips, and anything in {@code #avp_human:blueprint_unscannable}.</li>
- * <li>[stated] Oct 31: cosmetic furniture - every design in every style. It comes from the Cosmetic Crafter.
- * </li>
+ * <li>[stated] Oct 31: cosmetic furniture - every design in every style. It comes from the Cosmetic Crafter.</li>
  * <li>[stated] Oct 16: a written blueprint CHIP is not scanned but COPIED - 1 chip + 2 raw silicon = 2 of that chip
  * (see {@link #isCopy}). Faction licenses never go in at all.</li>
  * <li>Anything with no crafting recipe - a fabricator could never print it, so the scan would only waste the item.</li>

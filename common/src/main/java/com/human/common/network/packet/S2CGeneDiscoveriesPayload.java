@@ -11,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 /** A player's whole discovery list (genes, species), newline-separated ids. Sent on join and on every new discovery. */
 public record S2CGeneDiscoveriesPayload(
     String genes,
-    String species
+    String species,
+    String profiles
 ) implements CustomPacketPayload {
 
     public static final ResourceLocation PAYLOAD_ID = HumanResources.location("gene_discoveries");
@@ -23,6 +24,8 @@ public record S2CGeneDiscoveriesPayload(
         S2CGeneDiscoveriesPayload::genes,
         StreamCodecs.STRING_UTF8,
         S2CGeneDiscoveriesPayload::species,
+        StreamCodecs.STRING_UTF8,
+        S2CGeneDiscoveriesPayload::profiles,
         S2CGeneDiscoveriesPayload::new
     );
 

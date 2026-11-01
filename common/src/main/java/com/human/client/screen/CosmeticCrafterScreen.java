@@ -22,14 +22,13 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The Cosmetic Crafter's screen, built to the APPROVED mockup ([stated] Oct 31,
- * cosmetic_crafter_gui_style_drawer.png) at its exact GUI-pixel positions - [stated] Oct 27: built GUIs match the
- * approved mockup, never a simplified version.
+ * The Cosmetic Crafter's screen, built to the APPROVED mockup ([stated] Oct 31, cosmetic_crafter_gui_style_drawer.png)
+ * at its exact GUI-pixel positions - [stated] Oct 27: built GUIs match the approved mockup, never a simplified version.
  * <ul>
  * <li>Vanilla frame and slots; the MUTHUR-green screen holds SETS, CATALOGUE and the selected design.</li>
  * <li>[stated] Oct 31: ONE style button opens a DRAWER listing every style - however many factions come - with a
- * license slot on each faction's row. A style is locked until its license is in that slot, in the player's inventory
- * or in network storage.</li>
+ * license slot on each faction's row. A style is locked until its license is in that slot, in the player's inventory or
+ * in network storage.</li>
  * <li>[stated] Oct 31: NETWORK under the input box shows how many storages are connected.</li>
  * <li>All text is the vanilla font at one size, inside its frame ([stated] Oct 16 / Oct 18).</li>
  * </ul>
@@ -244,7 +243,15 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
         frame(g, 7, 220, 61, 242, MUTED, BG);
         boxText(g, Component.translatable(t("network")).getString(), 7, 220, 61, 231, MUTED);
         var linked = menu.linked();
-        boxText(g, linked > 0 ? Component.translatable(t("linked"), linked).getString() : Component.translatable(t("none")).getString(), 7, 230, 61, 241, GREEN);
+        boxText(
+            g,
+            linked > 0 ? Component.translatable(t("linked"), linked).getString() : Component.translatable(t("none")).getString(),
+            7,
+            230,
+            61,
+            241,
+            GREEN
+        );
 
         craftControls(g, mouseX, mouseY);
     }
@@ -263,8 +270,10 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
 
         for (int row = 0; row < SET_ROWS && row + setScroll < total; row++) {
             var filter = row + setScroll - 1;
-            var label = filter < 0 ? Component.translatable(t("set.all")).getString() : Component.translatable(CosmeticSet.values()[filter].translationKey())
-                .getString();
+            var label = filter < 0
+                ? Component.translatable(t("set.all")).getString()
+                : Component.translatable(CosmeticSet.values()[filter].translationKey())
+                    .getString();
             var y = 32 + row * 14;
 
             screenButton(g, label, 11, y, 82, y + 12, setFilter == filter, true, () -> {
@@ -324,7 +333,10 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
 
         var footprint = entry.design().footprint();
         var footprintWidth = font.width(footprint);
-        var name = font.plainSubstrByWidth(entry.resultStack().getHoverName().getString().toUpperCase(Locale.ROOT), 310 - footprintWidth - 4 - 199);
+        var name = font.plainSubstrByWidth(
+            entry.resultStack().getHoverName().getString().toUpperCase(Locale.ROOT),
+            310 - footprintWidth - 4 - 199
+        );
 
         text(g, name, 199, 21, GREEN);
         textRight(g, footprint, 310, 21, MUTED);
@@ -381,17 +393,29 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
             g.renderItem(cycle(part.ingredient().getItems()), leftPos + 199, topPos + y);
             text(g, Component.translatable(t("need"), need).getString(), 218, y + 4, GREEN);
             // Compact so the two never meet: "HAVE 32K" is 45px, right-aligned at 302; "NEED 8" ends at 251.
-            var haveText = have >= Short.MAX_VALUE ? Component.translatable(t("have_max")).getString() : Component.translatable(
-                t("have"),
-                have < 1000 ? String.valueOf(have) : (have / 1000) + "K"
-            ).getString();
+            var haveText = have >= Short.MAX_VALUE
+                ? Component.translatable(t("have_max")).getString()
+                : Component.translatable(
+                    t("have"),
+                    have < 1000 ? String.valueOf(have) : (have / 1000) + "K"
+                ).getString();
             textRight(g, haveText, 302, y + 4, have >= batch ? GREEN : WARN);
         }
 
-        scrollBar(g, 305, 99, 311, 148, materialScroll, Math.max(0, parts.size() - MATERIAL_ROWS), MATERIAL_ROWS, Math.max(
+        scrollBar(
+            g,
+            305,
+            99,
+            311,
+            148,
+            materialScroll,
+            Math.max(0, parts.size() - MATERIAL_ROWS),
             MATERIAL_ROWS,
-            parts.size()
-        ));
+            Math.max(
+                MATERIAL_ROWS,
+                parts.size()
+            )
+        );
     }
 
     /** One row per style; faction rows carry their license slot (a real menu slot, at the row's right). */
@@ -435,17 +459,30 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
             }
         }
 
-        scrollBar(g, 305, 90, 311, 148, drawerScroll, Math.max(0, styles.length - DRAWER_ROWS), DRAWER_ROWS, Math.max(
+        scrollBar(
+            g,
+            305,
+            90,
+            311,
+            148,
+            drawerScroll,
+            Math.max(0, styles.length - DRAWER_ROWS),
             DRAWER_ROWS,
-            styles.length
-        ));
+            Math.max(
+                DRAWER_ROWS,
+                styles.length
+            )
+        );
     }
 
     private net.minecraft.world.inventory.@Nullable Slot slotFor(CosmeticStyle option) {
         var index = CosmeticCrafterBlockEntity.licenseSlot(option);
 
         for (var slot : menu.slots) {
-            if (slot.getContainerSlot() == index && slot.index >= CosmeticCrafterMenu.MENU_FIRST_LICENSE && slot.index < CosmeticCrafterMenu.MENU_FIRST_INVENTORY) {
+            if (
+                slot.getContainerSlot() == index && slot.index >= CosmeticCrafterMenu.MENU_FIRST_LICENSE
+                    && slot.index < CosmeticCrafterMenu.MENU_FIRST_INVENTORY
+            ) {
                 return slot;
             }
         }
@@ -456,11 +493,33 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
     private void craftControls(GuiGraphics g, int mouseX, int mouseY) {
         var crafting = menu.queued() > 0;
 
-        vanillaButton(g, "-", 250, 164, 264, 178, true, mouseX, mouseY, () -> press(Screen.hasShiftDown() ? CosmeticCrafterMenu.COUNT_DOWN_TEN : CosmeticCrafterMenu.COUNT_DOWN));
+        vanillaButton(
+            g,
+            "-",
+            250,
+            164,
+            264,
+            178,
+            true,
+            mouseX,
+            mouseY,
+            () -> press(Screen.hasShiftDown() ? CosmeticCrafterMenu.COUNT_DOWN_TEN : CosmeticCrafterMenu.COUNT_DOWN)
+        );
         frame(g, 265, 164, 295, 178, V_LO, V_FIELD);
         var count = String.valueOf(crafting ? menu.queued() : menu.count());
         g.drawString(font, count, leftPos + 265 + (30 - font.width(count)) / 2 + 1, topPos + 167, 0xFFFFFFFF, false);
-        vanillaButton(g, "+", 296, 164, 310, 178, true, mouseX, mouseY, () -> press(Screen.hasShiftDown() ? CosmeticCrafterMenu.COUNT_UP_TEN : CosmeticCrafterMenu.COUNT_UP));
+        vanillaButton(
+            g,
+            "+",
+            296,
+            164,
+            310,
+            178,
+            true,
+            mouseX,
+            mouseY,
+            () -> press(Screen.hasShiftDown() ? CosmeticCrafterMenu.COUNT_UP_TEN : CosmeticCrafterMenu.COUNT_UP)
+        );
 
         var entry = current();
         var canCraft = crafting || (entry != null && menu.unlocked(entry.style()));
@@ -543,7 +602,12 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
                 var top = CosmeticCrafterMenu.DRAWER_TOP + 2 + row * CosmeticCrafterMenu.DRAWER_ROW;
 
                 if (!menu.unlocked(option) && x >= 199 && x < 285 && y >= top && y < top + CosmeticCrafterMenu.DRAWER_ROW) {
-                    g.renderTooltip(font, Component.translatable(t("locked"), Component.translatable(option.translationKey())), mouseX, mouseY);
+                    g.renderTooltip(
+                        font,
+                        Component.translatable(t("locked"), Component.translatable(option.translationKey())),
+                        mouseX,
+                        mouseY
+                    );
                     return;
                 }
             }
@@ -681,7 +745,18 @@ public class CosmeticCrafterScreen extends AbstractContainerScreen<CosmeticCraft
         }
     }
 
-    private void vanillaButton(GuiGraphics g, String label, int x0, int y0, int x1, int y1, boolean enabled, int mouseX, int mouseY, Runnable action) {
+    private void vanillaButton(
+        GuiGraphics g,
+        String label,
+        int x0,
+        int y0,
+        int x1,
+        int y1,
+        boolean enabled,
+        int mouseX,
+        int mouseY,
+        Runnable action
+    ) {
         var hovered = mouseX >= leftPos + x0 && mouseX < leftPos + x1 && mouseY >= topPos + y0 && mouseY < topPos + y1;
         var sprite = !enabled ? BUTTON_OFF : hovered ? BUTTON_HOVER : BUTTON;
 

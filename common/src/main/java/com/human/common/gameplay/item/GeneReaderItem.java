@@ -97,17 +97,15 @@ public class GeneReaderItem extends Item {
         // Everything the reader SCREEN shows (genes, advanced states, integrity, timers), captured now.
         var snapshot = com.human.common.gameplay.gene.reader.GeneReaderSnapshot.capture(interactionTarget);
         snapshot.writeTo(stack);
-        // Reading a mob discovers its species and every gene it shows: active, dormant, and its mutations.
+        // [stated] Nov 1: reading a living creature PROFILES its species (and records the species as met). It no longer
+        // discovers genes - only the Gene Analyzer teaches genes, and fully only for species profiled here.
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            var found = new java.util.ArrayList<net.minecraft.resources.ResourceLocation>();
-            snapshot.active().forEach(line -> found.add(net.minecraft.resources.ResourceLocation.parse(line.id())));
-            snapshot.dormant().forEach(line -> found.add(net.minecraft.resources.ResourceLocation.parse(line.id())));
-            snapshot.advanced()
-                .stream()
-                .filter(state -> state.status() != com.human.common.gameplay.gene.AdvancedGenes.Status.INACTIVE)
-                .forEach(state -> found.add(net.minecraft.resources.ResourceLocation.parse(state.id())));
-            found.removeIf(id -> id.equals(com.human.common.gameplay.gene.Genes.GENETIC_INTEGRITY.id()));
-            com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(serverPlayer, found, interactionTarget.getType());
+            com.human.common.gameplay.gene.discovery.GeneDiscoveries.profile(serverPlayer, interactionTarget.getType());
+            com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(
+                serverPlayer,
+                java.util.List.of(),
+                interactionTarget.getType()
+            );
         }
         stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
         // Assign stack back to player hand to update client-side.

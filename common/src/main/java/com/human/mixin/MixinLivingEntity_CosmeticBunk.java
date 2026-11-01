@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * <li>{@code setPosToBed} - how high the sleeper lies (on the right mattress);</li>
  * <li>{@code stopSleeping} - where they stand up (in front of the bunk, not inside it).</li>
  * </ul>
- * Only bunks are touched; every other bed goes the vanilla (or NeoForge) way. All four are hooked at their start or end,
- * which NeoForge's own patches to these methods leave in place. Method names checked against the 1.21.1 jar.
+ * Only bunks are touched; every other bed goes the vanilla (or NeoForge) way. All four are hooked at their start or
+ * end, which NeoForge's own patches to these methods leave in place. Method names checked against the 1.21.1 jar.
  */
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity_CosmeticBunk {

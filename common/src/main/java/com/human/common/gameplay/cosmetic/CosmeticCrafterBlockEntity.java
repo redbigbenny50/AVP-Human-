@@ -36,8 +36,8 @@ import java.util.List;
  * the network goes back if a later pull comes up short. Never deleted - what cannot go back stays in the input, and
  * failing that drops at its feet.
  * <h2>LICENSE</h2> Checked when CRAFT is pressed. A queued batch then finishes even if the player walks away with it.
- * <h2>POWER</h2> [stated] Nov 1: from the BACK only, any of the three bottom-row back blocks (this block is the back-middle
- * one). Power is drawn only while crafting with room for the result.
+ * <h2>POWER</h2> [stated] Nov 1: from the BACK only, any of the three bottom-row back blocks (this block is the
+ * back-middle one). Power is drawn only while crafting with room for the result.
  * <h2>COST</h2> Idle, nothing. Storage reads happen when a craft starts or finishes and twice a second while a screen
  * is open - never per tick.
  */
@@ -142,7 +142,9 @@ public class CosmeticCrafterBlockEntity extends PowerConsumerBlockEntity {
     // Licenses
     // ------------------------------------------------------------------------------------------------------------
 
-    /** Whether {@code style} is unlocked here: its license in the crafter's slot, the player's inventory or the network. */
+    /**
+     * Whether {@code style} is unlocked here: its license in the crafter's slot, the player's inventory or the network.
+     */
     public boolean licensed(ServerLevel level, @Nullable Player player, CosmeticStyle style) {
         return licensed(CosmeticCrafterSources.connected(level, this), player, style);
     }
@@ -330,7 +332,9 @@ public class CosmeticCrafterBlockEntity extends PowerConsumerBlockEntity {
         return target >= 0 && queued > 0;
     }
 
-    /** Crafting AND power reaching it - every visual follows this, never {@link #isCrafting} (the fabricator lesson). */
+    /**
+     * Crafting AND power reaching it - every visual follows this, never {@link #isCrafting} (the fabricator lesson).
+     */
     public boolean isRunning() {
         return running;
     }
@@ -413,79 +417,83 @@ public class CosmeticCrafterBlockEntity extends PowerConsumerBlockEntity {
     // whatever passes by.
     // ------------------------------------------------------------------------------------------------------------
 
-    private final com.human.common.gameplay.item.pipe.PipeItemAccess.Port pipePort = new com.human.common.gameplay.item.pipe.PipeItemAccess.Port() {
+    private final com.human.common.gameplay.item.pipe.PipeItemAccess.Port pipePort =
+        new com.human.common.gameplay.item.pipe.PipeItemAccess.Port() {
 
-        @Override
-        public boolean present() {
-            return !isRemoved();
-        }
-
-        @Override
-        public boolean canInsert() {
-            return false;
-        }
-
-        @Override
-        public boolean canExtract() {
-            return true;
-        }
-
-        @Override
-        public boolean isMachine() {
-            return true;
-        }
-
-        /** Only the OUTPUT comes out - the first finished stack the pipe will take. */
-        @Override
-        public com.human.common.gameplay.item.pipe.PipeItemAccess.@Nullable Offer peek(int max, java.util.function.Predicate<ItemStack> allowed) {
-            for (int slot = FIRST_OUTPUT; slot < FIRST_OUTPUT + OUTPUT_SLOTS; slot++) {
-                var held = items.get(slot);
-
-                if (held.isEmpty() || !allowed.test(held)) {
-                    continue;
-                }
-
-                var source = slot;
-                var offered = held.copyWithCount(Math.min(max, held.getCount()));
-
-                return new com.human.common.gameplay.item.pipe.PipeItemAccess.Offer() {
-
-                    @Override
-                    public ItemStack stack() {
-                        return offered;
-                    }
-
-                    @Override
-                    public int take(int count) {
-                        var stack = items.get(source);
-                        var took = Math.min(count, stack.getCount());
-
-                        stack.shrink(took);
-
-                        if (stack.isEmpty()) {
-                            items.set(source, ItemStack.EMPTY);
-                        }
-
-                        setChanged();
-
-                        return took;
-                    }
-                };
+            @Override
+            public boolean present() {
+                return !isRemoved();
             }
 
-            return null;
-        }
+            @Override
+            public boolean canInsert() {
+                return false;
+            }
 
-        @Override
-        public int insert(ItemStack stack) {
-            return 0;
-        }
+            @Override
+            public boolean canExtract() {
+                return true;
+            }
 
-        @Override
-        public Object storage() {
-            return CosmeticCrafterBlockEntity.this;
-        }
-    };
+            @Override
+            public boolean isMachine() {
+                return true;
+            }
+
+            /** Only the OUTPUT comes out - the first finished stack the pipe will take. */
+            @Override
+            public com.human.common.gameplay.item.pipe.PipeItemAccess.@Nullable Offer peek(
+                int max,
+                java.util.function.Predicate<ItemStack> allowed
+            ) {
+                for (int slot = FIRST_OUTPUT; slot < FIRST_OUTPUT + OUTPUT_SLOTS; slot++) {
+                    var held = items.get(slot);
+
+                    if (held.isEmpty() || !allowed.test(held)) {
+                        continue;
+                    }
+
+                    var source = slot;
+                    var offered = held.copyWithCount(Math.min(max, held.getCount()));
+
+                    return new com.human.common.gameplay.item.pipe.PipeItemAccess.Offer() {
+
+                        @Override
+                        public ItemStack stack() {
+                            return offered;
+                        }
+
+                        @Override
+                        public int take(int count) {
+                            var stack = items.get(source);
+                            var took = Math.min(count, stack.getCount());
+
+                            stack.shrink(took);
+
+                            if (stack.isEmpty()) {
+                                items.set(source, ItemStack.EMPTY);
+                            }
+
+                            setChanged();
+
+                            return took;
+                        }
+                    };
+                }
+
+                return null;
+            }
+
+            @Override
+            public int insert(ItemStack stack) {
+                return 0;
+            }
+
+            @Override
+            public Object storage() {
+                return CosmeticCrafterBlockEntity.this;
+            }
+        };
 
     /** The crafter's item port, as an item pipe sees it. */
     public com.human.common.gameplay.item.pipe.PipeItemAccess.Port pipePort() {
@@ -499,9 +507,9 @@ public class CosmeticCrafterBlockEntity extends PowerConsumerBlockEntity {
     }
 
     /**
-     * [stated] Nov 1: power from the BACK only - the gap under the machine means nothing can reach its underside. The core
-     * is the back-middle bottom block, so its own back face is one of the three ports; the other two reach it through
-     * the machine's parts (see {@link CosmeticCrafterBlock#coreThrough}).
+     * [stated] Nov 1: power from the BACK only - the gap under the machine means nothing can reach its underside. The
+     * core is the back-middle bottom block, so its own back face is one of the three ports; the other two reach it
+     * through the machine's parts (see {@link CosmeticCrafterBlock#coreThrough}).
      */
     @Override
     public boolean canConnectOn(Direction direction) {
@@ -723,7 +731,10 @@ public class CosmeticCrafterBlockEntity extends PowerConsumerBlockEntity {
             for (int slot = 0; slot < INPUT_SLOTS && !stack.isEmpty(); slot++) {
                 var held = items.get(slot);
 
-                if (pass == 0 && !held.isEmpty() && ItemStack.isSameItemSameComponents(held, stack) && held.getCount() < held.getMaxStackSize()) {
+                if (
+                    pass == 0 && !held.isEmpty() && ItemStack.isSameItemSameComponents(held, stack) && held.getCount() < held
+                        .getMaxStackSize()
+                ) {
                     var moved = Math.min(stack.getCount(), held.getMaxStackSize() - held.getCount());
 
                     held.grow(moved);

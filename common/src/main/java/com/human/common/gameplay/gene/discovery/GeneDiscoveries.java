@@ -47,6 +47,19 @@ public final class GeneDiscoveries extends SavedData {
 
     private final Map<UUID, Set<String>> species = new HashMap<>();
 
+    /**
+     * [stated] Nov 1 - SPECIES PROFILES, made only by reading a living creature with the gene reader. The Gene Analyzer
+     * fully decodes (names) a syringe only when its donor species is profiled. Kept apart from {@link #species} so they
+     * start empty for everyone ([stated] no migration from earlier discoveries).
+     */
+    private final Map<UUID, Set<String>> profiles = new HashMap<>();
+
+    /**
+     * [stated] Nov 1 - the gene reader names each syringe it reads SAMPLE-<SPECIES>-<n>: the last number used, per
+     * player per species code, so the numbers run on whichever reader the player uses.
+     */
+    private final Map<UUID, Map<String, Integer>> samples = new HashMap<>();
+
     /** Syringe draws each player has taken per species - the Analyzer's DRAWS TAKEN. */
     private final Map<UUID, Map<String, Integer>> draws = new HashMap<>();
 
@@ -68,6 +81,41 @@ public final class GeneDiscoveries extends SavedData {
 
     public Set<String> speciesOf(UUID player) {
         return species.getOrDefault(player, Set.of());
+    }
+
+    public Set<String> profilesOf(UUID player) {
+        return profiles.getOrDefault(player, Set.of());
+    }
+
+    /** Whether this player has profiled the species {@code entityTypeId} with the gene reader. */
+    public static boolean hasProfile(net.minecraft.server.MinecraftServer server, UUID player, @Nullable String entityTypeId) {
+        return entityTypeId != null && get(server).profilesOf(player).contains(entityTypeId);
+    }
+
+    /** The next sample number for this player and species code (1, 2, 3...), counted and saved. */
+    public static int nextSample(ServerPlayer player, String speciesCode) {
+        if (player.getServer() == null) {
+            return 1;
+        }
+        var data = get(player.getServer());
+        var next = data.samples.computeIfAbsent(player.getUUID(), k -> new HashMap<>()).merge(speciesCode, 1, Integer::sum);
+        data.setDirty();
+        return next;
+    }
+
+    /** Records a species profile (gene reader only); syncs the player's client if it is new. */
+    public static void profile(ServerPlayer player, EntityType<?> type) {
+        if (player.getServer() == null) {
+            return;
+        }
+        var data = get(player.getServer());
+        if (
+            data.profiles.computeIfAbsent(player.getUUID(), k -> new LinkedHashSet<>())
+                .add(BuiltInRegistries.ENTITY_TYPE.getKey(type).toString())
+        ) {
+            data.setDirty();
+            sync(player);
+        }
     }
 
     public Map<String, Integer> drawsOf(UUID player) {
@@ -126,7 +174,8 @@ public final class GeneDiscoveries extends SavedData {
                 player,
                 new S2CGeneDiscoveriesPayload(
                     String.join("\n", data.genesOf(player.getUUID())),
-                    String.join("\n", data.speciesOf(player.getUUID()))
+                    String.join("\n", data.speciesOf(player.getUUID())),
+                    String.join("\n", data.profilesOf(player.getUUID()))
                 )
             );
     }
@@ -146,6 +195,7 @@ public final class GeneDiscoveries extends SavedData {
             var entry = players.getCompound(key);
             data.genes.put(id, readSet(entry.getList("genes", Tag.TAG_STRING)));
             data.species.put(id, readSet(entry.getList("species", Tag.TAG_STRING)));
+            data.profiles.put(id, readSet(entry.getList("profiles", Tag.TAG_STRING)));
             var drawTag = entry.getCompound("draws");
             if (!drawTag.isEmpty()) {
                 var map = new HashMap<String, Integer>();
@@ -153,6 +203,14 @@ public final class GeneDiscoveries extends SavedData {
                     map.put(type, drawTag.getInt(type));
                 }
                 data.draws.put(id, map);
+            }
+            var sampleTag = entry.getCompound("samples");
+            if (!sampleTag.isEmpty()) {
+                var map = new HashMap<String, Integer>();
+                for (var code : sampleTag.getAllKeys()) {
+                    map.put(code, sampleTag.getInt(code));
+                }
+                data.samples.put(id, map);
             }
         }
         return data;
@@ -173,13 +231,19 @@ public final class GeneDiscoveries extends SavedData {
         ids.addAll(genes.keySet());
         ids.addAll(species.keySet());
         ids.addAll(draws.keySet());
+        ids.addAll(profiles.keySet());
+        ids.addAll(samples.keySet());
         for (var id : ids) {
             var entry = new CompoundTag();
             entry.put("genes", writeSet(genes.getOrDefault(id, Set.of())));
             entry.put("species", writeSet(species.getOrDefault(id, Set.of())));
+            entry.put("profiles", writeSet(profiles.getOrDefault(id, Set.of())));
             var drawTag = new CompoundTag();
             draws.getOrDefault(id, Map.of()).forEach(drawTag::putInt);
             entry.put("draws", drawTag);
+            var sampleTag = new CompoundTag();
+            samples.getOrDefault(id, Map.of()).forEach(sampleTag::putInt);
+            entry.put("samples", sampleTag);
             players.put(id.toString(), entry);
         }
         tag.put("players", players);

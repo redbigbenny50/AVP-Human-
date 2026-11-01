@@ -21,10 +21,19 @@ public final class GeneTooltips {
 
     private GeneTooltips() {}
 
+    /** A gene line, named only when this player has discovered the gene (gene tubes). */
     public static Component line(ResourceLocation id, GeneOperationType operation, double value) {
+        return line(id, operation, value, ClientGeneDiscoveries.knowsGene(id));
+    }
+
+    /**
+     * A gene line with the caller deciding whether it may be named - a syringe also names the genes of a profiled
+     * donor. Unnamed is ??? with no strength ([stated] Nov 1).
+     */
+    public static Component line(ResourceLocation id, GeneOperationType operation, double value, boolean named) {
         var gene = GeneRegistry.getValueOrNull(id);
 
-        if (gene == null || !ClientGeneDiscoveries.knowsGene(id)) {
+        if (gene == null || !named) {
             return Component.literal("  ???").withStyle(ChatFormatting.DARK_GRAY);
         }
 

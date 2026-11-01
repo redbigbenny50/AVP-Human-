@@ -10,9 +10,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Bunk beds that work as beds ([stated] Oct 31): two sleepers, one per bunk, players or NPCs. Sleeping through the night
- * and sleeping itself are vanilla's own; this class answers the questions vanilla asks of a bed, which the bed mixins
- * route here because the bunk is a cosmetic multiblock, not a BedBlock.
+ * Bunk beds that work as beds ([stated] Oct 31): two sleepers, one per bunk, players or NPCs. Sleeping through the
+ * night and sleeping itself are vanilla's own; this class answers the questions vanilla asks of a bed, which the bed
+ * mixins route here because the bunk is a cosmetic multiblock, not a BedBlock.
  * <ul>
  * <li>Each bunk's sleeping block is the PILLOW END of its level (cell {1, 0, 0} bottom, {1, 1, 0} top) - two different
  * positions, so two sleepers never share one.</li>
@@ -147,7 +147,11 @@ public final class CosmeticBunks {
                     var section = sections[index];
                     var sectionY = chunk.getSectionYFromSectionIndex(index) << 4;
 
-                    if (section.hasOnlyAir() || Math.abs(sectionY + 8 - origin.getY()) > SEARCH_HEIGHT + 8 || !section.maybeHas(CosmeticBunks::isSleepingCell)) {
+                    if (
+                        section.hasOnlyAir() || Math.abs(sectionY + 8 - origin.getY()) > SEARCH_HEIGHT + 8 || !section.maybeHas(
+                            CosmeticBunks::isSleepingCell
+                        )
+                    ) {
                         continue;
                     }
 
@@ -176,11 +180,13 @@ public final class CosmeticBunks {
         // and the bunk within ours, so it is within twice that of us.
         var claimed = new java.util.HashSet<BlockPos>();
 
-        for (var human : level.getEntitiesOfClass(
-            com.human.common.gameplay.entity.living.human.AbstractHuman.class,
-            new AABB(origin).inflate(SEARCH_RADIUS * 2),
-            human -> human != claimant && human.getBunkPos() != null
-        )) {
+        for (
+            var human : level.getEntitiesOfClass(
+                com.human.common.gameplay.entity.living.human.AbstractHuman.class,
+                new AABB(origin).inflate(SEARCH_RADIUS * 2),
+                human -> human != claimant && human.getBunkPos() != null
+            )
+        ) {
             claimed.add(human.getBunkPos());
         }
 

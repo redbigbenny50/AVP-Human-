@@ -1,11 +1,8 @@
 package com.human.client.render.block;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.blib.api.client.model.v1.AzBone;
 import com.blib.api.client.render.v1.block.AzBlockEntityRenderer;
 import com.blib.api.client.render.v1.block.AzBlockEntityRendererConfig;
-import com.blib.api.client.render.v1.layer.AzAutoGlowingLayer;
 import com.human.HumanResources;
 import com.human.common.gameplay.cosmetic.CosmeticBlockEntity;
 import com.human.common.gameplay.cosmetic.CosmeticModelTables;
@@ -13,6 +10,7 @@ import com.human.common.gameplay.cosmetic.CosmeticSpecimenBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,7 +39,7 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         var builder = AzBlockEntityRendererConfig.<CosmeticBlockEntity>builder(
             decor -> HumanResources.blockGeoModelLocation("cosmetic/" + decor.block().design().id()),
             CosmeticDecorRenderer::texture
-        ).addRenderLayer(new AzAutoGlowingLayer<>());
+        ).addRenderLayer(new com.human.client.render.CosmeticGlowLayer<>());
 
         // Floor / ceiling mounts and the doors, lids and spinners (see CosmeticDecorModelRenderer).
         builder.setModelRenderer(
@@ -55,7 +53,8 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         // otherwise a previous bone's buffer can leak onto the next. entityCutout is the builder's own default.
         builder.setBoneRenderTypeOverrideProvider(CosmeticDecorRenderer::renderType);
 
-        // ⚠ setBoneVisibilityFilter is only on the base builder, whose return type is the base builder - so it is called
+        // ⚠ setBoneVisibilityFilter is only on the base builder, whose return type is the base builder - so it is
+        // called
         // for its effect, and the block builder does the building.
         builder.setBoneVisibilityFilter(CosmeticDecorRenderer::hide);
 
@@ -69,8 +68,8 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
 
     /**
      * The model, then - for a weapon rack - each gun drawn on its mount with the game's own item rendering (FIXED, as
-     * an item frame draws it), so AVP, TACZ and vanilla weapons each look exactly as their mod draws them. The guns
-     * get the same turns as the model: facing about Y, then a floor/ceiling mount's X turn about the block middle.
+     * an item frame draws it), so AVP, TACZ and vanilla weapons each look exactly as their mod draws them. The guns get
+     * the same turns as the model: facing about Y, then a floor/ceiling mount's X turn about the block middle.
      */
     @Override
     public void render(
@@ -87,7 +86,8 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
             return;
         }
 
-        // A big piece is drawn even when its own block's section is off screen (see shouldRenderOffScreen) - and vanilla
+        // A big piece is drawn even when its own block's section is off screen (see shouldRenderOffScreen) - and
+        // vanilla
         // and Fabric draw such pieces with no view check at all. So skip it here when it is wholly behind the camera:
         // a room full of big pieces then costs nothing while the player faces away from them.
         if (isBig(decor) && behindCamera(decor)) {
@@ -121,19 +121,23 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         var itemRenderer = net.minecraft.client.Minecraft.getInstance().getItemRenderer();
         poseStack.pushPose();
         poseStack.translate(0.5, 0, 0.5);
-        poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
-            case SOUTH -> 180;
-            case WEST -> 90;
-            case EAST -> 270;
-            default -> 0;
-        }));
+        poseStack.mulPose(
+            com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
+                case SOUTH -> 180;
+                case WEST -> 90;
+                case EAST -> 270;
+                default -> 0;
+            })
+        );
 
         if (state.hasProperty(com.human.common.gameplay.cosmetic.CosmeticBlock.MOUNT)) {
             var mount = state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.MOUNT);
 
             if (mount != com.human.common.gameplay.cosmetic.CosmeticMount.WALL) {
                 poseStack.translate(0, 0.5, 0);
-                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(mount == com.human.common.gameplay.cosmetic.CosmeticMount.FLOOR ? 90 : -90));
+                poseStack.mulPose(
+                    com.mojang.math.Axis.XP.rotationDegrees(mount == com.human.common.gameplay.cosmetic.CosmeticMount.FLOOR ? 90 : -90)
+                );
                 poseStack.translate(0, -0.5, 0);
             }
         }
@@ -206,7 +210,9 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         return decor.isHolotable() ? box.expandTowards(0.0D, 1.0D, 0.0D) : box;
     }
 
-    /** Wholly behind the camera: everything in view lies in front of the camera's plane, so this never hides a piece. */
+    /**
+     * Wholly behind the camera: everything in view lies in front of the camera's plane, so this never hides a piece.
+     */
     private static boolean behindCamera(CosmeticBlockEntity decor) {
         var camera = net.minecraft.client.Minecraft.getInstance().gameRenderer.getMainCamera();
         var look = camera.getLookVector();
@@ -224,7 +230,9 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
     // at all past 48.
     // ------------------------------------------------------------------------------------------------------------
 
-    /** The projector surface spans model x / z -6..22 (28 px), centred on 8; the projection starts at its top (12 px). */
+    /**
+     * The projector surface spans model x / z -6..22 (28 px), centred on 8; the projection starts at its top (12 px).
+     */
     private static final float HOLO_SPAN = 28F, HOLO_CENTRE = 8F, HOLO_BASE = 12F, HOLO_MAX = 14F;
 
     /** Past this distance the projection is not drawn at all; past the half distance only every other column is. */
@@ -247,8 +255,8 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         }
 
         var n = CosmeticBlockEntity.HOLO;
-        var shade = new float[n * n];      // flat maps: -1 = not drawn, 0..1 = land brightness, 2 = water
-        var columns = new float[n * n];    // holotable: -1 = not drawn, else column height in px
+        var shade = new float[n * n]; // flat maps: -1 = not drawn, 0..1 = land brightness, 2 = water
+        var columns = new float[n * n]; // holotable: -1 = not drawn, else column height in px
         var map = !decor.holoMap().isEmpty();
 
         if (map) {
@@ -296,7 +304,9 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
     /** Reused for every map cell (render thread only) - a fresh array per cell per frame was 4096 a display a frame. */
     private static final int[] COLOUR = new int[4];
 
-    /** The cell's colour into {@link #COLOUR}: water teal, land green brighter with height; grid lines a touch stronger. */
+    /**
+     * The cell's colour into {@link #COLOUR}: water teal, land green brighter with height; grid lines a touch stronger.
+     */
     private static int[] mapColour(float v, boolean gridLine) {
         if (v >= 2F) {
             COLOUR[0] = 15;
@@ -319,7 +329,11 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
      * where the terrain steps down. Land bright green, water dim teal; unexplored columns are not drawn. It turns with
      * the emitter ring, about the table's centre.
      */
-    private static void renderHologram(CosmeticBlockEntity decor, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource source) {
+    private static void renderHologram(
+        CosmeticBlockEntity decor,
+        com.mojang.blaze3d.vertex.PoseStack poseStack,
+        net.minecraft.client.renderer.MultiBufferSource source
+    ) {
         var distance = viewDistanceSqr(decor);
 
         if (distance < 0) {
@@ -335,12 +349,14 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         var buffer = source.getBuffer(net.minecraft.client.renderer.RenderType.lightning());
         poseStack.pushPose();
         poseStack.translate(0.5, 0, 0.5);
-        poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
-            case SOUTH -> 180;
-            case WEST -> 90;
-            case EAST -> 270;
-            default -> 0;
-        }));
+        poseStack.mulPose(
+            com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
+                case SOUTH -> 180;
+                case WEST -> 90;
+                case EAST -> 270;
+                default -> 0;
+            })
+        );
         poseStack.translate(HOLO_CENTRE / 16F, HOLO_BASE / 16F, HOLO_CENTRE / 16F);
         poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(decor.spinAngle));
         var pose = poseStack.last();
@@ -357,7 +373,8 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
 
                 var water = kinds[j * n + i] == 2;
                 int r = water ? 20 : 40, g = water ? 150 : 255, b = water ? 140 : 90, a = water ? 70 : 110;
-                float x0 = -half + i / (float) step * cell, x1 = x0 + cell, z0 = -half + j / (float) step * cell, z1 = z0 + cell, y = h / 16F;
+                float x0 = -half + i / (float) step * cell, x1 = x0 + cell, z0 = -half + j / (float) step * cell, z1 = z0 + cell, y = h
+                    / 16F;
 
                 quad(buffer, pose, x0, y, z0, x0, y, z1, x1, y, z1, x1, y, z0, r, g, b, a);
 
@@ -368,10 +385,14 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
                 float south = j + step < n ? Math.max(0, column[(j + step) * n + i]) / 16F : 0F;
                 int side = a / 2;
 
-                if (west < y) quad(buffer, pose, x0, west, z0, x0, west, z1, x0, y, z1, x0, y, z0, r, g, b, side);
-                if (east < y) quad(buffer, pose, x1, east, z0, x1, y, z0, x1, y, z1, x1, east, z1, r, g, b, side);
-                if (north < y) quad(buffer, pose, x0, north, z0, x0, y, z0, x1, y, z0, x1, north, z0, r, g, b, side);
-                if (south < y) quad(buffer, pose, x0, south, z1, x1, south, z1, x1, y, z1, x0, y, z1, r, g, b, side);
+                if (west < y)
+                    quad(buffer, pose, x0, west, z0, x0, west, z1, x0, y, z1, x0, y, z0, r, g, b, side);
+                if (east < y)
+                    quad(buffer, pose, x1, east, z0, x1, y, z0, x1, y, z1, x1, east, z1, r, g, b, side);
+                if (north < y)
+                    quad(buffer, pose, x0, north, z0, x0, y, z0, x1, y, z0, x1, north, z0, r, g, b, side);
+                if (south < y)
+                    quad(buffer, pose, x0, south, z1, x1, south, z1, x1, y, z1, x0, y, z1, r, g, b, side);
             }
         }
 
@@ -383,7 +404,11 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
      * (model z = 3.9 px, x -21..21 after the 3-wide centring). Read like a wall map: north on top, west on the left.
      * Dim grid side panels either side; a few blinking contacts on a random map.
      */
-    private static void renderWallMap(CosmeticBlockEntity decor, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource source) {
+    private static void renderWallMap(
+        CosmeticBlockEntity decor,
+        com.mojang.blaze3d.vertex.PoseStack poseStack,
+        net.minecraft.client.renderer.MultiBufferSource source
+    ) {
         var distance = viewDistanceSqr(decor);
 
         if (distance < 0) {
@@ -447,7 +472,26 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
 
                 float d = 0.04F;
                 int red = k % 2 == 0 ? 255 : 230, green = k % 2 == 0 ? 60 : 190;
-                quad(buffer, pose, cx - d, cy - d, z - 0.002F, cx + d, cy - d, z - 0.002F, cx + d, cy + d, z - 0.002F, cx - d, cy + d, z - 0.002F, red, green, 40, 230);
+                quad(
+                    buffer,
+                    pose,
+                    cx - d,
+                    cy - d,
+                    z - 0.002F,
+                    cx + d,
+                    cy - d,
+                    z - 0.002F,
+                    cx + d,
+                    cy + d,
+                    z - 0.002F,
+                    cx - d,
+                    cy + d,
+                    z - 0.002F,
+                    red,
+                    green,
+                    40,
+                    230
+                );
             }
         }
 
@@ -455,11 +499,15 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
     }
 
     /**
-     * The briefing table's screen top ([stated] Oct 31): the same map as the wall display, lying flat at y = 13.1 px over
-     * the 24 px square centred on z = 8. Read from the front like a map on a table: north at the far side (+Z), west on
-     * the left (+X).
+     * The briefing table's screen top ([stated] Oct 31): the same map as the wall display, lying flat at y = 13.1 px
+     * over the 24 px square centred on z = 8. Read from the front like a map on a table: north at the far side (+Z),
+     * west on the left (+X).
      */
-    private static void renderTableMap(CosmeticBlockEntity decor, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource source) {
+    private static void renderTableMap(
+        CosmeticBlockEntity decor,
+        com.mojang.blaze3d.vertex.PoseStack poseStack,
+        net.minecraft.client.renderer.MultiBufferSource source
+    ) {
         var distance = viewDistanceSqr(decor);
 
         if (distance < 0) {
@@ -496,21 +544,28 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
     }
 
     /** The same turns the model gets: facing about Y, then a floor/ceiling mount's X turn about the block middle. */
-    private static void turnLikeTheModel(net.minecraft.world.level.block.state.BlockState state, com.mojang.blaze3d.vertex.PoseStack poseStack) {
+    private static void turnLikeTheModel(
+        net.minecraft.world.level.block.state.BlockState state,
+        com.mojang.blaze3d.vertex.PoseStack poseStack
+    ) {
         poseStack.translate(0.5, 0, 0.5);
-        poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
-            case SOUTH -> 180;
-            case WEST -> 90;
-            case EAST -> 270;
-            default -> 0;
-        }));
+        poseStack.mulPose(
+            com.mojang.math.Axis.YP.rotationDegrees(switch (state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.FACING)) {
+                case SOUTH -> 180;
+                case WEST -> 90;
+                case EAST -> 270;
+                default -> 0;
+            })
+        );
 
         if (state.hasProperty(com.human.common.gameplay.cosmetic.CosmeticBlock.MOUNT)) {
             var mount = state.getValue(com.human.common.gameplay.cosmetic.CosmeticBlock.MOUNT);
 
             if (mount != com.human.common.gameplay.cosmetic.CosmeticMount.WALL) {
                 poseStack.translate(0, 0.5, 0);
-                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(mount == com.human.common.gameplay.cosmetic.CosmeticMount.FLOOR ? 90 : -90));
+                poseStack.mulPose(
+                    com.mojang.math.Axis.XP.rotationDegrees(mount == com.human.common.gameplay.cosmetic.CosmeticMount.FLOOR ? 90 : -90)
+                );
                 poseStack.translate(0, -0.5, 0);
             }
         }
@@ -550,8 +605,22 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
     private static void quad(
         com.mojang.blaze3d.vertex.VertexConsumer buffer,
         com.mojang.blaze3d.vertex.PoseStack.Pose pose,
-        float ax, float ay, float az, float bx, float by, float bz, float cx, float cy, float cz, float dx, float dy, float dz,
-        int r, int g, int b, int a
+        float ax,
+        float ay,
+        float az,
+        float bx,
+        float by,
+        float bz,
+        float cx,
+        float cy,
+        float cz,
+        float dx,
+        float dy,
+        float dz,
+        int r,
+        int g,
+        int b,
+        int a
     ) {
         buffer.addVertex(pose, ax, ay, az).setColor(r, g, b, a);
         buffer.addVertex(pose, bx, by, bz).setColor(r, g, b, a);
@@ -610,7 +679,9 @@ public class CosmeticDecorRenderer extends AzBlockEntityRenderer<CosmeticBlockEn
         var state = decor.getBlockState();
 
         // Only the chosen interior shows; before the state is known, the default (first) one.
-        var shown = state.hasProperty(CosmeticSpecimenBlock.CONTENTS) ? state.getValue(CosmeticSpecimenBlock.CONTENTS).bone() : contents.getFirst();
+        var shown = state.hasProperty(CosmeticSpecimenBlock.CONTENTS)
+            ? state.getValue(CosmeticSpecimenBlock.CONTENTS).bone()
+            : contents.getFirst();
 
         return !boneName.equals(shown);
     }

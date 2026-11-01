@@ -44,7 +44,8 @@ public final class HumanGeneReader {
                 com.human.common.network.packet.S2CGeneDiscoveriesPayload.CODEC,
                 (payload, player) -> com.human.common.gameplay.gene.discovery.ClientGeneDiscoveries.accept(
                     payload.genes(),
-                    payload.species()
+                    payload.species(),
+                    payload.profiles()
                 )
             )
         );

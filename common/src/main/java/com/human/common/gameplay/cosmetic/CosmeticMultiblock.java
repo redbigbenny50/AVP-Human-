@@ -25,8 +25,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A block that covers several cells, the fabricator's rules generalised to any footprint:
  * <ul>
- * <li><b>PLACING</b> like a bed - every cell is checked first (replaceable, inside the world, nobody standing in it), so
- * it places whole or not at all. The player places the {@link #anchorCell() anchor}; the CORE (cell 0) and the rest
+ * <li><b>PLACING</b> like a bed - every cell is checked first (replaceable, inside the world, nobody standing in it),
+ * so it places whole or not at all. The player places the {@link #anchorCell() anchor}; the CORE (cell 0) and the rest
  * follow.</li>
  * <li><b>BREAKING</b> any cell breaks the core properly, so its one item drops. Cells whose core is gone tidy
  * themselves away; the core never removes itself on a neighbour change.</li>
@@ -274,10 +274,16 @@ public abstract class CosmeticMultiblock extends HorizontalDirectionalBlock {
         // as the model is (vanilla x 270 / x 90), then by the facing like every other piece.
         if (mount == 1) {
             double ny1 = 16 - z2, ny2 = 16 - z1, nz1 = y1, nz2 = y2;
-            y1 = ny1; y2 = ny2; z1 = nz1; z2 = nz2;
+            y1 = ny1;
+            y2 = ny2;
+            z1 = nz1;
+            z2 = nz2;
         } else if (mount == 2) {
             double ny1 = z1, ny2 = z2, nz1 = 16 - y2, nz2 = 16 - y1;
-            y1 = ny1; y2 = ny2; z1 = nz1; z2 = nz2;
+            y1 = ny1;
+            y2 = ny2;
+            z1 = nz1;
+            z2 = nz2;
         }
 
         // Turned clockwise seen from above: north as authored, then east 90, south 180, west 270.

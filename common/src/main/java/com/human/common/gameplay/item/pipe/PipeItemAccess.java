@@ -136,7 +136,9 @@ public interface PipeItemAccess {
         if (state.getBlock() instanceof com.human.common.gameplay.cosmetic.CosmeticCrafterBlock crafterBlock) {
             if (
                 com.human.common.gameplay.cosmetic.CosmeticCrafterBlock.isItemPort(state, side)
-                    && level.getBlockEntity(crafterBlock.corePos(pos, state)) instanceof com.human.common.gameplay.cosmetic.CosmeticCrafterBlockEntity crafter
+                    && level.getBlockEntity(
+                        crafterBlock.corePos(pos, state)
+                    ) instanceof com.human.common.gameplay.cosmetic.CosmeticCrafterBlockEntity crafter
             ) {
                 return crafter.pipePort();
             }

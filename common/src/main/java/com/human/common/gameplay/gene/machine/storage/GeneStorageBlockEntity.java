@@ -255,7 +255,14 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
 
     void stopViewing() {
         if (viewers > 0 && --viewers == 0) {
-            if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> setOpen(false)"), level.getGameTime(), System.currentTimeMillis());
+            if (level != null)
+                com.human.Human.LOGGER.info(
+                    "[GENE-DIAG] {} {} t={} ms={}",
+                    "storage",
+                    (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> setOpen(false)"),
+                    level.getGameTime(),
+                    System.currentTimeMillis()
+                );
             setOpen(false);
         }
     }
@@ -348,14 +355,18 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
      */
     private static double liftHeight(int ticks) {
         var s = ticks / 20.0D;
-        if (s <= 0.2D) return 0.5D * s / 0.2D;
-        if (s <= 1.0D) return 0.5D + 7.5D * (s - 0.2D) / 0.8D;
-        if (s <= 2.0D) return 8.0D + 8.0D * (s - 1.0D);
+        if (s <= 0.2D)
+            return 0.5D * s / 0.2D;
+        if (s <= 1.0D)
+            return 0.5D + 7.5D * (s - 0.2D) / 0.8D;
+        if (s <= 2.0D)
+            return 8.0D + 8.0D * (s - 1.0D);
         return 16.0D;
     }
 
     /**
-     * How far into the close clip the lift is at {@code height} px: close runs 16 at 0 s, 8 at 0.8 s, 0 at 1.5 s. In ticks.
+     * How far into the close clip the lift is at {@code height} px: close runs 16 at 0 s, 8 at 0.8 s, 0 at 1.5 s. In
+     * ticks.
      */
     private static double closeTicksAt(double height) {
         var seconds = height >= 8.0D ? (16.0D - height) / 8.0D * 0.8D : 0.8D + (8.0D - height) / 8.0D * 0.7D;
@@ -384,7 +395,14 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
             } else {
                 var partWay = openStartedAt >= 0 ? liftHeight(clientTicks - openStartedAt) : 16.0D;
                 animationSent = dispatch(partWay >= 16.0D ? CLOSE : clipFrom("close", closeTicksAt(partWay)));
-                if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", (animationSent ? "CLIENT close dispatched" : "CLIENT close dispatch FAILED (no animator yet)"), level.getGameTime(), System.currentTimeMillis());
+                if (level != null)
+                    com.human.Human.LOGGER.info(
+                        "[GENE-DIAG] {} {} t={} ms={}",
+                        "storage",
+                        (animationSent ? "CLIENT close dispatched" : "CLIENT close dispatch FAILED (no animator yet)"),
+                        level.getGameTime(),
+                        System.currentTimeMillis()
+                    );
                 if (animationSent) {
                     openStartedAt = -1;
                     clientStageTwo = -1;
@@ -445,7 +463,13 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
             shownOpen = open;
             clientStageTwo = open ? 1 : -1;
         } else if (level != null && level.isClientSide && open != shownOpen) {
-            com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", "CLIENT update received open=" + open, level.getGameTime(), System.currentTimeMillis());
+            com.human.Human.LOGGER.info(
+                "[GENE-DIAG] {} {} t={} ms={}",
+                "storage",
+                "CLIENT update received open=" + open,
+                level.getGameTime(),
+                System.currentTimeMillis()
+            );
             shownOpen = open;
             animationSent = false;
             clientStageTwo = -1;

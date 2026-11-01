@@ -204,6 +204,9 @@ public class GeneAnalyzerBlockEntity extends PowerConsumerBlockEntity {
     /** The scan is done: what the sample holds goes into the loading player's database. */
     private void finish(Level level) {
         level.playSound(null, worldPosition, SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.BLOCKS, 0.6F, 1.6F);
+        // [stated] Nov 1: the scan decodes the syringe - stamped ANALYZED whoever loaded it and whether or not they are
+        // online. Its genes then show to anyone (names still per player: known genes, or a profiled donor).
+        SyringeItem.markAnalyzed(sample());
         if (
             loader != null && level instanceof ServerLevel serverLevel && serverLevel.getServer()
                 .getPlayerList()
@@ -217,7 +220,12 @@ public class GeneAnalyzerBlockEntity extends PowerConsumerBlockEntity {
             }
             var donor = SyringeItem.donorOf(sample);
             EntityType<?> species = donor == null ? null : EntityType.byString(donor).orElse(null);
-            GeneDiscoveries.discover(player, genes, species);
+            // [stated] Nov 1: genes are taught only when the donor species is PROFILED (read alive with the gene
+            // reader).
+            // Otherwise the decode is partial: categories and strengths, names ???, until the species is profiled.
+            if (GeneDiscoveries.hasProfile(serverLevel.getServer(), player.getUUID(), donor)) {
+                GeneDiscoveries.discover(player, genes, species);
+            }
             // Anyone looking at the database sees the new entries straight away.
             if (player.containerMenu instanceof GeneAnalyzerMenu) {
                 AnalyzerDatabase.send(player);
@@ -316,7 +324,8 @@ public class GeneAnalyzerBlockEntity extends PowerConsumerBlockEntity {
                     }
                 }
                 case SCAN -> {
-                    // The DNA strands are the dna track's alone (hidden until half way, see DNA_CLEAR). Coming into view
+                    // The DNA strands are the dna track's alone (hidden until half way, see DNA_CLEAR). Coming into
+                    // view
                     // mid-scan, load runs for a moment first.
                     LOAD.dispatchForBlockEntity(this);
                     chain(SCAN, first ? 2 : 30);

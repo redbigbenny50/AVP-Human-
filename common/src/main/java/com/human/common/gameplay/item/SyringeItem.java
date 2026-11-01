@@ -120,6 +120,7 @@ public class SyringeItem extends Item {
      */
     /** Empties the syringe and forgets its donor; back to EXTRACT. Also used by the gene reader's CLEAR SAMPLE. */
     public static void emptySyringe(ItemStack stack) {
+        forgetSample(stack);
         stack.set(HumanDataComponents.SYRINGE_CONTENTS.get(), SyringeContents.EMPTY);
         stack.set(HumanDataComponents.SYRINGE_MODE.get(), SyringeMode.EXTRACT);
         net.minecraft.world.item.component.CustomData.update(
@@ -137,6 +138,72 @@ public class SyringeItem extends Item {
     public static final String DONOR_KEY = "avp_human_syringe_donor";
 
     /** The entity type the sample in this syringe came from, or null. */
+    // ------------------------------------------------------------------------------------------------------------
+    // Analyzed - [stated] Nov 1: only the Gene Analyzer decodes a syringe; until then its genes are hidden everywhere
+    // (tooltip, gene reader). A syringe the Splicer made counts as analyzed - its maker built it from known genes.
+    // ------------------------------------------------------------------------------------------------------------
+
+    private static final String ANALYZED = "avp_human_analyzed";
+
+    public static boolean isAnalyzed(ItemStack stack) {
+        if (com.human.common.gameplay.gene.machine.GeneSplicing.SPLICED.equals(donorOf(stack))) {
+            return true;
+        }
+        var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        return data != null && data.copyTag().getBoolean(ANALYZED);
+    }
+
+    public static void markAnalyzed(ItemStack stack) {
+        net.minecraft.world.item.component.CustomData.update(
+            net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+            stack,
+            tag -> tag.putBoolean(ANALYZED, true)
+        );
+    }
+
+    /**
+     * [stated] Nov 1 - the name the gene reader gave this sample (SAMPLE-COW-3), which is also how the reader's history
+     * knows a syringe it has read before. Null until a reader has read it.
+     */
+    private static final String SAMPLE_ID = "avp_human_sample_id";
+
+    public static @org.jetbrains.annotations.Nullable String sampleIdOf(ItemStack stack) {
+        var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if (data == null) {
+            return null;
+        }
+        var tag = data.copyTag();
+        return tag.contains(SAMPLE_ID) ? tag.getString(SAMPLE_ID) : null;
+    }
+
+    public static void setSampleId(ItemStack stack, String id) {
+        net.minecraft.world.item.component.CustomData.update(
+            net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+            stack,
+            tag -> tag.putString(SAMPLE_ID, id)
+        );
+    }
+
+    /**
+     * A new sample (or none): the old one's ANALYZED stamp and reader name go. So does the item's name, but only while
+     * it is still the reader's auto-name - a name the player typed is theirs and stays.
+     */
+    private static void forgetSample(ItemStack stack) {
+        var id = sampleIdOf(stack);
+        var name = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+        if (id != null && name != null && name.getString().equals(id)) {
+            stack.remove(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+        }
+        net.minecraft.world.item.component.CustomData.update(
+            net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+            stack,
+            tag -> {
+                tag.remove(ANALYZED);
+                tag.remove(SAMPLE_ID);
+            }
+        );
+    }
+
     public static @org.jetbrains.annotations.Nullable String donorOf(ItemStack stack) {
         var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
         if (data == null) {
@@ -277,14 +344,12 @@ public class SyringeItem extends Item {
                 }
 
                 donorGeneManager.startSampleCooldown();
+                // [stated] Nov 1: drawing only counts the draw - the sample has to be analyzed to learn what is in it.
                 if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-                    com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(
-                        serverPlayer,
-                        geneBonusDataEntries.stream().map(GeneBonusDataEntry::id).toList(),
-                        interactionTarget.getType()
-                    );
                     com.human.common.gameplay.gene.discovery.GeneDiscoveries.countDraw(serverPlayer, interactionTarget.getType());
                 }
+                // A fresh draw is a new, unanalyzed, unnamed sample.
+                forgetSample(stack);
                 net.minecraft.world.item.component.CustomData.update(
                     net.minecraft.core.component.DataComponents.CUSTOM_DATA,
                     stack,
@@ -340,13 +405,6 @@ public class SyringeItem extends Item {
                     }
                 }
                 targetContainer.getDormantGeneMap().putAll(GeneDataUtil.toMap(sleeping));
-                if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-                    com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(
-                        serverPlayer,
-                        syringeContents.geneBonusDataEntries().stream().map(GeneBonusDataEntry::id).toList(),
-                        null
-                    );
-                }
 
                 // [stated] Oct 25 - integrity costs -0.10 per injection plus -0.05 for each extra gene in the syringe,
                 // and
@@ -417,14 +475,25 @@ public class SyringeItem extends Item {
         }
 
         list.add(CommonComponents.EMPTY);
-        list.add(Component.literal("Genes:").withStyle(ChatFormatting.YELLOW));
-        // Named when this player has discovered the gene, ??? otherwise (discoveries are per player).
-        for (var entry : syringeContents.geneBonusDataEntries()) {
-            list.add(GeneTooltips.line(entry.id(), entry.operation(), entry.value()));
-        }
         var donor = donorOf(itemStack);
+        // [stated] Nov 1: one line per gene. A gene is NAMED (with its strength) only once a Gene Analyzer has decoded
+        // the syringe AND this player knows the gene or has profiled the donor; otherwise it is ??? with no strength.
+        var analyzed = isAnalyzed(itemStack);
+        var profiled = analyzed && com.human.common.gameplay.gene.discovery.ClientGeneDiscoveries.hasProfile(donor);
+        list.add(Component.literal(analyzed ? "Genes:" : "Unanalyzed sample:").withStyle(ChatFormatting.YELLOW));
+        var hidden = false;
+        for (var entry : syringeContents.geneBonusDataEntries()) {
+            var named = analyzed && (profiled || com.human.common.gameplay.gene.discovery.ClientGeneDiscoveries.knowsGene(entry.id()));
+            hidden |= !named;
+            list.add(GeneTooltips.line(entry.id(), entry.operation(), entry.value(), named));
+        }
         if (donor != null) {
             list.add(GeneTooltips.donor(donor));
+        }
+        if (!analyzed) {
+            list.add(Component.literal("Analyze it in a Gene Analyzer to decode it").withStyle(ChatFormatting.DARK_GRAY));
+        } else if (hidden) {
+            list.add(Component.literal("Profile the donor with a gene reader to name them").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 }

@@ -25,26 +25,34 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The Cosmetic Crafter - 3 wide, 2 deep, 2 tall; standard, W-Y and USCM editions.
  * <h2>CORE</h2> The core is the BACK-MIDDLE block. [stated] Nov 1: power on the BACK only, through any of the three
- * bottom-row back blocks (one port centred on each); nothing reaches the underside. The player places the FRONT-middle block.
+ * bottom-row back blocks (one port centred on each); nothing reaches the underside. The player places the FRONT-middle
+ * block.
  */
 public class CosmeticCrafterBlock extends CosmeticMultiblock implements EntityBlock, com.human.common.gameplay.power.PowerParts.PartBlock {
 
     /** Core (back-middle) first, then the rest. Front is -z. */
     public static final int[][] CELLS = {
         { 0, 0, 0 },
-        { -1, 0, -1 }, { 0, 0, -1 }, { 1, 0, -1 },
-        { -1, 0, 0 }, { 1, 0, 0 },
-        { -1, 1, -1 }, { 0, 1, -1 }, { 1, 1, -1 },
-        { -1, 1, 0 }, { 0, 1, 0 }, { 1, 1, 0 }
+        { -1, 0, -1 },
+        { 0, 0, -1 },
+        { 1, 0, -1 },
+        { -1, 0, 0 },
+        { 1, 0, 0 },
+        { -1, 1, -1 },
+        { 0, 1, -1 },
+        { 1, 1, -1 },
+        { -1, 1, 0 },
+        { 0, 1, 0 },
+        { 1, 1, 0 }
     };
 
     /** The front-middle block, where the player clicks. */
     public static final int ANCHOR = 2;
 
     /**
-     * [stated] Nov 1: the ITEM PORT, on the pillar side - the clockwise side's front-bottom block (cell 1, 0, -1). An item
-     * pipe connects only there, which is how the crafter reaches a pipe network's storage; finished pieces can also be
-     * pulled out through it.
+     * [stated] Nov 1: the ITEM PORT, on the pillar side - the clockwise side's front-bottom block (cell 1, 0, -1). An
+     * item pipe connects only there, which is how the crafter reaches a pipe network's storage; finished pieces can
+     * also be pulled out through it.
      */
     public static final int ITEM_PORT_CELL = 3;
 
@@ -133,8 +141,8 @@ public class CosmeticCrafterBlock extends CosmeticMultiblock implements EntityBl
     }
 
     /**
-     * The core joined the grid the moment it was placed - before the machine's other blocks existed - so cables at their
-     * faces could not reach it yet. Walk again from the core now that they do (as the gene machines do).
+     * The core joined the grid the moment it was placed - before the machine's other blocks existed - so cables at
+     * their faces could not reach it yet. Walk again from the core now that they do (as the gene machines do).
      */
     @Override
     public void setPlacedBy(

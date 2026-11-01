@@ -7,8 +7,10 @@ import com.human.common.gameplay.gene.GeneDefects;
 import com.human.common.gameplay.gene.GeneOperationType;
 import com.human.common.gameplay.gene.GeneRegistry;
 import com.human.common.gameplay.gene.Genes;
+import com.human.common.gameplay.gene.discovery.ClientGeneDiscoveries;
 import com.human.common.gameplay.gene.reader.GeneReaderMenu;
 import com.human.common.gameplay.gene.reader.GeneReaderSnapshot;
+import com.human.common.gameplay.gene.reader.ReaderHistory;
 import com.human.common.gameplay.harvest.HarvestGenes;
 import com.human.common.gameplay.item.SyringeItem;
 import com.human.common.network.packet.C2SSyringeLabelPayload;
@@ -85,7 +87,8 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
 
         ACTIVE("ACTIVE"),
         DORMANT("DORMANT"),
-        SYRINGE("SYRINGE");
+        SYRINGE("SYRINGE"),
+        HISTORY("HISTORY");
 
         final String label;
 
@@ -115,6 +118,9 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
     private EditBox label;
 
     private ItemStack lastSyringe = ItemStack.EMPTY;
+
+    /** A HISTORY sample opened with OPEN REPORT (its id), shown on the SYRINGE tab until the slot's syringe changes. */
+    private @Nullable String viewing;
 
     private @Nullable LivingEntity icon;
 
@@ -159,6 +165,78 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
         return GeneReaderSnapshot.readFrom(stack);
     }
 
+    /** The gene reader this screen is for (main hand first, as {@link #snapshot()} reads it). */
+    private ItemStack reader() {
+        var player = minecraft == null ? null : minecraft.player;
+        if (player == null) {
+            return ItemStack.EMPTY;
+        }
+        return player.getMainHandItem().is(HumanItems.GENE_READER.get()) ? player.getMainHandItem() : player.getOffhandItem();
+    }
+
+    private List<ReaderHistory.Entry> history() {
+        return ReaderHistory.read(reader());
+    }
+
+    /** A sample the SYRINGE tab can show: the slot's syringe, or a HISTORY entry. */
+    private record Sample(
+        String name,
+        @Nullable String donor,
+        boolean analyzed,
+        List<ReaderHistory.Gene> genes
+    ) {}
+
+    /**
+     * [stated] Nov 1 - what the SYRINGE tab shows: a report opened from HISTORY, else the filled syringe in the slot,
+     * else the last sample this reader read (the tab keeps its last reading), else nothing.
+     */
+    private @Nullable Sample shownSample() {
+        var entries = history();
+        if (viewing != null) {
+            for (var entry : entries) {
+                if (entry.id().equals(viewing)) {
+                    return fromEntry(entry);
+                }
+            }
+        }
+        var syringe = menu.syringe();
+        var contents = syringe.get(HumanDataComponents.SYRINGE_CONTENTS.get());
+        if (contents != null && !contents.geneBonusDataEntries().isEmpty()) {
+            var genes = contents.geneBonusDataEntries()
+                .stream()
+                .map(e -> new ReaderHistory.Gene(e.id(), e.operation(), e.value()))
+                .toList();
+            var name = syringe.get(DataComponents.CUSTOM_NAME);
+            var id = SyringeItem.sampleIdOf(syringe);
+            return new Sample(
+                name != null ? name.getString() : id != null ? id : "SYRINGE",
+                SyringeItem.donorOf(syringe),
+                SyringeItem.isAnalyzed(syringe),
+                genes
+            );
+        }
+        return entries.isEmpty() ? null : fromEntry(entries.get(0));
+    }
+
+    private static Sample fromEntry(ReaderHistory.Entry entry) {
+        return new Sample(entry.name(), entry.donor(), entry.analyzed(), entry.genes());
+    }
+
+    private static String donorName(@Nullable String donor) {
+        if (donor == null) {
+            return "UNKNOWN";
+        }
+        if (com.human.common.gameplay.gene.machine.GeneSplicing.SPLICED.equals(donor)) {
+            return "SPLICED";
+        }
+        return EntityType.byString(donor).map(type -> type.getDescription().getString()).orElse(donor).toUpperCase(Locale.ROOT);
+    }
+
+    /** Whether this player has learned every gene in {@code sample} (the Gene Analyzer teaches them). */
+    private static boolean learned(Sample sample) {
+        return sample.genes().stream().allMatch(gene -> ClientGeneDiscoveries.knowsGene(gene.id()));
+    }
+
     private long now() {
         return minecraft != null && minecraft.level != null ? minecraft.level.getGameTime() : 0L;
     }
@@ -183,43 +261,76 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
 
             label.setEditable(!syringe.isEmpty());
 
-            if (syringe.isEmpty() && tab == Tab.SYRINGE) {
-                tab = Tab.ACTIVE;
-                scroll = 0;
-                selected = -1;
-            }
+            // [stated] Nov 1: the SYRINGE tab keeps its last reading when the syringe comes out; a syringe put in (or
+            // taken out) ends an opened HISTORY report, so the tab follows the slot again.
+            viewing = null;
         }
     }
 
     private List<Tab> tabs() {
-        return menu.syringe().isEmpty() ? List.of(Tab.ACTIVE, Tab.DORMANT) : List.of(Tab.ACTIVE, Tab.DORMANT, Tab.SYRINGE);
+        return List.of(Tab.ACTIVE, Tab.DORMANT, Tab.SYRINGE, Tab.HISTORY);
     }
 
     private List<Row> buildRows(@Nullable GeneReaderSnapshot snapshot) {
         var list = new ArrayList<Row>();
 
-        if (tab == Tab.SYRINGE) {
-            var syringe = menu.syringe();
-            var contents = syringe.get(HumanDataComponents.SYRINGE_CONTENTS.get());
-            var donor = SyringeItem.donorOf(syringe);
-            var donorName = donor == null
-                ? "UNKNOWN"
-                : com.human.common.gameplay.gene.machine.GeneSplicing.SPLICED.equals(donor)
-                    ? "SPLICED"
-                    : EntityType.byString(donor)
-                        .map(type -> type.getDescription().getString())
-                        .orElse(donor)
-                        .toUpperCase(Locale.ROOT);
-
-            list.add(new Row(true, "FROM " + donorName + " \u00b7 1 DOSE", "", M, "", ""));
-
-            if (contents != null) {
-                var lines = contents.geneBonusDataEntries()
-                    .stream()
-                    .map(entry -> new GeneReaderSnapshot.Line(entry.id().toString(), entry.operation().ordinal(), entry.value()))
-                    .toList();
-                addGeneGroups(list, lines, null, snapshot, true);
+        if (tab == Tab.HISTORY) {
+            var entries = history();
+            if (entries.isEmpty()) {
+                list.add(new Row(true, "NO SAMPLES READ YET", "", M, "", ""));
+                list.add(new Row(false, "PUT A FILLED SYRINGE IN THE SLOT", "", M, "", ""));
+                return list;
             }
+            list.add(new Row(true, "SAMPLES READ - " + entries.size() + " OF " + ReaderHistory.MAX, "", M, "", ""));
+            for (var entry : entries) {
+                var count = entry.genes().size();
+                var value = entry.analyzed() ? count + (count == 1 ? " GENE" : " GENES") : "UNANALYZED";
+                // What the Gene Analyzer still has to do for this player to learn the genes (tooltips, machine lists).
+                var hint = learned(fromEntry(entry))
+                    ? ""
+                    : !ClientGeneDiscoveries.hasProfile(entry.donor())
+                        ? "PROFILE THE DONOR WITH THE READER, THEN ANALYZE IT TO LEARN ITS GENES."
+                        // Profiled: an analysis now teaches them - also for a sample analyzed before the profile.
+                        : "ANALYZE IT IN A GENE ANALYZER TO LEARN ITS GENES.";
+                list.add(
+                    new Row(
+                        false,
+                        entry.name(),
+                        value,
+                        entry.analyzed() ? G : A,
+                        entry.name() + " FROM " + donorName(entry.donor()) + ". OPEN REPORT TO SEE ITS GENES.",
+                        hint
+                    )
+                );
+            }
+            return list;
+        }
+
+        if (tab == Tab.SYRINGE) {
+            var sample = shownSample();
+            if (sample == null) {
+                list.add(new Row(true, "NO SAMPLE READ YET", "", M, "", ""));
+                list.add(new Row(false, "PUT A FILLED SYRINGE IN THE SLOT", "", M, "", ""));
+                return list;
+            }
+            list.add(
+                new Row(
+                    true,
+                    sample.name() + " - FROM " + donorName(sample.donor()) + " - " + (sample.analyzed() ? "ANALYZED" : "UNANALYZED"),
+                    "",
+                    M,
+                    "",
+                    ""
+                )
+            );
+            // [stated] Nov 1 (corrected): the reader shows a syringe's contents in full, named - reading samples is
+            // what
+            // it is for. Only the item tooltip keeps ??? until the Gene Analyzer teaches the genes.
+            var lines = sample.genes()
+                .stream()
+                .map(gene -> new GeneReaderSnapshot.Line(gene.id().toString(), gene.operation().ordinal(), gene.value()))
+                .toList();
+            addGeneGroups(list, lines, null, snapshot, true);
             return list;
         }
 
@@ -659,10 +770,17 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
         var w = RIGHT_W - 8;
         var y = LIST_Y + 4;
 
+        if (tab == Tab.HISTORY) {
+            drawHistoryPanel(graphics, x, y, w);
+            return;
+        }
         if (tab == Tab.SYRINGE) {
-            var contents = menu.syringe().get(HumanDataComponents.SYRINGE_CONTENTS.get());
-            var genes = contents == null ? 0 : (int) contents.geneBonusDataEntries().stream().map(e -> e.id()).distinct().count();
-            var cost = contents == null ? 0.0 : SyringeItem.injectionIntegrityCost(contents);
+            // The cost of injecting the sample the tab is showing (slot, opened report or last read).
+            var sample = shownSample();
+            var genes = sample == null ? 0 : (int) sample.genes().stream().map(ReaderHistory.Gene::id).distinct().count();
+            var cost = genes == 0
+                ? 0.0
+                : SyringeItem.INTEGRITY_COST_PER_INJECTION + SyringeItem.INTEGRITY_COST_PER_EXTRA_GENE * Math.max(0, genes - 1);
 
             text(graphics, x, y, "INJECT COST", M);
             y += 10;
@@ -758,6 +876,46 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
         }
     }
 
+    /** The HISTORY entry the selected row is (row 0 is the header), or null. */
+    private ReaderHistory.@Nullable Entry selectedEntry() {
+        if (tab != Tab.HISTORY || selected < 1) {
+            return null;
+        }
+        var entries = history();
+        return selected - 1 < entries.size() ? entries.get(selected - 1) : null;
+    }
+
+    /** OPEN REPORT, at the foot of the HISTORY panel (approved mockup Nov 1). */
+    private static final int REPORT_BUTTON_Y = LIST_Y + LIST_H - 19;
+
+    /** [stated] Nov 1 mockup - the HISTORY tab's panel: the selected sample, and OPEN REPORT. */
+    private void drawHistoryPanel(GuiGraphics graphics, int x, int y, int w) {
+        var entry = selectedEntry();
+        if (entry == null) {
+            text(graphics, x, y, "SAMPLE", M);
+            text(graphics, x, y + 10, "SELECT A SAMPLE", M);
+            return;
+        }
+        TerminalText.draw(graphics, font, leftPos, topPos, x, y, w, entry.name(), M, false);
+        y += 10;
+        // A long (modded) species name scrolls inside its space rather than being cut off.
+        var donorRoom = w - font.width("DONOR") - 6;
+        text(graphics, x, y, "DONOR", M);
+        TerminalText.draw(graphics, font, leftPos, topPos, x + w - donorRoom, y, donorRoom, donorName(entry.donor()), G, true);
+        y += 10;
+        kv(graphics, x, y, w, "STATUS", entry.analyzed() ? "ANALYZED" : "UNANALYZED", entry.analyzed() ? G : A);
+        y += 10;
+        kv(graphics, x, y, w, "GENES", String.valueOf(entry.genes().size()), G);
+        y += 10;
+        var profiled = ClientGeneDiscoveries.hasProfile(entry.donor());
+        kv(graphics, x, y, w, "DONOR PROFILED", profiled ? "YES" : "NO", profiled ? G : A);
+        y += 10;
+        line(graphics, x, x + w - 1, y, M);
+        box(graphics, x, REPORT_BUTTON_Y, w, 14, G, D);
+        var open = "OPEN REPORT";
+        text(graphics, x + (w - font.width(open)) / 2, REPORT_BUTTON_Y + 3, open, G);
+    }
+
     private void kv(GuiGraphics graphics, int x, int y, int w, String key, String value, int valueColour) {
         var valueWidth = font.width(value);
         TerminalText.draw(graphics, font, leftPos, topPos, x, y, w - valueWidth - 4, key, M, false);
@@ -771,7 +929,9 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
     private void drawDetail(GuiGraphics graphics) {
         box(graphics, 6, DETAIL_Y, SW - 12, 24, M, P);
         var row = selected >= 0 && selected < rows.size() ? rows.get(selected) : null;
-        var line1 = row == null ? "SELECT A GENE TO SEE WHAT IT DOES." : row.detail1();
+        var line1 = row == null
+            ? tab == Tab.HISTORY ? "SELECT A SAMPLE TO SEE ITS DETAILS." : "SELECT A GENE TO SEE WHAT IT DOES."
+            : row.detail1();
         var line2 = row == null ? "" : row.detail2();
         TerminalText.draw(graphics, font, leftPos, topPos, 10, DETAIL_Y + 4, SW - 20, line1, G, false);
         TerminalText.draw(graphics, font, leftPos, topPos, 10, DETAIL_Y + 14, SW - 20, line2, M, false);
@@ -860,6 +1020,20 @@ public class GeneReaderScreen extends AbstractContainerScreen<GeneReaderMenu> {
             if (x >= sbx && x < sbx + 5 && y >= LIST_Y + 3 && y < LIST_Y + LIST_H - 3) {
                 var fraction = (y - (LIST_Y + 4)) / (double) (LIST_H - 8);
                 scroll = (int) Math.round(fraction * maxScroll());
+                return true;
+            }
+
+            // OPEN REPORT: the selected HISTORY sample, shown on the SYRINGE tab.
+            var reportX = 6 + LIST_W + 4 + 4;
+            var reportW = RIGHT_W - 8;
+            var entry = selectedEntry();
+            if (
+                entry != null && x >= reportX && x < reportX + reportW && y >= REPORT_BUTTON_Y && y < REPORT_BUTTON_Y + 14
+            ) {
+                viewing = entry.id();
+                tab = Tab.SYRINGE;
+                scroll = 0;
+                selected = -1;
                 return true;
             }
 

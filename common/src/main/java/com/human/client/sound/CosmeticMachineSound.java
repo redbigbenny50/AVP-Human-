@@ -39,15 +39,22 @@ public class CosmeticMachineSound extends AbstractTickableSoundInstance {
     private static final java.util.Set<CosmeticMachineSound> PLAYING = new java.util.HashSet<>();
 
     private static final Set<CosmeticDesign> TOOLS = EnumSet.of(
-        CosmeticDesign.LATHE, CosmeticDesign.CNC_MILL, CosmeticDesign.TABLE_SAW, CosmeticDesign.BAND_SAW,
-        CosmeticDesign.COLD_SAW, CosmeticDesign.BENCH_GRINDER, CosmeticDesign.ASSEMBLY_RIG
+        CosmeticDesign.LATHE,
+        CosmeticDesign.CNC_MILL,
+        CosmeticDesign.TABLE_SAW,
+        CosmeticDesign.BAND_SAW,
+        CosmeticDesign.COLD_SAW,
+        CosmeticDesign.BENCH_GRINDER,
+        CosmeticDesign.ASSEMBLY_RIG
     );
 
     private final CosmeticBlockEntity piece;
 
     public CosmeticMachineSound(CosmeticBlockEntity piece) {
         super(
-            TOOLS.contains(piece.block().design()) ? HumanSoundEvents.BLOCK_COSMETIC_TOOL_LOOP.get() : HumanSoundEvents.BLOCK_COSMETIC_HUM_LOOP.get(),
+            TOOLS.contains(piece.block().design())
+                ? HumanSoundEvents.BLOCK_COSMETIC_TOOL_LOOP.get()
+                : HumanSoundEvents.BLOCK_COSMETIC_HUM_LOOP.get(),
             SoundSource.BLOCKS,
             SoundInstance.createUnseededRandom()
         );
@@ -84,8 +91,8 @@ public class CosmeticMachineSound extends AbstractTickableSoundInstance {
     }
 
     /**
-     * Each client tick on a running-machine piece: start the loop when it is on and none is playing (switched on, or the
-     * player walked back into range), and forget a loop that has stopped itself. Reads only the synced block state.
+     * Each client tick on a running-machine piece: start the loop when it is on and none is playing (switched on, or
+     * the player walked back into range), and forget a loop that has stopped itself. Reads only the synced block state.
      */
     public static void tick(CosmeticBlockEntity piece) {
         var manager = Minecraft.getInstance().getSoundManager();

@@ -17,9 +17,11 @@ import java.util.function.Predicate;
 public enum CosmeticContents implements StringRepresentable {
 
     PLANT("plant", "gContentsPlant", stack -> stack.is(ItemTags.SAPLINGS)),
-    FUNGUS("fungus", "gContentsFungus", stack -> stack.is(Items.RED_MUSHROOM) || stack.is(Items.BROWN_MUSHROOM) || stack.is(
-        Items.CRIMSON_FUNGUS
-    ) || stack.is(Items.WARPED_FUNGUS)),
+    FUNGUS(
+        "fungus", "gContentsFungus", stack -> stack.is(Items.RED_MUSHROOM) || stack.is(Items.BROWN_MUSHROOM) || stack.is(
+            Items.CRIMSON_FUNGUS
+        ) || stack.is(Items.WARPED_FUNGUS)
+    ),
     CRYSTAL_PURPLE("crystal_purple", "gContentsCrystalPurple", stack -> stack.is(Items.AMETHYST_SHARD)),
     CRYSTAL_BLUE("crystal_blue", "gContentsCrystalBlue", stack -> stack.is(Items.PRISMARINE_CRYSTALS)),
     CRYSTAL_GREEN("crystal_green", "gContentsCrystalGreen", stack -> stack.is(Items.EMERALD)),

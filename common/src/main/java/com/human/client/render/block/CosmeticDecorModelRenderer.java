@@ -1,14 +1,14 @@
 package com.human.client.render.block;
 
+import com.blib.api.client.render.v1.AzLayerRenderer;
 import com.blib.api.client.render.v1.AzRendererPipelineContext;
 import com.blib.api.client.render.v1.block.model.AzBlockEntityModelRenderer;
 import com.blib.api.client.render.v1.block.pipeline.AzBlockEntityRendererPipeline;
-import com.blib.api.client.render.v1.AzLayerRenderer;
 import com.human.common.gameplay.cosmetic.CosmeticBlock;
 import com.human.common.gameplay.cosmetic.CosmeticBlockEntity;
 import com.human.common.gameplay.cosmetic.CosmeticModelTables;
-import com.human.common.gameplay.cosmetic.CosmeticMount;
 import com.human.common.gameplay.cosmetic.CosmeticMotion;
+import com.human.common.gameplay.cosmetic.CosmeticMount;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.core.Direction;
@@ -21,10 +21,11 @@ import java.util.List;
  * <ul>
  * <li><b>Floor / ceiling mounts</b> ([stated] Oct 31): after BLib's facing turn, a wall piece lying on a floor turns
  * +90 degrees about X through the block centre (front up), on a ceiling -90 (front down). BLib's own UP/DOWN handling
- * cannot also keep the facing, which is why the turn is added here. Matches the baked models' blockstate x 270 / 90.</li>
+ * cannot also keep the facing, which is why the turn is added here. Matches the baked models' blockstate x 270 /
+ * 90.</li>
  * <li><b>Doors, lids and spinners</b>: their bones are turned from the block state each frame - doors ease open and
- * shut, spinners wind up and coast down ([stated] Oct 31: right-click toggles them). The baked model is shared by
- * every block and item of the design, so the bones are put back to rest straight after drawing.</li>
+ * shut, spinners wind up and coast down ([stated] Oct 31: right-click toggles them). The baked model is shared by every
+ * block and item of the design, so the bones are put back to rest straight after drawing.</li>
  * </ul>
  */
 public class CosmeticDecorModelRenderer extends AzBlockEntityModelRenderer<CosmeticBlockEntity> {
