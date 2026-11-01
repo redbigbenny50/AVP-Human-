@@ -17,7 +17,8 @@ public final class ClientNetworkTubes {
         double value,
         String operation,
         double perDose,
-        int storage
+        int storage,
+        int count
     ) {}
 
     private static List<Entry> entries = List.of();
@@ -41,7 +42,8 @@ public final class ClientNetworkTubes {
                             Double.parseDouble(f[2]),
                             f[3],
                             Double.parseDouble(f[4]),
-                            Integer.parseInt(f[5])
+                            Integer.parseInt(f[5]),
+                            f.length > 6 ? Math.max(1, Integer.parseInt(f[6])) : 1
                         )
                     );
                 }

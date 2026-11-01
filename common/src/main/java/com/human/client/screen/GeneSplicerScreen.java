@@ -356,7 +356,8 @@ public class GeneSplicerScreen extends AbstractContainerScreen<GeneSplicerMenu> 
         box(graphics, NX, 42, NW, 146, G, P);
         text(graphics, NX + 4, 46, "NETWORK STORAGE", M);
         var list = filtered();
-        textRight(graphics, NX + NW - 5, 46, list.size() + (list.size() == 1 ? " TUBE" : " TUBES"), G);
+        var tubes = list.stream().mapToInt(ClientNetworkTubes.Entry::count).sum();
+        textRight(graphics, NX + NW - 5, 46, tubes + (tubes == 1 ? " TUBE" : " TUBES"), G);
         box(graphics, NX + 4, 56, NW - 8, 12, G, D);
         if (search.getValue().isEmpty() && !search.isFocused()) {
             text(graphics, NX + 7, 58, "_", M);
@@ -383,6 +384,10 @@ public class GeneSplicerScreen extends AbstractContainerScreen<GeneSplicerMenu> 
             var right = dim
                 ? "IN SYRINGE"
                 : known ? value(entry.gene(), GeneOperationType.valueOf(entry.operation()), entry.value(), kind) : "";
+            // identical tubes stack in one rack slot: show how many this entry holds
+            if (entry.count() > 1) {
+                right = "x" + entry.count() + (right.isEmpty() ? "" : "  " + right);
+            }
             var rightWidth = font.width(right);
             fit(
                 graphics,

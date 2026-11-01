@@ -5,24 +5,6 @@
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
-				"gDnaLeft": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
-				"gDnaRight": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
 				"gBarsBack": {
 					"scale": {
 						"vector": [
@@ -100,24 +82,6 @@
 		"power_on": {
 			"animation_length": 1.2,
 			"bones": {
-				"gDnaLeft": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
-				"gDnaRight": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
 				"gSample": {
 					"scale": {
 						"vector": [
@@ -250,24 +214,6 @@
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
-				"gDnaLeft": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
-				"gDnaRight": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
 				"gSample": {
 					"scale": {
 						"vector": [
@@ -336,24 +282,6 @@
 		"load": {
 			"animation_length": 1.5,
 			"bones": {
-				"gDnaLeft": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
-				"gDnaRight": {
-					"scale": {
-						"vector": [
-							0,
-							0,
-							0
-						]
-					}
-				},
 				"gBar0": {
 					"scale": {
 						"vector": [
@@ -1098,24 +1026,6 @@
 						}
 					}
 				},
-				"gDnaLeft": {
-					"scale": {
-						"vector": [
-							1,
-							1,
-							1
-						]
-					}
-				},
-				"gDnaRight": {
-					"scale": {
-						"vector": [
-							1,
-							1,
-							1
-						]
-					}
-				},
 				"gBar0": {
 					"scale": {
 						"vector": [
@@ -1149,6 +1059,30 @@
 							1,
 							4.8,
 							1
+						]
+					}
+				}
+			}
+		},
+		"progress_0": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.05,
+			"bones": {
+				"gDnaLeft": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gDnaRight": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
 						]
 					}
 				}

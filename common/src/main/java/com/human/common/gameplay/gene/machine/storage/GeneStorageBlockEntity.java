@@ -255,6 +255,7 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
 
     void stopViewing() {
         if (viewers > 0 && --viewers == 0) {
+            if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> setOpen(false)"), level.getGameTime(), System.currentTimeMillis());
             setOpen(false);
         }
     }
@@ -314,8 +315,19 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
         return carousel;
     }
 
+    /**
+     * A lid clip, from its first frame. The start offset is a TRACK setting in BLib and persists, so every clip sets it
+     * (to 0 here) before playing - otherwise an offset close would make the next open start part way through too.
+     */
     private static AzCommand<GeneStorageBlockEntity> clip(String name) {
-        return AzCommand.<GeneStorageBlockEntity>idempotent().play(AzTarget.track(TRACK), name, AzPlayBehaviors.HOLD_ON_LAST_FRAME).build();
+        return clipFrom(name, 0.0D);
+    }
+
+    private static AzCommand<GeneStorageBlockEntity> clipFrom(String name, double startTicks) {
+        return AzCommand.<GeneStorageBlockEntity>idempotent()
+            .setStartTickOffset(AzTarget.track(TRACK), startTicks)
+            .play(AzTarget.track(TRACK), name, AzPlayBehaviors.HOLD_ON_LAST_FRAME)
+            .build();
     }
 
     private static final AzCommand<GeneStorageBlockEntity> OPEN_1 = clip("open_1");
@@ -324,10 +336,38 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
 
     private static final AzCommand<GeneStorageBlockEntity> CLOSE = clip("close");
 
+    /** Client ticks counted while the block entity ticks - the clock for the lift height below. */
+    private int clientTicks;
+
+    /** Client tick at which open_1 started, or -1 when the lift is fully up (or down) rather than part way. */
+    private int openStartedAt = -1;
+
+    /**
+     * Where the lift is, in px, {@code ticks} after open_1 started - read off the clips' keyframes: open_1 rises 0.5 by
+     * 0.2 s and 8 by 1 s; open_2 (which starts 1 s in) carries on to 16 at 2 s.
+     */
+    private static double liftHeight(int ticks) {
+        var s = ticks / 20.0D;
+        if (s <= 0.2D) return 0.5D * s / 0.2D;
+        if (s <= 1.0D) return 0.5D + 7.5D * (s - 0.2D) / 0.8D;
+        if (s <= 2.0D) return 8.0D + 8.0D * (s - 1.0D);
+        return 16.0D;
+    }
+
+    /**
+     * How far into the close clip the lift is at {@code height} px: close runs 16 at 0 s, 8 at 0.8 s, 0 at 1.5 s. In ticks.
+     */
+    private static double closeTicksAt(double height) {
+        var seconds = height >= 8.0D ? (16.0D - height) / 8.0D * 0.8D : 0.8D + (8.0D - height) / 8.0D * 0.7D;
+        return Math.max(0.0D, seconds * 20.0D);
+    }
+
     /**
      * Plays the lid clips when the synced flag changes; retries until the animator exists (it is made on first render).
+     * A close while the lid is still opening starts from the lift's current height, not from fully up (no jump).
      */
     public void clientTick() {
+        clientTicks++;
         if (clientStageTwo >= 0 && --clientStageTwo == 0) {
             clientStageTwo = -1;
             if (!dispatch(OPEN_2)) {
@@ -335,9 +375,20 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
             }
         }
         if (!animationSent) {
-            animationSent = dispatch(shownOpen ? OPEN_1 : CLOSE);
-            if (animationSent && shownOpen) {
-                clientStageTwo = STAGE_TWO_DELAY;
+            if (shownOpen) {
+                animationSent = dispatch(OPEN_1);
+                if (animationSent) {
+                    clientStageTwo = STAGE_TWO_DELAY;
+                    openStartedAt = clientTicks;
+                }
+            } else {
+                var partWay = openStartedAt >= 0 ? liftHeight(clientTicks - openStartedAt) : 16.0D;
+                animationSent = dispatch(partWay >= 16.0D ? CLOSE : clipFrom("close", closeTicksAt(partWay)));
+                if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", (animationSent ? "CLIENT close dispatched" : "CLIENT close dispatch FAILED (no animator yet)"), level.getGameTime(), System.currentTimeMillis());
+                if (animationSent) {
+                    openStartedAt = -1;
+                    clientStageTwo = -1;
+                }
             }
         }
     }
@@ -394,6 +445,7 @@ public class GeneStorageBlockEntity extends PowerConsumerBlockEntity implements 
             shownOpen = open;
             clientStageTwo = open ? 1 : -1;
         } else if (level != null && level.isClientSide && open != shownOpen) {
+            com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "storage", "CLIENT update received open=" + open, level.getGameTime(), System.currentTimeMillis());
             shownOpen = open;
             animationSent = false;
             clientStageTwo = -1;

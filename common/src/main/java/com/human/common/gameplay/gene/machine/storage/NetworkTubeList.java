@@ -62,6 +62,9 @@ public final class NetworkTubeList {
                     .append(contents.perDose())
                     .append('\t')
                     .append(storageNumber)
+                    .append('\t')
+                    // the stack's size: identical tubes stack (up to 16) in one rack slot, and the list must say so
+                    .append(rack.getItem(slot).getCount())
                     .append('\n');
                 storages.add(member);
                 slots.add(slot);

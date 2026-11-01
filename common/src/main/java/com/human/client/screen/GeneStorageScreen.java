@@ -187,7 +187,8 @@ public class GeneStorageScreen extends AbstractContainerScreen<GeneStorageMenu> 
     private void drawRack(GuiGraphics graphics) {
         box(graphics, 6, 42, 170, 196, G, P);
         text(graphics, 10, 46, "RACK", M);
-        textRight(graphics, 171, 46, tubeCount() + "/" + GeneStorageInventory.SIZE, G);
+        // tubes held (stacks counted) and rack slots used - identical tubes stack up to 16 in one slot
+        textRight(graphics, 171, 46, tubeTotal() + " TUBES  " + tubeCount() + "/" + GeneStorageInventory.SIZE, G);
         var query = search.getValue().trim();
         for (int row = 0; row < GeneStorageInventory.ROWS; row++) {
             for (int column = 0; column < GeneStorageInventory.COLUMNS; column++) {
@@ -198,7 +199,14 @@ public class GeneStorageScreen extends AbstractContainerScreen<GeneStorageMenu> 
                 box(graphics, x0, y0, 18, 18, isSelected ? G : M, isSelected ? P : W);
                 var stack = menu.rack().getItem(index);
                 if (!stack.isEmpty()) {
-                    tube(graphics, x0 + 6, y0 + 4, GeneTubeItem.colour(stack) | 0xFF000000, !query.isEmpty() && !matches(stack, query));
+                    var dim = !query.isEmpty() && !matches(stack, query);
+                    if (stack.getCount() > 1) {
+                        // a stack: the glyph moves to the cell's left and its size sits at the right, clear of it
+                        tube(graphics, x0, y0 + 4, GeneTubeItem.colour(stack) | 0xFF000000, dim);
+                        textRight(graphics, x0 + 17, y0 + 5, String.valueOf(stack.getCount()), dim ? M : G);
+                    } else {
+                        tube(graphics, x0 + 6, y0 + 4, GeneTubeItem.colour(stack) | 0xFF000000, dim);
+                    }
                 }
             }
         }
@@ -409,6 +417,16 @@ public class GeneStorageScreen extends AbstractContainerScreen<GeneStorageMenu> 
         return menu.data(GeneStorageMenu.DATA_ISOLATED) != 0;
     }
 
+    /** Every tube on the rack, stacks counted. */
+    private int tubeTotal() {
+        var total = 0;
+        for (int i = 0; i < GeneStorageInventory.SIZE; i++) {
+            total += menu.rack().getItem(i).getCount();
+        }
+        return total;
+    }
+
+    /** Rack slots in use. */
     private int tubeCount() {
         var count = 0;
         for (int i = 0; i < GeneStorageInventory.SIZE; i++) {

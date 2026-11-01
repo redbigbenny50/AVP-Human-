@@ -271,9 +271,12 @@ public class GeneAnalyzerBlockEntity extends PowerConsumerBlockEntity {
 
     private static final AzCommand<GeneAnalyzerBlockEntity> DNA_FULL = clip(DNA_TRACK, "progress_100", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
 
-    private static final AzCommand<GeneAnalyzerBlockEntity> DNA_CLEAR = AzCommand.<GeneAnalyzerBlockEntity>idempotent()
-        .cancel(AzTarget.track(DNA_TRACK))
-        .build();
+    /**
+     * Both strands hidden. The DNA strands are animated by the dna track ONLY (the base clips no longer key them, so
+     * the two tracks never fight over them). Hidden is a held clip rather than a cancel: a cancelled track lets BLib
+     * ease the strands back to their rest pose - full size - within a tick.
+     */
+    private static final AzCommand<GeneAnalyzerBlockEntity> DNA_CLEAR = clip(DNA_TRACK, "progress_0", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
 
     /** Speed back to normal for every clip but scan. */
     private static final AzCommand<GeneAnalyzerBlockEntity> NORMAL_SPEED = AzCommand.<GeneAnalyzerBlockEntity>idempotent()
@@ -313,8 +316,8 @@ public class GeneAnalyzerBlockEntity extends PowerConsumerBlockEntity {
                     }
                 }
                 case SCAN -> {
-                    // The scan clip keys no DNA screens; it relies on the pose load leaves them in (hidden). Coming
-                    // into view mid-scan, load runs for a moment first so the screens start hidden too.
+                    // The DNA strands are the dna track's alone (hidden until half way, see DNA_CLEAR). Coming into view
+                    // mid-scan, load runs for a moment first.
                     LOAD.dispatchForBlockEntity(this);
                     chain(SCAN, first ? 2 : 30);
                 }

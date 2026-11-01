@@ -353,8 +353,9 @@ public class GeneRecombinatorScreen extends AbstractContainerScreen<GeneRecombin
         var list = filtered();
         var query = filter.getValue().trim();
         var space = query.indexOf(' ');
-        var hits = list.size() + " " + (query.isEmpty()
-            ? (list.size() == 1 ? "TUBE" : "TUBES")
+        var tubes = list.stream().mapToInt(ClientNetworkTubes.Entry::count).sum();
+        var hits = tubes + " " + (query.isEmpty()
+            ? (tubes == 1 ? "TUBE" : "TUBES")
             : space < 0 ? query : query.substring(0, space));
         fit(graphics, NX + NW - 5 - Math.min(font.width(hits), 70) + 1, 46, Math.min(font.width(hits), 70), hits, G, true);
         box(graphics, NX + 4, 56, NW - 8, 12, G, D);
@@ -371,7 +372,8 @@ public class GeneRecombinatorScreen extends AbstractContainerScreen<GeneRecombin
             var entry = list.get(i);
             var known = ClientGeneDiscoveries.knowsGene(entry.gene());
             var name = known ? geneName(entry.gene()) + " " + amount(entry) : "???";
-            var right = "STORE " + entry.storage();
+            // identical tubes stack in one rack slot: show how many this entry holds
+            var right = (entry.count() > 1 ? "x" + entry.count() + "  " : "") + "STORE " + entry.storage();
             var rightWidth = font.width(right);
             var isSelected = i == selected;
             if (isSelected) {

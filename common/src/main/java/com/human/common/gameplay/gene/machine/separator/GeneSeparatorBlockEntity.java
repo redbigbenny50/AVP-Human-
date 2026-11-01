@@ -406,6 +406,7 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
 
     void stopViewing() {
         if (viewers > 0 && --viewers == 0) {
+            if (level != null) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", (level.isClientSide ? "CLIENT menu closed (viewers 0)" : "SERVER last viewer left -> sync"), level.getGameTime(), System.currentTimeMillis());
             sync();
         }
     }
@@ -470,6 +471,15 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
 
     private boolean clientLid;
 
+    /** The spinning loop is 0.5 s: spin_down starts at the angle the loop starts at, so it waits for that point. */
+    private static final int SPIN_LOOP_TICKS = 10;
+
+    /** Client ticks since the spinning loop started, or -1 when it isn't running. */
+    private int spinLoopTicks = -1;
+
+    /** A spin_down is waiting for the spinning loop to come round to its start. */
+    private boolean spinDownPending;
+
     public void clientTick() {
         if (level == null || com.blib.internal.client.animation.AzAnimatorAccessor.getOrNull(this) == null) {
             return;
@@ -481,6 +491,7 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
                 LID_OPEN.dispatchForBlockEntity(this);
             } else if (shownLid == 1) {
                 LID_CLOSE.dispatchForBlockEntity(this);
+                com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", "CLIENT lid_close dispatched", level.getGameTime(), System.currentTimeMillis());
             }
             shownLid = lid;
         }
@@ -490,17 +501,20 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
         if (rotor != shownRotor) {
             switch (rotor) {
                 case 1 -> {
+                    // a new run: any spin_down still waiting for the old loop is dropped
+                    spinDownPending = false;
+                    spinLoopTicks = -1;
                     SPIN_UP.dispatchForBlockEntity(this);
                     spinChain = SPIN_TICKS;
                 }
                 case 2 -> {
                     spinChain = -1;
-                    SPIN_DOWN.dispatchForBlockEntity(this);
+                    spinDownSoon();
                 }
                 default -> {
                     spinChain = -1;
                     if (shownRotor == 1) {
-                        SPIN_DOWN.dispatchForBlockEntity(this);
+                        spinDownSoon();
                     }
                 }
             }
@@ -509,12 +523,32 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
         if (spinChain >= 0 && --spinChain == 0) {
             SPINNING.dispatchForBlockEntity(this);
             spinChain = -1;
+            spinLoopTicks = 0;
+        } else if (spinLoopTicks >= 0) {
+            spinLoopTicks++;
+        }
+
+        // spin_down picks up at the spinning loop's start angle, so it is dispatched when the loop comes round to it -
+        // at most half a second later - rather than wherever the rotor happens to be (which jumped the rotor).
+        if (spinDownPending && (spinLoopTicks < 0 || spinLoopTicks % SPIN_LOOP_TICKS == 0)) {
+            spinDownPending = false;
+            spinLoopTicks = -1;
+            SPIN_DOWN.dispatchForBlockEntity(this);
         }
 
         var screen = !supplied ? 0 : running ? 2 : 1;
         if (screen != shownScreen) {
             (screen == 0 ? SCREEN_OFF : screen == 2 ? SCREEN_WORKING : SCREEN_ON).dispatchForBlockEntity(this);
             shownScreen = screen;
+        }
+    }
+
+    /** Spin down: straight away if the spinning loop never started (still spinning up), else at the loop's start. */
+    private void spinDownSoon() {
+        if (spinLoopTicks < 0) {
+            SPIN_DOWN.dispatchForBlockEntity(this);
+        } else {
+            spinDownPending = true;
         }
     }
 
@@ -553,7 +587,9 @@ public class GeneSeparatorBlockEntity extends PowerConsumerBlockEntity {
         autoStart = !tag.contains(NBT_AUTO) || tag.getBoolean(NBT_AUTO);
         supplied = tag.getBoolean(NBT_SUPPLIED);
         networkFull = tag.getBoolean(NBT_NETWORK_FULL);
-        clientLid = tag.getBoolean(NBT_LID);
+        var diagLid = tag.getBoolean(NBT_LID);
+        if (level != null && level.isClientSide && diagLid != clientLid) com.human.Human.LOGGER.info("[GENE-DIAG] {} {} t={} ms={}", "separator", "CLIENT update received lid=" + diagLid, level.getGameTime(), System.currentTimeMillis());
+        clientLid = diagLid;
     }
 
     /** The client needs the state for the clips; the slots reach the screen through its menu. */
