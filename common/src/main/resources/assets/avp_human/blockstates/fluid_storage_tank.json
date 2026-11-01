@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/fluid_storage_tank_particle"
+    }
+  }
+}

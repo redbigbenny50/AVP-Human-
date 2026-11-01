@@ -76,6 +76,7 @@ public final class HumanEmiPlugin implements EmiPlugin {
         var hydrating = category("hydrating", HumanBlocks.ELECTRIC_HYDRATOR.get());
         var fabricating = category("fabricating", HumanFabrication.FABRICATOR.get());
         var vaporizing = category("vaporizing", HumanVaporizer.VAPORIZER.get());
+        var cosmetic = category("cosmetic_crafting", com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER.get());
         var sources = category(
             "blueprint_sources",
             HumanItems.BLUEPRINT_M41A_PULSE_RIFLE.get(),
@@ -87,7 +88,19 @@ public final class HumanEmiPlugin implements EmiPlugin {
 
         try {
             for (
-                var category : List.of(grinding, pressing, freezing, hydrating, fabricating, vaporizing, sources, table, drying, harvesting)
+                var category : List.of(
+                    grinding,
+                    pressing,
+                    freezing,
+                    hydrating,
+                    fabricating,
+                    vaporizing,
+                    cosmetic,
+                    sources,
+                    table,
+                    drying,
+                    harvesting
+                )
             ) {
                 registry.addCategory(category);
             }
@@ -107,6 +120,9 @@ public final class HumanEmiPlugin implements EmiPlugin {
         registry.addWorkstation(vaporizing, EmiStack.of(HumanVaporizer.WY_VAPORIZER.get()));
         registry.addWorkstation(vaporizing, EmiStack.of(HumanVaporizer.USCM_VAPORIZER.get()));
         registry.addWorkstation(table, EmiStack.of(HumanBlocks.BLUEPRINT_BLOCK.get()));
+        registry.addWorkstation(cosmetic, EmiStack.of(com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER.get()));
+        registry.addWorkstation(cosmetic, EmiStack.of(com.human.common.registry.init.HumanCosmetics.WY_COSMETIC_CRAFTER.get()));
+        registry.addWorkstation(cosmetic, EmiStack.of(com.human.common.registry.init.HumanCosmetics.USCM_COSMETIC_CRAFTER.get()));
         registry.addWorkstation(drying, EmiStack.of(Blocks.CAULDRON));
         registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, EmiStack.of(HumanBlocks.ELECTRIC_FURNACE.get()));
         registry.addWorkstation(VanillaEmiRecipeCategories.SMOKING, EmiStack.of(HumanBlocks.ELECTRIC_SMOKER.get()));
@@ -212,6 +228,29 @@ public final class HumanEmiPlugin implements EmiPlugin {
             }
         } catch (RuntimeException exception) {
             // One bad recipe (a data pack's, another mod's) costs only this section, never the whole plugin.
+            com.human.Human.LOGGER.warn("avp_human EMI: skipped a section that failed to build", exception);
+        }
+
+        // [stated] Oct 31 - the Cosmetic Crafter's catalogue, one page per design in each style.
+        try {
+            var page = 0;
+            for (var entry : com.human.common.gameplay.cosmetic.CosmeticCatalog.entries()) {
+                var inputs = new ArrayList<EmiIngredient>();
+                for (var part : entry.parts()) {
+                    inputs.add(items(part.ingredient(), part.count()));
+                }
+                registry.addRecipe(
+                    new Page(
+                        cosmetic,
+                        synthetic("cosmetic_crafting", page++),
+                        inputs,
+                        List.of(EmiStack.of(entry.resultStack())),
+                        com.human.common.gameplay.cosmetic.CosmeticCrafterBlockEntity.CRAFT_TICKS,
+                        null
+                    )
+                );
+            }
+        } catch (RuntimeException exception) {
             com.human.Human.LOGGER.warn("avp_human EMI: skipped a section that failed to build", exception);
         }
 

@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/cable_tray",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_cable_tray",
+    "particle": "avp_human:block/cosmetic/uscm_cable_tray"
+  }
+}

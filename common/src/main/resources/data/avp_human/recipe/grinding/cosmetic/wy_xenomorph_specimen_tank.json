@@ -1,0 +1,51 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:wy_xenomorph_specimen_tank"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 10
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:aluminum_ingot",
+        "count": 3
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:industrial_glass",
+        "count": 3
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:rubber_globule",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:integrated_circuit",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:white_plastic",
+        "count": 2
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:yellow_dye",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

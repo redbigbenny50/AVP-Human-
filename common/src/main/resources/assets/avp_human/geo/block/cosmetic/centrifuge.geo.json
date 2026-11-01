@@ -1,0 +1,239 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.34375,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -6
+              ],
+              "size": [
+                12,
+                2,
+                12
+              ],
+              "uv": [
+                40,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                2,
+                -5
+              ],
+              "size": [
+                10,
+                6,
+                10
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                3,
+                -6
+              ],
+              "size": [
+                6,
+                3,
+                1
+              ],
+              "uv": [
+                20,
+                29
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gLid",
+          "pivot": [
+            0,
+            8,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                8,
+                -5
+              ],
+              "size": [
+                10,
+                1,
+                10
+              ],
+              "uv": [
+                48,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gHandle",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "gLid",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                9,
+                -1
+              ],
+              "size": [
+                4,
+                1,
+                2
+              ],
+              "uv": [
+                34,
+                29
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyDome",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "gLid",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                9,
+                -4
+              ],
+              "size": [
+                8,
+                2,
+                8
+              ],
+              "uv": [
+                88,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmHandles",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                5,
+                5,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                4
+              ],
+              "uv": [
+                0,
+                29
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                5,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                4
+              ],
+              "uv": [
+                10,
+                29
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppBand",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                6,
+                -6
+              ],
+              "size": [
+                12,
+                1,
+                12
+              ],
+              "uv": [
+                0,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

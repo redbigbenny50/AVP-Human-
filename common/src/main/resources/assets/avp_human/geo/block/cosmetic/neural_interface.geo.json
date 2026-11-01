@@ -1,0 +1,298 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          0.5625,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBase",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -6
+              ],
+              "size": [
+                12,
+                4,
+                28
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gChair",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                4,
+                2
+              ],
+              "size": [
+                10,
+                3,
+                10
+              ],
+              "uv": [
+                0,
+                32
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                4,
+                12
+              ],
+              "size": [
+                10,
+                6,
+                10
+              ],
+              "uv": [
+                80,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                4,
+                -4
+              ],
+              "size": [
+                10,
+                2,
+                6
+              ],
+              "uv": [
+                70,
+                32
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gRing",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                10,
+                20
+              ],
+              "size": [
+                2,
+                6,
+                2
+              ],
+              "uv": [
+                102,
+                32
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                13,
+                15
+              ],
+              "size": [
+                8,
+                1,
+                6
+              ],
+              "uv": [
+                0,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gMonitor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                4,
+                -6
+              ],
+              "size": [
+                2,
+                8,
+                2
+              ],
+              "uv": [
+                40,
+                32
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                12,
+                -6
+              ],
+              "size": [
+                8,
+                6,
+                3
+              ],
+              "uv": [
+                48,
+                32
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                13,
+                -3
+              ],
+              "size": [
+                6,
+                4,
+                1
+              ],
+              "uv": [
+                28,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                3,
+                -7
+              ],
+              "size": [
+                12,
+                1,
+                1
+              ],
+              "uv": [
+                68,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -7
+              ],
+              "size": [
+                12,
+                2,
+                1
+              ],
+              "uv": [
+                42,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                8
+              ],
+              "size": [
+                1,
+                4,
+                4
+              ],
+              "uv": [
+                110,
+                32
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

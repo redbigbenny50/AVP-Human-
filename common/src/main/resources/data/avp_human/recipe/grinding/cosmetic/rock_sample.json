@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:rock_sample"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:amethyst_shard",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:dirt",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:paper",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

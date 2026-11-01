@@ -1,0 +1,15 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:ceiling_rail"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/bottles",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_bottles",
+    "particle": "avp_human:block/cosmetic/wy_bottles"
+  }
+}

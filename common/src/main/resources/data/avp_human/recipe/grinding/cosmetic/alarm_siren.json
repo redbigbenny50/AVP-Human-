@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:alarm_siren"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:redstone",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

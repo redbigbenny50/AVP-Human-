@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/paperwork_stack",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_paperwork_stack",
+    "particle": "avp_human:block/cosmetic/wy_paperwork_stack"
+  }
+}

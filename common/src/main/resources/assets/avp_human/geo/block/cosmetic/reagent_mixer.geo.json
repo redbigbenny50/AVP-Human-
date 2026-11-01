@@ -1,0 +1,248 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.3125,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBase",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                0,
+                -4
+              ],
+              "size": [
+                8,
+                3,
+                8
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                3,
+                -3
+              ],
+              "size": [
+                6,
+                1,
+                6
+              ],
+              "uv": [
+                0,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gFlask",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gAgitator",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                4,
+                0
+              ],
+              "size": [
+                2,
+                1,
+                1
+              ],
+              "uv": [
+                30,
+                11
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                3,
+                2
+              ],
+              "size": [
+                1,
+                7,
+                1
+              ],
+              "uv": [
+                48,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                9,
+                2
+              ],
+              "size": [
+                3,
+                1,
+                1
+              ],
+              "uv": [
+                36,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                2,
+                -5
+              ],
+              "size": [
+                8,
+                1,
+                1
+              ],
+              "uv": [
+                44,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmArmor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                0,
+                -5
+              ],
+              "size": [
+                8,
+                1,
+                1
+              ],
+              "uv": [
+                0,
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                1,
+                1,
+                -5
+              ],
+              "size": [
+                2,
+                2,
+                1
+              ],
+              "uv": [
+                24,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlass",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                5,
+                -2
+              ],
+              "size": [
+                4,
+                5,
+                4
+              ],
+              "uv": [
+                32,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

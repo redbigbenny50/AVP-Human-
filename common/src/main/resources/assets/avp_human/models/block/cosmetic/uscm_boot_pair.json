@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/boot_pair",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_boot_pair",
+    "particle": "avp_human:block/cosmetic/uscm_boot_pair"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.4375,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gMount",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                10,
+                7
+              ],
+              "size": [
+                4,
+                4,
+                1
+              ],
+              "uv": [
+                22,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                11,
+                4
+              ],
+              "size": [
+                2,
+                2,
+                3
+              ],
+              "uv": [
+                32,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gCamera",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                9,
+                -3
+              ],
+              "size": [
+                4,
+                4,
+                7
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                10,
+                -4
+              ],
+              "size": [
+                2,
+                2,
+                1
+              ],
+              "uv": [
+                42,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

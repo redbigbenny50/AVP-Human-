@@ -1,0 +1,191 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.25,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                0,
+                -4
+              ],
+              "size": [
+                10,
+                5,
+                9
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gLid",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                5,
+                -1
+              ],
+              "size": [
+                10,
+                2,
+                6
+              ],
+              "uv": [
+                0,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPanel",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                3,
+                -5
+              ],
+              "size": [
+                8,
+                2,
+                1
+              ],
+              "uv": [
+                32,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                5,
+                -2
+              ],
+              "size": [
+                10,
+                1,
+                1
+              ],
+              "uv": [
+                8,
+                22
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmArmor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                1,
+                0,
+                -5
+              ],
+              "size": [
+                4,
+                2,
+                1
+              ],
+              "uv": [
+                50,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                7,
+                1
+              ],
+              "size": [
+                2,
+                1,
+                2
+              ],
+              "uv": [
+                0,
+                22
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

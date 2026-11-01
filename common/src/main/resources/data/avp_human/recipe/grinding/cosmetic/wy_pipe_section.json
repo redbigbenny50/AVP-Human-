@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:wy_pipe_section"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:white_plastic",
+        "count": 2
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:yellow_dye",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

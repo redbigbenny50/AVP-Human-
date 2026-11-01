@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/coffee_mug",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_coffee_mug",
+    "particle": "avp_human:block/cosmetic/wy_coffee_mug"
+  }
+}

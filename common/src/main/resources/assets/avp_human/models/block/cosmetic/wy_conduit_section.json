@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/conduit_section",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_conduit_section",
+    "particle": "avp_human:block/cosmetic/wy_conduit_section"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "parent": "avp_human:block/cosmetic/exercise_bench",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        1.904,
+        -0.214,
+        -2.322
+      ],
+      "scale": [
+        0.3846,
+        0.3846,
+        0.3846
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.1538,
+        0.1538,
+        0.1538
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        -2.692,
+        -1.346,
+        0
+      ],
+      "scale": [
+        0.3077,
+        0.3077,
+        0.3077
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.2308,
+        0.2308,
+        0.2308
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.2308,
+        0.2308,
+        0.2308
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.2308,
+        0.2308,
+        0.2308
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.2308,
+        0.2308,
+        0.2308
+      ]
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.5,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gStand",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                0,
+                -5
+              ],
+              "size": [
+                16,
+                5,
+                11
+              ],
+              "uv": [
+                0,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gTv",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                5,
+                -1
+              ],
+              "size": [
+                14,
+                11,
+                6
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gScreen",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                6,
+                -2
+              ],
+              "size": [
+                12,
+                9,
+                1
+              ],
+              "uv": [
+                24,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gConsole",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                1,
+                -6
+              ],
+              "size": [
+                6,
+                2,
+                1
+              ],
+              "uv": [
+                50,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppSpeakers",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                7,
+                5,
+                -2
+              ],
+              "size": [
+                1,
+                8,
+                5
+              ],
+              "uv": [
+                0,
+                33
+              ]
+            },
+            {
+              "origin": [
+                -8,
+                5,
+                -2
+              ],
+              "size": [
+                1,
+                8,
+                5
+              ],
+              "uv": [
+                12,
+                33
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

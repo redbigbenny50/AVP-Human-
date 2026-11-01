@@ -231,5 +231,9 @@ public class BlocksCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, CoreBlocks.RUBBER_BLOCK);
         CreativeModeTabUtil.accept(output, HumanBlocks.DESK_TERMINAL_BLOCK);
         CreativeModeTabUtil.accept(output, HumanBlocks.RESONATOR_BLOCK);
+
+        // [stated] Oct 31 - cosmetic furniture, Industrial editions (W-Y and USCM editions are in their faction tabs).
+        com.human.common.registry.init.HumanCosmetics.decorItems(com.human.common.gameplay.cosmetic.CosmeticStyle.INDUSTRIAL)
+            .forEach(item -> CreativeModeTabUtil.accept(output, item));
     };
 }

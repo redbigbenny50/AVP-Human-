@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "avp_human:uscm_screen_board",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "cell": "0"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "avp_human:uscm_screen_board"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

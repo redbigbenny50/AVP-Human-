@@ -1,0 +1,153 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.28125,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -5
+              ],
+              "size": [
+                14,
+                8,
+                11
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDoor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -3,
+                1,
+                -6
+              ],
+              "size": [
+                9,
+                6,
+                1
+              ],
+              "uv": [
+                0,
+                19
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                2,
+                -7
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                48,
+                19
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPanel",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                1,
+                -6
+              ],
+              "size": [
+                2,
+                6,
+                1
+              ],
+              "uv": [
+                20,
+                19
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -3,
+                8,
+                -2
+              ],
+              "size": [
+                6,
+                1,
+                5
+              ],
+              "uv": [
+                26,
+                19
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -88,6 +88,8 @@ public class HumanClient {
     public static void initialize() {
         // Oct 24 - drops on BLib's shared JEI, REI and EMI tabs.
         com.human.client.compat.HumanViewers.register();
+        // [stated] Oct 31 - the cosmetic furniture's info pages, shown in JEI, REI and EMI alike.
+        com.human.client.compat.CosmeticViewerInfo.register();
 
         // The wiring tool shows a resonator's sphere through this hook (see ResonatorSphereHook).
         com.human.common.gameplay.block.resonator.ResonatorSphereHook.show =
@@ -191,6 +193,50 @@ public class HumanClient {
                 name -> () -> new com.human.client.render.item.FabricatorItemRenderer("uscm_fabricator")
             );
 
+        // [stated] Oct 31 - the Cosmetic Crafter: its screen, its animated model, and its three editions in the hand.
+        MOD.registries()
+            .registerMenuScreen(
+                com.human.common.registry.init.HumanCosmetics.CRAFTER_MENU,
+                com.human.client.screen.CosmeticCrafterScreen::new
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanCosmetics.CRAFTER_BLOCK_ENTITY,
+                context -> new com.human.client.render.block.CosmeticCrafterRenderer()
+            );
+        MOD.registries()
+            .registerBlockEntityRenderer(
+                com.human.common.registry.init.HumanCosmetics.DECOR_BLOCK_ENTITY,
+                context -> new com.human.client.render.block.CosmeticDecorRenderer()
+            );
+        for (
+            var crafter : java.util.List.of(
+                com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER_ITEM,
+                com.human.common.registry.init.HumanCosmetics.WY_COSMETIC_CRAFTER_ITEM,
+                com.human.common.registry.init.HumanCosmetics.USCM_COSMETIC_CRAFTER_ITEM
+            )
+        ) {
+            MOD.registries()
+                .registerItemRenderer(
+                    crafter,
+                    name -> () -> new com.human.client.render.item.CosmeticItemRenderer("cosmetic_crafter", name)
+                );
+        }
+        // Animated designs (glowing screens) draw through AzureLib in the hand too; baked ones use their block model.
+        for (var design : com.human.common.gameplay.cosmetic.CosmeticDesign.values()) {
+            if (!design.animated()) {
+                continue;
+            }
+
+            for (var style : com.human.common.gameplay.cosmetic.CosmeticStyle.values()) {
+                MOD.registries()
+                    .registerItemRenderer(
+                        com.human.common.registry.init.HumanCosmetics.DECOR_ITEMS.get(design.blockName(style)),
+                        name -> () -> new com.human.client.render.item.CosmeticItemRenderer(design.id(), name, design.translucent())
+                    );
+            }
+        }
+
         // [stated] Oct 17 - the vaporizer: its geo model (with the real liquid behind the windows), the shared machine
         // screen on its own art, and the model in the hand for all three editions.
         MOD.registries()
@@ -234,6 +280,8 @@ public class HumanClient {
         // The machines' client tick - animation clock and working sound. Handed in from here so common code never
         // names a client class.
         ElectricMachineBlockEntity.clientTicker = MachineClientHooks::tick;
+        // [stated] Oct 31 - cosmetic machines (fans, saws, lathe, ...) play a working loop while they run.
+        com.human.common.gameplay.cosmetic.CosmeticBlockEntity.clientTicker = com.human.client.sound.CosmeticMachineSound::tick;
 
         HumanKeybindingRegistry.initialize();
 
@@ -410,6 +458,16 @@ public class HumanClient {
     private static void registerItemColors() {
         registerCanisterColor();
 
+        // Dyeable cosmetic pieces: the item shows its edition's undyed fabric colour (tint index 0 = the fabric).
+        for (var entry : com.human.common.registry.init.HumanCosmetics.DECOR_ITEMS.entrySet()) {
+            var name = entry.getKey();
+
+            if (com.human.common.gameplay.cosmetic.CosmeticModelTables.FABRIC_DEFAULT.containsKey(name)) {
+                var tint = com.human.common.gameplay.cosmetic.CosmeticFabric.DEFAULT.tint(name);
+                MOD.registries().registerItemColor((itemStack, layer) -> layer == 0 ? tint : -1, List.of(entry.getValue()));
+            }
+        }
+
         // [stated] Oct 2: a Skin Kit's label takes its skin's colour.
         MOD.registries()
             .registerItemColor(
@@ -584,6 +642,7 @@ public class HumanClient {
         MOD.registries().registerEntityRenderer(HumanEntityTypes.FLAMETHROW, FlamethrowRenderer::new);
         // The chem thrower's lingering cloud draws nothing itself - its particles come from its own client tick.
         MOD.registries().registerEntityRenderer(HumanEntityTypes.CHEM_CLOUD, net.minecraft.client.renderer.entity.NoopRenderer::new);
+        MOD.registries().registerEntityRenderer(HumanEntityTypes.COSMETIC_SEAT, net.minecraft.client.renderer.entity.NoopRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.GRENADE_THROWN, ThrownItemRenderer::new);
         MOD.registries().registerEntityRenderer(HumanEntityTypes.MARINE, MarineRenderer::new);
         // [stated] Oct 13 - the tactical marine keeps the marine body; the Weyland-Yutani units wear the employee body.

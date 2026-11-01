@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/duffel_bag",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_duffel_bag",
+    "particle": "avp_human:block/cosmetic/uscm_duffel_bag"
+  }
+}

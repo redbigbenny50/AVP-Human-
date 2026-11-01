@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/electrical_box",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_electrical_box",
+    "particle": "avp_human:block/cosmetic/wy_electrical_box"
+  }
+}

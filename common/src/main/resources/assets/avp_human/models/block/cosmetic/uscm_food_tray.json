@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/food_tray",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_food_tray",
+    "particle": "avp_human:block/cosmetic/uscm_food_tray"
+  }
+}

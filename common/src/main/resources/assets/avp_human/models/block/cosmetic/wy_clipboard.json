@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/clipboard",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_clipboard",
+    "particle": "avp_human:block/cosmetic/wy_clipboard"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:food_dispenser"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 4
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:rubber_globule",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:integrated_circuit",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

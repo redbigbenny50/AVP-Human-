@@ -1,0 +1,255 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          1.0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gCabinet",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -6
+              ],
+              "size": [
+                14,
+                30,
+                13
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gRadios",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                3,
+                -7
+              ],
+              "size": [
+                12,
+                5,
+                1
+              ],
+              "uv": [
+                0,
+                43
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                10,
+                -7
+              ],
+              "size": [
+                12,
+                5,
+                1
+              ],
+              "uv": [
+                26,
+                43
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                17,
+                -7
+              ],
+              "size": [
+                12,
+                5,
+                1
+              ],
+              "uv": [
+                0,
+                49
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                24,
+                -7
+              ],
+              "size": [
+                12,
+                5,
+                1
+              ],
+              "uv": [
+                26,
+                49
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gAntenna",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                3,
+                30,
+                0
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                52,
+                49
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                30,
+                2
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                56,
+                49
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                29,
+                -7
+              ],
+              "size": [
+                14,
+                1,
+                1
+              ],
+              "uv": [
+                30,
+                55
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -7
+              ],
+              "size": [
+                12,
+                2,
+                1
+              ],
+              "uv": [
+                0,
+                55
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                6,
+                22,
+                -7
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                26,
+                55
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

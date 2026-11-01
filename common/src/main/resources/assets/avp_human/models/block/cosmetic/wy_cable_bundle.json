@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/cable_bundle",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_cable_bundle",
+    "particle": "avp_human:block/cosmetic/wy_cable_bundle"
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          1.0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -7
+              ],
+              "size": [
+                14,
+                1,
+                14
+              ],
+              "uv": [
+                0,
+                43
+              ]
+            },
+            {
+              "origin": [
+                -7,
+                1,
+                -6
+              ],
+              "size": [
+                14,
+                30,
+                13
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -7,
+                31,
+                -7
+              ],
+              "size": [
+                14,
+                1,
+                14
+              ],
+              "uv": [
+                56,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDoors",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gWyDoor",
+          "pivot": [
+            7,
+            2,
+            -6
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                2,
+                -7
+              ],
+              "size": [
+                14,
+                28,
+                1
+              ],
+              "uv": [
+                86,
+                0
+              ]
+            },
+            {
+              "origin": [
+                5,
+                12,
+                -8
+              ],
+              "size": [
+                1,
+                6,
+                1
+              ],
+              "uv": [
+                112,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDoorRight",
+          "pivot": [
+            7,
+            2,
+            -6
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                0,
+                2,
+                -7
+              ],
+              "size": [
+                7,
+                28,
+                1
+              ],
+              "uv": [
+                70,
+                0
+              ],
+              "inflate": 0.003
+            },
+            {
+              "origin": [
+                1,
+                13,
+                -8
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                120,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDoorLeft",
+          "pivot": [
+            -7,
+            2,
+            -6
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                2,
+                -7
+              ],
+              "size": [
+                7,
+                28,
+                1
+              ],
+              "uv": [
+                54,
+                0
+              ],
+              "inflate": -0.003
+            },
+            {
+              "origin": [
+                -2,
+                13,
+                -8
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                116,
+                43
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

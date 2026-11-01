@@ -131,6 +131,19 @@ public interface PipeItemAccess {
             return fabricator.pipePort();
         }
 
+        // [stated] Nov 1 - the Cosmetic Crafter: ONE item port, on its pillar side (the clockwise side's front-bottom
+        // block). A pipe connects there and nowhere else on the machine; through it, finished pieces come out.
+        if (state.getBlock() instanceof com.human.common.gameplay.cosmetic.CosmeticCrafterBlock crafterBlock) {
+            if (
+                com.human.common.gameplay.cosmetic.CosmeticCrafterBlock.isItemPort(state, side)
+                    && level.getBlockEntity(crafterBlock.corePos(pos, state)) instanceof com.human.common.gameplay.cosmetic.CosmeticCrafterBlockEntity crafter
+            ) {
+                return crafter.pipePort();
+            }
+
+            return NONE;
+        }
+
         // Oct 15 - the quarry terminal: its ITEM port is the TOP of its back-row clockwise block ([stated] Oct 13: item
         // port top left, facing the screen). It gives mined items from the internal slots and takes frame blocks in.
         // Every other face of the terminal is no item port at all.

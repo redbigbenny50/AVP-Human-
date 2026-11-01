@@ -38,6 +38,7 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
         EnUsBlockProvider.CONSUMER.accept(builder);
         com.human.fabric.data.lang.en_us.provider.EnUsCrateProvider.CONSUMER.accept(builder);
         com.human.fabric.data.lang.en_us.provider.EnUsFabricationProvider.CONSUMER.accept(builder);
+        com.human.fabric.data.lang.en_us.provider.EnUsCosmeticProvider.CONSUMER.accept(builder);
         com.human.fabric.data.lang.en_us.provider.EnUsChemicalsProvider.CONSUMER.accept(builder);
         com.human.fabric.data.lang.en_us.provider.EnUsQuarryProvider.CONSUMER.accept(builder);
 

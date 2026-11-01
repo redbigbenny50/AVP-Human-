@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/warning_sign",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_warning_sign",
+    "particle": "avp_human:block/cosmetic/wy_warning_sign"
+  }
+}

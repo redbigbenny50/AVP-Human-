@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/facility_sign",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_facility_sign",
+    "particle": "avp_human:block/cosmetic/wy_facility_sign"
+  }
+}

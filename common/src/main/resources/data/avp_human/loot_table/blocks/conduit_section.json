@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "avp_human:conduit_section",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "cell": "0"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "avp_human:conduit_section"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

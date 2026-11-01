@@ -81,6 +81,7 @@ public class PowerCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanBlocks.ELECTRONICS_WORKSTATION);
         CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanFabrication.DRIVE_BAY);
         CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanFabrication.FABRICATOR);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER);
         // [stated] Oct 17 - the vaporizer. Its W-Y and USCM editions (and every other faction machine) live in their
         // faction tabs since Sep 28.
         CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanVaporizer.VAPORIZER);

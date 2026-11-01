@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/office_chair",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_office_chair",
+    "particle": "avp_human:block/cosmetic/wy_office_chair"
+  }
+}

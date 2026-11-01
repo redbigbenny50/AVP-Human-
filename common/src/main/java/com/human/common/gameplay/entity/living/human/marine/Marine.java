@@ -203,11 +203,28 @@ public class Marine extends AbstractHuman implements BLibInventoryHolder, Entity
             return null;
         }
 
+        // [stated] Oct 31 - heading to a bunk or asleep in one: the bunk goal has the path, so the agent sits out (plans
+        // are kept and resume when the marine is up).
+        if (inEntityTick && isBunking()) {
+            return null;
+        }
+
         if (inEntityTick && !com.human.common.gameplay.entity.living.human.marine.ai.MarineAiLod.shouldRunAi(this)) {
             return null;
         }
 
         return MarineGOAP.GRAPH;
+    }
+
+    /** A hired marine follows its employer and never takes a bunk; an unhired one does, like any other human. */
+    @Override
+    public boolean wantsBunk() {
+        return !hasLeader();
+    }
+
+    @Override
+    public boolean mayUseBunkNow() {
+        return super.mayUseBunkNow() && !hasLeader();
     }
 
     /** Oct 5 - alien truce: the game time until which this marine's own contact keeps it (MarineAlienTruce). */

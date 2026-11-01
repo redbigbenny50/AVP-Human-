@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/pipe_mount",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_pipe_mount",
+    "particle": "avp_human:block/cosmetic/uscm_pipe_mount"
+  }
+}

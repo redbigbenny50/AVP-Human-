@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/wall_clock",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_wall_clock",
+    "particle": "avp_human:block/cosmetic/wy_wall_clock"
+  }
+}

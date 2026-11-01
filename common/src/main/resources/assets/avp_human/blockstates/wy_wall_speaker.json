@@ -1,0 +1,453 @@
+{
+  "variants": {
+    "cell=0,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker"
+    },
+    "cell=1,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=north,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "y": 90
+    },
+    "cell=1,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=east,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "y": 180
+    },
+    "cell=1,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=south,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "y": 270
+    },
+    "cell=1,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=west,mount=wall": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 270
+    },
+    "cell=1,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=north,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 270,
+      "y": 90
+    },
+    "cell=1,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=east,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 270,
+      "y": 180
+    },
+    "cell=1,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=south,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 270,
+      "y": 270
+    },
+    "cell=1,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=west,mount=floor": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 90
+    },
+    "cell=1,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=north,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 90,
+      "y": 90
+    },
+    "cell=1,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=east,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 90,
+      "y": 180
+    },
+    "cell=1,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=south,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=0,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker",
+      "x": 90,
+      "y": 270
+    },
+    "cell=1,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=2,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=3,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=4,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=5,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=6,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=7,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=8,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=9,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=10,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    },
+    "cell=11,facing=west,mount=ceiling": {
+      "model": "avp_human:block/cosmetic/wy_wall_speaker_particle"
+    }
+  }
+}

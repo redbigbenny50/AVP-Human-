@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/trash_bin",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_trash_bin",
+    "particle": "avp_human:block/cosmetic/wy_trash_bin"
+  }
+}

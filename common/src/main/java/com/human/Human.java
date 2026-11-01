@@ -134,6 +134,8 @@ public class Human {
         // Storage crates and containers: blocks, items, block entity, menu, item component, tab, packets.
         com.human.common.registry.init.HumanCrates.initialize();
         com.human.common.registry.init.HumanFabrication.initialize();
+        // [stated] Oct 31 - the Cosmetic Crafter and its furniture catalogue.
+        com.human.common.registry.init.HumanCosmetics.initialize();
         // Quarry: the terminal (three editions) and the frame block.
         com.human.common.registry.init.HumanQuarry.initialize();
         // [stated] Oct 17 - the chem line: the xeno acids (fluids, liquid blocks, buckets) and the gas tanks. Fluids

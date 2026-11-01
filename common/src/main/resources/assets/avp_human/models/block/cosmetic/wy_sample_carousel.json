@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/sample_carousel",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_sample_carousel",
+    "particle": "avp_human:block/cosmetic/wy_sample_carousel"
+  }
+}

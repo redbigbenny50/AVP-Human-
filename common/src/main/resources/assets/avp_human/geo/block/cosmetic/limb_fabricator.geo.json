@@ -1,0 +1,432 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 256,
+        "texture_height": 256,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          1.0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBase",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                0,
+                -8
+              ],
+              "size": [
+                32,
+                6,
+                32
+              ],
+              "uv": [
+                124,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gFrame",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                7,
+                6,
+                -8
+              ],
+              "size": [
+                1,
+                22,
+                1
+              ],
+              "uv": [
+                128,
+                52
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                6,
+                -8
+              ],
+              "size": [
+                1,
+                22,
+                1
+              ],
+              "uv": [
+                132,
+                52
+              ]
+            },
+            {
+              "origin": [
+                7,
+                6,
+                23
+              ],
+              "size": [
+                1,
+                22,
+                1
+              ],
+              "uv": [
+                136,
+                52
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                6,
+                23
+              ],
+              "size": [
+                1,
+                22,
+                1
+              ],
+              "uv": [
+                140,
+                52
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gCap",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                28,
+                -8
+              ],
+              "size": [
+                32,
+                4,
+                32
+              ],
+              "uv": [
+                0,
+                52
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gLimb",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -14,
+                6,
+                4
+              ],
+              "size": [
+                12,
+                2,
+                8
+              ],
+              "uv": [
+                62,
+                88
+              ]
+            },
+            {
+              "origin": [
+                -9,
+                8,
+                6
+              ],
+              "size": [
+                6,
+                3,
+                4
+              ],
+              "uv": [
+                130,
+                88
+              ]
+            },
+            {
+              "origin": [
+                -11,
+                8,
+                6
+              ],
+              "size": [
+                2,
+                4,
+                4
+              ],
+              "uv": [
+                102,
+                88
+              ]
+            },
+            {
+              "origin": [
+                -14,
+                8,
+                6
+              ],
+              "size": [
+                3,
+                3,
+                4
+              ],
+              "uv": [
+                150,
+                88
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPrinter",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -23,
+                27,
+                7
+              ],
+              "size": [
+                30,
+                1,
+                2
+              ],
+              "uv": [
+                174,
+                88
+              ]
+            },
+            {
+              "origin": [
+                -10,
+                24,
+                6
+              ],
+              "size": [
+                4,
+                3,
+                4
+              ],
+              "uv": [
+                114,
+                88
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                5,
+                -9
+              ],
+              "size": [
+                32,
+                1,
+                1
+              ],
+              "uv": [
+                22,
+                111
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -3,
+                0,
+                -9
+              ],
+              "size": [
+                10,
+                2,
+                1
+              ],
+              "uv": [
+                0,
+                111
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -10,
+                0,
+                -9
+              ],
+              "size": [
+                4,
+                4,
+                1
+              ],
+              "uv": [
+                164,
+                88
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlass",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -23,
+                6,
+                -8
+              ],
+              "size": [
+                30,
+                22,
+                1
+              ],
+              "uv": [
+                144,
+                52
+              ]
+            },
+            {
+              "origin": [
+                -23,
+                6,
+                23
+              ],
+              "size": [
+                30,
+                22,
+                1
+              ],
+              "uv": [
+                0,
+                88
+              ]
+            },
+            {
+              "origin": [
+                7,
+                6,
+                -7
+              ],
+              "size": [
+                1,
+                22,
+                30
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                6,
+                -7
+              ],
+              "size": [
+                1,
+                22,
+                30
+              ],
+              "uv": [
+                62,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

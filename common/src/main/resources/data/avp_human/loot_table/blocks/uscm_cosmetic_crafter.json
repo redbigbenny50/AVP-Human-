@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "avp_human:uscm_cosmetic_crafter",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "cell": "0"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "avp_human:uscm_cosmetic_crafter",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name",
+                "avp_human:power_ports",
+                "minecraft:container"
+              ],
+              "source": "block_entity"
+            }
+          ]
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

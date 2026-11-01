@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/instrument_tray",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_instrument_tray",
+    "particle": "avp_human:block/cosmetic/wy_instrument_tray"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/cable_hook",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_cable_hook",
+    "particle": "avp_human:block/cosmetic/wy_cable_hook"
+  }
+}

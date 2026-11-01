@@ -49,6 +49,12 @@ public class HumanREIClient implements REIClientPlugin {
         registry.add(
             new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.VAPORIZING, HumanMachineDisplays.vaporizers().getFirst())
         );
+        registry.add(
+            new HumanMachineDisplays.MachineCategory(
+                HumanMachineDisplays.COSMETIC_CRAFTING,
+                HumanMachineDisplays.cosmeticCrafters().getFirst()
+            )
+        );
 
         registry.addWorkstations(HumanMachineDisplays.GRINDING, EntryStacks.of(HumanMachineDisplays.grinder()));
         registry.addWorkstations(HumanMachineDisplays.PRESSING, EntryStacks.of(HumanMachineDisplays.press()));
@@ -59,6 +65,9 @@ public class HumanREIClient implements REIClientPlugin {
         }
         for (var vaporizer : HumanMachineDisplays.vaporizers()) {
             registry.addWorkstations(HumanMachineDisplays.VAPORIZING, EntryStacks.of(vaporizer));
+        }
+        for (var crafter : HumanMachineDisplays.cosmeticCrafters()) {
+            registry.addWorkstations(HumanMachineDisplays.COSMETIC_CRAFTING, EntryStacks.of(crafter));
         }
 
         // The electric machines that run vanilla (or our industrial) recipes, as workstations on those tabs.
@@ -112,6 +121,9 @@ public class HumanREIClient implements REIClientPlugin {
         );
         for (var recipe : com.human.client.compat.VaporizingRecipe.all()) {
             registry.add(HumanMachineDisplays.vaporizing(recipe));
+        }
+        for (var entry : com.human.common.gameplay.cosmetic.CosmeticCatalog.entries()) {
+            registry.add(HumanMachineDisplays.cosmetic(entry));
         }
         for (var display : BlueprintSourceDisplays.all()) {
             registry.add(display);

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/tool_chest_particle"
+    }
+  }
+}

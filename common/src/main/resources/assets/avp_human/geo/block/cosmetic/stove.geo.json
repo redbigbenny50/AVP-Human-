@@ -1,0 +1,276 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          0.625,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -6
+              ],
+              "size": [
+                14,
+                13,
+                13
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                2,
+                -7
+              ],
+              "size": [
+                12,
+                7,
+                1
+              ],
+              "uv": [
+                54,
+                26
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                7,
+                -8
+              ],
+              "size": [
+                8,
+                1,
+                1
+              ],
+              "uv": [
+                74,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gHob",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                13,
+                -6
+              ],
+              "size": [
+                14,
+                1,
+                13
+              ],
+              "uv": [
+                0,
+                26
+              ]
+            },
+            {
+              "origin": [
+                1,
+                14,
+                -4
+              ],
+              "size": [
+                4,
+                1,
+                4
+              ],
+              "uv": [
+                112,
+                26
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                14,
+                -4
+              ],
+              "size": [
+                4,
+                1,
+                4
+              ],
+              "uv": [
+                0,
+                40
+              ]
+            },
+            {
+              "origin": [
+                1,
+                14,
+                1
+              ],
+              "size": [
+                4,
+                1,
+                4
+              ],
+              "uv": [
+                16,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                14,
+                1
+              ],
+              "size": [
+                4,
+                1,
+                4
+              ],
+              "uv": [
+                32,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDials",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                10,
+                -7
+              ],
+              "size": [
+                12,
+                2,
+                1
+              ],
+              "uv": [
+                48,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmRails",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                7,
+                2,
+                -5
+              ],
+              "size": [
+                1,
+                10,
+                10
+              ],
+              "uv": [
+                54,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -8,
+                2,
+                -5
+              ],
+              "size": [
+                1,
+                10,
+                10
+              ],
+              "uv": [
+                76,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppHood",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                14,
+                5
+              ],
+              "size": [
+                14,
+                6,
+                2
+              ],
+              "uv": [
+                80,
+                26
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

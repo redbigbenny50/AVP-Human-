@@ -29,6 +29,7 @@ public class WyCreativeModeTabInitializer {
 
         // Machines
         CreativeModeTabUtil.accept(output, HumanFabrication.WY_FABRICATOR);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanCosmetics.WY_COSMETIC_CRAFTER);
         CreativeModeTabUtil.accept(output, HumanFabrication.WY_DRIVE_BAY);
         CreativeModeTabUtil.accept(output, HumanBlocks.WY_CRYOTUBE_CONTROLLER);
         CreativeModeTabUtil.accept(output, HumanVaporizer.WY_VAPORIZER);
@@ -42,5 +43,9 @@ public class WyCreativeModeTabInitializer {
                 CreativeModeTabUtil.accept(output, item);
             }
         });
+
+        // [stated] Oct 31 - cosmetic furniture, this faction's editions.
+        com.human.common.registry.init.HumanCosmetics.decorItems(com.human.common.gameplay.cosmetic.CosmeticStyle.WY)
+            .forEach(item -> CreativeModeTabUtil.accept(output, item));
     };
 }

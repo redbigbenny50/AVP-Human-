@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/maintenance_kit",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_maintenance_kit",
+    "particle": "avp_human:block/cosmetic/uscm_maintenance_kit"
+  }
+}

@@ -25,6 +25,8 @@ import java.util.WeakHashMap;
  * be lost.</li>
  * <li>Faction blocks - those are unlocked by a faction license, and a blueprint must not be a way round it.</li>
  * <li>Licenses, blank chips, and anything in {@code #avp_human:blueprint_unscannable}.</li>
+ * <li>[stated] Oct 31: cosmetic furniture - every design in every style. It comes from the Cosmetic Crafter.
+ * </li>
  * <li>[stated] Oct 16: a written blueprint CHIP is not scanned but COPIED - 1 chip + 2 raw silicon = 2 of that chip
  * (see {@link #isCopy}). Faction licenses never go in at all.</li>
  * <li>Anything with no crafting recipe - a fabricator could never print it, so the scan would only waste the item.</li>
@@ -61,6 +63,12 @@ public final class BlueprintScanning {
 
     private BlueprintScanning() {}
 
+    /** A cosmetic decor piece (any design, any style). The Cosmetic Crafter machine itself is not one. */
+    private static boolean isCosmetic(ItemStack stack) {
+        return stack.getItem() instanceof net.minecraft.world.item.BlockItem blockItem
+            && blockItem.getBlock() instanceof com.human.common.gameplay.cosmetic.CosmeticBlock;
+    }
+
     /** Whether {@code stack} may be scanned at all, ignoring the silicon and the output slot. */
     public static Result check(Level level, ItemStack stack) {
         if (stack.isEmpty()) {
@@ -71,7 +79,9 @@ public final class BlueprintScanning {
             return isCopy(stack) ? Result.OK : Result.BLANK_CHIP;
         }
 
-        if (stack.is(UNSCANNABLE) || stack.getItem() instanceof FactionLicenseItem) {
+        // [stated] Oct 31: cosmetic furniture never becomes a blueprint chip, whatever recipes a datapack adds -
+        // it is made in the Cosmetic Crafter.
+        if (stack.is(UNSCANNABLE) || stack.getItem() instanceof FactionLicenseItem || isCosmetic(stack)) {
             return Result.UNSCANNABLE;
         }
 

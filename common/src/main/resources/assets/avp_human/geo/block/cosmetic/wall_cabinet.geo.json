@@ -1,0 +1,178 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.5,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                0,
+                -5
+              ],
+              "size": [
+                32,
+                16,
+                12
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlass",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gUppStripe",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                15,
+                -6
+              ],
+              "size": [
+                32,
+                1,
+                1
+              ],
+              "uv": [
+                42,
+                28
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlassDoorRight",
+          "pivot": [
+            8,
+            1,
+            -5
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                1,
+                -6
+              ],
+              "size": [
+                16,
+                14,
+                1
+              ],
+              "uv": [
+                88,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                6,
+                -7
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                34,
+                28
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlassDoorLeft",
+          "pivot": [
+            -24,
+            1,
+            -5
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                1,
+                -6
+              ],
+              "size": [
+                16,
+                14,
+                1
+              ],
+              "uv": [
+                0,
+                28
+              ]
+            },
+            {
+              "origin": [
+                -11,
+                6,
+                -7
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                38,
+                28
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

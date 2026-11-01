@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/map_panel",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_map_panel",
+    "particle": "avp_human:block/cosmetic/uscm_map_panel"
+  }
+}

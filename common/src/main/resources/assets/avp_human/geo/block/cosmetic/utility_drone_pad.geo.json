@@ -1,0 +1,319 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.1875,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gPad",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                0,
+                -8
+              ],
+              "size": [
+                32,
+                2,
+                32
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                2,
+                4
+              ],
+              "size": [
+                2,
+                1,
+                8
+              ],
+              "uv": [
+                0,
+                34
+              ]
+            },
+            {
+              "origin": [
+                -14,
+                2,
+                4
+              ],
+              "size": [
+                2,
+                1,
+                8
+              ],
+              "uv": [
+                20,
+                34
+              ]
+            },
+            {
+              "origin": [
+                -12,
+                2,
+                7
+              ],
+              "size": [
+                8,
+                1,
+                2
+              ],
+              "uv": [
+                80,
+                34
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gLights",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                7,
+                2,
+                -8
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                120,
+                34
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                2,
+                -8
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                124,
+                34
+              ]
+            },
+            {
+              "origin": [
+                7,
+                2,
+                23
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                0,
+                43
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                2,
+                23
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                4,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDrone",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -21,
+                2,
+                14
+              ],
+              "size": [
+                6,
+                3,
+                6
+              ],
+              "uv": [
+                40,
+                34
+              ]
+            },
+            {
+              "origin": [
+                -17,
+                5,
+                13
+              ],
+              "size": [
+                3,
+                1,
+                2
+              ],
+              "uv": [
+                100,
+                34
+              ]
+            },
+            {
+              "origin": [
+                -22,
+                5,
+                19
+              ],
+              "size": [
+                3,
+                1,
+                2
+              ],
+              "uv": [
+                110,
+                34
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                1,
+                -9
+              ],
+              "size": [
+                32,
+                1,
+                1
+              ],
+              "uv": [
+                8,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                0,
+                -9
+              ],
+              "size": [
+                16,
+                1,
+                1
+              ],
+              "uv": [
+                74,
+                43
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                2,
+                2,
+                18
+              ],
+              "size": [
+                4,
+                1,
+                4
+              ],
+              "uv": [
+                64,
+                34
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

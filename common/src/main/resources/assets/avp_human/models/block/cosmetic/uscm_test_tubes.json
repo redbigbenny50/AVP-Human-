@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/test_tubes",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_test_tubes",
+    "particle": "avp_human:block/cosmetic/uscm_test_tubes"
+  }
+}

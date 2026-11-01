@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/wy_screen_panel_particle"
+    }
+  }
+}

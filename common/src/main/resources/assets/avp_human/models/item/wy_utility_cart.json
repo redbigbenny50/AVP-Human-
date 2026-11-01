@@ -1,0 +1,124 @@
+{
+  "parent": "avp_human:block/cosmetic/wy_utility_cart",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        1.939,
+        0.55,
+        -1.921
+      ],
+      "scale": [
+        0.3226,
+        0.3226,
+        0.3226
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.129,
+        0.129,
+        0.129
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        -2.742,
+        -0.484,
+        0
+      ],
+      "scale": [
+        0.2581,
+        0.2581,
+        0.2581
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.1935,
+        0.1935,
+        0.1935
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.1935,
+        0.1935,
+        0.1935
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.1935,
+        0.1935,
+        0.1935
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.1935,
+        0.1935,
+        0.1935
+      ]
+    }
+  }
+}

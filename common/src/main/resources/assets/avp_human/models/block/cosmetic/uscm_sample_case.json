@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/sample_case",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_sample_case",
+    "particle": "avp_human:block/cosmetic/uscm_sample_case"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/preservation_pod_particle"
+    }
+  }
+}

@@ -540,5 +540,122 @@
       }
     ],
     "subtitle": "subtitles.jukebox_sounds.building_better_worlds"
+  },
+  "block.cosmetic.door_open": {
+    "sounds": [
+      {
+        "name": "minecraft:block.iron_trapdoor.open",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.door_open"
+  },
+  "block.cosmetic.door_close": {
+    "sounds": [
+      {
+        "name": "minecraft:block.iron_trapdoor.close",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.door_close"
+  },
+  "block.cosmetic.lid_open": {
+    "sounds": [
+      {
+        "name": "minecraft:block.barrel.open",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.lid_open"
+  },
+  "block.cosmetic.lid_close": {
+    "sounds": [
+      {
+        "name": "minecraft:block.barrel.close",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.lid_close"
+  },
+  "block.cosmetic.machine_switch": {
+    "sounds": [
+      {
+        "name": "minecraft:block.lever.click",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.machine_switch"
+  },
+  "block.cosmetic.hum_loop": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.ambient",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.hum_loop"
+  },
+  "block.cosmetic.tool_loop": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.minecart.riding",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.tool_loop"
+  },
+  "block.cosmetic.map_in": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.activate",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.map_in"
+  },
+  "block.cosmetic.map_out": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.deactivate",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.map_out"
+  },
+  "block.cosmetic.item_place": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.add_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.item_place"
+  },
+  "block.cosmetic.item_take": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.remove_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.item_take"
+  },
+  "block.cosmetic.dye": {
+    "sounds": [
+      {
+        "name": "minecraft:item.dye.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.dye"
+  },
+  "block.cosmetic.sit": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wool.step",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.block.cosmetic.sit"
   }
 }

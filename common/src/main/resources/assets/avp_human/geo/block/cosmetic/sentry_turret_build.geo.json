@@ -1,0 +1,330 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          0.71875,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gDesk",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                0,
+                -6
+              ],
+              "size": [
+                10,
+                12,
+                12
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                0,
+                -6
+              ],
+              "size": [
+                2,
+                12,
+                2
+              ],
+              "uv": [
+                92,
+                24
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                0,
+                4
+              ],
+              "size": [
+                2,
+                12,
+                2
+              ],
+              "uv": [
+                100,
+                24
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                12,
+                -7
+              ],
+              "size": [
+                32,
+                2,
+                14
+              ],
+              "uv": [
+                0,
+                24
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gTripod",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                14,
+                -2
+              ],
+              "size": [
+                4,
+                3,
+                4
+              ],
+              "uv": [
+                50,
+                40
+              ]
+            },
+            {
+              "origin": [
+                0,
+                14,
+                -1
+              ],
+              "size": [
+                3,
+                1,
+                2
+              ],
+              "uv": [
+                106,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -7,
+                14,
+                -1
+              ],
+              "size": [
+                3,
+                1,
+                2
+              ],
+              "uv": [
+                116,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGun",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                17,
+                -3
+              ],
+              "size": [
+                7,
+                4,
+                6
+              ],
+              "uv": [
+                0,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -13,
+                18,
+                -1
+              ],
+              "size": [
+                7,
+                2,
+                2
+              ],
+              "uv": [
+                88,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gParts",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -20,
+                14,
+                -4
+              ],
+              "size": [
+                6,
+                4,
+                6
+              ],
+              "uv": [
+                26,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -3,
+                21,
+                -2
+              ],
+              "size": [
+                3,
+                2,
+                3
+              ],
+              "uv": [
+                66,
+                40
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                11,
+                -7
+              ],
+              "size": [
+                10,
+                1,
+                1
+              ],
+              "uv": [
+                20,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                0,
+                -7
+              ],
+              "size": [
+                9,
+                2,
+                1
+              ],
+              "uv": [
+                0,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                1,
+                6,
+                -7
+              ],
+              "size": [
+                4,
+                4,
+                1
+              ],
+              "uv": [
+                78,
+                40
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

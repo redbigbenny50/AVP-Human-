@@ -155,6 +155,22 @@ public class HumanEntityTypes {
         EntityType.Builder.of(SentryTurret::new, MobCategory.MISC).sized(1.0F, 1.0F).noSummon()
     );
 
+    /**
+     * The invisible seat a player rides while sitting on cosmetic furniture ([stated] Oct 31). Never saved - it removes
+     * itself the moment nobody sits on it, so none can pile up.
+     */
+    public static final BLibHolder<EntityType<com.human.common.gameplay.cosmetic.CosmeticSeatEntity>> COSMETIC_SEAT = create(
+        "cosmetic_seat",
+        EntityType.Builder.<com.human.common.gameplay.cosmetic.CosmeticSeatEntity>of(
+            com.human.common.gameplay.cosmetic.CosmeticSeatEntity::new,
+            MobCategory.MISC
+        )
+            .sized(0.001F, 0.001F)
+            .noSave()
+            .noSummon()
+            .clientTrackingRange(10)
+    );
+
     public static <T extends Entity> BLibHolder<EntityType<T>> create(String id, EntityType.Builder<T> builder) {
         return TYPE_REGISTRY.createHolder(id, () -> ((SilencedEntityTypeBuilder) builder).blib$buildWithoutDataFixerCheck());
     }

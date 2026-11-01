@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/toolbox",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_toolbox",
+    "particle": "avp_human:block/cosmetic/wy_toolbox"
+  }
+}

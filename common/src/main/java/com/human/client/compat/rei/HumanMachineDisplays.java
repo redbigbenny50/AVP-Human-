@@ -60,6 +60,9 @@ public final class HumanMachineDisplays {
 
     public static final CategoryIdentifier<MachineDisplay> VAPORIZING = CategoryIdentifier.of(Human.MOD_ID, "vaporizing");
 
+    /** [stated] Oct 31 - the Cosmetic Crafter's catalogue. */
+    public static final CategoryIdentifier<MachineDisplay> COSMETIC_CRAFTING = CategoryIdentifier.of(Human.MOD_ID, "cosmetic_crafting");
+
     public static final CategoryIdentifier<MachineDisplay> BLUEPRINT_TABLE = CategoryIdentifier.of(Human.MOD_ID, "blueprint_table");
 
     public static final CategoryIdentifier<MachineDisplay> DRYING = CategoryIdentifier.of(Human.MOD_ID, "drying");
@@ -235,6 +238,14 @@ public final class HumanMachineDisplays {
         return new MachineDisplay(FABRICATING, inputs, List.of(EntryIngredients.of(result)));
     }
 
+    public static MachineDisplay cosmetic(com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry entry) {
+        var inputs = new ArrayList<EntryIngredient>();
+        for (var part : entry.parts()) {
+            inputs.add(items(part.ingredient(), part.count()));
+        }
+        return new MachineDisplay(COSMETIC_CRAFTING, inputs, List.of(EntryIngredients.of(entry.resultStack())));
+    }
+
     public static MachineDisplay vaporizing(VaporizingRecipe recipe) {
         return new MachineDisplay(
             VAPORIZING,
@@ -301,6 +312,14 @@ public final class HumanMachineDisplays {
 
     static List<Block> fabricators() {
         return List.of(HumanFabrication.FABRICATOR.get(), HumanFabrication.WY_FABRICATOR.get(), HumanFabrication.USCM_FABRICATOR.get());
+    }
+
+    static List<Block> cosmeticCrafters() {
+        return List.of(
+            com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER.get(),
+            com.human.common.registry.init.HumanCosmetics.WY_COSMETIC_CRAFTER.get(),
+            com.human.common.registry.init.HumanCosmetics.USCM_COSMETIC_CRAFTER.get()
+        );
     }
 
     static List<Block> vaporizers() {

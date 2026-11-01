@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:uscm_large_table"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 4
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:aluminum_ingot",
+        "count": 3
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:composite_ingot",
+        "count": 2
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:green_dye",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

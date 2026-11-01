@@ -188,6 +188,34 @@ public class HumanSoundEvents {
 
     public static final BLibHolder<SoundEvent> WEAPON_CHEM_THROWER_STOP = create("item.weapon.chem_thrower.stop");
 
+    // [stated] Oct 31 - cosmetic furniture sounds. Each points at a vanilla sound as a PLACEHOLDER in sounds.json; drop a
+    // real .ogg in and change that one entry, no code change needed.
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_DOOR_OPEN = create("block.cosmetic.door_open");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_DOOR_CLOSE = create("block.cosmetic.door_close");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_LID_OPEN = create("block.cosmetic.lid_open");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_LID_CLOSE = create("block.cosmetic.lid_close");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_MACHINE_SWITCH = create("block.cosmetic.machine_switch");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_HUM_LOOP = create("block.cosmetic.hum_loop");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_TOOL_LOOP = create("block.cosmetic.tool_loop");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_MAP_IN = create("block.cosmetic.map_in");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_MAP_OUT = create("block.cosmetic.map_out");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_ITEM_PLACE = create("block.cosmetic.item_place");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_ITEM_TAKE = create("block.cosmetic.item_take");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_DYE = create("block.cosmetic.dye");
+
+    public static final BLibHolder<SoundEvent> BLOCK_COSMETIC_SIT = create("block.cosmetic.sit");
+
     private static BLibHolder<SoundEvent> create(String path) {
         return REGISTRY.createHolder(path, () -> SoundEvent.createVariableRangeEvent(HumanResources.location(path)));
     }

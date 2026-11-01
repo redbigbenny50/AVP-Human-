@@ -1,0 +1,422 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 256,
+        "texture_height": 256,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          1.0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gEnclosure",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                0,
+                -8
+              ],
+              "size": [
+                32,
+                6,
+                32
+              ],
+              "uv": [
+                0,
+                56
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                6,
+                22
+              ],
+              "size": [
+                32,
+                26,
+                2
+              ],
+              "uv": [
+                0,
+                94
+              ]
+            },
+            {
+              "origin": [
+                6,
+                6,
+                -8
+              ],
+              "size": [
+                2,
+                26,
+                30
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -24,
+                6,
+                -8
+              ],
+              "size": [
+                2,
+                26,
+                30
+              ],
+              "uv": [
+                64,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -22,
+                30,
+                -8
+              ],
+              "size": [
+                28,
+                2,
+                30
+              ],
+              "uv": [
+                128,
+                56
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWindow",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -22,
+                6,
+                -8
+              ],
+              "size": [
+                28,
+                2,
+                1
+              ],
+              "uv": [
+                50,
+                122
+              ]
+            },
+            {
+              "origin": [
+                -22,
+                28,
+                -8
+              ],
+              "size": [
+                28,
+                2,
+                1
+              ],
+              "uv": [
+                108,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gSpindle",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                22,
+                6
+              ],
+              "size": [
+                6,
+                8,
+                6
+              ],
+              "uv": [
+                204,
+                94
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gCutter",
+          "pivot": [
+            -4,
+            18,
+            9
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                15,
+                8
+              ],
+              "size": [
+                2,
+                7,
+                2
+              ],
+              "uv": [
+                32,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPanel",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -22,
+                8,
+                -8
+              ],
+              "size": [
+                8,
+                20,
+                1
+              ],
+              "uv": [
+                68,
+                94
+              ]
+            },
+            {
+              "origin": [
+                -22,
+                8,
+                -7
+              ],
+              "size": [
+                8,
+                20,
+                29
+              ],
+              "uv": [
+                128,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gTable",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -14,
+                6,
+                0
+              ],
+              "size": [
+                20,
+                3,
+                18
+              ],
+              "uv": [
+                86,
+                94
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPart",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -8,
+                9,
+                5
+              ],
+              "size": [
+                8,
+                4,
+                8
+              ],
+              "uv": [
+                0,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -24,
+                5,
+                -9
+              ],
+              "size": [
+                32,
+                1,
+                1
+              ],
+              "uv": [
+                188,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -3,
+                0,
+                -9
+              ],
+              "size": [
+                10,
+                2,
+                1
+              ],
+              "uv": [
+                166,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -10,
+                0,
+                -9
+              ],
+              "size": [
+                4,
+                4,
+                1
+              ],
+              "uv": [
+                40,
+                122
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gGlass",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -14,
+                8,
+                -8
+              ],
+              "size": [
+                20,
+                20,
+                1
+              ],
+              "uv": [
+                162,
+                94
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

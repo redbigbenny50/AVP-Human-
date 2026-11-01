@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/book_stack",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_book_stack",
+    "particle": "avp_human:block/cosmetic/uscm_book_stack"
+  }
+}

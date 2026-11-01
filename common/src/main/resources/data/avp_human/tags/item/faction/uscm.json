@@ -8,6 +8,7 @@
     "avp_human:uscm_container",
     "avp_human:uscm_drive_bay",
     "avp_human:uscm_fabricator",
+    "avp_human:uscm_cosmetic_crafter",
     "avp_human:uscm_quarry_terminal",
     "avp_human:uscm_vaporizer",
     "avp_human:uscm_electric_distributor",

@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/biohazard_bin",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_biohazard_bin",
+    "particle": "avp_human:block/cosmetic/uscm_biohazard_bin"
+  }
+}

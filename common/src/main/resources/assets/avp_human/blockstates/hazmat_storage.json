@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/hazmat_storage_particle"
+    }
+  }
+}

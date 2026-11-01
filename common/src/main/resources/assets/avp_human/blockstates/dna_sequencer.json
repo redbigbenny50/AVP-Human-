@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/dna_sequencer_particle"
+    }
+  }
+}

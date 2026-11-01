@@ -1,0 +1,212 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          0.59375,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gPodium",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -6
+              ],
+              "size": [
+                12,
+                1,
+                12
+              ],
+              "uv": [
+                0,
+                20
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                1,
+                -4
+              ],
+              "size": [
+                10,
+                11,
+                9
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                12,
+                -6
+              ],
+              "size": [
+                12,
+                1,
+                11
+              ],
+              "uv": [
+                0,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gReader",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                13,
+                -5
+              ],
+              "size": [
+                4,
+                1,
+                3
+              ],
+              "uv": [
+                0,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gBeacon",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                13,
+                2
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                46,
+                33
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                17,
+                1
+              ],
+              "size": [
+                3,
+                2,
+                3
+              ],
+              "uv": [
+                50,
+                33
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyStripe",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                8,
+                -5
+              ],
+              "size": [
+                10,
+                1,
+                1
+              ],
+              "uv": [
+                36,
+                45
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmHazard",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                1,
+                -5
+              ],
+              "size": [
+                10,
+                3,
+                1
+              ],
+              "uv": [
+                14,
+                45
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

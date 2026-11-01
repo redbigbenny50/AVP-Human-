@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/coat_hook",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_coat_hook",
+    "particle": "avp_human:block/cosmetic/uscm_coat_hook"
+  }
+}

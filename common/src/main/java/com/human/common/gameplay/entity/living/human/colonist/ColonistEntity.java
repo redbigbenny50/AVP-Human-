@@ -218,8 +218,9 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
             }
 
             tickBedClaim(serverLevel);
-            // At night a colonist with a bed goes to it; the walk back to the workstation waits for the morning.
-            if (!(isSleepTime() && bedPos != null)) {
+            // At night a colonist with a bed - or, lacking one, a bunk - goes to it; the walk back to the workstation waits
+            // for the morning.
+            if (!(isSleepTime() && (bedPos != null || getBunkPos() != null))) {
                 tickReturnToWorkstation(serverLevel);
             }
         }
@@ -355,6 +356,12 @@ public class ColonistEntity extends AbstractHuman implements Merchant {
 
     public @Nullable BlockPos getBedPos() {
         return bedPos;
+    }
+
+    /** [stated] Oct 31 - a colonist sleeps in a real bed when it has one, and in a free bunk only when it does not. */
+    @Override
+    public boolean wantsBunk() {
+        return bedPos == null;
     }
 
     /** Night, in a dimension where beds work (never in the Nether or the End, where a bed is a bomb). */

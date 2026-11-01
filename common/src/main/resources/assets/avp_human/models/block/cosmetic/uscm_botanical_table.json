@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/botanical_table",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_botanical_table",
+    "particle": "avp_human:block/cosmetic/uscm_botanical_table"
+  }
+}

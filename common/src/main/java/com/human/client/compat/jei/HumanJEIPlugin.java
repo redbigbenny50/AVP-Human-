@@ -47,6 +47,7 @@ public class HumanJEIPlugin implements IModPlugin {
             new HumanMachineCategories.Freezing(gui, bucket),
             new HumanMachineCategories.Hydrating(gui, bucket),
             new HumanMachineCategories.Fabricating(gui, bucket),
+            new HumanMachineCategories.CosmeticCrafting(gui, bucket),
             new HumanMachineCategories.Vaporizing(gui, bucket)
         );
 
@@ -80,6 +81,7 @@ public class HumanJEIPlugin implements IModPlugin {
             HumanMachineCategories.FABRICATING,
             values(recipeManager, com.human.common.registry.init.HumanFabrication.FABRICATING_TYPE.get())
         );
+        registration.addRecipes(HumanMachineCategories.COSMETIC_CRAFTING, com.human.common.gameplay.cosmetic.CosmeticCatalog.entries());
         registration.addRecipes(HumanMachineCategories.VAPORIZING, com.human.client.compat.VaporizingRecipe.all());
         registration.addRecipes(BlueprintSourceCategory.TYPE, com.human.client.compat.BlueprintSources.all());
         registration.addRecipes(BlueprintTableCategory.TYPE, com.human.client.compat.BlueprintTableRecipe.all());
@@ -121,6 +123,16 @@ public class HumanJEIPlugin implements IModPlugin {
             )
         ) {
             registration.addRecipeCatalyst(new ItemStack(fabricator), HumanMachineCategories.FABRICATING);
+        }
+
+        for (
+            var crafter : java.util.List.of(
+                com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER.get(),
+                com.human.common.registry.init.HumanCosmetics.WY_COSMETIC_CRAFTER.get(),
+                com.human.common.registry.init.HumanCosmetics.USCM_COSMETIC_CRAFTER.get()
+            )
+        ) {
+            registration.addRecipeCatalyst(new ItemStack(crafter), HumanMachineCategories.COSMETIC_CRAFTING);
         }
 
         registration.addRecipeCatalyst(com.human.client.compat.BlueprintTableRecipe.table(), BlueprintTableCategory.TYPE);

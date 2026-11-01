@@ -62,6 +62,13 @@ public final class HumanMachineCategories {
         FabricatingRecipe.class
     );
 
+    /** [stated] Oct 31 - the Cosmetic Crafter's catalogue: one page per design in each style. */
+    public static final RecipeType<com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry> COSMETIC_CRAFTING = RecipeType.create(
+        "avp_human",
+        "cosmetic_crafting",
+        com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry.class
+    );
+
     public static final RecipeType<VaporizingRecipe> VAPORIZING = RecipeType.create(
         "avp_human",
         "vaporizing",
@@ -317,6 +324,52 @@ public final class HumanMachineCategories {
             var level = net.minecraft.client.Minecraft.getInstance().level;
             var result = level == null ? ItemStack.EMPTY : recipe.getResultItem(level.registryAccess());
             builder.addOutputSlot(96, 19).setOutputSlotBackground().addItemStack(result);
+        }
+    }
+
+    /**
+     * Cosmetic Crafter: the raw materials (3 per row), then the piece. A faction style's page names the license it
+     * needs, since the crafter refuses that style without it.
+     */
+    public static final class CosmeticCrafting extends Machine<com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry> {
+
+        public CosmeticCrafting(IGuiHelper gui, long bucketVolume) {
+            super(gui, bucketVolume, COSMETIC_CRAFTING, com.human.common.registry.init.HumanCosmetics.COSMETIC_CRAFTER.get(), 116, 54);
+        }
+
+        @Override
+        int time(com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry recipe) {
+            return com.human.common.gameplay.cosmetic.CosmeticCrafterBlockEntity.CRAFT_TICKS;
+        }
+
+        @Override
+        int arrowX() {
+            return 60;
+        }
+
+        @Override
+        public void setRecipe(
+            IRecipeLayoutBuilder builder,
+            com.human.common.gameplay.cosmetic.CosmeticCatalog.Entry recipe,
+            @NotNull IFocusGroup focuses
+        ) {
+            var parts = recipe.parts();
+            for (int i = 0; i < parts.size() && i < 9; i++) {
+                var part = parts.get(i);
+                builder.addInputSlot(1 + (i % 3) * SLOT, 1 + (i / 3) * SLOT)
+                    .setStandardSlotBackground()
+                    .addItemStacks(counted(part.ingredient(), part.count()));
+            }
+            var output = builder.addOutputSlot(96, 19).setOutputSlotBackground().addItemStack(recipe.resultStack());
+            var faction = recipe.style().faction();
+            if (faction != null) {
+                output.addRichTooltipCallback(
+                    (view, tooltip) -> tooltip.add(
+                        Component.translatable("gui.avp_human.cosmetic_crafter.needs_license", Component.translatable(recipe.style().translationKey()))
+                            .withStyle(ChatFormatting.GOLD)
+                    )
+                );
+            }
         }
     }
 

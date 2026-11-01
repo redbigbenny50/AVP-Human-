@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/limb_fabricator_particle"
+    }
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 128,
+        "texture_height": 128,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          1.0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gBody",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                0,
+                -5
+              ],
+              "size": [
+                14,
+                32,
+                12
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gDoor",
+          "pivot": [
+            6,
+            1,
+            -5
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                1,
+                -6
+              ],
+              "size": [
+                12,
+                30,
+                1
+              ],
+              "uv": [
+                52,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                18,
+                -7
+              ],
+              "size": [
+                8,
+                8,
+                1
+              ],
+              "uv": [
+                78,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                12,
+                -7
+              ],
+              "size": [
+                1,
+                6,
+                1
+              ],
+              "uv": [
+                96,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gIndicator",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                1,
+                27,
+                -7
+              ],
+              "size": [
+                3,
+                1,
+                1
+              ],
+              "uv": [
+                26,
+                44
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gUscmArmor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root"
+        },
+        {
+          "name": "gWyTrimDoor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "gDoor",
+          "cubes": [
+            {
+              "origin": [
+                -4,
+                16,
+                -7
+              ],
+              "size": [
+                10,
+                1,
+                1
+              ],
+              "uv": [
+                34,
+                44
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmArmorDoor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "gDoor",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                1,
+                -7
+              ],
+              "size": [
+                12,
+                2,
+                1
+              ],
+              "uv": [
+                0,
+                44
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStarDoor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "gDoor",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                7,
+                -7
+              ],
+              "size": [
+                4,
+                4,
+                1
+              ],
+              "uv": [
+                100,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

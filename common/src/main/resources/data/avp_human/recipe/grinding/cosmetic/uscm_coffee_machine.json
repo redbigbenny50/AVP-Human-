@@ -1,0 +1,45 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:uscm_coffee_machine"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 2
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:industrial_glass",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:paper",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:redstone",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:composite_ingot",
+        "count": 2
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:green_dye",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

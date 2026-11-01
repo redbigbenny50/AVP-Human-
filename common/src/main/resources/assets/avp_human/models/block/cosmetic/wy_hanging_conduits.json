@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/hanging_conduits",
+  "textures": {
+    "0": "avp_human:block/cosmetic/wy_hanging_conduits",
+    "particle": "avp_human:block/cosmetic/wy_hanging_conduits"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/petri_dishes",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_petri_dishes",
+    "particle": "avp_human:block/cosmetic/uscm_petri_dishes"
+  }
+}

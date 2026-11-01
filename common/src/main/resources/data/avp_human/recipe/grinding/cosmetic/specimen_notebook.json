@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:specimen_notebook"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:paper",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

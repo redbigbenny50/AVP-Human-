@@ -1,0 +1,7 @@
+{
+  "parent": "avp_human:block/cosmetic/pipe_cluster",
+  "textures": {
+    "0": "avp_human:block/cosmetic/uscm_pipe_cluster",
+    "particle": "avp_human:block/cosmetic/uscm_pipe_cluster"
+  }
+}

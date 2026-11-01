@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "avp_human:block/cosmetic/isolation_chamber_particle"
+    }
+  }
+}

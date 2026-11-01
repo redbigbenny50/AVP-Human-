@@ -1,0 +1,21 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:paperwork_stack"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:paper",
+        "count": 2
+      }
+    }
+  ],
+  "time": 200
+}

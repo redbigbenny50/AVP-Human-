@@ -1,0 +1,169 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.46875,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gPanel",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                1,
+                6
+              ],
+              "size": [
+                14,
+                14,
+                2
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                2,
+                5
+              ],
+              "size": [
+                12,
+                12,
+                1
+              ],
+              "uv": [
+                32,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gHinge",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                6,
+                3,
+                5
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                18,
+                16
+              ]
+            },
+            {
+              "origin": [
+                6,
+                11,
+                5
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                22,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gLock",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -5,
+                7,
+                4
+              ],
+              "size": [
+                2,
+                2,
+                1
+              ],
+              "uv": [
+                26,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmStencil",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                2,
+                4
+              ],
+              "size": [
+                8,
+                3,
+                1
+              ],
+              "uv": [
+                0,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -86,6 +86,10 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
         // uses the copper door type, which can be. Iron-type doors that need redstone stay shut, as for villagers.
         this.goalSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.OpenDoorGoal(this, true));
 
+        // [stated] Oct 31 - colonists, marines and W-Y troops sleep in free bunks at night. Here for the same reason as
+        // the door goal: every human type gets it, whatever else drives it.
+        this.goalSelector.addGoal(3, new BunkSleepGoal(this));
+
         setPathfindingMalus(PathType.WATER, DEFAULT_WATER_MALUS);
         getNavigation().setCanFloat(true);
         this.humanFeatureManager = new HumanFeatureManager(this);
@@ -122,6 +126,105 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
 
         if (!level().isClientSide()) {
             ticksUntilBored.set(Math.max(ticksUntilBored.get() - 1, 0));
+
+            if (level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                tickBunkClaim(serverLevel);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Bunks - [stated] Oct 31: colonists, marines and W-Y troops sleep in free bunks at night
+    // ------------------------------------------------------------------------------------------------------------
+
+    /** Night runs from here to the end of the day, as for colonists. */
+    private static final long BUNK_TIME_FROM = 12000L;
+
+    /** The bunk sleeping block this human has claimed, or null. Saved. */
+    private @org.jetbrains.annotations.Nullable net.minecraft.core.BlockPos bunkPos;
+
+    private int bunkScanCooldown;
+
+    /** True while the bunk goal runs - a GOAP human pauses its agent then (see isBunking). */
+    private boolean bunking;
+
+    /** Woken by danger: no new attempt to sleep before this game time. */
+    private long bunkWakeUntil;
+
+    public @org.jetbrains.annotations.Nullable net.minecraft.core.BlockPos getBunkPos() {
+        return bunkPos;
+    }
+
+    /** Heading to a bunk or asleep in one - a GOAP human pauses its agent meanwhile, so the two never fight. */
+    public boolean isBunking() {
+        return bunking;
+    }
+
+    void setBunking(boolean bunking) {
+        this.bunking = bunking;
+    }
+
+    long bunkWakeUntil() {
+        return bunkWakeUntil;
+    }
+
+    /** Woken by danger: gets up and waits a while before trying to sleep again. */
+    void wakeFromBunk() {
+        bunkWakeUntil = level().getGameTime() + BunkSleepGoal.WAKE_COOLDOWN_TICKS;
+
+        if (isSleeping()) {
+            stopSleeping();
+        }
+    }
+
+    /** Night, in a dimension where beds work (never the Nether or the End). */
+    public boolean isBunkTime() {
+        if (!level().dimensionType().bedWorks()) {
+            return false;
+        }
+
+        return level().getDayTime() % 24000L >= BUNK_TIME_FROM;
+    }
+
+    /** Whether this human wants a bunk at all. A colonist with a real bed does not. */
+    public boolean wantsBunk() {
+        return true;
+    }
+
+    /** Whether this human may go to bed right now: nothing to fight, not hurt in the last ten seconds. */
+    public boolean mayUseBunkNow() {
+        return getTarget() == null && tickCount - getLastHurtByMobTimestamp() > 200;
+    }
+
+    /** Claims the nearest free bunk when this human wants one; drops a claim on a bunk that is gone. */
+    private void tickBunkClaim(net.minecraft.server.level.ServerLevel level) {
+        if (--bunkScanCooldown > 0) {
+            return;
+        }
+
+        bunkScanCooldown = 100 + getRandom().nextInt(100);
+
+        if (bunkPos != null) {
+            var gone = level.isLoaded(bunkPos) && !com.human.common.gameplay.cosmetic.CosmeticBunks.isBunkBed(level, bunkPos);
+
+            if (gone || !wantsBunk()) {
+                bunkPos = null;
+            }
+
+            return;
+        }
+
+        if (wantsBunk()) {
+            bunkPos = com.human.common.gameplay.cosmetic.CosmeticBunks.findFree(level, blockPosition(), this);
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+
+        if (bunkPos != null) {
+            compound.put("CosmeticBunk", net.minecraft.nbt.NbtUtils.writeBlockPos(bunkPos));
         }
     }
 
@@ -185,6 +288,7 @@ public abstract class AbstractHuman extends PathfinderMob implements DataUser {
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         resetTicksUntilBored();
+        bunkPos = net.minecraft.nbt.NbtUtils.readBlockPos(compound, "CosmeticBunk").orElse(null);
     }
 
     public HumanFeatureManager getHumanFeatureManager() {

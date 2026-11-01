@@ -1,0 +1,217 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.46875,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gHousing",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                1,
+                4
+              ],
+              "size": [
+                14,
+                14,
+                4
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gFan",
+          "pivot": [
+            0,
+            8,
+            3
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                7,
+                3
+              ],
+              "size": [
+                2,
+                2,
+                1
+              ],
+              "uv": [
+                18,
+                18
+              ]
+            },
+            {
+              "origin": [
+                1,
+                7,
+                3
+              ],
+              "size": [
+                4,
+                2,
+                1
+              ],
+              "uv": [
+                24,
+                18
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                7,
+                3
+              ],
+              "size": [
+                4,
+                2,
+                1
+              ],
+              "uv": [
+                34,
+                18
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                3,
+                3
+              ],
+              "size": [
+                2,
+                4,
+                1
+              ],
+              "uv": [
+                6,
+                18
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                9,
+                3
+              ],
+              "size": [
+                2,
+                4,
+                1
+              ],
+              "uv": [
+                12,
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyGrille",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                2,
+                2
+              ],
+              "size": [
+                12,
+                12,
+                1
+              ],
+              "uv": [
+                36,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmCage",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                7,
+                2
+              ],
+              "size": [
+                14,
+                2,
+                1
+              ],
+              "uv": [
+                0,
+                25
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                1,
+                2
+              ],
+              "size": [
+                2,
+                6,
+                1
+              ],
+              "uv": [
+                0,
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

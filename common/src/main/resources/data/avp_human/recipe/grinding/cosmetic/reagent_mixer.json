@@ -1,0 +1,33 @@
+{
+  "type": "avp_human:grinding",
+  "ingredient": {
+    "item": "avp_human:reagent_mixer"
+  },
+  "results": [
+    {
+      "result": {
+        "id": "avp_human:steel_ingot",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "avp_human:industrial_glass",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:paper",
+        "count": 1
+      }
+    },
+    {
+      "result": {
+        "id": "minecraft:redstone",
+        "count": 1
+      }
+    }
+  ],
+  "time": 200
+}

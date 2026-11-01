@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "avp_human:tool_rack",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "cell": "0"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "avp_human:tool_rack"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

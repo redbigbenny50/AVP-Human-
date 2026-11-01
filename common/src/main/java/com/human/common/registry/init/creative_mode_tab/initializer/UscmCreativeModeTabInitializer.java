@@ -31,6 +31,7 @@ public class UscmCreativeModeTabInitializer {
 
         // Machines
         CreativeModeTabUtil.accept(output, HumanFabrication.USCM_FABRICATOR);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanCosmetics.USCM_COSMETIC_CRAFTER);
         CreativeModeTabUtil.accept(output, HumanFabrication.USCM_DRIVE_BAY);
         CreativeModeTabUtil.accept(output, HumanBlocks.USCM_CRYOTUBE_CONTROLLER);
         CreativeModeTabUtil.accept(output, HumanVaporizer.USCM_VAPORIZER);
@@ -44,5 +45,9 @@ public class UscmCreativeModeTabInitializer {
                 CreativeModeTabUtil.accept(output, item);
             }
         });
+
+        // [stated] Oct 31 - cosmetic furniture, this faction's editions.
+        com.human.common.registry.init.HumanCosmetics.decorItems(com.human.common.gameplay.cosmetic.CosmeticStyle.USCM)
+            .forEach(item -> CreativeModeTabUtil.accept(output, item));
     };
 }

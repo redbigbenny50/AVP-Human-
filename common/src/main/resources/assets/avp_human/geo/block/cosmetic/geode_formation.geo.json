@@ -1,0 +1,501 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 2,
+        "visible_bounds_offset": [
+          0,
+          0.375,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gShell",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -5
+              ],
+              "size": [
+                12,
+                2,
+                11
+              ],
+              "uv": [
+                0,
+                16
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                2,
+                4
+              ],
+              "size": [
+                12,
+                9,
+                2
+              ],
+              "uv": [
+                0,
+                29
+              ]
+            },
+            {
+              "origin": [
+                4,
+                2,
+                -5
+              ],
+              "size": [
+                2,
+                7,
+                9
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                2,
+                -5
+              ],
+              "size": [
+                2,
+                7,
+                9
+              ],
+              "uv": [
+                22,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                9,
+                -3
+              ],
+              "size": [
+                8,
+                2,
+                7
+              ],
+              "uv": [
+                28,
+                29
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyTrim",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                0,
+                -6
+              ],
+              "size": [
+                12,
+                1,
+                1
+              ],
+              "uv": [
+                28,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmArmor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -6,
+                11,
+                4
+              ],
+              "size": [
+                12,
+                1,
+                2
+              ],
+              "uv": [
+                0,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppStar",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -2,
+                11,
+                0
+              ],
+              "size": [
+                4,
+                1,
+                3
+              ],
+              "uv": [
+                0,
+                46
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gContentsCrystalPurple",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                0,
+                2,
+                -1
+              ],
+              "size": [
+                2,
+                4,
+                2
+              ],
+              "uv": [
+                0,
+                40
+              ]
+            },
+            {
+              "origin": [
+                0,
+                6,
+                -1
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                14,
+                46
+              ]
+            },
+            {
+              "origin": [
+                -2,
+                2,
+                -2
+              ],
+              "size": [
+                2,
+                2,
+                2
+              ],
+              "uv": [
+                32,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                4,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                18,
+                46
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gContentsCrystalBlue",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                0,
+                2,
+                -1
+              ],
+              "size": [
+                2,
+                4,
+                2
+              ],
+              "uv": [
+                8,
+                40
+              ]
+            },
+            {
+              "origin": [
+                0,
+                6,
+                -1
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                22,
+                46
+              ]
+            },
+            {
+              "origin": [
+                -2,
+                2,
+                -2
+              ],
+              "size": [
+                2,
+                2,
+                2
+              ],
+              "uv": [
+                40,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                4,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                26,
+                46
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gContentsCrystalGreen",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                0,
+                2,
+                -1
+              ],
+              "size": [
+                2,
+                4,
+                2
+              ],
+              "uv": [
+                16,
+                40
+              ]
+            },
+            {
+              "origin": [
+                0,
+                6,
+                -1
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                30,
+                46
+              ]
+            },
+            {
+              "origin": [
+                -2,
+                2,
+                -2
+              ],
+              "size": [
+                2,
+                2,
+                2
+              ],
+              "uv": [
+                48,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                4,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                34,
+                46
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gContentsCrystalRed",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                0,
+                2,
+                -1
+              ],
+              "size": [
+                2,
+                4,
+                2
+              ],
+              "uv": [
+                24,
+                40
+              ]
+            },
+            {
+              "origin": [
+                0,
+                6,
+                -1
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                38,
+                46
+              ]
+            },
+            {
+              "origin": [
+                -2,
+                2,
+                -2
+              ],
+              "size": [
+                2,
+                2,
+                2
+              ],
+              "uv": [
+                56,
+                40
+              ]
+            },
+            {
+              "origin": [
+                -1,
+                4,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                1
+              ],
+              "uv": [
+                42,
+                46
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

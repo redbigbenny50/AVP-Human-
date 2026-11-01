@@ -1,0 +1,324 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unknown",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 3,
+        "visible_bounds_offset": [
+          0,
+          0.71875,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "gTray",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                5,
+                0,
+                -5
+              ],
+              "size": [
+                2,
+                5,
+                10
+              ],
+              "uv": [
+                0,
+                16
+              ]
+            },
+            {
+              "origin": [
+                -7,
+                0,
+                -5
+              ],
+              "size": [
+                2,
+                5,
+                10
+              ],
+              "uv": [
+                24,
+                16
+              ]
+            },
+            {
+              "origin": [
+                -7,
+                5,
+                -6
+              ],
+              "size": [
+                14,
+                4,
+                12
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                9,
+                -5
+              ],
+              "size": [
+                12,
+                1,
+                10
+              ],
+              "uv": [
+                0,
+                31
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gPlants",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                2,
+                10,
+                -1
+              ],
+              "size": [
+                1,
+                5,
+                1
+              ],
+              "uv": [
+                30,
+                42
+              ]
+            },
+            {
+              "origin": [
+                0,
+                14,
+                -2
+              ],
+              "size": [
+                5,
+                2,
+                3
+              ],
+              "uv": [
+                36,
+                50
+              ]
+            },
+            {
+              "origin": [
+                1,
+                16,
+                -3
+              ],
+              "size": [
+                3,
+                1,
+                5
+              ],
+              "uv": [
+                34,
+                42
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                10,
+                1
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                52,
+                50
+              ]
+            },
+            {
+              "origin": [
+                -6,
+                13,
+                0
+              ],
+              "size": [
+                5,
+                2,
+                3
+              ],
+              "uv": [
+                0,
+                56
+              ]
+            },
+            {
+              "origin": [
+                -5,
+                15,
+                -1
+              ],
+              "size": [
+                3,
+                1,
+                5
+              ],
+              "uv": [
+                0,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gWyLight",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -1,
+                10,
+                4
+              ],
+              "size": [
+                2,
+                12,
+                1
+              ],
+              "uv": [
+                48,
+                16
+              ]
+            },
+            {
+              "origin": [
+                -4,
+                22,
+                -2
+              ],
+              "size": [
+                8,
+                1,
+                7
+              ],
+              "uv": [
+                0,
+                42
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUscmHandles",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                7,
+                6,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                4
+              ],
+              "uv": [
+                16,
+                50
+              ]
+            },
+            {
+              "origin": [
+                -8,
+                6,
+                -2
+              ],
+              "size": [
+                1,
+                2,
+                4
+              ],
+              "uv": [
+                26,
+                50
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gUppBand",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "parent": "root",
+          "cubes": [
+            {
+              "origin": [
+                -7,
+                8,
+                -7
+              ],
+              "size": [
+                14,
+                1,
+                1
+              ],
+              "uv": [
+                16,
+                56
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

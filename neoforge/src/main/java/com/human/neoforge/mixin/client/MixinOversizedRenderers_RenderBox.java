@@ -40,7 +40,11 @@ import org.spongepowered.asm.mixin.Mixin;
         FluidTankRenderer.class,
         CryotankRenderer.class,
         HydroelectricGeneratorRenderer.class,
-        VaporizerRenderer.class
+        VaporizerRenderer.class,
+        // Cosmetic Crafter (3x2x2) and the big cosmetic pieces - without these Embeddium culls them by their one core
+        // block, the same blink the quarry had.
+        com.human.client.render.block.CosmeticCrafterRenderer.class,
+        com.human.client.render.block.CosmeticDecorRenderer.class
     }
 )
 public abstract class MixinOversizedRenderers_RenderBox {

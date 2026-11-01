@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "avp_human:white_plastic"
+    },
+    "D": {
+      "item": "avp_human:desk_terminal"
+    },
+    "S": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "C": {
+      "item": "minecraft:crafter"
+    }
+  },
+  "pattern": [
+    "PDP",
+    "SMS",
+    "SCS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:cosmetic_crafter"
+  }
+}
