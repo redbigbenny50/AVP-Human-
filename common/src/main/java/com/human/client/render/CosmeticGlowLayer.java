@@ -38,9 +38,17 @@ public class CosmeticGlowLayer<K, T> extends AzAutoGlowingLayer<K, T> {
         }
     }
 
-    /** Whether the glowmask BLib would use for {@code texture} is there and lights at least one pixel. */
+    /**
+     * Whether the glowmask BLib would use for {@code texture} is there and lights at least one pixel.
+     * <p>
+     * ⚠ Nov 1 (second crash): the glowmask's NAME comes from {@code appendToPath}, which only builds the name. The
+     * first version asked {@code AzAbstractTexture.getEmissiveResource} for it, which also REGISTERS AND LOADS the glow
+     * texture - so this check loaded the empty glowmask it was meant to keep BLib away from, and crashed the same way.
+     * Nothing here may load the texture; only BLib's own layer does, and only after this says the glowmask is usable.
+     * </p>
+     */
     public static boolean hasGlow(ResourceLocation texture) {
-        return USABLE.computeIfAbsent(AzAbstractTexture.getEmissiveResource(texture), CosmeticGlowLayer::check);
+        return USABLE.computeIfAbsent(AzAbstractTexture.appendToPath(texture, "_glowmask"), CosmeticGlowLayer::check);
     }
 
     private static boolean check(ResourceLocation glowmask) {
