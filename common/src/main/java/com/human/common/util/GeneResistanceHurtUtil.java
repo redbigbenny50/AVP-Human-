@@ -20,15 +20,32 @@ public class GeneResistanceHurtUtil {
     ) {
         var geneContainer = geneCarrier.getOrCreateGeneManager().getGeneContainer();
 
-        if (AVPAlien.MOD.isLoaded()) {
-            if (damageSource.is(AlienDamageTypeKeys.ACID)) {
-                return applyGeneResistanceToDamage(geneContainer, Genes.ACID_RESISTANCE, damage);
-            }
+        var isAcid = damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.ACID_VAPOR)
+            || (AVPAlien.MOD.isLoaded() && damageSource.is(AlienDamageTypeKeys.ACID));
+
+        if (isAcid) {
+            // Corrosive Damage: the ATTACKER's acid hits harder (+100% at the cap). Applied before the target's own
+            // acid resistance, so a resistant target still cuts the boosted hit.
+            var corrosive = GeneValues.get(damageSource.getEntity(), Genes.CORROSIVE_DAMAGE);
+            var boosted = corrosive > 0 ? (float) (damage * (1.0 + corrosive)) : damage;
+
+            // [stated] Oct 19 - the vapors are acid too: acidium and nether acidium vapor.
+            return applyGeneResistanceToDamage(geneContainer, Genes.ACID_RESISTANCE, boosted);
         }
 
-        // [stated] Oct 19 - the vapors are acid too: acidium and nether acidium vapor.
-        if (damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.ACID_VAPOR)) {
-            return applyGeneResistanceToDamage(geneContainer, Genes.ACID_RESISTANCE, damage);
+        // Radiation Resistance: avp_human radiation and avp_alien radiation sickness. 100% = immune.
+        if (
+            damageSource.is(com.human.common.registry.key.HumanDamageTypeKeys.RADIATION)
+                || (AVPAlien.MOD.isLoaded() && damageSource.is(AlienDamageTypeKeys.RADIATION_SICKNESS))
+        ) {
+            return applyGeneResistanceToDamage(geneContainer, Genes.RADIATION_RESISTANCE, damage);
+        }
+
+        // Toxin Resistance: wither, and the poison effect's tick (vanilla deals it as plain MAGIC with no attacker, so
+        // it
+        // is recognised by the victim actually being poisoned). 100% = immune.
+        if (damageSource.is(DamageTypes.WITHER) || isPoisonTick(geneCarrier, damageSource)) {
+            return applyGeneResistanceToDamage(geneContainer, Genes.TOXIN_RESISTANCE, damage);
         }
 
         if (damageSource.is(DamageTypeTags.IS_FIRE)) {
@@ -48,6 +65,13 @@ public class GeneResistanceHurtUtil {
         }
 
         return damage;
+    }
+
+    private static boolean isPoisonTick(GeneCarrier geneCarrier, DamageSource damageSource) {
+        return damageSource.is(DamageTypes.MAGIC)
+            && damageSource.getEntity() == null
+            && geneCarrier instanceof net.minecraft.world.entity.LivingEntity living
+            && living.hasEffect(net.minecraft.world.effect.MobEffects.POISON);
     }
 
     private static float applyGeneResistanceToDamage(

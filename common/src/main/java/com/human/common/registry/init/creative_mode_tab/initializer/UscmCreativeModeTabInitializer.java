@@ -26,6 +26,8 @@ public class UscmCreativeModeTabInitializer {
 
         // The base building set, in its build order: walls, lights, floors, ceiling, structure, lockers, window.
         HumanUscmBlocks.ALL.forEach(block -> CreativeModeTabUtil.accept(output, block));
+        // [stated] Oct 30: their slabs, stairs and walls, after the full blocks.
+        HumanUscmBlocks.SHAPES.forEach(shape -> CreativeModeTabUtil.accept(output, shape.block()));
 
         // Machines
         CreativeModeTabUtil.accept(output, HumanFabrication.USCM_FABRICATOR);

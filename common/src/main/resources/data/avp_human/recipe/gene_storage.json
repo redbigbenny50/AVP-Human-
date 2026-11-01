@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "T": {
+      "item": "avp_human:empty_gene_tube"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "I": {
+      "item": "minecraft:packed_ice"
+    }
+  },
+  "pattern": [
+    "SGS",
+    "TMT",
+    "SIS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:gene_storage"
+  }
+}

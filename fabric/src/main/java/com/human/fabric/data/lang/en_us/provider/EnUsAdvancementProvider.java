@@ -57,6 +57,13 @@ public class EnUsAdvancementProvider {
 
         addAdvancement(
             builder,
+            HumanAdvancements.SELF_MILKER,
+            "Self Milker",
+            "Carry the Milkable gene and fill a bucket from yourself"
+        );
+
+        addAdvancement(
+            builder,
             HumanAdvancements.SMELT_BRASS,
             "Brass Ring",
             "Smelt raw brass in a furnace"

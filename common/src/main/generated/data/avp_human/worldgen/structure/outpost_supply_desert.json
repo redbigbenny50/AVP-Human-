@@ -1,6 +1,6 @@
 {
   "type": "avp_human:outpost_supply_desert",
-  "biomes": "minecraft:desert",
+  "biomes": "#avp_human:has_outpost_supply_desert",
   "spawn_overrides": {},
   "start_pool": "avp_human:outpost_supply_desert",
   "step": "surface_structures",

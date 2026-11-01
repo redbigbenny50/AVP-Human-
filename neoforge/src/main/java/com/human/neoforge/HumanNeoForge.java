@@ -78,7 +78,9 @@ public class HumanNeoForge {
         // [stated] Sep 30: the battery pack and nuclear battery as energy items.
         modBus.addListener(com.human.neoforge.power.NeoForgeBatteryEnergy::register);
 
-        // Oct 24 - the M42A3 blueprint in ocean ruin chests and trail ruin suspicious gravel (HumanNeoForgeLoot).
+        // Oct 25 - the F903WE blueprint in ocean ruin chests and trail ruin suspicious gravel, and the M42A3 in
+        // pillager
+        // outpost chests (HumanVanillaLoot, applied by HumanNeoForgeLoot).
         com.human.neoforge.loot.HumanNeoForgeLoot.register();
         modBus.addListener(com.human.neoforge.power.NeoForgeCableEnergy::register);
         // Storage crates as item handlers, for hoppers and other mods.

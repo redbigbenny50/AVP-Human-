@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TTT",
+    "PCS",
+    "III"
+  ],
+  "key": {
+    "T": {
+      "item": "avp_human:empty_gene_tube"
+    },
+    "P": {
+      "item": "minecraft:spyglass"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "S": {
+      "item": "avp_human:syringe"
+    },
+    "I": {
+      "item": "avp_human:steel_ingot"
+    }
+  },
+  "result": {
+    "id": "avp_human:geneticist_station",
+    "count": 1
+  }
+}

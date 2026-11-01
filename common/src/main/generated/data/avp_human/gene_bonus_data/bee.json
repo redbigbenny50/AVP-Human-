@@ -1,0 +1,30 @@
+{
+  "entityTypePredicate": "minecraft:bee",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:lightweight",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:toxin_resistance",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    },
+    {
+      "id": "avp_human:poison",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.049999999999999996
+    },
+    {
+      "id": "avp_human:poisonous_barbs",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.049999999999999996
+    },
+    {
+      "id": "avp_human:honey",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

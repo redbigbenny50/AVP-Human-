@@ -1,0 +1,50 @@
+{
+  "entityTypePredicate": "minecraft:fox",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
+    },
+    {
+      "id": "avp_human:jump_height",
+      "operation": "ADDITIVE",
+      "value": 0.009375
+    },
+    {
+      "id": "avp_human:sneak_speed",
+      "operation": "ADDITIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:stealth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.05
+    },
+    {
+      "id": "avp_human:forager",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:intelligence",
+      "operation": "ADDITIVE",
+      "value": 6.25
+    }
+  ]
+}

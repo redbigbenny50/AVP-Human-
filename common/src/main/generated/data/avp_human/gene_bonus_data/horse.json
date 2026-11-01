@@ -2,9 +2,24 @@
   "entityTypePredicate": "minecraft:horse",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:move_speed",
+      "id": "avp_human:max_health",
       "operation": "ADDITIVE",
-      "value": 0.025
+      "value": 1.25
+    },
+    {
+      "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.05
+    },
+    {
+      "id": "avp_human:step_height",
+      "operation": "ADDITIVE",
+      "value": 0.08333333333333333
+    },
+    {
+      "id": "avp_human:jump_height",
+      "operation": "ADDITIVE",
+      "value": 0.01875
     }
   ]
 }

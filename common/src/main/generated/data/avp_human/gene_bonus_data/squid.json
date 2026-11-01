@@ -1,0 +1,20 @@
+{
+  "entityTypePredicate": "minecraft:squid",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:swim_speed",
+      "operation": "ADDITIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:air_capacity",
+      "operation": "ADDITIVE",
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:ink",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

@@ -38,6 +38,16 @@ public final class GeneImmunity {
         return full(entity, Genes.ACID_RESISTANCE);
     }
 
+    /** Never takes radiation or radiation sickness. */
+    public static boolean radiationImmune(Entity entity) {
+        return full(entity, Genes.RADIATION_RESISTANCE);
+    }
+
+    /** Never poisoned or withered. */
+    public static boolean toxinImmune(Entity entity) {
+        return full(entity, Genes.TOXIN_RESISTANCE);
+    }
+
     private static boolean full(Entity entity, Gene gene) {
         if (!(entity instanceof GeneCarrier carrier)) {
             return false;

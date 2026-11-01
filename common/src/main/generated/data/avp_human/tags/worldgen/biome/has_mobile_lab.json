@@ -1,10 +1,32 @@
 {
   "values": [
     "minecraft:badlands",
-    "minecraft:cherry_grove",
     "minecraft:desert",
+    "minecraft:cherry_grove",
+    "minecraft:eroded_badlands",
+    "minecraft:plains",
     "minecraft:savanna",
-    "minecraft:stony_shore",
-    "minecraft:snowy_plains"
+    "minecraft:snowy_plains",
+    "minecraft:windswept_savanna",
+    {
+      "id": "#c:is_badlands",
+      "required": false
+    },
+    {
+      "id": "#c:is_desert",
+      "required": false
+    },
+    {
+      "id": "#c:is_plains",
+      "required": false
+    },
+    {
+      "id": "#c:is_snowy_plains",
+      "required": false
+    },
+    {
+      "id": "#c:is_savanna",
+      "required": false
+    }
   ]
 }

@@ -76,9 +76,13 @@ dependencies {
     modImplementation("com.blib:blib-fabric-${minecraft_version}:${project.blib_version}")
 
     // Team Reborn Energy - the de-facto FE/RF standard on Fabric (Tech Reborn, Modern Industrialization, Oritech).
-    // ⚠ NOT bundled: every tech mod that speaks energy already ships or requires it, and two copies on the classpath
-    // would be worse than none. 4.1.x is the 1.21.1 line - 5.x targets a later snapshot and will NOT load here.
+    // 4.1.x is the 1.21.1 line - 5.x targets a later snapshot and will NOT load here.
+    // ⚠ Oct 25 - NOW BUNDLED (include). fabric.mod.json REQUIRES it, and a player without a tech mod got
+    // "avp_human requires team_reborn_energy, which is missing" and could not start. Bundling cannot make two copies:
+    // Fabric Loader keeps ONE copy per mod id across all nested jars (the newest), so when Tech Reborn or another mod
+    // ships it too, only one loads.
     modImplementation "teamreborn:energy:${project.team_reborn_energy_version}"
+    include "teamreborn:energy:${project.team_reborn_energy_version}"
 
     // ⚠ BUNDLED, NOT JUST COMPILED AGAINST. `include` is what puts these inside the shipped jar; dropping it would
     // leave avp_human loading against classes only BLib happens to carry.

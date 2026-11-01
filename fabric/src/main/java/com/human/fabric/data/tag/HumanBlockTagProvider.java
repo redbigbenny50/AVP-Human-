@@ -280,6 +280,19 @@ public class HumanBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         com.human.common.registry.init.block.HumanUscmBlocks.ALL.forEach(block -> storagePickaxe.add(block.get()));
         // [stated] Oct 20 - the W-Y building set mines with a pickaxe.
         com.human.common.registry.init.block.HumanWyBlocks.ALL.forEach(block -> storagePickaxe.add(block.get()));
+        // [stated] Oct 30 - the W-Y and USCM slabs, stairs and walls: pickaxe, and the vanilla shape tags (a wall only
+        // connects to blocks in #minecraft:walls).
+        java.util.stream.Stream.concat(
+            com.human.common.registry.init.block.HumanWyBlocks.SHAPES.stream(),
+            com.human.common.registry.init.block.HumanUscmBlocks.SHAPES.stream()
+        ).forEach(shape -> {
+            storagePickaxe.add(shape.block().get());
+            getOrCreateTagBuilder(switch (shape.kind()) {
+                case SLAB -> BlockTags.SLABS;
+                case STAIRS -> BlockTags.STAIRS;
+                case WALL -> BlockTags.WALLS;
+            }).add(shape.block().get());
+        });
 
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
             .addTag(HumanBlockTags.CONCRETE)

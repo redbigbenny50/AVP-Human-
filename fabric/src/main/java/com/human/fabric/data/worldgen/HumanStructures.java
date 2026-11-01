@@ -9,20 +9,18 @@ import com.human.common.gameplay.worldgen.structure.HumanSupplyOutpostDesertStru
 import com.human.common.gameplay.worldgen.structure.HumanSupplyOutpostStructure;
 import com.human.common.registry.key.HumanStructureKeys;
 import com.human.common.registry.key.HumanStructureTemplatePoolKeys;
+import com.human.common.registry.tag.HumanBiomeTags;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -37,7 +35,7 @@ public class HumanStructures {
             HumanStructureKeys.SUPPLY_OUTPOST_BADLANDS,
             createHumanSupplyOutpostStructure(
                 registry,
-                List.of(Biomes.BADLANDS, Biomes.WOODED_BADLANDS),
+                HumanBiomeTags.HAS_OUTPOST_SUPPLY_BADLAND,
                 HumanStructureTemplatePoolKeys.SUPPLY_OUTPOST_BADLANDS,
                 HumanSupplyOutpostBadlandsStructure::new
             )
@@ -46,7 +44,7 @@ public class HumanStructures {
             HumanStructureKeys.SUPPLY_OUTPOST_DESERT,
             createHumanSupplyOutpostStructure(
                 registry,
-                List.of(Biomes.DESERT),
+                HumanBiomeTags.HAS_OUTPOST_SUPPLY_DESERT,
                 HumanStructureTemplatePoolKeys.SUPPLY_OUTPOST_DESERT,
                 HumanSupplyOutpostDesertStructure::new
             )
@@ -59,12 +57,7 @@ public class HumanStructures {
         var biomeLookup = registry.lookup(Registries.BIOME);
         var templatePoolLookup = registry.lookup(Registries.TEMPLATE_POOL);
 
-        var biomes = HolderSet.direct(
-            List.of(
-                biomeLookup.getOrThrow(Biomes.MEADOW),
-                biomeLookup.getOrThrow(Biomes.SAVANNA_PLATEAU)
-            )
-        );
+        var biomes = biomeLookup.getOrThrow(HumanBiomeTags.HAS_OUTPOST_COMMS);
 
         var structureSettings = new Structure.StructureSettings.Builder(biomes)
             .generationStep(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
@@ -81,17 +74,7 @@ public class HumanStructures {
         var biomeLookup = registry.lookup(Registries.BIOME);
         var templatePoolLookup = registry.lookup(Registries.TEMPLATE_POOL);
 
-        var biomes = HolderSet.direct(
-            List.of(
-                biomeLookup.getOrThrow(Biomes.BIRCH_FOREST),
-                biomeLookup.getOrThrow(Biomes.FLOWER_FOREST),
-                biomeLookup.getOrThrow(Biomes.FOREST),
-                biomeLookup.getOrThrow(Biomes.OLD_GROWTH_BIRCH_FOREST),
-                biomeLookup.getOrThrow(Biomes.PLAINS),
-                biomeLookup.getOrThrow(Biomes.SUNFLOWER_PLAINS),
-                biomeLookup.getOrThrow(Biomes.TAIGA)
-            )
-        );
+        var biomes = biomeLookup.getOrThrow(HumanBiomeTags.HAS_MARINE_CAMP_GRASS);
 
         var structureSettings = new Structure.StructureSettings.Builder(biomes)
             .generationStep(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
@@ -108,18 +91,7 @@ public class HumanStructures {
         var biomeLookup = registry.lookup(Registries.BIOME);
         var templatePoolLookup = registry.lookup(Registries.TEMPLATE_POOL);
 
-        var biomes = HolderSet.direct(
-            List.of(
-                biomeLookup.getOrThrow(Biomes.BADLANDS),
-                biomeLookup.getOrThrow(Biomes.DESERT),
-                biomeLookup.getOrThrow(Biomes.CHERRY_GROVE),
-                biomeLookup.getOrThrow(Biomes.ERODED_BADLANDS),
-                biomeLookup.getOrThrow(Biomes.PLAINS),
-                biomeLookup.getOrThrow(Biomes.SAVANNA),
-                biomeLookup.getOrThrow(Biomes.SNOWY_PLAINS),
-                biomeLookup.getOrThrow(Biomes.WINDSWEPT_SAVANNA)
-            )
-        );
+        var biomes = biomeLookup.getOrThrow(HumanBiomeTags.HAS_MOBILE_LAB);
 
         var structureSettings = new Structure.StructureSettings.Builder(biomes)
             .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)
@@ -138,13 +110,7 @@ public class HumanStructures {
         var biomeLookup = registry.lookup(Registries.BIOME);
         var templatePoolLookup = registry.lookup(Registries.TEMPLATE_POOL);
 
-        var biomes = HolderSet.direct(
-            List.of(
-                biomeLookup.getOrThrow(Biomes.OLD_GROWTH_PINE_TAIGA),
-                biomeLookup.getOrThrow(Biomes.OLD_GROWTH_SPRUCE_TAIGA),
-                biomeLookup.getOrThrow(Biomes.SNOWY_TAIGA)
-            )
-        );
+        var biomes = biomeLookup.getOrThrow(HumanBiomeTags.HAS_OUTPOST_MUNITION);
 
         var structureSettings = new Structure.StructureSettings.Builder(biomes)
             .generationStep(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
@@ -159,14 +125,15 @@ public class HumanStructures {
 
     private static @NotNull HumanSupplyOutpostStructure createHumanSupplyOutpostStructure(
         BootstrapContext<Structure> registry,
-        List<ResourceKey<Biome>> biomeKeys,
+        net.minecraft.tags.TagKey<Biome> biomeTag,
         ResourceKey<StructureTemplatePool> templatePoolResourceKey,
         BiFunction<Structure.StructureSettings, Holder.Reference<StructureTemplatePool>, HumanSupplyOutpostStructure> structureFactory
     ) {
         var biomeLookup = registry.lookup(Registries.BIOME);
         var templatePoolLookup = registry.lookup(Registries.TEMPLATE_POOL);
 
-        var biomesHolder = HolderSet.direct(biomeKeys.stream().map(biomeLookup::getOrThrow).toList());
+        // [stated] Oct 28 - biomes come from the structure's biome tag (vanilla biomes + the matching "c" tag).
+        var biomesHolder = biomeLookup.getOrThrow(biomeTag);
 
         var structureSettings = new Structure.StructureSettings.Builder(biomesHolder)
             .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)

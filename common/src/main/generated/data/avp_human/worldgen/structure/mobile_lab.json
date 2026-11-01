@@ -1,15 +1,6 @@
 {
   "type": "avp_human:mobile_lab",
-  "biomes": [
-    "minecraft:badlands",
-    "minecraft:desert",
-    "minecraft:cherry_grove",
-    "minecraft:eroded_badlands",
-    "minecraft:plains",
-    "minecraft:savanna",
-    "minecraft:snowy_plains",
-    "minecraft:windswept_savanna"
-  ],
+  "biomes": "#avp_human:has_mobile_lab",
   "spawn_overrides": {},
   "start_pool": "avp_human:mobile_lab",
   "step": "surface_structures",

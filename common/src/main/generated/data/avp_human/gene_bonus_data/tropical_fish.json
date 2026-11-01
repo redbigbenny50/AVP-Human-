@@ -1,0 +1,10 @@
+{
+  "entityTypePredicate": "minecraft:tropical_fish",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:swim_speed",
+      "operation": "ADDITIVE",
+      "value": 0.0625
+    }
+  ]
+}

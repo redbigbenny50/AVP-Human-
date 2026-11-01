@@ -78,8 +78,15 @@ public class HumanMiningCampStructure extends JigsawBackedStructure {
             return Optional.empty();
         }
 
-        return super.findGenerationPoint(generationContext);
+        // [stated] Oct 28 - no hanging off cliffs or floating: the whole footprint must be within 10 blocks of level,
+        // and the structure sits at the footprint's median ground height so the terrain is blended (filled under,
+        // carved above) evenly around it. See SiteFit.
+        return super.findGenerationPoint(generationContext)
+            .flatMap(stub -> com.human.common.gameplay.worldgen.structure.util.SiteFit.fit(generationContext, stub, MAX_RELIEF, false));
     }
+
+    /** The most the ground may rise across the footprint before the site is refused, in blocks. */
+    private static final int MAX_RELIEF = 10;
 
     @Override
     public @NotNull StructureType<?> type() {

@@ -2,6 +2,7 @@ package com.human.common.gameplay.entity.living.human.marine.ai.tame_wolf;
 
 import com.blib.api.common.inventory.v1.BLibInventory;
 import com.human.common.gameplay.entity.living.human.marine.Marine;
+import com.human.common.gameplay.level.patrol.impl.WolfSpawner;
 import com.just.ai.goap.StateKey;
 import com.just.ai.goap.sensor.Compose;
 import com.just.ai.goap.sensor.Sensor;
@@ -19,6 +20,13 @@ public class TameWolfSensors {
     public static final Sensor.Mono<Marine, Option<Wolf>> NEAREST_UNTAMED_WOLF = Sensors.lazyCompose(
         StateKey.sensed("nearest_untamed_wolf"),
         (marine, worldState) -> {
+            // [stated] Oct 27 - only tactical marines handle dogs. Gated here, in code, because camp structures place
+            // marines whose saved inventories still hold bones from before this rule. A HIRED marine still may: the
+            // player chose to hand him bones, so that dog is on purpose, not a spawn flood.
+            if (!mayHandleDogs(marine)) {
+                return Option.none();
+            }
+
             var wolves = marine.getEntitySenseCache().getByType(EntityType.WOLF);
 
             Wolf nearestWolf = null;
@@ -116,10 +124,15 @@ public class TameWolfSensors {
             var hasWolfNearby = worldState.getOrDefault(HAS_UNTAMED_WOLF_NEARBY.key(), false);
             var hasBoneInWorld = worldState.getOrDefault(HAS_BONE_IN_WORLD.key(), false);
 
-            // Collect bones if: no wolf nearby, bones available in world, and we have less than a stack.
-            return !hasWolfNearby && hasBoneInWorld && boneCount < MAX_BONES_TO_COLLECT;
+            // Collect bones if: a dog handler, no wolf nearby, bones available in world, and less than a stack.
+            return mayHandleDogs(marine) && !hasWolfNearby && hasBoneInWorld && boneCount < MAX_BONES_TO_COLLECT;
         }
     );
+
+    /** Tactical marines, and any marine a player has hired (who only has bones because the player gave them). */
+    public static boolean mayHandleDogs(Marine marine) {
+        return WolfSpawner.isTactical(marine) || marine.hasLeader();
+    }
 
     private TameWolfSensors() {
         throw new UnsupportedOperationException();

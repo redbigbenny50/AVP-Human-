@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "avp_human:wy_fluted_panel"
+  },
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_fluted_panel_wall"
+  }
+}

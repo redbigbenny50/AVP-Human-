@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "avp_human:block/geneticist_station"
+    },
+    "facing=east": {
+      "model": "avp_human:block/geneticist_station",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "avp_human:block/geneticist_station",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "avp_human:block/geneticist_station",
+      "y": 270
+    }
+  }
+}

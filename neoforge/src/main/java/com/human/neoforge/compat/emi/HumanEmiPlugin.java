@@ -83,9 +83,12 @@ public final class HumanEmiPlugin implements EmiPlugin {
         );
         var table = category("blueprint_table", HumanBlocks.BLUEPRINT_BLOCK.get());
         var drying = category("drying", Blocks.HONEY_BLOCK, Component.literal("Drying"));
+        var harvesting = category("harvesting", net.minecraft.world.item.Items.BUCKET, Component.literal("Harvesting"));
 
         try {
-            for (var category : List.of(grinding, pressing, freezing, hydrating, fabricating, vaporizing, sources, table, drying)) {
+            for (
+                var category : List.of(grinding, pressing, freezing, hydrating, fabricating, vaporizing, sources, table, drying, harvesting)
+            ) {
                 registry.addCategory(category);
             }
         } catch (RuntimeException exception) {
@@ -283,6 +286,24 @@ public final class HumanEmiPlugin implements EmiPlugin {
             }
         } catch (RuntimeException exception) {
             // One bad recipe (a data pack's, another mod's) costs only this section, never the whole plugin.
+            com.human.Human.LOGGER.warn("avp_human EMI: skipped a section that failed to build", exception);
+        }
+
+        // Genetics: the harvest genes and the substance bucket.
+        n = 0;
+        try {
+            for (var recipe : com.human.client.compat.HarvestRecipe.all()) {
+                var inputs = new ArrayList<EmiIngredient>();
+                for (var stack : recipe.inputs()) {
+                    inputs.add(EmiStack.of(stack));
+                }
+                var outputs = new ArrayList<EmiStack>();
+                for (var stack : recipe.outputs()) {
+                    outputs.add(EmiStack.of(stack));
+                }
+                registry.addRecipe(new Page(harvesting, synthetic("harvesting", n++), inputs, outputs, 0, recipe.how()));
+            }
+        } catch (RuntimeException exception) {
             com.human.Human.LOGGER.warn("avp_human EMI: skipped a section that failed to build", exception);
         }
     }

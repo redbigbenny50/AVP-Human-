@@ -118,6 +118,42 @@ public final class HumanViewers {
                 )
             )
         );
+        // Oct 31 - player report: "JEI doesn't tell them how to make plastic". Every coloured plastic but green is only
+        // made by dyeing another plastic, so looking one up shows "plastic + dye" and nothing else - the real start
+        // (polymer from slime balls, then green plastic) only appears on green plastic and polymer themselves.
+        BLibViewers.registerInfo(
+            new com.blib.api.client.viewer.v1.ViewerInfo(
+                ResourceLocation.fromNamespaceAndPath(Human.MOD_ID, "plastic"),
+                () -> items(
+                    "polymer",
+                    "green_plastic",
+                    "white_plastic",
+                    "light_gray_plastic",
+                    "gray_plastic",
+                    "black_plastic",
+                    "brown_plastic",
+                    "red_plastic",
+                    "orange_plastic",
+                    "yellow_plastic",
+                    "lime_plastic",
+                    "cyan_plastic",
+                    "light_blue_plastic",
+                    "blue_plastic",
+                    "purple_plastic",
+                    "magenta_plastic",
+                    "pink_plastic"
+                ),
+                List.of(
+                    Component.literal("How to make plastic:"),
+                    Component.literal("1. Smelt slime balls into Polymer."),
+                    Component.literal("2. Craft 4 Polymer into Green Plastic - or cook any resin block in the Industrial Furnace."),
+                    Component.literal("3. Dye Green Plastic any color by crafting it with a dye."),
+                    Component.literal(
+                        "Cut, framed, pitted and grate plastic come from colored plastic in a stonecutter. Hazard-striped plastic is crafted from white and black plastic."
+                    )
+                )
+            )
+        );
     }
 
     /** avp_human items by name, skipping any that are not registered - nothing here may fail on a missing item. */

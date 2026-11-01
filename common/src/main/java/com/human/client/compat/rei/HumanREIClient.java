@@ -31,6 +31,8 @@ public class HumanREIClient implements REIClientPlugin {
             new HumanMachineDisplays.MachineCategory(HumanMachineDisplays.DRYING, net.minecraft.world.level.block.Blocks.HONEY_BLOCK)
         );
         registry.addWorkstations(HumanMachineDisplays.DRYING, EntryStacks.of(net.minecraft.world.level.block.Blocks.CAULDRON));
+        // Genetics: the harvest genes and the substance bucket.
+        registry.add(new HarvestDisplays.HarvestCategory());
         registry.addWorkstations(
             HumanMachineDisplays.BLUEPRINT_TABLE,
             EntryStacks.of(com.human.common.registry.init.HumanBlocks.BLUEPRINT_BLOCK.get())
@@ -119,6 +121,9 @@ public class HumanREIClient implements REIClientPlugin {
         }
         for (var recipe : com.human.client.compat.DryingRecipe.all()) {
             registry.add(HumanMachineDisplays.drying(recipe));
+        }
+        for (var recipe : com.human.client.compat.HarvestRecipe.all()) {
+            registry.add(HarvestDisplays.display(recipe));
         }
     }
 

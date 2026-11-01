@@ -200,7 +200,11 @@ public class HumanBlockItems {
 
     public static final BLibHolder<BlockItem> REDSTONE_GENERATOR = create("redstone_generator", HumanBlocks.REDSTONE_GENERATOR);
 
-    public static final BLibHolder<BlockItem> RESONATOR_BLOCK = create("resonator", HumanBlocks.RESONATOR_BLOCK);
+    // Oct 29: a model block that must stack - see StackableModelBlockItem.
+    public static final BLibHolder<BlockItem> RESONATOR_BLOCK = createWithSupplier(
+        "resonator",
+        () -> new com.human.common.gameplay.block_item.StackableModelBlockItem(HumanBlocks.RESONATOR_BLOCK.get(), new Item.Properties())
+    );
 
     public static final BLibHolder<BlockItem> SENTRY_TURRET = createWithSupplier("sentry_turret", SentryTurretBlockItem::new);
 
@@ -287,7 +291,9 @@ public class HumanBlockItems {
 
     public static void initialize() {
         REGISTRY.registerAll();
-        IDENTITY_REGISTRY.register(RESONATOR_BLOCK);
-        IDENTITY_REGISTRY.register(SENTRY_TURRET);
+        // Oct 29 BUG FIX: the resonator and sentry turret are no longer AzureLib identity items. An identity item gets
+        // a
+        // RANDOM animation id on every new stack, so no two stacks were equal and they would not stack anywhere
+        // (inventory, chests, Refined Storage). Neither item renderer has an animator, so the id did nothing for them.
     }
 }

@@ -556,6 +556,17 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider {
         com.human.common.registry.init.block.HumanUscmBlocks.ALL.forEach(block -> dropSelf(block));
         // [stated] Oct 20 - every W-Y block drops itself (the locker also spills its contents, from the block).
         com.human.common.registry.init.block.HumanWyBlocks.ALL.forEach(block -> dropSelf(block));
+        // [stated] Oct 30 - the W-Y and USCM slabs, stairs and walls: a doubled slab drops two.
+        java.util.stream.Stream.concat(
+            com.human.common.registry.init.block.HumanWyBlocks.SHAPES.stream(),
+            com.human.common.registry.init.block.HumanUscmBlocks.SHAPES.stream()
+        ).forEach(shape -> {
+            if (shape.kind() == com.human.common.registry.init.block.FacilityShape.Kind.SLAB) {
+                dropSlab(shape.block());
+            } else {
+                dropSelf(shape.block());
+            }
+        });
         dropSlab(HumanCompositeBlocks.CUT_COMPOSITE_SLAB);
         dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_SIDING_SLAB);
         dropSlab(HumanCompositeBlocks.COMPOSITE_FASTENED_STANDING_SLAB);

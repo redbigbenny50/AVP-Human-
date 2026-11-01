@@ -23,14 +23,26 @@ public class MarineSpawner {
 
     /** [stated] Oct 13 - a patrol of one soldier type (the W-Y units and the tactical marine have their own). */
     public static List<Marine> spawn(Level level, Player player, BlockPos.MutableBlockPos startPos, EntityType<Marine> type) {
+        return spawn(level, player, startPos, type, 4);
+    }
+
+    /**
+     * [stated] Oct 27 - a regular patrol can carry one tactical marine mixed in, so the patrol is spawned in two parts
+     * of the same squad. {@code startPos} keeps walking between calls, so the second part lands beside the first.
+     */
+    public static List<Marine> spawn(
+        Level level,
+        Player player,
+        BlockPos.MutableBlockPos startPos,
+        EntityType<Marine> type,
+        int spawnCount
+    ) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return List.of();
         }
 
         var spawnedMarines = new ArrayList<Marine>();
         var randomSource = level.random;
-        var spawnCount = 4;
-
         for (var i = 0; i < spawnCount; ++i) {
             startPos.setY(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, startPos).getY());
 

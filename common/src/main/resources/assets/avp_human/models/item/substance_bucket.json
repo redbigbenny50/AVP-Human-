@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/bucket",
+    "layer1": "avp_human:item/substance_bucket_fill"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "avp_human:item/substance_bucket_slime"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "avp_human:item/substance_bucket_ink"
+    }
+  ]
+}

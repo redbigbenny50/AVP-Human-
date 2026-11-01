@@ -476,6 +476,9 @@ public class EnUsBlockProvider {
         com.human.common.registry.init.block.HumanUscmBlocks.ENGLISH_NAMES.forEach((block, name) -> addBlock(builder, block, name));
         // [stated] Oct 20 - the W-Y building set; names live beside the blocks in HumanWyBlocks.
         com.human.common.registry.init.block.HumanWyBlocks.ENGLISH_NAMES.forEach((block, name) -> addBlock(builder, block, name));
+        // [stated] Oct 30 - the W-Y and USCM slabs, stairs and walls.
+        com.human.common.registry.init.block.HumanWyBlocks.SHAPES.forEach(shape -> addBlock(builder, shape.block(), shape.name()));
+        com.human.common.registry.init.block.HumanUscmBlocks.SHAPES.forEach(shape -> addBlock(builder, shape.block(), shape.name()));
     };
 
     private static void addBlock(

@@ -9,6 +9,7 @@ import com.human.common.model.GeneCarrier;
 import com.human.common.registry.GeneBonusDataRegistry;
 import com.human.common.registry.init.HumanDataComponents;
 import com.human.common.util.GeneDataUtil;
+import com.human.common.util.GeneSamplePrick;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -47,77 +48,30 @@ public class GeneReaderItem extends Item {
     ) {
         var stack = player.getItemInHand(hand);
 
-        if (player.isShiftKeyDown()) {
-            if (!level.isClientSide) {
-                cycleGeneReaderMode(stack, player);
+        // [stated] Oct 27 approved screen footer: RIGHT-CLICK MOB: SAMPLE / SHIFT-CLICK: SELF / RIGHT-CLICK AIR: OPEN.
+        if (!level.isClientSide) {
+            if (player.isShiftKeyDown()) {
+                interact(stack, player, player, hand);
+            } else {
+                player.openMenu(
+                    new net.minecraft.world.SimpleMenuProvider(
+                        (containerId, inventory, opener) -> new com.human.common.gameplay.gene.reader.GeneReaderMenu(
+                            containerId,
+                            inventory
+                        ),
+                        Component.translatable("gui.avp_human.gene_reader")
+                    )
+                );
             }
-
-            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-        } else {
-            if (!level.isClientSide) {
-                var mode = stack.getOrDefault(HumanDataComponents.GENE_READER_MODE.get(), DEFAULT_MODE);
-
-                if (mode == GeneReaderMode.CLEAR) {
-                    stack.set(HumanDataComponents.GENE_READER_CONTENTS.get(), GeneReaderContents.EMPTY);
-                    // TODO: Use proper translatable here.
-                    player.displayClientMessage(Component.literal("Gene data has been cleared."), true);
-                }
-            }
-
-            return super.use(level, player, hand);
         }
+
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
-        var player = context.getPlayer();
-
-        if (player == null) {
-            return super.useOn(context);
-        }
-
-        if (player.isShiftKeyDown()) {
-            if (!context.getLevel().isClientSide()) {
-                cycleGeneReaderMode(context.getItemInHand(), context.getPlayer());
-            }
-
-            return InteractionResult.SUCCESS;
-        } else {
-            if (!context.getLevel().isClientSide()) {
-                var stack = context.getItemInHand();
-                var mode = stack.getOrDefault(HumanDataComponents.GENE_READER_MODE.get(), DEFAULT_MODE);
-
-                if (mode == GeneReaderMode.CLEAR) {
-                    stack.set(HumanDataComponents.GENE_READER_CONTENTS.get(), GeneReaderContents.EMPTY);
-                    // TODO: Use proper translatable here.
-                    player.displayClientMessage(Component.literal("Gene data has been cleared."), true);
-                }
-            }
-
-            return super.useOn(context);
-        }
-    }
-
-    private void cycleGeneReaderMode(ItemStack stack, Player player) {
-        var current = stack.getOrDefault(HumanDataComponents.GENE_READER_MODE.get(), DEFAULT_MODE);
-        var next = nextMode(current);
-        stack.set(HumanDataComponents.GENE_READER_MODE.get(), next);
-
-        player.displayClientMessage(
-            // TODO: Use proper translatable here.
-            Component.literal("Switched mode to ")
-                .append(
-                    Component.literal(next.toString())
-                        .withStyle(ChatFormatting.YELLOW)
-                ),
-            true
-        );
-    }
-
-    private GeneReaderMode nextMode(GeneReaderMode current) {
-        var values = GeneReaderMode.values();
-        var nextOrdinal = (current.ordinal() + 1) % values.length;
-        return values[nextOrdinal];
+        // Clicking a block does what clicking the air does (open the screen, or sample yourself when sneaking).
+        return InteractionResult.PASS;
     }
 
     public static void interact(
@@ -126,17 +80,10 @@ public class GeneReaderItem extends Item {
         @NotNull LivingEntity interactionTarget,
         @NotNull InteractionHand usedHand
     ) {
-        var geneReaderMode = stack.getOrDefault(HumanDataComponents.GENE_READER_MODE.get(), DEFAULT_MODE);
-
-        if (geneReaderMode == GeneReaderMode.CLEAR) {
-            return;
-        }
-
+        // ⚠ Used to stop here for any creature without a species gene file, so the reader did nothing at all on it.
+        // Every living thing is read now: its active and dormant genes are real either way, and the species list is
+        // simply empty ("No gene data found." in the tooltip).
         var geneBonusMapData = GeneBonusDataRegistry.getOrDefault(interactionTarget.getType());
-
-        if (geneBonusMapData.isEmpty()) {
-            return;
-        }
 
         var geneContainer = ((GeneCarrier) interactionTarget).getOrCreateGeneManager().getGeneContainer();
         var geneReaderContents = new EnumMap<GeneReaderMode, List<GeneBonusDataEntry>>(GeneReaderMode.class);
@@ -147,14 +94,33 @@ public class GeneReaderItem extends Item {
 
         // Assign gene reader contents back to gene reader item stack.
         stack.set(HumanDataComponents.GENE_READER_CONTENTS.get(), new GeneReaderContents(geneReaderContents));
+        // Everything the reader SCREEN shows (genes, advanced states, integrity, timers), captured now.
+        var snapshot = com.human.common.gameplay.gene.reader.GeneReaderSnapshot.capture(interactionTarget);
+        snapshot.writeTo(stack);
+        // Reading a mob discovers its species and every gene it shows: active, dormant, and its mutations.
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            var found = new java.util.ArrayList<net.minecraft.resources.ResourceLocation>();
+            snapshot.active().forEach(line -> found.add(net.minecraft.resources.ResourceLocation.parse(line.id())));
+            snapshot.dormant().forEach(line -> found.add(net.minecraft.resources.ResourceLocation.parse(line.id())));
+            snapshot.advanced()
+                .stream()
+                .filter(state -> state.status() != com.human.common.gameplay.gene.AdvancedGenes.Status.INACTIVE)
+                .forEach(state -> found.add(net.minecraft.resources.ResourceLocation.parse(state.id())));
+            found.removeIf(id -> id.equals(com.human.common.gameplay.gene.Genes.GENETIC_INTEGRITY.id()));
+            com.human.common.gameplay.gene.discovery.GeneDiscoveries.discover(serverPlayer, found, interactionTarget.getType());
+        }
         stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
         // Assign stack back to player hand to update client-side.
         player.setItemInHand(usedHand, stack);
-        // Apply "fake" damage to the entity.
-        // TODO: Add a proper damage source here.
-        interactionTarget.hurt(interactionTarget.damageSources().generic(), 0.01F);
+        // Hurt flash + sound only - no damage, not counted as a hurt (see GeneSamplePrick).
+        GeneSamplePrick.prick(interactionTarget);
         // TODO: Use proper translatable here.
-        player.displayClientMessage(Component.literal("Processed gene data from target."), true);
+        player.displayClientMessage(
+            Component.literal(
+                geneBonusMapData.isEmpty() ? "Processed gene data from target (no species data)." : "Processed gene data from target."
+            ),
+            true
+        );
     }
 
     @Override

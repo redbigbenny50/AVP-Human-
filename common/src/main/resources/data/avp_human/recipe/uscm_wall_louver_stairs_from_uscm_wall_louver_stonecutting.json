@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "avp_human:uscm_wall_louver"
+  },
+  "result": {
+    "count": 1,
+    "id": "avp_human:uscm_wall_louver_stairs"
+  }
+}

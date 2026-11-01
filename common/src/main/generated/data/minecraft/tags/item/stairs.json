@@ -220,6 +220,20 @@
     "avp_human:titanium_siding_stairs",
     "avp_human:titanium_stairs",
     "avp_human:titanium_standing_stairs",
-    "avp_human:titanium_tread_stairs"
+    "avp_human:titanium_tread_stairs",
+    "avp_human:composite_wall_stairs",
+    "avp_human:composite_cement_stairs",
+    "avp_human:uscm_wall_ribbed_stairs",
+    "avp_human:uscm_wall_louver_stairs",
+    "avp_human:uscm_floor_tile_stairs",
+    "avp_human:uscm_floor_grate_stairs",
+    "avp_human:uscm_floor_hazard_stairs",
+    "avp_human:wy_wall_stairs",
+    "avp_human:wy_wall_perforated_stairs",
+    "avp_human:wy_fluted_panel_stairs",
+    "avp_human:wy_floor_rubber_tread_stairs",
+    "avp_human:wy_floor_rubber_stud_stairs",
+    "avp_human:wy_floor_rubber_herringbone_stairs",
+    "avp_human:wy_floor_slat_plate_stairs"
   ]
 }

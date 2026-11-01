@@ -1,5 +1,19 @@
 {
   "values": [
+    "avp_human:wy_wall_slab",
+    "avp_human:wy_wall_perforated_slab",
+    "avp_human:wy_fluted_panel_slab",
+    "avp_human:wy_floor_rubber_tread_slab",
+    "avp_human:wy_floor_rubber_stud_slab",
+    "avp_human:wy_floor_rubber_herringbone_slab",
+    "avp_human:wy_floor_slat_plate_slab",
+    "avp_human:composite_wall_slab",
+    "avp_human:composite_cement_slab",
+    "avp_human:uscm_wall_ribbed_slab",
+    "avp_human:uscm_wall_louver_slab",
+    "avp_human:uscm_floor_tile_slab",
+    "avp_human:uscm_floor_grate_slab",
+    "avp_human:uscm_floor_hazard_slab",
     "avp_human:white_concrete_slab",
     "avp_human:orange_concrete_slab",
     "avp_human:magenta_concrete_slab",
@@ -220,6 +234,20 @@
     "avp_human:titanium_plating_slab",
     "avp_human:titanium_siding_slab",
     "avp_human:titanium_standing_slab",
-    "avp_human:titanium_tread_slab"
+    "avp_human:titanium_tread_slab",
+    "avp_human:composite_wall_slab",
+    "avp_human:composite_cement_slab",
+    "avp_human:uscm_wall_ribbed_slab",
+    "avp_human:uscm_wall_louver_slab",
+    "avp_human:uscm_floor_tile_slab",
+    "avp_human:uscm_floor_grate_slab",
+    "avp_human:uscm_floor_hazard_slab",
+    "avp_human:wy_wall_slab",
+    "avp_human:wy_wall_perforated_slab",
+    "avp_human:wy_fluted_panel_slab",
+    "avp_human:wy_floor_rubber_tread_slab",
+    "avp_human:wy_floor_rubber_stud_slab",
+    "avp_human:wy_floor_rubber_herringbone_slab",
+    "avp_human:wy_floor_slat_plate_slab"
   ]
 }

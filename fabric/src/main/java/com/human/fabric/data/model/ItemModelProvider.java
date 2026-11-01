@@ -222,7 +222,8 @@ public class ItemModelProvider extends FabricModelProvider {
         generateStandardItem(generators, HumanItems.FERROALUMINUM_NUGGET);
         generateStandardItem(generators, HumanItems.STEEL_NUGGET);
         generateStandardItem(generators, HumanItems.GENE_READER);
-        generateStandardItem(generators, HumanItems.SYRINGE);
+        generateTwoLayeredItem(generators, HumanItems.SYRINGE); // [stated] Oct 29 - barrel shows the gene blend
+                                                                // (syringe_overlay)
         generateStandardItem(generators, HumanItems.BRASS_NUGGET);
         generateStandardItem(generators, HumanItems.TITANIUM_NUGGET);
         generateStandardItem(generators, HumanItems.ZINC_NUGGET);

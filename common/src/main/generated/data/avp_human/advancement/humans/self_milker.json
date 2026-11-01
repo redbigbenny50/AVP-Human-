@@ -1,0 +1,28 @@
+{
+  "parent": "avp_human:humans/root",
+  "criteria": {
+    "self_milker": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.humans.self_milker.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:milk_bucket"
+    },
+    "title": {
+      "translate": "advancements.humans.self_milker.title"
+    }
+  },
+  "requirements": [
+    [
+      "self_milker"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

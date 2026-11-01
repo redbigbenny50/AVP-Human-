@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "avp_human:block/wy_floor_slat_plate",
+    "side": "avp_human:block/wy_floor_slat_plate",
+    "top": "avp_human:block/wy_floor_slat_plate"
+  }
+}

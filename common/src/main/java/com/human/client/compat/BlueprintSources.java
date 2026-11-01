@@ -119,9 +119,12 @@ public final class BlueprintSources {
         addModifier(sources, "Bastion treasure", LootTableModifiers.BASTION_TREASURE_LOOT_TABLE_MODIFIER);
         addModifier(sources, "Nether fortresses", LootTableModifiers.NETHER_BRIDGE_LOOT_TABLE_MODIFIER);
 
-        // Oct 24 - the M42A3 in ruins (HumanVanillaLoot): ocean ruin chests, and trail ruins' rare suspicious gravel.
+        // Oct 25 - HumanVanillaLoot: the F903WE in ruins (ocean ruin chests, trail ruins' rare suspicious gravel) and
+        // the
+        // M42A3 in pillager outpost chests.
         addPools(sources, "Ocean ruins - big ruin chest", net.minecraft.world.level.storage.loot.BuiltInLootTables.UNDERWATER_RUIN_BIG);
         addPools(sources, "Ocean ruins - small ruin chest", net.minecraft.world.level.storage.loot.BuiltInLootTables.UNDERWATER_RUIN_SMALL);
+        addPools(sources, "Pillager outposts - tower chest", net.minecraft.world.level.storage.loot.BuiltInLootTables.PILLAGER_OUTPOST);
         try {
             var found = new LinkedHashMap<Item, Float>();
             for (

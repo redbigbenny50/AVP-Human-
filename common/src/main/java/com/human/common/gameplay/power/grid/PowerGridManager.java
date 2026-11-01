@@ -163,6 +163,8 @@ public class PowerGridManager {
 
         for (var pos : ready) {
             if (!PowerGridExploreUtil.isConnectable(level, pos)) {
+                // Oct 31 - a machine part that just loaded: its core may now reach cables it could not before.
+                relinkThroughPart(level, pos);
                 continue;
             }
 
@@ -190,6 +192,46 @@ public class PowerGridManager {
             return;
         }
 
+        linkComponent(level, pos, node);
+    }
+
+    /**
+     * Oct 31 - walks again from a position that may ALREADY be on a grid and merges every grid the walk reaches, the
+     * way a first link does.
+     * <p>
+     * ⚠ For a multi-block machine ({@link com.human.common.gameplay.power.PowerParts}). Its core's block entity loads
+     * and links the moment the core block is placed - BEFORE the machine places its other blocks - so the cables at
+     * those blocks' faces were not reachable yet. A plain {@link #linkOnLoad} would see the core already known and
+     * stop. Merging folds grids into one root instead of overwriting, so nothing is fed twice.
+     * </p>
+     */
+    public void relink(Level level, BlockPos pos) {
+        if (!level.isLoaded(pos) || !PowerGridExploreUtil.isConnectable(level, pos)) {
+            return;
+        }
+
+        linkComponent(level, pos, level.getBlockEntity(pos) instanceof PowerNode node ? node : null);
+    }
+
+    /** A machine part's chunk loaded or the part changed: walk again from its core. */
+    private void relinkThroughPart(Level level, BlockPos partPos) {
+        var state = level.getBlockState(partPos);
+
+        if (!(state.getBlock() instanceof com.human.common.gameplay.power.PowerParts.PartBlock part)) {
+            return;
+        }
+
+        for (var direction : VALUES) {
+            var core = part.coreThrough(level, partPos, state, direction);
+
+            if (core != null) {
+                relink(level, core);
+                return;
+            }
+        }
+    }
+
+    private void linkComponent(Level level, BlockPos pos, PowerNode node) {
         var component = PowerGridExploreUtil.discover(level, pos);
 
         if (component.isEmpty()) {
@@ -294,6 +336,10 @@ public class PowerGridManager {
             for (var direction : VALUES) {
                 seeds.add(removed.relative(direction));
             }
+
+            // Oct 31 - a removed cable that fed a machine through one of its parts touched that machine's core, which
+            // is not one of its six neighbours. Without this the core keeps a grid that no longer exists.
+            PowerGridExploreUtil.coresThroughParts(level, removed, seeds::add);
         }
 
         pendingSplits.clear();

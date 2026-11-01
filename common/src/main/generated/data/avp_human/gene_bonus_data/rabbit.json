@@ -1,0 +1,45 @@
+{
+  "entityTypePredicate": "minecraft:rabbit",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:armor",
+      "operation": "ADDITIVE",
+      "value": -0.75
+    },
+    {
+      "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
+    },
+    {
+      "id": "avp_human:jump_height",
+      "operation": "ADDITIVE",
+      "value": 0.0375
+    },
+    {
+      "id": "avp_human:mining_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:luck",
+      "operation": "ADDITIVE",
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:bonus_embryo_count",
+      "operation": "ADDITIVE",
+      "value": 0.16666666666666666
+    },
+    {
+      "id": "avp_human:accelerated_growth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    },
+    {
+      "id": "avp_human:rapid_gestation",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    }
+  ]
+}

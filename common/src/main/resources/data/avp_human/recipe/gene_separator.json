@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "T": {
+      "item": "avp_human:empty_gene_tube"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "B": {
+      "item": "avp_human:motherboard"
+    }
+  },
+  "pattern": [
+    "SPS",
+    "TMT",
+    "SBS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:gene_separator"
+  }
+}

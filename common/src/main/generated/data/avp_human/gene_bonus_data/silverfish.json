@@ -1,0 +1,10 @@
+{
+  "entityTypePredicate": "minecraft:silverfish",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:mining_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
+    }
+  ]
+}

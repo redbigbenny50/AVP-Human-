@@ -2,24 +2,24 @@
   "entityTypePredicate": "minecraft:pufferfish",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:poisonous_barbs",
-      "operation": "MULTIPLICATIVE",
-      "value": 0.33
-    },
-    {
       "id": "avp_human:attack_damage",
       "operation": "ADDITIVE",
-      "value": -1.0
+      "value": -0.5
     },
     {
-      "id": "avp_human:intelligence",
-      "operation": "ADDITIVE",
-      "value": -10.0
-    },
-    {
-      "id": "avp_human:move_speed",
+      "id": "avp_human:poison",
       "operation": "MULTIPLICATIVE",
-      "value": -0.05
+      "value": 0.049999999999999996
+    },
+    {
+      "id": "avp_human:poisonous_barbs",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.075
+    },
+    {
+      "id": "avp_human:thorns",
+      "operation": "ADDITIVE",
+      "value": 0.3333333333333333
     }
   ]
 }

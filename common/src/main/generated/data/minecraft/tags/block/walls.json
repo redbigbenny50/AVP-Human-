@@ -1,5 +1,12 @@
 {
   "values": [
+    "avp_human:wy_wall_wall",
+    "avp_human:wy_wall_perforated_wall",
+    "avp_human:wy_fluted_panel_wall",
+    "avp_human:composite_wall_wall",
+    "avp_human:composite_cement_wall",
+    "avp_human:uscm_wall_ribbed_wall",
+    "avp_human:uscm_wall_louver_wall",
     "avp_human:white_industrial_concrete_wall",
     "avp_human:orange_industrial_concrete_wall",
     "avp_human:magenta_industrial_concrete_wall",
@@ -56,6 +63,13 @@
     "avp_human:brown_plastic_wall",
     "avp_human:green_plastic_wall",
     "avp_human:red_plastic_wall",
-    "avp_human:black_plastic_wall"
+    "avp_human:black_plastic_wall",
+    "avp_human:composite_wall_wall",
+    "avp_human:composite_cement_wall",
+    "avp_human:uscm_wall_ribbed_wall",
+    "avp_human:uscm_wall_louver_wall",
+    "avp_human:wy_wall_wall",
+    "avp_human:wy_wall_perforated_wall",
+    "avp_human:wy_fluted_panel_wall"
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "avp_human:wy_floor_rubber_stud"
+  },
+  "result": {
+    "count": 1,
+    "id": "avp_human:wy_floor_rubber_stud_stairs"
+  }
+}

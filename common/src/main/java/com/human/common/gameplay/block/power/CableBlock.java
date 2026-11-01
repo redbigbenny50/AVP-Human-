@@ -274,6 +274,15 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
 
         PowerNode node = level.getBlockEntity(target) instanceof PowerNode ours ? ours : null;
 
+        // Oct 31 - a machine part shows the flange of the machine it feeds.
+        if (node == null) {
+            var core = com.human.common.gameplay.power.PowerParts.coreThrough(level, target, direction.getOpposite());
+
+            if (core != null && level.getBlockEntity(core) instanceof PowerNode machine) {
+                node = machine;
+            }
+        }
+
         if (node == null) {
             var port = com.human.common.gameplay.power.external.ExternalEnergy.Holder.get().open(level, target, direction.getOpposite());
 
@@ -400,7 +409,9 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
             var neighbor = blockPos.relative(direction);
 
             if (canConnectTo(level, neighbor, direction)) {
-                manager.union(blockPos, neighbor);
+                // Oct 31 - through a machine part, the cable joins the machine's CORE, never the part block itself.
+                var core = com.human.common.gameplay.power.PowerParts.coreThrough(level, neighbor, direction.getOpposite());
+                manager.union(blockPos, core != null ? core : neighbor);
             }
         }
 
@@ -525,7 +536,13 @@ public class CableBlock extends Block implements net.minecraft.world.level.block
             return node.isFaceConnectable(direction.getOpposite());
         }
 
-        return blockEntity instanceof PowerNode;
+        if (blockEntity instanceof PowerNode) {
+            return true;
+        }
+
+        // Oct 31 - a face of a bigger machine's part block that feeds its core (the underside of any gene
+        // machine's bottom blocks). Block states only, so the client draws the same arm.
+        return com.human.common.gameplay.power.PowerParts.takesCable(level, neighbor, direction.getOpposite());
     }
 
     // ------------------------------------------------------------------------------------------------------------

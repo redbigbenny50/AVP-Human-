@@ -1,0 +1,209 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:sponge",
+    "minecraft:wet_sponge",
+    "minecraft:tide_armor_trim_smithing_template",
+    "minecraft:sculk_catalyst",
+    {
+      "id": "avp_alien:raw_royal_jelly",
+      "required": false
+    },
+    {
+      "id": "avp_alien:raw_scourge_jelly",
+      "required": false
+    },
+    {
+      "id": "avp_alien:raw_irradiated_jelly",
+      "required": false
+    },
+    {
+      "id": "avp_alien:poison_jelly",
+      "required": false
+    },
+    {
+      "id": "avp_alien:royal_jelly_block",
+      "required": false
+    },
+    {
+      "id": "avp_alien:scourge_jelly_block",
+      "required": false
+    },
+    {
+      "id": "avp_alien:irradiated_jelly_block",
+      "required": false
+    },
+    {
+      "id": "avp_alien:poison_jelly_block",
+      "required": false
+    },
+    {
+      "id": "avp_alien:plated_chitin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:plated_aberrant_chitin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:plated_irradiated_chitin",
+      "required": false
+    },
+    {
+      "id": "avp_alien:plated_nether_chitin",
+      "required": false
+    },
+    {
+      "id": "avp_predator:battleaxe",
+      "required": false
+    },
+    {
+      "id": "avp_predator:chain_whip",
+      "required": false
+    },
+    {
+      "id": "avp_predator:cloaking_device",
+      "required": false
+    },
+    {
+      "id": "avp_predator:combi_stick",
+      "required": false
+    },
+    {
+      "id": "avp_predator:fire_pellet",
+      "required": false
+    },
+    {
+      "id": "avp_predator:gauntlet",
+      "required": false
+    },
+    {
+      "id": "avp_predator:hand_caster",
+      "required": false
+    },
+    {
+      "id": "avp_predator:jungle_predator_boots",
+      "required": false
+    },
+    {
+      "id": "avp_predator:jungle_predator_chestplate",
+      "required": false
+    },
+    {
+      "id": "avp_predator:jungle_predator_helmet",
+      "required": false
+    },
+    {
+      "id": "avp_predator:jungle_predator_leggings",
+      "required": false
+    },
+    {
+      "id": "avp_predator:mud_bucket",
+      "required": false
+    },
+    {
+      "id": "avp_predator:net",
+      "required": false
+    },
+    {
+      "id": "avp_predator:plasma_bow",
+      "required": false
+    },
+    {
+      "id": "avp_predator:plasma_core",
+      "required": false
+    },
+    {
+      "id": "avp_predator:plasma_shuriken",
+      "required": false
+    },
+    {
+      "id": "avp_predator:plasma_sword",
+      "required": false
+    },
+    {
+      "id": "avp_predator:pred_grenade_explosive",
+      "required": false
+    },
+    {
+      "id": "avp_predator:pred_grenade_fire",
+      "required": false
+    },
+    {
+      "id": "avp_predator:pred_grenade_freeze",
+      "required": false
+    },
+    {
+      "id": "avp_predator:pred_grenade_irradiated",
+      "required": false
+    },
+    {
+      "id": "avp_predator:pred_grenade_sticky",
+      "required": false
+    },
+    {
+      "id": "avp_predator:predator_music_disc_1",
+      "required": false
+    },
+    {
+      "id": "avp_predator:predator_music_disc_1_fragment",
+      "required": false
+    },
+    {
+      "id": "avp_predator:shuriken",
+      "required": false
+    },
+    {
+      "id": "avp_predator:smart_disc",
+      "required": false
+    },
+    {
+      "id": "avp_predator:trip_mine",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_arrow",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_axe",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_bow",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_dart",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_hoe",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_pickaxe",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_scrap",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_shard",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_shovel",
+      "required": false
+    },
+    {
+      "id": "avp_predator:veritanium_sword",
+      "required": false
+    },
+    {
+      "id": "avp_predator:whip",
+      "required": false
+    }
+  ]
+}

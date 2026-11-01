@@ -53,6 +53,26 @@ public class HumanAdvancementProvider {
         var smeltTitaniumAdvancement = addSmeltTitaniumAdvancement(blastSteelAdvancement, consumer);
 
         var fillCanisterAdvancement = addFillCanisterAdvancement(smeltTitaniumAdvancement, consumer);
+
+        var selfMilkerAdvancement = addSelfMilkerAdvancement(root, consumer);
+    }
+
+    /** [stated] Oct 30: rare challenge, granted in code (SelfMilking) - hidden until earned. */
+    private static AdvancementHolder addSelfMilkerAdvancement(AdvancementHolder parent, Consumer<AdvancementHolder> consumer) {
+        return Advancement.Builder.advancement()
+            .addCriterion("self_milker", CriteriaTriggers.IMPOSSIBLE.createCriterion(new ImpossibleTrigger.TriggerInstance()))
+            .parent(parent)
+            .display(
+                Items.MILK_BUCKET,
+                HumanAdvancements.SELF_MILKER.titleComponent(),
+                HumanAdvancements.SELF_MILKER.descriptionComponent(),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                true
+            )
+            .save(consumer, HumanAdvancements.SELF_MILKER.resourceLocation().toString());
     }
 
     private static AdvancementHolder addBlastSteelAdvancement(AdvancementHolder parent, Consumer<AdvancementHolder> consumer) {

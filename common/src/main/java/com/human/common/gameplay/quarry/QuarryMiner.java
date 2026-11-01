@@ -395,6 +395,7 @@ final class QuarryMiner {
                 }
 
                 level.setBlock(at, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                collapsePortalsAround(level, at, state);
                 zapped++;
 
                 if (!lasered) {
@@ -516,6 +517,10 @@ final class QuarryMiner {
      * beside the hole cannot pour in while the drill works. Five fluid reads per dug block - nothing per tick.
      */
     private void clear(ServerLevel level, BlockPos at) {
+        // Oct 31 - read before it is replaced: a portal frame block must tell its portal it is gone, whatever replaces
+        // it.
+        var removed = level.getBlockState(at);
+
         // [stated] Oct 15: "Ocean or river chunks should just pass through the water without draining it. Basically
         // treating it like air. Unless the player selects drain or void." So there, with DRAIN OFF, a dug spot that
         // water touches simply becomes water - the sea carries on down the hole as the drill goes, as if it were air
@@ -525,6 +530,7 @@ final class QuarryMiner {
             for (var side : POUR_SIDES) {
                 if (level.getFluidState(at.relative(side)).is(net.minecraft.tags.FluidTags.WATER)) {
                     level.setBlock(at, Blocks.WATER.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                    collapsePortalsAround(level, at, removed);
                     return;
                 }
             }
@@ -543,11 +549,45 @@ final class QuarryMiner {
                 }
 
                 fields[fieldCount++] = at.asLong();
+                collapsePortalsAround(level, at, removed);
                 return;
             }
         }
 
         level.setBlock(at, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+        collapsePortalsAround(level, at, removed);
+    }
+
+    /**
+     * Oct 31 - player report: the quarry mined a nether portal's obsidian frame and the portal stayed, floating.
+     * <p>
+     * The quarry removes blocks WITHOUT telling their neighbours (UPDATE_KNOWN_SHAPE) on purpose: told, sand and gravel
+     * above the dig would start falling in and water would start flowing in. But a portal is unbreakable, so the quarry
+     * never mines it, and it only collapses when told its frame changed. So just portals are told: for each portal
+     * block next to the one removed, the normal "neighbour changed" update runs, the portal sees its frame is broken
+     * and collapses - the whole portal, as when a player breaks the obsidian. Only obsidian (the only block a portal
+     * frame is made of) is checked, so ordinary mining costs nothing extra.
+     * </p>
+     */
+    static void collapsePortalsAround(ServerLevel level, BlockPos removed, BlockState removedState) {
+        if (!removedState.is(Blocks.OBSIDIAN)) {
+            return;
+        }
+
+        for (var direction : net.minecraft.core.Direction.values()) {
+            var neighbour = removed.relative(direction);
+
+            if (level.getBlockState(neighbour).is(Blocks.NETHER_PORTAL)) {
+                level.neighborShapeChanged(
+                    direction.getOpposite(),
+                    Blocks.AIR.defaultBlockState(),
+                    neighbour,
+                    removed.immutable(),
+                    Block.UPDATE_ALL,
+                    512
+                );
+            }
+        }
     }
 
     /**

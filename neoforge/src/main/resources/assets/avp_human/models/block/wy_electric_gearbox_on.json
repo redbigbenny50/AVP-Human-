@@ -1,5 +1,6 @@
 {
   "parent": "block/block",
+  "render_type": "minecraft:cutout",
   "textures": {
     "front": "avp_human:block/wy_converter_front",
     "power": "avp_human:block/cryotube_controller_wy_back",

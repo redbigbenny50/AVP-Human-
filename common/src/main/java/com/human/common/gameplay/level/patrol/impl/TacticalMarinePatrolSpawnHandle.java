@@ -60,5 +60,8 @@ public class TacticalMarinePatrolSpawnHandle {
         for (var marine : spawnedMarines) {
             TacticalMarineGearDecorator.INSTANCE.decorate(level, marine);
         }
+
+        // [stated] Oct 27 - tactical marines are the ones that bring dogs; each rolls for its own.
+        WolfSpawner.spawnForTacticalMarines(level, spawnedMarines);
     }
 }

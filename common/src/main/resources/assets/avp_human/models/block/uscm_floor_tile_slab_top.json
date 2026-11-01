@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "avp_human:block/uscm_floor_tile",
+    "side": "avp_human:block/uscm_floor_tile",
+    "top": "avp_human:block/uscm_floor_tile"
+  }
+}

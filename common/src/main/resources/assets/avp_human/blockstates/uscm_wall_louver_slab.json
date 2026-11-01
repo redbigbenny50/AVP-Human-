@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/uscm_wall_louver_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/uscm_wall_louver"
+    },
+    "type=top": {
+      "model": "avp_human:block/uscm_wall_louver_slab_top"
+    }
+  }
+}

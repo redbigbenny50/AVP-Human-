@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "avp_human:block/wy_wall_perforated",
+    "side": "avp_human:block/wy_wall_perforated",
+    "top": "avp_human:block/wy_wall_perforated"
+  }
+}

@@ -3,13 +3,13 @@
   "geneBonusDataEntries": [
     {
       "id": "avp_human:move_speed",
-      "operation": "ADDITIVE",
-      "value": 0.015
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
     },
     {
-      "id": "avp_human:intelligence",
+      "id": "avp_human:step_height",
       "operation": "ADDITIVE",
-      "value": -5.0
+      "value": 0.0625
     }
   ]
 }

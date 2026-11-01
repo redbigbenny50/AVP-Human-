@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "avp_human:block/wy_floor_rubber_stud",
+    "side": "avp_human:block/wy_floor_rubber_stud",
+    "top": "avp_human:block/wy_floor_rubber_stud"
+  }
+}

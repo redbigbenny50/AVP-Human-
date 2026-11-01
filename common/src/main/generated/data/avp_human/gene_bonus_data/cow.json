@@ -2,14 +2,34 @@
   "entityTypePredicate": "minecraft:cow",
   "geneBonusDataEntries": [
     {
+      "id": "avp_human:max_health",
+      "operation": "ADDITIVE",
+      "value": 0.625
+    },
+    {
+      "id": "avp_human:knockback_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.025
+    },
+    {
       "id": "avp_human:bonus_embryo_count",
       "operation": "ADDITIVE",
-      "value": 0.25
+      "value": 0.0625
     },
     {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": -10.0
+      "value": -6.25
+    },
+    {
+      "id": "avp_human:milkable",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:milk",
+      "operation": "ADDITIVE",
+      "value": 0.125
     }
   ]
 }

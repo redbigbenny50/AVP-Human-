@@ -33,6 +33,28 @@ public final class HumanGameRules {
             MixinGameRulesBooleanValueAccessor.blib$create(true)
         );
 
+    /**
+     * [stated] Oct 25 - genetics guard 1. {@code true}: bonus-embryo extra babies are not born while 60 or more of the
+     * same animal live within 32 blocks. {@code false}: no cap.
+     */
+    public static final GameRules.Key<GameRules.BooleanValue> BONUS_EMBRYO_CROWD_CAP = MixinGameRulesAccessor
+        .blib$register(
+            "humanBonusEmbryoCrowdCap",
+            GameRules.Category.MOBS,
+            MixinGameRulesBooleanValueAccessor.blib$create(true)
+        );
+
+    /**
+     * [stated] Oct 30: players can inject themselves - a temporary 3-day infusion (see PlayerGeneInfusion). ON by
+     * default; off, a self-injection is refused with a message and nothing is used up. Read at each injection.
+     */
+    public static final GameRules.Key<GameRules.BooleanValue> PLAYER_GENE_INJECTION = MixinGameRulesAccessor
+        .blib$register(
+            "humanPlayerGeneInjection",
+            GameRules.Category.PLAYER,
+            MixinGameRulesBooleanValueAccessor.blib$create(true)
+        );
+
     private HumanGameRules() {
         throw new UnsupportedOperationException();
     }

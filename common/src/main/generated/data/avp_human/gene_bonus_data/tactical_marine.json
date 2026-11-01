@@ -2,14 +2,14 @@
   "entityTypePredicate": "avp_human:tactical_marine",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:attack_damage",
-      "operation": "ADDITIVE",
-      "value": 1.0
-    },
-    {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": 30.0
+      "value": 12.5
+    },
+    {
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
     }
   ]
 }

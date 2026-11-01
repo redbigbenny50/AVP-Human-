@@ -24,6 +24,8 @@ public class WyCreativeModeTabInitializer {
         // [stated] Oct 20 - the W-Y building set, in its build order: walls, patterns, panels, screens, lights, vents,
         // structure, floors, ceiling, locker, window.
         HumanWyBlocks.ALL.forEach(block -> CreativeModeTabUtil.accept(output, block));
+        // [stated] Oct 30: their slabs, stairs and walls, after the full blocks.
+        HumanWyBlocks.SHAPES.forEach(shape -> CreativeModeTabUtil.accept(output, shape.block()));
 
         // Machines
         CreativeModeTabUtil.accept(output, HumanFabrication.WY_FABRICATOR);

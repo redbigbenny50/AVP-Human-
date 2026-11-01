@@ -2,19 +2,19 @@
   "entityTypePredicate": "minecraft:cave_spider",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:move_speed",
+      "id": "avp_human:max_health",
+      "operation": "ADDITIVE",
+      "value": -1.25
+    },
+    {
+      "id": "avp_human:toxin_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.05
+      "value": 0.08333333333333333
     },
     {
       "id": "avp_human:poison",
       "operation": "MULTIPLICATIVE",
-      "value": 0.34
-    },
-    {
-      "id": "avp_human:max_health",
-      "operation": "MULTIPLICATIVE",
-      "value": -0.1
+      "value": 0.075
     }
   ]
 }

@@ -1,0 +1,30 @@
+{
+  "entityTypePredicate": "minecraft:ocelot",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03333333333333333
+    },
+    {
+      "id": "avp_human:fall_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.6666666666666666
+    },
+    {
+      "id": "avp_human:sneak_speed",
+      "operation": "ADDITIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:stealth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03333333333333333
+    }
+  ]
+}

@@ -30,6 +30,16 @@ public class HumanMobEffects {
         return FROZEN_SOLID.getBackingHolder();
     }
 
+    /** [stated] Oct 30: a player's temporary gene infusion - its icon and timer; the genes end when it does. */
+    private static final BLibHolder<MobEffect> GENE_INFUSION = create(
+        "gene_infusion",
+        com.human.common.gameplay.gene.infusion.GeneInfusionEffect::new
+    );
+
+    public static Holder<MobEffect> getGeneInfusionHolder() {
+        return GENE_INFUSION.getBackingHolder();
+    }
+
     private static BLibHolder<MobEffect> create(String path, Supplier<MobEffect> mobEffectSupplier) {
         return REGISTRY.createHolder(path, mobEffectSupplier);
     }

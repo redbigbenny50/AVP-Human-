@@ -1,0 +1,30 @@
+{
+  "entityTypePredicate": "minecraft:spider",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:sneak_speed",
+      "operation": "ADDITIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:stealth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03333333333333333
+    },
+    {
+      "id": "avp_human:toxin_resistance",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    }
+  ]
+}

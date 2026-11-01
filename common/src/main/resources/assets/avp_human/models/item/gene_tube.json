@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "avp_human:item/gene_tube",
+    "layer1": "avp_human:item/gene_tube_overlay"
+  }
+}

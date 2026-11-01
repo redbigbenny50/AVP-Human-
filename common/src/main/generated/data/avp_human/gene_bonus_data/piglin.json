@@ -2,24 +2,19 @@
   "entityTypePredicate": "minecraft:piglin",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:attack_damage",
-      "operation": "ADDITIVE",
-      "value": 4.0
-    },
-    {
-      "id": "avp_human:intelligence",
-      "operation": "ADDITIVE",
-      "value": 10.0
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
     },
     {
       "id": "avp_human:fire_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.15
+      "value": 0.0625
     },
     {
-      "id": "avp_human:cold_resistance",
-      "operation": "MULTIPLICATIVE",
-      "value": -0.075
+      "id": "avp_human:intelligence",
+      "operation": "ADDITIVE",
+      "value": 8.333333333333334
     }
   ]
 }

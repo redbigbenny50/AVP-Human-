@@ -49,6 +49,8 @@ public class TacticalMarineGearDecorator implements MarineDecorator {
     public void applyExclusives(Marine marine) {
         MarineGearDecoratorUtil.giveDroppableItem(marine, HumanItems.DOG_TAG.get());
         MarineGearDecoratorUtil.giveItem(marine, HumanItems.CORNBREAD.get(), 5 + marine.getRandom().nextInt(10));
+        // [stated] Oct 27 - the dog handlers: bones are how a tactical marine recruits a wild wolf.
+        MarineGearDecoratorUtil.giveItem(marine, Items.BONE, 7 + marine.getRandom().nextInt(12));
     }
 
     public void applyExtras(Marine marine) {

@@ -23,6 +23,9 @@ public class HumanAdvancements {
 
     public static final BLibAdvancement SMELT_TITANIUM = create("smelt_titanium");
 
+    /** [stated] Oct 30: the rare challenge for milking yourself (Milkable gene, empty bucket used in the air). */
+    public static final BLibAdvancement SELF_MILKER = create("self_milker");
+
     private static BLibAdvancement create(String path) {
         return new BLibAdvancement(Human.MOD_ID, "humans", path);
     }

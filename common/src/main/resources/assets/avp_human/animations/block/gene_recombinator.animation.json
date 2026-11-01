@@ -1,0 +1,1519 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"gLFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLTube": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRTube": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				}
+			}
+		},
+		"load": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.6,
+			"bones": {
+				"gLTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLFingerA": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0.997
+							]
+						}
+					}
+				},
+				"gLFingerB": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								-0.997
+							]
+						}
+					}
+				},
+				"gRFingerA": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0.997
+							]
+						}
+					}
+				},
+				"gRFingerB": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								-0.997
+							]
+						}
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		},
+		"pour": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 3.4,
+			"bones": {
+				"gLShoulder": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-45.517
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								-27.202
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								-50.991
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								-37.555
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								-37.555
+							]
+						}
+					}
+				},
+				"gLElbow": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								55.519
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								25.245
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								94.193
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								80.919
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								80.919
+							]
+						}
+					}
+				},
+				"gLWrist": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-10.002
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								1.956
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								-43.203
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								71.636
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								71.636
+							]
+						}
+					}
+				},
+				"gRShoulder": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								45.517
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								27.202
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								50.991
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								37.555
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								37.555
+							]
+						}
+					}
+				},
+				"gRElbow": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-55.519
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								-25.245
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								-94.193
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								-80.919
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								-80.919
+							]
+						}
+					}
+				},
+				"gRWrist": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								10.002
+							]
+						},
+						"0.5": {
+							"vector": [
+								0,
+								0,
+								-1.956
+							]
+						},
+						"1.7": {
+							"vector": [
+								0,
+								0,
+								43.203
+							]
+						},
+						"2.4": {
+							"vector": [
+								0,
+								0,
+								-71.636
+							]
+						},
+						"3.4": {
+							"vector": [
+								0,
+								0,
+								-71.636
+							]
+						}
+					}
+				},
+				"gLFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0.997
+						]
+					}
+				},
+				"gLFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							-0.997
+						]
+					}
+				},
+				"gRFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0.997
+						]
+					}
+				},
+				"gRFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							-0.997
+						]
+					}
+				},
+				"gLTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"0": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"2.4": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"3.18": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"3.2": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"0": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"2.4": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"3.18": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"3.2": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"2.5": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"2.52": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"2.8": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						}
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"2.8": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"2.82": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"3.1": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						}
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"3.1": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"3.12": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"3.4": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						}
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		},
+		"return": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1.6,
+			"bones": {
+				"gLShoulder": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								-37.555
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-45.517
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								-50.991
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								-27.202
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLElbow": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								80.919
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								55.519
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								94.193
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								25.245
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLWrist": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								71.636
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-10.002
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								-43.203
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								1.956
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRShoulder": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								37.555
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								45.517
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								50.991
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								27.202
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRElbow": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								-80.919
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								-55.519
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								-94.193
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								-25.245
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRWrist": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								-71.636
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								0,
+								10.002
+							]
+						},
+						"0.6": {
+							"vector": [
+								0,
+								0,
+								43.203
+							]
+						},
+						"1.3": {
+							"vector": [
+								0,
+								0,
+								-1.956
+							]
+						},
+						"1.6": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0.997
+						]
+					}
+				},
+				"gLFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							-0.997
+						]
+					}
+				},
+				"gRFingerA": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							0.997
+						]
+					}
+				},
+				"gRFingerB": {
+					"position": {
+						"vector": [
+							0,
+							0,
+							-0.997
+						]
+					}
+				},
+				"gLTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				}
+			}
+		},
+		"release": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.6,
+			"bones": {
+				"gLFingerA": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0.997
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLFingerB": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								-0.997
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRFingerA": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0.997
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gRFingerB": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								-0.997
+							]
+						},
+						"0.4": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gRTube": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		},
+		"mix": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"gAgitator": {
+					"rotation": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"1": {
+							"vector": [
+								0,
+								360,
+								0
+							]
+						}
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"vector": [
+							1,
+							1,
+							1
+						]
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		},
+		"press": {
+			"animation_length": 1.5,
+			"bones": {
+				"gPiston": {
+					"position": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.75": {
+							"vector": [
+								0,
+								-4,
+								0
+							]
+						},
+						"1.5": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLayer1": {
+					"scale": {
+						"0": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"0.5": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"0.73": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"0.75": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLayer2": {
+					"scale": {
+						"0": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"0.25": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"0.53": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"0.55": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gLayer3": {
+					"scale": {
+						"0": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						},
+						"0.28": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"0.3": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						}
+					}
+				},
+				"gOutFluid": {
+					"scale": {
+						"0": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.3": {
+							"vector": [
+								0,
+								0,
+								0
+							]
+						},
+						"0.32": {
+							"vector": [
+								1,
+								0.05,
+								1
+							]
+						},
+						"0.9": {
+							"vector": [
+								1,
+								1,
+								1
+							]
+						}
+					}
+				},
+				"gLTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"gRTubeFluid": {
+					"scale": {
+						"vector": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		}
+	}
+}

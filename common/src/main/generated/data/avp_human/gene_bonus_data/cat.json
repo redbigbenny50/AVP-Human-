@@ -1,0 +1,35 @@
+{
+  "entityTypePredicate": "minecraft:cat",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:fall_resistance",
+      "operation": "ADDITIVE",
+      "value": 1.0
+    },
+    {
+      "id": "avp_human:sneak_speed",
+      "operation": "ADDITIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:stealth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    },
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
+    },
+    {
+      "id": "avp_human:luck",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

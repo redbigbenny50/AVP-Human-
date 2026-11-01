@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "avp_human:block/uscm_wall_ribbed",
+    "side": "avp_human:block/uscm_wall_ribbed",
+    "top": "avp_human:block/uscm_wall_ribbed"
+  }
+}

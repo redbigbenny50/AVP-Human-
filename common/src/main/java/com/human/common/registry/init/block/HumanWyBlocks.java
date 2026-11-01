@@ -15,6 +15,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -209,6 +212,21 @@ public final class HumanWyBlocks {
      * Steel-strength properties, from a FRESH builder every call, so a light level chained onto one block can never
      * leak into another block's properties.
      */
+    private static final List<FacilityShape> SHAPES_MUTABLE = new ArrayList<>();
+
+    /** [stated] Oct 30: slabs, stairs and walls for the W-Y wall faces; slabs and stairs for the W-Y floors. */
+    public static final List<FacilityShape> SHAPES = Collections.unmodifiableList(SHAPES_MUTABLE);
+
+    static {
+        shapes(WALL, "wy_wall", "W-Y Wall", true);
+        shapes(PERFORATED_PANEL, "wy_wall_perforated", "W-Y Perforated Panel", true);
+        shapes(FLUTED_PANEL, "wy_fluted_panel", "W-Y Fluted Panel", true);
+        shapes(TREAD_MAT, "wy_floor_rubber_tread", "W-Y Tread Mat", false);
+        shapes(STUD_MAT, "wy_floor_rubber_stud", "W-Y Stud Mat", false);
+        shapes(CHEVRON_MAT, "wy_floor_rubber_herringbone", "W-Y Chevron Mat", false);
+        shapes(SLAT_FLOOR, "wy_floor_slat_plate", "W-Y Slat Floor", false);
+    }
+
     private static BlockBehaviour.Properties steel(int light) {
         var properties = HumanBlockProperties.STEEL_SUPPLIER.get().build();
         return light > 0 ? properties.lightLevel(state -> light) : properties;
@@ -251,6 +269,50 @@ public final class HumanWyBlocks {
         ITEMS_MUTABLE.put(holder, ITEMS.<Item>createHolder(id, () -> new BlockItem(holder.get(), new Item.Properties())));
 
         return holder;
+    }
+
+    /**
+     * Registers the slab, stairs and (when {@code wall}) wall cut from {@code base}; same steel properties as the base.
+     */
+    private static void shapes(BLibHolder<Block> base, String baseId, String baseName, boolean wall) {
+        SHAPES_MUTABLE.add(
+            shape(base, baseId, baseId + "_slab", baseName + " Slab", FacilityShape.Kind.SLAB, () -> new SlabBlock(steel()))
+        );
+        SHAPES_MUTABLE.add(
+            shape(
+                base,
+                baseId,
+                baseId + "_stairs",
+                baseName + " Stairs",
+                FacilityShape.Kind.STAIRS,
+                () -> new StairBlock(base.get().defaultBlockState(), steel())
+            )
+        );
+        if (wall) {
+            SHAPES_MUTABLE.add(
+                shape(
+                    base,
+                    baseId,
+                    baseId + "_wall",
+                    FacilityShape.wallName(baseName),
+                    FacilityShape.Kind.WALL,
+                    () -> new WallBlock(steel())
+                )
+            );
+        }
+    }
+
+    private static FacilityShape shape(
+        BLibHolder<Block> base,
+        String baseId,
+        String id,
+        String name,
+        FacilityShape.Kind kind,
+        Supplier<Block> supplier
+    ) {
+        var holder = BLOCKS.<Block>createHolder(id, supplier);
+        var item = ITEMS.<Item>createHolder(id, () -> new BlockItem(holder.get(), new Item.Properties()));
+        return new FacilityShape(holder, item, base, kind, id, name, baseId);
     }
 
     public static void initialize() {

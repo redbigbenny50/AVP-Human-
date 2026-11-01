@@ -123,7 +123,9 @@ public class HumanFabric implements ModInitializer {
         // [stated] Oct 19 - spiders and cave spiders: a 20% cobweb.
         LootTableModifiers.SPIDER_COBWEB_LOOT_TABLE_MODIFIER.apply(key, builder);
 
-        // Oct 24 - the M42A3 blueprint in ruins: a pool of its own in ocean ruin chests, and an entry IN the existing
+        // Oct 25 - the F903WE blueprint in ruins and the M42A3 in pillager outposts (HumanVanillaLoot): a pool of its
+        // own
+        // in ocean ruin and pillager outpost chests, and an entry IN the existing
         // pool of the trail ruins' rare archaeology (brushing keeps only the first item, so it must not be its own
         // pool).
         for (var pool : com.human.common.data.loot.HumanVanillaLoot.extraPools(key)) {

@@ -1,0 +1,45 @@
+{
+  "entityTypePredicate": "minecraft:frog",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:jump_height",
+      "operation": "ADDITIVE",
+      "value": 0.024999999999999998
+    },
+    {
+      "id": "avp_human:fall_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.5
+    },
+    {
+      "id": "avp_human:air_capacity",
+      "operation": "ADDITIVE",
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:stealth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:cold_blooded",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:bonus_parasite_count",
+      "operation": "ADDITIVE",
+      "value": 0.16666666666666666
+    },
+    {
+      "id": "avp_human:accelerated_growth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:fertility",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    }
+  ]
+}

@@ -15,6 +15,24 @@ public class ToolsAndUtilitiesCreativeModeTabInitializer {
         CreativeModeTabUtil.accept(output, HumanItems.ARMOR_CASE);
         CreativeModeTabUtil.accept(output, HumanItems.GENE_READER);
         CreativeModeTabUtil.accept(output, HumanItems.SYRINGE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneTubes.EMPTY_GENE_TUBE);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneticist.GENETICIST_STATION_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneticist.CLEANSER);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneStorage.GENE_STORAGE_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneStorage.WY_GENE_STORAGE_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneStorage.USCM_GENE_STORAGE_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneAnalyzer.GENE_ANALYZER_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneAnalyzer.WY_GENE_ANALYZER_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneAnalyzer.USCM_GENE_ANALYZER_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSeparator.GENE_SEPARATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSeparator.WY_GENE_SEPARATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSeparator.USCM_GENE_SEPARATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneRecombinator.GENE_RECOMBINATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneRecombinator.WY_GENE_RECOMBINATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneRecombinator.USCM_GENE_RECOMBINATOR_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSplicer.GENE_SPLICER_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSplicer.WY_GENE_SPLICER_ITEM);
+        CreativeModeTabUtil.accept(output, com.human.common.registry.init.HumanGeneSplicer.USCM_GENE_SPLICER_ITEM);
         CreativeModeTabUtil.accept(output, HumanItems.CANISTER);
 
         // One full canister for EVERY fluid that can go in one - vanilla's, ours and any other mod's - found in the

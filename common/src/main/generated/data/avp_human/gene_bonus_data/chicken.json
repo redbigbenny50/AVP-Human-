@@ -1,0 +1,35 @@
+{
+  "entityTypePredicate": "minecraft:chicken",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:fall_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.6666666666666666
+    },
+    {
+      "id": "avp_human:lightweight",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:accelerated_growth",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:rapid_gestation",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:fertility",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:egg_laying",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

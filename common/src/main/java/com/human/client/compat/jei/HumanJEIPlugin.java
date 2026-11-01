@@ -54,6 +54,8 @@ public class HumanJEIPlugin implements IModPlugin {
         registration.addRecipeCategories(new BlueprintSourceCategory(gui));
         registration.addRecipeCategories(new BlueprintTableCategory(gui));
         registration.addRecipeCategories(new DryingCategory(gui, bucket));
+        // Genetics: the harvest genes and the substance bucket.
+        registration.addRecipeCategories(new HarvestingCategory(gui));
     }
 
     @Override
@@ -82,6 +84,7 @@ public class HumanJEIPlugin implements IModPlugin {
         registration.addRecipes(BlueprintSourceCategory.TYPE, com.human.client.compat.BlueprintSources.all());
         registration.addRecipes(BlueprintTableCategory.TYPE, com.human.client.compat.BlueprintTableRecipe.all());
         registration.addRecipes(DryingCategory.TYPE, com.human.client.compat.DryingRecipe.all());
+        registration.addRecipes(HarvestingCategory.TYPE, com.human.client.compat.HarvestRecipe.all());
     }
 
     private static <I extends net.minecraft.world.item.crafting.RecipeInput, R extends net.minecraft.world.item.crafting.Recipe<I>> java.util.List<R> values(

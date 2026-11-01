@@ -1,0 +1,10 @@
+{
+  "entityTypePredicate": "minecraft:ghast",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:lightweight",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
+    }
+  ]
+}

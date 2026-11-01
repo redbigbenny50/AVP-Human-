@@ -2,14 +2,9 @@
   "entityTypePredicate": "minecraft:illusioner",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:attack_damage",
-      "operation": "ADDITIVE",
-      "value": 2.5
-    },
-    {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": 15.0
+      "value": 8.333333333333334
     }
   ]
 }

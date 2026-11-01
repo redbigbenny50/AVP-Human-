@@ -1,0 +1,10 @@
+{
+  "entityTypePredicate": "minecraft:endermite",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:warp",
+      "operation": "ADDITIVE",
+      "value": 0.08333333333333333
+    }
+  ]
+}

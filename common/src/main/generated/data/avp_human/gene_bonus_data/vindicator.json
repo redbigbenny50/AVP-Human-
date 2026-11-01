@@ -4,12 +4,12 @@
     {
       "id": "avp_human:attack_damage",
       "operation": "ADDITIVE",
-      "value": 6.5
+      "value": 0.6666666666666666
     },
     {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": 15.0
+      "value": 8.333333333333334
     }
   ]
 }

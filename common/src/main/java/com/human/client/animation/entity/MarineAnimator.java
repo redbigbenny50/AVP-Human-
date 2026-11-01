@@ -2,6 +2,9 @@ package com.human.client.animation.entity;
 
 import com.blib.api.client.animation.v1.BLibEntityAnimationUtils;
 import com.blib.api.client.animation.v1.animator.AzEntityAnimator;
+import com.blib.api.client.animation.v1.pose.AzBoneConstraints;
+import com.blib.api.client.animation.v1.pose.AzPoseModifierRegistry;
+import com.blib.api.client.animation.v1.pose.secondary.AzSpringBone;
 import com.blib.api.client.animation.v1.track.AzAnimationTrack;
 import com.blib.api.client.animation.v1.track.AzAnimationTrackContainer;
 import com.blib.api.client.model.v1.AzBone;
@@ -88,6 +91,26 @@ public class MarineAnimator extends AzEntityAnimator<Marine> {
     @Override
     public @NotNull ResourceLocation getAnimationLocation(Marine animatable) {
         return ANIMATION;
+    }
+
+    /**
+     * BLib pose system (Oct 31) - the canteen on the marine's back swings a little on its belt clip when the marine
+     * runs, turns or stops. Kept stiff so it never swings into the body. A model without {@code gCantine} simply skips
+     * it.
+     */
+    @Override
+    protected void registerPoseModifiers(AzPoseModifierRegistry<Marine> modifiers) {
+        modifiers.add(
+            "canteen",
+            AzSpringBone.<Marine>chain("gCantine")
+                .tip(0, -3.3F, 0)
+                .stiffness(0.40F)
+                .damping(0.35F)
+                .gravity(0.002F)
+                // Blockbench degrees: a short swing, a little twist, never a full flip onto the body.
+                .constraint(AzBoneConstraints.limit("gCantine", -25, 25, -10, 10, -25, 25))
+                .build()
+        );
     }
 
     @Override

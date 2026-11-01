@@ -8,7 +8,6 @@ import com.human.common.registry.init.item.HumanGunItems;
 import com.human.common.registry.init.item.HumanItems;
 import com.just.core.functional.tuple.Tuple2;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class MarineGearDecorator implements MarineDecorator {
     public void applyExclusives(Marine marine) {
         MarineGearDecoratorUtil.giveDroppableItem(marine, HumanItems.DOG_TAG.get());
         MarineGearDecoratorUtil.giveItem(marine, HumanItems.CORNBREAD.get(), 5 + marine.getRandom().nextInt(10));
-        MarineGearDecoratorUtil.giveItem(marine, Items.BONE, 7 + marine.getRandom().nextInt(12));
+        // [stated] Oct 27 - no bones: only tactical marines handle dogs, and bones are what recruit wild wolves.
     }
 
     public void applyExtras(Marine marine) {

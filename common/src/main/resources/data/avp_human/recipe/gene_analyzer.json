@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "D": {
+      "item": "avp_human:desk_terminal"
+    },
+    "R": {
+      "item": "avp_human:gene_reader"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "B": {
+      "item": "avp_human:motherboard"
+    }
+  },
+  "pattern": [
+    "GDG",
+    "RMR",
+    "SBS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:gene_analyzer"
+  }
+}

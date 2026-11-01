@@ -2,19 +2,34 @@
   "entityTypePredicate": "minecraft:pig",
   "geneBonusDataEntries": [
     {
+      "id": "avp_human:max_health",
+      "operation": "ADDITIVE",
+      "value": -1.25
+    },
+    {
+      "id": "avp_human:forager",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:metabolism",
+      "operation": "MULTIPLICATIVE",
+      "value": -0.03125
+    },
+    {
       "id": "avp_human:bonus_embryo_count",
       "operation": "ADDITIVE",
-      "value": 1.0
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:rapid_gestation",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.041666666666666664
     },
     {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": -15.0
-    },
-    {
-      "id": "avp_human:max_health",
-      "operation": "MULTIPLICATIVE",
-      "value": -0.1
+      "value": -6.25
     }
   ]
 }

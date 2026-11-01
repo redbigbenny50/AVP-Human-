@@ -1,8 +1,23 @@
 {
   "values": [
     "minecraft:birch_forest",
+    "minecraft:flower_forest",
     "minecraft:forest",
-    "minecraft:meadow",
-    "minecraft:plains"
+    "minecraft:old_growth_birch_forest",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:taiga",
+    {
+      "id": "#c:is_plains",
+      "required": false
+    },
+    {
+      "id": "#c:is_birch_forest",
+      "required": false
+    },
+    {
+      "id": "#c:is_flower_forest",
+      "required": false
+    }
   ]
 }

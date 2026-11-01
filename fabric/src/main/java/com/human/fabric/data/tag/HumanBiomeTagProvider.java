@@ -21,38 +21,61 @@ public class HumanBiomeTagProvider extends FabricTagProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
+        // [stated] Oct 28 - the structures read their biomes from these tags (they used to carry their own vanilla-only
+        // lists, so with Terralith or another biome mod they had almost nowhere to spawn - the badlands outpost worst).
+        // Each keeps exactly its old vanilla biomes, plus the shared "c" convention tag for that biome family, which
+        // biome mods add their own biomes to. Optional, so a pack without the tag loses nothing.
         getOrCreateTagBuilder(HumanBiomeTags.HAS_MARINE_CAMP_GRASS)
             .add(Biomes.BIRCH_FOREST)
+            .add(Biomes.FLOWER_FOREST)
             .add(Biomes.FOREST)
-            .add(Biomes.MEADOW)
-            .add(Biomes.PLAINS);
+            .add(Biomes.OLD_GROWTH_BIRCH_FOREST)
+            .add(Biomes.PLAINS)
+            .add(Biomes.SUNFLOWER_PLAINS)
+            .add(Biomes.TAIGA)
+            .addOptionalTag(common("is_plains"))
+            .addOptionalTag(common("is_birch_forest"))
+            .addOptionalTag(common("is_flower_forest"));
 
         applyStandardMarineBiomes(HumanBiomeTags.HAS_MARINE_PATROLS)
             .addOptionalTag(BiomeTags.IS_SAVANNA);
 
         getOrCreateTagBuilder(HumanBiomeTags.HAS_MOBILE_LAB)
             .add(Biomes.BADLANDS)
-            .add(Biomes.CHERRY_GROVE)
             .add(Biomes.DESERT)
+            .add(Biomes.CHERRY_GROVE)
+            .add(Biomes.ERODED_BADLANDS)
+            .add(Biomes.PLAINS)
             .add(Biomes.SAVANNA)
-            .add(Biomes.STONY_SHORE)
-            .add(Biomes.SNOWY_PLAINS);
+            .add(Biomes.SNOWY_PLAINS)
+            .add(Biomes.WINDSWEPT_SAVANNA)
+            .addOptionalTag(common("is_badlands"))
+            .addOptionalTag(common("is_desert"))
+            .addOptionalTag(common("is_plains"))
+            .addOptionalTag(common("is_snowy_plains"))
+            .addOptionalTag(common("is_savanna"));
 
+        // No convention tag fits meadow + savanna plateau without pulling in badlands and cherry groves, so the
+        // communications outpost keeps its two vanilla biomes only.
         getOrCreateTagBuilder(HumanBiomeTags.HAS_OUTPOST_COMMS)
-            .add(Biomes.FLOWER_FOREST)
-            .add(Biomes.SUNFLOWER_PLAINS)
-            .add(Biomes.WINDSWEPT_HILLS)
-            .add(Biomes.WINDSWEPT_SAVANNA);
+            .add(Biomes.MEADOW)
+            .add(Biomes.SAVANNA_PLATEAU);
 
         getOrCreateTagBuilder(HumanBiomeTags.HAS_OUTPOST_MUNITION)
+            .add(Biomes.OLD_GROWTH_PINE_TAIGA)
+            .add(Biomes.OLD_GROWTH_SPRUCE_TAIGA)
             .add(Biomes.SNOWY_TAIGA)
-            .add(Biomes.TAIGA);
+            .addOptionalTag(common("is_taiga"));
 
         getOrCreateTagBuilder(HumanBiomeTags.HAS_OUTPOST_SUPPLY_BADLAND)
-            .add(Biomes.BADLANDS);
+            .add(Biomes.BADLANDS)
+            .add(Biomes.WOODED_BADLANDS)
+            .addOptionalTag(BiomeTags.IS_BADLANDS)
+            .addOptionalTag(common("is_badlands"));
 
         getOrCreateTagBuilder(HumanBiomeTags.HAS_OUTPOST_SUPPLY_DESERT)
-            .add(Biomes.DESERT);
+            .add(Biomes.DESERT)
+            .addOptionalTag(common("is_desert"));
 
         getOrCreateTagBuilder(HumanBiomeTags.HAS_TACTICAL_MARINE_PATROLS)
             .addOptionalTag(BiomeTags.IS_JUNGLE)
@@ -83,6 +106,11 @@ public class HumanBiomeTagProvider extends FabricTagProvider<Biome> {
 
         getOrCreateTagBuilder(HumanBiomeTags.IS_IRRADIATED)
             .addOptional(HumanBiomeKeys.NUKED_BIOME);
+    }
+
+    /** A shared "c" convention biome tag (both loaders define the same set in 1.21.1). */
+    private static TagKey<Biome> common(String path) {
+        return TagKey.create(Registries.BIOME, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", path));
     }
 
     private FabricTagProvider<Biome>.FabricTagBuilder applyStandardMarineBiomes(TagKey<Biome> biomeTag) {

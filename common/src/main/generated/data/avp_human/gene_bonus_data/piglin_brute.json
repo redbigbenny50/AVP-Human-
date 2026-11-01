@@ -4,22 +4,17 @@
     {
       "id": "avp_human:attack_damage",
       "operation": "ADDITIVE",
-      "value": 6.5
+      "value": 0.6666666666666666
     },
     {
       "id": "avp_human:fire_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.15
+      "value": 0.0625
     },
     {
       "id": "avp_human:intelligence",
       "operation": "ADDITIVE",
-      "value": 5.0
-    },
-    {
-      "id": "avp_human:cold_resistance",
-      "operation": "MULTIPLICATIVE",
-      "value": -0.075
+      "value": 8.333333333333334
     }
   ]
 }

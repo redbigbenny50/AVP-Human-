@@ -49,6 +49,11 @@ public class GeneMap {
         return multiplicative + additive;
     }
 
+    /** True when no gene is held at all - the cheap check hot paths use before looking anything up. */
+    public boolean isEmpty() {
+        return geneMap.isEmpty();
+    }
+
     public Map<GeneModifierKey, Double> getBackingMap() {
         return Collections.unmodifiableMap(geneMap);
     }
@@ -104,6 +109,13 @@ public class GeneMap {
     public void clear() {
         setDirty();
         geneMap.clear();
+    }
+
+    /** Takes a gene modifier out entirely (marked dirty, so its effect is taken off on the next tick). */
+    public void remove(GeneModifierKey geneModifierKey) {
+        if (geneMap.remove(geneModifierKey) != null) {
+            dirtyKeys.add(geneModifierKey);
+        }
     }
 
     public Set<GeneModifierKey> getDirtyKeys() {

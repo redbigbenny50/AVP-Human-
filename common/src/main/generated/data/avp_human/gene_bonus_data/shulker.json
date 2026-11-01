@@ -1,0 +1,20 @@
+{
+  "entityTypePredicate": "minecraft:shulker",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:armor",
+      "operation": "ADDITIVE",
+      "value": 0.375
+    },
+    {
+      "id": "avp_human:armor_toughness",
+      "operation": "ADDITIVE",
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:warp",
+      "operation": "ADDITIVE",
+      "value": 0.08333333333333333
+    }
+  ]
+}

@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * avp_human's Oct 24 ruin loot on NeoForge (HumanVanillaLoot; Fabric does the same through its loot event): the M42A3
- * blueprint as a pool of its own in ocean ruin chests, and as one more entry IN the existing pool of the trail ruins'
- * rare archaeology table - brushing keeps only the first item a roll gives, so a separate pool there would never pay
- * out. A failure is logged and skipped, never allowed to break the table's loading.
+ * avp_human's added structure loot on NeoForge (HumanVanillaLoot; Fabric does the same through its loot event): the
+ * F903WE blueprint as a pool of its own in ocean ruin chests (and the M42A3 likewise in pillager outpost chests), and
+ * as one more entry IN the existing pool of the trail ruins' rare archaeology table - brushing keeps only the first
+ * item a roll gives, so a separate pool there would never pay out. A failure is logged and skipped, never allowed to
+ * break the table's loading.
  */
 public final class HumanNeoForgeLoot {
 

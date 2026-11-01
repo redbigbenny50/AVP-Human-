@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/wy_floor_rubber_herringbone_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/wy_floor_rubber_herringbone"
+    },
+    "type=top": {
+      "model": "avp_human:block/wy_floor_rubber_herringbone_slab_top"
+    }
+  }
+}

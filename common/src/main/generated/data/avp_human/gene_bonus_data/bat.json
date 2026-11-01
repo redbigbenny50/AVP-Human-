@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "minecraft:bat",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:lightweight",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    }
+  ]
+}

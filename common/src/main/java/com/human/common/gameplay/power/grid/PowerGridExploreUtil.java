@@ -2,14 +2,16 @@ package com.human.common.gameplay.power.grid;
 
 import com.human.common.gameplay.block.entity.power.PowerNodeBlockEntity;
 import com.human.common.gameplay.power.PowerNode;
+import com.human.common.gameplay.power.PowerParts;
 import com.human.common.registry.init.HumanBlocks;
 import com.just.core.traversal.BFS;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PowerGridExploreUtil {
@@ -25,21 +27,64 @@ public class PowerGridExploreUtil {
     public static Set<BlockPos> discover(Level level, BlockPos start) {
         var visited = new HashSet<BlockPos>();
 
-        BFS.traverse(
-            start,
-            current -> Arrays.stream(VALUES)
-                // ⭐ THE BREAKER CHECK, AND IT MUST BE ON BOTH SIDES. A face is only traversable when the block we
-                // are leaving has that face open AND the block we are entering has ITS facing side open. Checking
-                // one end would make a closed port asymmetric - power could not leave the battery but could still be
-                // pulled out of it from the far side, which is the kind of one-way leak nobody would ever find.
-                .filter(direction -> portsOpen(level, current, direction))
-                .map(current::relative)
-                .filter(relPos -> isConnectable(level, relPos))
-                .toList(),
-            visited::add
-        );
+        BFS.traverse(start, current -> neighbours(level, current), visited::add);
 
         return visited;
+    }
+
+    /**
+     * What one step of a walk reaches from {@code current}: the six faces as before, plus the steps through a
+     * multi-block machine's parts ({@link PowerParts}).
+     */
+    private static List<BlockPos> neighbours(Level level, BlockPos current) {
+        var out = new ArrayList<BlockPos>(6);
+
+        for (var direction : VALUES) {
+            // ⭐ THE BREAKER CHECK, AND IT MUST BE ON BOTH SIDES. A face is only traversable when the block we are
+            // leaving has that face open AND the block we are entering has ITS facing side open. Checking one end would
+            // make a closed port asymmetric - power could not leave the battery but could still be pulled out of it
+            // from the far side, which is the kind of one-way leak nobody would ever find.
+            if (!portsOpen(level, current, direction)) {
+                continue;
+            }
+
+            var next = current.relative(direction);
+
+            if (isConnectable(level, next)) {
+                out.add(next);
+                continue;
+            }
+
+            // Oct 31 - a cable against a part of a bigger machine reaches that machine's core.
+            var core = PowerParts.coreThrough(level, next, direction.getOpposite());
+
+            if (core != null) {
+                out.add(core);
+            }
+        }
+
+        // ...and the other way: a machine's core reaches out to the cables at its parts.
+        PowerParts.cableLinks(level, current, outside -> {
+            if (isConnectable(level, outside)) {
+                out.add(outside);
+            }
+        }, ignored -> {});
+
+        return out;
+    }
+
+    /**
+     * The cores a removed or changed position touched through machine parts - the seeds a rebuild must also start from,
+     * because they are not among that position's six neighbours.
+     */
+    public static void coresThroughParts(Level level, BlockPos pos, java.util.function.Consumer<BlockPos> sink) {
+        for (var direction : VALUES) {
+            var core = PowerParts.coreThrough(level, pos.relative(direction), direction.getOpposite());
+
+            if (core != null) {
+                sink.accept(core);
+            }
+        }
     }
 
     /**
@@ -64,6 +109,11 @@ public class PowerGridExploreUtil {
                 if (!level.isLoaded(neighbour) && !component.contains(neighbour)) {
                     frontier.add(neighbour.immutable());
                 }
+            }
+
+            // A machine whose parts, or the cables beyond them, sit in a chunk that has not loaded yet.
+            if (level.isLoaded(member)) {
+                PowerParts.cableLinks(level, member, ignored -> {}, frontier::add);
             }
         }
 

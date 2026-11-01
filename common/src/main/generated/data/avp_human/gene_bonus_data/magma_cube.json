@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "minecraft:magma_cube",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:fire_resistance",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
+    },
+    {
+      "id": "avp_human:slime",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

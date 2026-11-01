@@ -1,0 +1,40 @@
+{
+  "entityTypePredicate": "minecraft:warden",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:max_health",
+      "operation": "ADDITIVE",
+      "value": 1.6666666666666667
+    },
+    {
+      "id": "avp_human:attack_damage",
+      "operation": "ADDITIVE",
+      "value": 0.6666666666666666
+    },
+    {
+      "id": "avp_human:knockback_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.1
+    },
+    {
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": -0.0625
+    },
+    {
+      "id": "avp_human:sturdiness",
+      "operation": "ADDITIVE",
+      "value": 0.06666666666666667
+    },
+    {
+      "id": "avp_human:armor_penetration",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.075
+    }
+  ]
+}

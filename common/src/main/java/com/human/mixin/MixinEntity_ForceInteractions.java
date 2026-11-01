@@ -2,7 +2,6 @@ package com.human.mixin;
 
 import com.human.common.gameplay.item.GeneReaderItem;
 import com.human.common.gameplay.item.SyringeItem;
-import com.human.common.registry.GeneBonusDataRegistry;
 import com.human.common.registry.init.item.HumanItems;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +26,12 @@ public abstract class MixinEntity_ForceInteractions {
 
         if (self instanceof LivingEntity livingSelf) {
 
-            if (avp_human$syringeCheck(itemstack, self) || avp_human$geneReaderCheck(itemstack)) {
+            // ⚠ Both sides must give the SAME answer here. The syringe check used to read the species gene registry,
+            // which is data-pack data the server loads and a dedicated-server client never has - so the client said
+            // "not mine", fell through to the item's own use() (mode cycling on shift), and the server ran the syringe
+            // as well: two actions from one click. Now any living target is claimed on both sides and the SERVER
+            // decides what happens (SyringeItem.interact reports "no genetic data" itself).
+            if (avp_human$syringeCheck(itemstack) || avp_human$geneReaderCheck(itemstack)) {
                 var item = itemstack.getItem();
 
                 if (!livingSelf.level().isClientSide) {
@@ -44,8 +48,8 @@ public abstract class MixinEntity_ForceInteractions {
     }
 
     @Unique
-    private static boolean avp_human$syringeCheck(ItemStack itemstack, Entity self) {
-        return itemstack.is(HumanItems.SYRINGE.get()) && GeneBonusDataRegistry.has(self.getType());
+    private static boolean avp_human$syringeCheck(ItemStack itemstack) {
+        return itemstack.is(HumanItems.SYRINGE.get());
     }
 
     @Unique

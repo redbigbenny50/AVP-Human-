@@ -24,6 +24,11 @@ public class GeneBonusDataRegistry {
         return ENTITY_TYPE_TO_GENE_BONUS_MAP.getOrDefault(entityType, Map.of());
     }
 
+    /** Every species with gene data and its genes - read-only, for the Gene Analyzer's database. */
+    public static Map<EntityType<?>, Map<GeneModifierKey, Double>> all() {
+        return java.util.Collections.unmodifiableMap(ENTITY_TYPE_TO_GENE_BONUS_MAP);
+    }
+
     public static void clear() {
         GENE_BONUS_MAPS.clear();
     }

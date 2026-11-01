@@ -37,6 +37,10 @@ public abstract class MixinLivingEntity_GeneCarrier extends Entity implements Ge
     @Unique
     private GeneManager avp_human$geneManager;
 
+    /** Phase Step (advanced): game time of the last blink. */
+    @Unique
+    private long avp_human$lastPhaseStep = Long.MIN_VALUE;
+
     public MixinLivingEntity_GeneCarrier(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -105,6 +109,25 @@ public abstract class MixinLivingEntity_GeneCarrier extends Entity implements Ge
         var warpStrength = getOrCreateGeneManager().getGeneContainer()
             .getActiveGeneMap()
             .getValue(Genes.WARP, GeneOperationType.ADDITIVE);
+
+        // Phase Step (advanced): a controlled blink instead of random teleports - when something hits it, it blinks
+        // away and dodges the hit, then needs 5 seconds before it can blink again. No random teleporting at all.
+        if (getOrCreateGeneManager().hasAdvanced(Genes.PHASE_STEP)) {
+            var now = level().getGameTime();
+
+            if (damageSource.getEntity() != null && now - avp_human$lastPhaseStep >= 100) {
+                var self = LivingEntity.class.cast(this);
+
+                for (var i = 0; i < 64; ++i) {
+                    if (TeleportUtil.teleport(self)) {
+                        avp_human$lastPhaseStep = now;
+                        cir.setReturnValue(false);
+                        return;
+                    }
+                }
+            }
+            return;
+        }
 
         if (avp_human$shouldTeleportToDodgeProjectile(damageSource, warpStrength) || avp_human$shouldTeleportRandomly(warpStrength)) {
             var self = LivingEntity.class.cast(this);
@@ -221,7 +244,9 @@ public abstract class MixinLivingEntity_GeneCarrier extends Entity implements Ge
                 .getActiveGeneMap()
                 .getValue(Genes.THORNS, GeneOperationType.ADDITIVE);
 
-            if (thornsDamage >= 0) {
+            // ⚠ Was ">= 0", so every mob WITHOUT the gene (value 0) still fired a 0-damage thorns hit back at every
+            // attacker on every hit.
+            if (thornsDamage > 0) {
                 livingEntity.hurt(livingEntity.damageSources().thorns(this), (float) thornsDamage);
             }
         }

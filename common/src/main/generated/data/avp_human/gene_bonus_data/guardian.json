@@ -2,14 +2,24 @@
   "entityTypePredicate": "minecraft:guardian",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:thorns",
+      "id": "avp_human:swim_speed",
       "operation": "ADDITIVE",
-      "value": 2.0
+      "value": 0.08333333333333333
     },
     {
-      "id": "avp_human:attack_damage",
+      "id": "avp_human:air_capacity",
       "operation": "ADDITIVE",
-      "value": 3.0
+      "value": 0.25
+    },
+    {
+      "id": "avp_human:thorns",
+      "operation": "ADDITIVE",
+      "value": 0.3333333333333333
+    },
+    {
+      "id": "avp_human:cold_blooded",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
     }
   ]
 }

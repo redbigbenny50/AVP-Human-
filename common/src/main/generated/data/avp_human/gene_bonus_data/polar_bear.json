@@ -2,19 +2,29 @@
   "entityTypePredicate": "minecraft:polar_bear",
   "geneBonusDataEntries": [
     {
+      "id": "avp_human:max_health",
+      "operation": "ADDITIVE",
+      "value": 1.25
+    },
+    {
       "id": "avp_human:attack_damage",
       "operation": "ADDITIVE",
-      "value": 3.0
+      "value": 0.5
+    },
+    {
+      "id": "avp_human:knockback_resistance",
+      "operation": "ADDITIVE",
+      "value": 0.05
+    },
+    {
+      "id": "avp_human:knockback",
+      "operation": "ADDITIVE",
+      "value": 0.0625
     },
     {
       "id": "avp_human:cold_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.2
-    },
-    {
-      "id": "avp_human:max_health",
-      "operation": "MULTIPLICATIVE",
-      "value": 0.1
+      "value": 0.125
     }
   ]
 }

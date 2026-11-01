@@ -1,19 +1,22 @@
 package com.human.common.gameplay.level.patrol.impl;
 
+import com.human.common.gameplay.entity.living.human.marine.Marine;
 import com.human.common.gameplay.level.patrol.PatrolSpawnTimings;
 import com.human.common.gameplay.level.patrol.PatrolSpawner;
 import com.human.common.gameplay.level.patrol.PatrolSpawnerTicker;
 import com.human.common.gameplay.level.patrol.decorator.gear.MarineGearDecorator;
+import com.human.common.gameplay.level.patrol.decorator.gear.TacticalMarineGearDecorator;
 import com.human.common.gameplay.level.patrol.decorator.squad.MarineSquadLeadershipDecorator;
+import com.human.common.registry.init.HumanEntityTypes;
 import com.human.common.registry.tag.HumanBiomeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarinePatrolSpawnHandle {
 
@@ -50,25 +53,40 @@ public class MarinePatrolSpawnHandle {
         return spawner;
     }
 
+    /**
+     * [stated] Oct 27 - tactical marines are a RARE variant mixed into ordinary patrols, and they are the only marines
+     * that bring dogs. One patrol in five swaps one of its four soldiers for a tactical marine in camo.
+     */
+    public static final float TACTICAL_MIX_IN_CHANCE = 0.2F;
+
+    private static final int PATROL_SIZE = 4;
+
     private void spawn(Level level, Player player, BlockPos.MutableBlockPos mutableBlockPos) {
-        var spawnedMarines = MarineSpawner.spawn(level, player, mutableBlockPos);
+        var withTactical = level.random.nextFloat() < TACTICAL_MIX_IN_CHANCE;
+        var regulars = MarineSpawner.spawn(
+            level,
+            player,
+            mutableBlockPos,
+            HumanEntityTypes.MARINE.get(),
+            withTactical ? PATROL_SIZE - 1 : PATROL_SIZE
+        );
+        var tacticals = withTactical
+            ? MarineSpawner.spawn(level, player, mutableBlockPos, HumanEntityTypes.TACTICAL_MARINE.get(), 1)
+            : List.<Marine>of();
 
-        MarineSquadLeadershipDecorator.INSTANCE.decorate(level, spawnedMarines);
+        var squad = new ArrayList<Marine>(regulars);
+        squad.addAll(tacticals);
 
-        for (var marine : spawnedMarines) {
+        MarineSquadLeadershipDecorator.INSTANCE.decorate(level, squad);
+
+        for (var marine : regulars) {
             MarineGearDecorator.INSTANCE.decorate(level, marine);
         }
 
-        if (!spawnedMarines.isEmpty()) {
-            var spawnedWolves = WolfSpawner.spawn(level, player, mutableBlockPos);
-
-            for (var wolf : spawnedWolves) {
-                wolf.setItemSlot(EquipmentSlot.BODY, new ItemStack(Items.WOLF_ARMOR));
-
-                var randomMarine = spawnedMarines.get(level.random.nextInt(spawnedMarines.size()));
-
-                wolf.assignMarineOwner(randomMarine);
-            }
+        for (var marine : tacticals) {
+            TacticalMarineGearDecorator.INSTANCE.decorate(level, marine);
         }
+
+        WolfSpawner.spawnForTacticalMarines(level, tacticals);
     }
 }

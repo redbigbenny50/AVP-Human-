@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/composite_cement_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/composite_cement"
+    },
+    "type=top": {
+      "model": "avp_human:block/composite_cement_slab_top"
+    }
+  }
+}

@@ -13,6 +13,8 @@ public class HumanFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HumanClient.initialize();
+        // Genetics screens (the gene reader), registered beside HumanClient's own.
+        com.human.client.GeneticsClient.initialize();
         FabricFluidClientInfo.install();
 
         // Fabric's half of liquid latex. NeoForge gets its textures from the FluidType's client extensions instead;

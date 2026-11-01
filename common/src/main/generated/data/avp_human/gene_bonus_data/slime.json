@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "minecraft:slime",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:regeneration",
+      "operation": "ADDITIVE",
+      "value": 0.041666666666666664
+    },
+    {
+      "id": "avp_human:slime",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

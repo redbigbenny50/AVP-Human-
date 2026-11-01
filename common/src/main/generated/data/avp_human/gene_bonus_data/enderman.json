@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "minecraft:enderman",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:night_vision",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:warp",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    }
+  ]
+}

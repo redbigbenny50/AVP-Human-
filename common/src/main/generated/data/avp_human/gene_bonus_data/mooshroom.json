@@ -2,24 +2,24 @@
   "entityTypePredicate": "minecraft:mooshroom",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:armor",
-      "operation": "ADDITIVE",
-      "value": -0.25
+      "id": "avp_human:radiation_resistance",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.08333333333333333
     },
     {
-      "id": "avp_human:armor_toughness",
+      "id": "avp_human:milkable",
       "operation": "ADDITIVE",
-      "value": -0.25
+      "value": 0.125
     },
     {
-      "id": "avp_human:genetic_integrity",
+      "id": "avp_human:bowl_feeding",
       "operation": "ADDITIVE",
-      "value": -0.2
+      "value": 0.125
     },
     {
-      "id": "avp_human:intelligence",
+      "id": "avp_human:stew",
       "operation": "ADDITIVE",
-      "value": -10.0
+      "value": 0.125
     }
   ]
 }

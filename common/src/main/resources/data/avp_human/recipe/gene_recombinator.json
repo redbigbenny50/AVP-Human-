@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "avp_human:empty_gene_tube"
+    },
+    "G": {
+      "item": "avp_human:industrial_glass"
+    },
+    "A": {
+      "item": "minecraft:brewing_stand"
+    },
+    "M": {
+      "item": "avp_human:machine_block"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "B": {
+      "item": "avp_human:motherboard"
+    }
+  },
+  "pattern": [
+    "TGT",
+    "AMA",
+    "SBS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "avp_human:gene_recombinator"
+  }
+}

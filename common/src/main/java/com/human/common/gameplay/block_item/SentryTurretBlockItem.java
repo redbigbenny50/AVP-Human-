@@ -34,6 +34,19 @@ public class SentryTurretBlockItem extends BlockItem {
         super(HumanBlocks.SENTRY_TURRET.get(), new Item.Properties());
     }
 
+    /** Oct 29: old turret stacks carry a random animation id that stops them stacking - see StackableModelBlockItem. */
+    @Override
+    public void inventoryTick(
+        @NotNull ItemStack stack,
+        @NotNull net.minecraft.world.level.Level level,
+        @NotNull net.minecraft.world.entity.Entity entity,
+        int slot,
+        boolean selected
+    ) {
+        super.inventoryTick(stack, level, entity, slot, selected);
+        StackableModelBlockItem.stripAnimationId(stack, level);
+    }
+
     @Override
     public void appendHoverText(
         @NotNull ItemStack stack,

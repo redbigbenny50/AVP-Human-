@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "minecraft:salmon",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:swim_speed",
+      "operation": "ADDITIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:cold_blooded",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    }
+  ]
+}

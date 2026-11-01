@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "avp_human:marine_dog",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
+    }
+  ]
+}

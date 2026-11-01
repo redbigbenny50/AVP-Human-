@@ -2,29 +2,34 @@
   "entityTypePredicate": "minecraft:sniffer",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:bonus_parasite_count",
-      "operation": "ADDITIVE",
-      "value": 0.5
-    },
-    {
-      "id": "avp_human:max_health",
-      "operation": "MULTIPLICATIVE",
-      "value": 0.15
-    },
-    {
       "id": "avp_human:attack_damage",
       "operation": "ADDITIVE",
-      "value": -3.0
-    },
-    {
-      "id": "avp_human:intelligence",
-      "operation": "ADDITIVE",
-      "value": -5.0
+      "value": -0.5
     },
     {
       "id": "avp_human:move_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": -0.025
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": -0.025
+    },
+    {
+      "id": "avp_human:mining_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:metabolism",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.03125
+    },
+    {
+      "id": "avp_human:bonus_parasite_count",
       "operation": "ADDITIVE",
-      "value": -0.01
+      "value": 0.25
     }
   ]
 }

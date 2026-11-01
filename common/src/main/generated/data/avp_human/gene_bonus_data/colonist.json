@@ -1,0 +1,15 @@
+{
+  "entityTypePredicate": "avp_human:colonist",
+  "geneBonusDataEntries": [
+    {
+      "id": "avp_human:luck",
+      "operation": "ADDITIVE",
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:intelligence",
+      "operation": "ADDITIVE",
+      "value": 12.5
+    }
+  ]
+}

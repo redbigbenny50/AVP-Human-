@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "avp_human:block/wy_wall_slab"
+    },
+    "type=double": {
+      "model": "avp_human:block/wy_wall"
+    },
+    "type=top": {
+      "model": "avp_human:block/wy_wall_slab_top"
+    }
+  }
+}

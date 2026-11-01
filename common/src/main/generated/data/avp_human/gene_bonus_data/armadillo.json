@@ -4,17 +4,22 @@
     {
       "id": "avp_human:armor",
       "operation": "ADDITIVE",
-      "value": 2.0
+      "value": 1.5
     },
     {
       "id": "avp_human:armor_toughness",
       "operation": "ADDITIVE",
-      "value": 1.0
+      "value": 0.6666666666666666
     },
     {
-      "id": "avp_human:attack_damage",
+      "id": "avp_human:sturdiness",
+      "operation": "ADDITIVE",
+      "value": 0.05
+    },
+    {
+      "id": "avp_human:mining_speed",
       "operation": "MULTIPLICATIVE",
-      "value": -0.075
+      "value": 0.041666666666666664
     }
   ]
 }

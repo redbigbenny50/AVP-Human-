@@ -14,6 +14,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -199,6 +202,24 @@ public final class HumanUscmBlocks {
         () -> BlockEntityType.Builder.of(LockerBlockEntity::new, LOCKER.get(), WEAPON_LOCKER.get()).build(null)
     );
 
+    private static final List<FacilityShape> SHAPES_MUTABLE = new ArrayList<>();
+
+    /**
+     * [stated] Oct 30: slabs, stairs and walls for the composite and USCM wall faces; slabs and stairs for the USCM
+     * floors.
+     */
+    public static final List<FacilityShape> SHAPES = Collections.unmodifiableList(SHAPES_MUTABLE);
+
+    static {
+        shapes(COMPOSITE_WALL, "composite_wall", "Composite Wall", true);
+        shapes(COMPOSITE_CEMENT, "composite_cement", "Composite Cement", true);
+        shapes(WALL_RIBBED, "uscm_wall_ribbed", "USCM Ribbed Wall", true);
+        shapes(WALL_LOUVER, "uscm_wall_louver", "USCM Louvered Wall", true);
+        shapes(FLOOR_TILE, "uscm_floor_tile", "USCM Floor Tile", false);
+        shapes(FLOOR_GRATE, "uscm_floor_grate", "USCM Floor Grate", false);
+        shapes(FLOOR_HAZARD, "uscm_floor_hazard", "USCM Hazard Floor", false);
+    }
+
     private HumanUscmBlocks() {}
 
     /**
@@ -236,6 +257,50 @@ public final class HumanUscmBlocks {
         ITEMS_MUTABLE.put(holder, ITEMS.<Item>createHolder(id, () -> new BlockItem(holder.get(), new Item.Properties())));
 
         return holder;
+    }
+
+    /**
+     * Registers the slab, stairs and (when {@code wall}) wall cut from {@code base}; same steel properties as the base.
+     */
+    private static void shapes(BLibHolder<Block> base, String baseId, String baseName, boolean wall) {
+        SHAPES_MUTABLE.add(
+            shape(base, baseId, baseId + "_slab", baseName + " Slab", FacilityShape.Kind.SLAB, () -> new SlabBlock(steel()))
+        );
+        SHAPES_MUTABLE.add(
+            shape(
+                base,
+                baseId,
+                baseId + "_stairs",
+                baseName + " Stairs",
+                FacilityShape.Kind.STAIRS,
+                () -> new StairBlock(base.get().defaultBlockState(), steel())
+            )
+        );
+        if (wall) {
+            SHAPES_MUTABLE.add(
+                shape(
+                    base,
+                    baseId,
+                    baseId + "_wall",
+                    FacilityShape.wallName(baseName),
+                    FacilityShape.Kind.WALL,
+                    () -> new WallBlock(steel())
+                )
+            );
+        }
+    }
+
+    private static FacilityShape shape(
+        BLibHolder<Block> base,
+        String baseId,
+        String id,
+        String name,
+        FacilityShape.Kind kind,
+        Supplier<Block> supplier
+    ) {
+        var holder = BLOCKS.<Block>createHolder(id, supplier);
+        var item = ITEMS.<Item>createHolder(id, () -> new BlockItem(holder.get(), new Item.Properties()));
+        return new FacilityShape(holder, item, base, kind, id, name, baseId);
     }
 
     public static void initialize() {

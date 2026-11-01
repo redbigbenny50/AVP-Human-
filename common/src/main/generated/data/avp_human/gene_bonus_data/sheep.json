@@ -2,19 +2,24 @@
   "entityTypePredicate": "minecraft:sheep",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:bonus_embryo_count",
-      "operation": "ADDITIVE",
-      "value": 0.4
-    },
-    {
       "id": "avp_human:cold_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.15
+      "value": 0.0625
     },
     {
-      "id": "avp_human:intelligence",
+      "id": "avp_human:bonus_embryo_count",
       "operation": "ADDITIVE",
-      "value": -10.0
+      "value": 0.125
+    },
+    {
+      "id": "avp_human:rapid_gestation",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.015625
+    },
+    {
+      "id": "avp_human:shearable",
+      "operation": "ADDITIVE",
+      "value": 0.125
     }
   ]
 }

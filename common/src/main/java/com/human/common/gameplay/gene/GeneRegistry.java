@@ -5,17 +5,29 @@ import com.just.core.functional.option.Option;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class GeneRegistry {
 
-    private static final Map<ResourceLocation, Gene> GENES_BY_RESOURCE_LOCATION = new HashMap<>();
+    // Concurrent: loot genes are created on demand, from the server thread and (for tooltips) the client thread.
+    private static final Map<ResourceLocation, Gene> GENES_BY_RESOURCE_LOCATION = new java.util.concurrent.ConcurrentHashMap<>();
 
-    private static final Map<Gene, ResourceLocation> RESOURCE_LOCATION_BY_VALUE = new HashMap<>();
+    private static final Map<Gene, ResourceLocation> RESOURCE_LOCATION_BY_VALUE = new java.util.concurrent.ConcurrentHashMap<>();
 
     public static @Nullable Gene getValueOrNull(ResourceLocation resourceLocation) {
+        var gene = GENES_BY_RESOURCE_LOCATION.get(resourceLocation);
+
+        // A loot gene that has not been seen yet this session (loaded from a save, a syringe, a packet): make it.
+        if (gene == null) {
+            gene = LootGenes.resolve(resourceLocation);
+        }
+
+        return gene;
+    }
+
+    /** Only what is already registered - never makes a loot gene. */
+    static @Nullable Gene getRegisteredOrNull(ResourceLocation resourceLocation) {
         return GENES_BY_RESOURCE_LOCATION.get(resourceLocation);
     }
 

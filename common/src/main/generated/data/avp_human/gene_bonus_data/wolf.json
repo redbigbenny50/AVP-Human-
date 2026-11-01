@@ -2,24 +2,39 @@
   "entityTypePredicate": "minecraft:wolf",
   "geneBonusDataEntries": [
     {
-      "id": "avp_human:bonus_embryo_count",
+      "id": "avp_human:max_health",
       "operation": "ADDITIVE",
-      "value": 0.65
+      "value": -1.25
+    },
+    {
+      "id": "avp_human:attack_damage",
+      "operation": "ADDITIVE",
+      "value": 0.5
+    },
+    {
+      "id": "avp_human:keen_senses",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.0625
+    },
+    {
+      "id": "avp_human:attack_speed",
+      "operation": "MULTIPLICATIVE",
+      "value": 0.025
     },
     {
       "id": "avp_human:cold_resistance",
       "operation": "MULTIPLICATIVE",
-      "value": 0.075
+      "value": 0.0625
     },
     {
-      "id": "avp_human:move_speed",
+      "id": "avp_human:bonus_embryo_count",
       "operation": "ADDITIVE",
-      "value": 0.01
+      "value": 0.125
     },
     {
-      "id": "avp_human:max_health",
-      "operation": "MULTIPLICATIVE",
-      "value": -0.1
+      "id": "avp_human:intelligence",
+      "operation": "ADDITIVE",
+      "value": 6.25
     }
   ]
 }

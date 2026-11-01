@@ -1,10 +1,6 @@
 {
   "type": "avp_human:outpost_munition",
-  "biomes": [
-    "minecraft:old_growth_pine_taiga",
-    "minecraft:old_growth_spruce_taiga",
-    "minecraft:snowy_taiga"
-  ],
+  "biomes": "#avp_human:has_outpost_munition",
   "spawn_overrides": {},
   "start_pool": "avp_human:outpost_munition",
   "step": "top_layer_modification",

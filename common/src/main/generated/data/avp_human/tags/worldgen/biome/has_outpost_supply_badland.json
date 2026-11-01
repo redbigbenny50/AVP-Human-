@@ -1,5 +1,14 @@
 {
   "values": [
-    "minecraft:badlands"
+    "minecraft:badlands",
+    "minecraft:wooded_badlands",
+    {
+      "id": "#minecraft:is_badlands",
+      "required": false
+    },
+    {
+      "id": "#c:is_badlands",
+      "required": false
+    }
   ]
 }
